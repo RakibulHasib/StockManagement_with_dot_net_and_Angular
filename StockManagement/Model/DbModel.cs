@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StockManagement.Model
 {
@@ -120,5 +121,21 @@ namespace StockManagement.Model
         public int Sales { get; set; }
         public decimal Total { get; set; }
         public virtual Product Product { get; set; }
+    }
+
+    public class StockDBContext : DbContext
+    {
+        public StockDBContext(DbContextOptions<StockDBContext> options):base(options) { }
+
+        public DbSet<SavoyIceCream> savoyIceCreams { get; set; }
+        public DbSet<ZaNZeeIceCream> zaNZeeIceCreams { get; set; }
+        public DbSet<LovelloIceCream> lovelloIceCreams { get; set; }
+        public DbSet<IglooIceCream> iglooIceCreams { get; set; }
+        public DbSet<KaziFarmFood> kaziFarmFoods { get; set; }
+        public DbSet<Product> products { get; set; }
+        public DbSet<Gari1> gari1 { get; set; }
+        public DbSet<Gari2> gari2 { get; set; }
+        public DbSet<Gari3> gari3 { get; set; }
+
     }
 }
