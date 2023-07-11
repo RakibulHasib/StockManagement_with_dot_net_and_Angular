@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
+using StockManagement.Model;
 
 namespace StockManagement.Model
 {
@@ -138,4 +139,64 @@ namespace StockManagement.Model
         public DbSet<Gari3> gari3 { get; set; }
 
     }
-}
+
+
+public static class SavoyIceCreamEndpoints
+{
+	public static void MapSavoyIceCreamEndpoints (this IEndpointRouteBuilder routes)
+    {
+        routes.MapGet("/api/SavoyIceCream", async (StockDBContext db) =>
+        {
+            return await db.savoyIceCreams.ToListAsync();
+        })
+        .WithName("GetAllSavoyIceCreams");
+
+        routes.MapGet("/api/SavoyIceCream/{id}", async (int SavoyIceCreamId, StockDBContext db) =>
+        {
+            return await db.savoyIceCreams.FindAsync(SavoyIceCreamId)
+                is SavoyIceCream model
+                    ? Results.Ok(model)
+                    : Results.NotFound();
+        })
+        .WithName("GetSavoyIceCreamById");
+
+        routes.MapPut("/api/SavoyIceCream/{id}", async (int SavoyIceCreamId, SavoyIceCream savoyIceCream, StockDBContext db) =>
+        {
+            var foundModel = await db.savoyIceCreams.FindAsync(SavoyIceCreamId);
+
+            if (foundModel is null)
+            {
+                return Results.NotFound();
+            }
+
+            db.Update(savoyIceCream);
+
+            await db.SaveChangesAsync();
+
+            return Results.NoContent();
+        })
+        .WithName("UpdateSavoyIceCream");
+
+        routes.MapPost("/api/SavoyIceCream/", async (SavoyIceCream savoyIceCream, StockDBContext db) =>
+        {
+            db.savoyIceCreams.Add(savoyIceCream);
+            await db.SaveChangesAsync();
+            return Results.Created($"/SavoyIceCreams/{savoyIceCream.SavoyIceCreamId}", savoyIceCream);
+        })
+        .WithName("CreateSavoyIceCream");
+
+
+        routes.MapDelete("/api/SavoyIceCream/{id}", async (int SavoyIceCreamId, StockDBContext db) =>
+        {
+            if (await db.savoyIceCreams.FindAsync(SavoyIceCreamId) is SavoyIceCream savoyIceCream)
+            {
+                db.savoyIceCreams.Remove(savoyIceCream);
+                await db.SaveChangesAsync();
+                return Results.Ok(savoyIceCream);
+            }
+
+            return Results.NotFound();
+        })
+        .WithName("DeleteSavoyIceCream");
+    }
+}}

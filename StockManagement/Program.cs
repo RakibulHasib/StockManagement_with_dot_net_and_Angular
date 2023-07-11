@@ -1,5 +1,6 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using StockManagement.Model;
+using StockManagement.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,5 +24,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapSavoyIceCreamEndpoints();
 
 app.Run();
