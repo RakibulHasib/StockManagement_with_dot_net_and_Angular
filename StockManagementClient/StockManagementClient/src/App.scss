@@ -1,0 +1,352 @@
+@import "prismjs/themes/prism-coy.css";
+@import "./AppDemo.scss";
+@import 'primereact/resources/primereact.min.css';
+@import 'primereact/resources/themes/saga-blue/theme.css';
+@import 'primeicons/primeicons.css';
+
+
+:root {
+    --maskbg: rgba(0, 0, 0, 0.6);
+}
+
+.imageBox {
+    position: relative;
+}
+.img-box-2 {
+    position: relative;
+    top: -10px;
+}
+.deleteButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.action-button-green {
+    background-color: #d1fae5 !important;
+    z-index: 1;
+}
+
+.po-enabled {
+    background-color: #f2bfe9 !important;
+}
+.cs-approved {
+    background-color: #eec8bb !important;
+}
+.cs-enable {
+    background-color: #bbeecf !important;
+}
+.invoice-enabled {
+    background-color: #f5eeb5 !important;
+}
+.dpInvoice-enabled {
+    background-color: #dbf5b5 !important;
+}
+.checkNo-enabled {
+    background-color: #a6d8b2 !important;
+}
+.action-button-green:hover {
+    background-color: #a7f3d0 !important;
+    z-index: 1;
+}
+.dpReceive-enabled {
+    background-color: #e8e2b3 !important;
+}
+.action-button-red {
+    background-color: #fecdd3 !important;
+    z-index: 1;
+}
+.action-button-red:hover {
+    background-color: #fda4af !important;
+    z-index: 1;
+}
+
+.workorder-created {
+    background-color: #e1f6cc !important;
+}
+
+.autoComplete-red {
+    border: 0px solid white;
+}
+.autoComplete-red input {
+    border: 1px solid red;
+}
+
+.autoComplete-red input:focus {
+    box-shadow: inset 0 0 0 1px #3f51b5, inset 0 0 0 1px #3f51b5, inset 0 0 0 1px #3f51b5, inset 0 0 0 1px #3f51b5;
+}
+
+// cart functionality design
+
+.cart-icon {
+    background: #4d5eba;
+    position: fixed;
+    right: 10px;
+    top: 100px;
+}
+.cart-value {
+    background: orange;
+    border-radius: 50%;
+    position: absolute;
+    left: 20px !important;
+    top: 2px !important;
+    width: 20px;
+    text-align: center;
+}
+.cart-value-2 {
+    background: orange;
+    border-radius: 50%;
+    width: 40px;
+    text-align: center;
+}
+.req-quantity {
+    background: orange;
+    border-radius: 20%;
+    width: 40px;
+    text-align: center;
+    -webkit-border-radius: 20%;
+    -moz-border-radius: 20%;
+    -ms-border-radius: 20%;
+    -o-border-radius: 20%;
+}
+.cs-btn {
+    width: 40px;
+    padding: 4px;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+}
+.p-checkbox .p-checkbox-box.p-highlight .p-checkbox-icon.pi-check:before {
+    top: 8px;
+    left: 2px;
+}
+
+.p-grid {
+    display: flex !important;
+}
+
+.inputNumber input {
+    border: 1px solid #ed3833;
+    border-radius: 4px;
+    width: 100%;
+}
+
+// .table td {
+//     white-space: nowrap;
+//     text-overflow: ellipsis;
+//     // max-width: 250px;
+// }
+// .table th {
+//     white-space: nowrap;
+//     text-overflow: ellipsis;
+//     // max-width: 250px;
+// }
+/* .Table-td {
+    white-space:wrap !important;
+    text-overflow: ellipsis;
+    max-width: 250px;
+
+ }
+.Table-th {
+    white-space:wrap !important;
+    text-overflow: ellipsis;
+    max-width: 250px;
+
+ } */
+// .p-dialog .p-dialog-content {
+//     background: #ffffff;
+//     color: rgba(0, 0, 0, 0.87);
+//     /* padding: 0 1.25rem 1.25rem 1.25rem; */
+// }
+.cs-card {
+    position: relative;
+}
+.cs-check-btn {
+    position: absolute;
+    top: -3px !important;
+}
+.cs-add-btn {
+    position: absolute;
+    top: -3px !important;
+    right: 5px !important;
+}
+.item-card {
+    min-height: 170px;
+}
+.item-card-2 {
+    min-height: 130px;
+}
+
+.search-btn-parent {
+    position: relative;
+}
+.search-btn {
+    right: 21%;
+    position: absolute !important;
+    top: 14% !important;
+}
+
+//  .ui-autocomplete-panel {
+//     z-index: 9999 !important;
+//     }
+//     .ui-autocomplete{
+//         z-index: 9999 !important;
+
+//     }
+
+//     .ui-menu{
+//         z-index: 9999 !important;
+
+//     }
+
+//     .ui-menu .ui-menu{
+//         z-index: 9999 !important;
+
+//     }
+
+//     .ui-menu .ui-menu-item{
+//         z-index: 9999 !important;
+
+//     }
+.ui-autocomplete {
+    cursor: default;
+    z-index: 4000 !important;
+}
+
+.p-rowgroup-header {
+    display: none !important;
+}
+
+.p-rowgroup-footer td {
+    font-weight: 700;
+    background-color: #ccf9e4;
+}
+
+.sticky .p-datatable-thead th {
+    background: #ffffff;
+    position: sticky !important;
+    top: 0;
+    z-index: 50;
+    border-width: 1px 1px 1px 1px !important;
+    border: 1px solid gray;
+}
+
+.p-datatable.p-datatable-gridlines .p-datatable-thead > tr > th {
+    // border-width: 1px 1px 1px 1px !important;
+}
+
+// commercial export lc-- master lc/sc/smslc
+
+.radio-design {
+    border: 1px solid rgb(167, 166, 166);
+}
+
+// input [checkbox]
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+
+// production
+.card {
+    position: relative;
+}
+.quantity {
+    position: absolute;
+    rotate: 180;
+    /* rotate: revert !important; */
+    /* top: 0; */
+    left: -7px;
+    top: 174px;
+}
+#cutNo {
+    padding: 12px;
+    border-radius: 4px;
+}
+#layQTY {
+    padding: 12px;
+    border-radius: 4px;
+}
+#cutQTY {
+    padding: 12px;
+    border-radius: 4px;
+}
+
+@media print {
+    *,
+    :after,
+    :before {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.fsReportHeadDisable {
+    background-color: #22362e !important;
+}
+
+.responsive-modal {
+    width: 100%;
+    max-width: "1200px";
+    @media (min-width: 768px) {
+        width: 90%;
+    }
+    @media (min-width: 1200px) {
+        width: 80%;
+    }
+}
+
+.sortable-handler {
+    touch-action: none;
+}
+
+// style={{
+//     width: "100%",
+//     maxWidth: "1200px",
+
+//     "@media (min-width: 768px)": {
+//         width: "90%",
+//     },
+
+//     "@media (min-width: 1200px)": {
+//         width: "80%",
+//     },
+// }}
+
+.p-picklist-filter span {
+    display: none;
+}
+.ui-datatable-scrollable-header th,
+.ui-datatable-scrollable-body td {
+    border-right: 1px solid #d9d9d9;
+}
+
+.hideCheckBox .p-resizable-column .p-selection-column role[columnheader] {
+    display: none;
+}
+.imp-one {
+    margin-bottom: 73px;
+}
+.sample-file-filed {
+    position: relative;
+    top: -63px;
+}
+@media print {
+    body * {
+        display: hidden;
+    }
+
+    .print-area {
+        * {
+            visibility: visible;
+        }
+    }
+}
