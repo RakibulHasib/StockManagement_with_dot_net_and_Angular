@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StockManagement.DTO;
 using StockManagement.Model;
 
 namespace StockManagement.Controllers
@@ -83,16 +84,31 @@ namespace StockManagement.Controllers
         // POST: api/SavoyIceCreams
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<SavoyIceCream>> PostSavoyIceCream(SavoyIceCream savoyIceCream)
+        public async Task<ActionResult<int>> PostSavoyIceCream(List<SavoyIceCreamDTO> savoyIceCreamVM)
         {
-          if (_context.savoyIceCreams == null)
-          {
-              return Problem("Entity set 'StockDBContext.savoyIceCreams'  is null.");
-          }
-            _context.savoyIceCreams.Add(savoyIceCream);
-            await _context.SaveChangesAsync();
+            int result = 0;
+            foreach (var item in savoyIceCreamVM)
+            {
+                var savoyIceCream = new SavoyIceCream
+                {
+                    ProductName = item.ProductName,
+                    Eja = item.Total-item.SalesQuantity,
+                    Price = item.Price,
+                    NewProduct = item.NewProduct,
+                    Total = item.Total,
+                    SalesQuantity = item.SalesQuantity,
+                    TotalAmount = item.TotalAmount,
+                    Dumping = item.Dumping,
+                    Receive = item.Receive,
+                    Remaining = item.Remaining,
+                    CreatedDate = DateTime.Now
+                };
+                _context.savoyIceCreams.Add(savoyIceCream);
+            }
 
-            return CreatedAtAction("GetSavoyIceCream", new { id = savoyIceCream.SavoyIceCreamId }, savoyIceCream);
+            result=await _context.SaveChangesAsync();
+
+            return result;
         }
 
         // DELETE: api/SavoyIceCreams/5
