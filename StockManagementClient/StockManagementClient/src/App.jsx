@@ -1,9 +1,9 @@
 import "./App.css";
 import "./styles.css";
-import 'primereact/resources/primereact.min.css';
-import 'primeicons/primeicons.css';
-import FrontPage from "./pages/Dashboard/FrontPage";
-import Navbar from "./components/Navbar";
+// import 'primereact/resources/primereact.min.css';
+// import 'primeicons/primeicons.css';
+ import FrontPage from "./pages/Dashboard/FrontPage";
+// import Navbar from "./components/Navbar";
 
 
 
@@ -14,12 +14,7 @@ import Navbar from "./components/Navbar";
 function App() {
   return (
     <div>
-      {/* <DashboardLayout>
-        <Dashboard />
-        <AllButtons />
-      </DashboardLayout> */}
-      <Navbar/>
-      <FrontPage/>
+      <FrontPage />    
     </div>
   );
 }
