@@ -1,8 +1,10 @@
-﻿namespace StockManagement.DTO
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace StockManagement.Model
 {
-    public class SavoyIceCreamDTO
+    public class LovelloIceCream
     {
-        public int SavoyIceCreamId { get; set; }
+        public int LovelloIceCreamId { get; set; }
         public int ProductId { get; set; }
         public int CompanyId { get; set; }
         public int? Eja { get; set; }
@@ -15,5 +17,8 @@
         public int? Receive { get; set; }
         public int? Remaining { get; set; }
         public DateTime? CreatedDate { get; set; }
+
+        public virtual Product? Product { get; set; }
+        public virtual Company? Company { get; set; }
     }
 }

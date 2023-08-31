@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StockManagement.DTO;
 using StockManagement.Model;
@@ -25,10 +20,10 @@ namespace StockManagement.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SavoyIceCream>>> GetsavoyIceCreams()
         {
-          if (_context.savoyIceCreams == null)
-          {
-              return NotFound();
-          }
+            if (_context.savoyIceCreams == null)
+            {
+                return NotFound();
+            }
             return await _context.savoyIceCreams.ToListAsync();
         }
 
@@ -36,10 +31,10 @@ namespace StockManagement.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<SavoyIceCream>> GetSavoyIceCream(int id)
         {
-          if (_context.savoyIceCreams == null)
-          {
-              return NotFound();
-          }
+            if (_context.savoyIceCreams == null)
+            {
+                return NotFound();
+            }
             var savoyIceCream = await _context.savoyIceCreams.FindAsync(id);
 
             if (savoyIceCream == null)
@@ -50,7 +45,7 @@ namespace StockManagement.Controllers
             return savoyIceCream;
         }
 
-        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSavoyIceCream(int id, SavoyIceCream savoyIceCream)
         {
@@ -88,8 +83,9 @@ namespace StockManagement.Controllers
             {
                 var savoyIceCream = new SavoyIceCream
                 {
-                    ProductName = item.ProductName,
-                    Eja = item.Total-item.SalesQuantity,
+                    CompanyId = item.CompanyId,
+                    ProductId = item.ProductId,
+                    Eja = item.Total - item.SalesQuantity,
                     Price = item.Price,
                     NewProduct = item.NewProduct,
                     Total = item.Total,
@@ -103,7 +99,7 @@ namespace StockManagement.Controllers
                 _context.savoyIceCreams.Add(savoyIceCream);
             }
 
-            result=await _context.SaveChangesAsync();
+            result = await _context.SaveChangesAsync();
 
             return result;
         }

@@ -12,8 +12,8 @@ using StockManagement.Model;
 namespace StockManagement.Migrations
 {
     [DbContext(typeof(StockDBContext))]
-    [Migration("20230711162238_Script")]
-    partial class Script
+    [Migration("20230831184851_rssm")]
+    partial class rssm
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,19 @@ namespace StockManagement.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("StockManagement.Model.Company", b =>
+                {
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CompanyId");
+
+                    b.ToTable("Company");
+                });
 
             modelBuilder.Entity("StockManagement.Model.Gari1", b =>
                 {
@@ -131,6 +144,9 @@ namespace StockManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IglooIceCreamId"), 1L, 1);
 
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -146,8 +162,8 @@ namespace StockManagement.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Receive")
                         .HasColumnType("int");
@@ -166,6 +182,10 @@ namespace StockManagement.Migrations
 
                     b.HasKey("IglooIceCreamId");
 
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("ProductId");
+
                     b.ToTable("iglooIceCreams");
                 });
 
@@ -176,6 +196,9 @@ namespace StockManagement.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("KaziFarmFoodId"), 1L, 1);
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -192,8 +215,8 @@ namespace StockManagement.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Receive")
                         .HasColumnType("int");
@@ -212,6 +235,10 @@ namespace StockManagement.Migrations
 
                     b.HasKey("KaziFarmFoodId");
 
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("ProductId");
+
                     b.ToTable("kaziFarmFoods");
                 });
 
@@ -222,6 +249,9 @@ namespace StockManagement.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LovelloIceCreamId"), 1L, 1);
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -238,8 +268,8 @@ namespace StockManagement.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Receive")
                         .HasColumnType("int");
@@ -258,6 +288,10 @@ namespace StockManagement.Migrations
 
                     b.HasKey("LovelloIceCreamId");
 
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("ProductId");
+
                     b.ToTable("lovelloIceCreams");
                 });
 
@@ -269,10 +303,18 @@ namespace StockManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"), 1L, 1);
 
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IsActive")
+                        .HasColumnType("int");
+
                     b.Property<string>("ProductName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProductId");
+
+                    b.HasIndex("CompanyId");
 
                     b.ToTable("products");
                 });
@@ -284,6 +326,9 @@ namespace StockManagement.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SavoyIceCreamId"), 1L, 1);
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -300,8 +345,8 @@ namespace StockManagement.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Receive")
                         .HasColumnType("int");
@@ -320,6 +365,10 @@ namespace StockManagement.Migrations
 
                     b.HasKey("SavoyIceCreamId");
 
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("ProductId");
+
                     b.ToTable("savoyIceCreams");
                 });
 
@@ -330,6 +379,9 @@ namespace StockManagement.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ZaNZeeIceCreamId"), 1L, 1);
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -346,8 +398,8 @@ namespace StockManagement.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Receive")
                         .HasColumnType("int");
@@ -365,6 +417,10 @@ namespace StockManagement.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ZaNZeeIceCreamId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("zaNZeeIceCreams");
                 });
@@ -402,6 +458,127 @@ namespace StockManagement.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("StockManagement.Model.IglooIceCream", b =>
+                {
+                    b.HasOne("StockManagement.Model.Company", "Company")
+                        .WithMany("IglooIceCreams")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("StockManagement.Model.Product", "Product")
+                        .WithMany("IglooIceCreams")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("StockManagement.Model.KaziFarmFood", b =>
+                {
+                    b.HasOne("StockManagement.Model.Company", "Company")
+                        .WithMany("KaziFarmFoods")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("StockManagement.Model.Product", "Product")
+                        .WithMany("KaziFarmFoods")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("StockManagement.Model.LovelloIceCream", b =>
+                {
+                    b.HasOne("StockManagement.Model.Company", "Company")
+                        .WithMany("LovelloIceCreams")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("StockManagement.Model.Product", "Product")
+                        .WithMany("LovelloIceCreams")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("StockManagement.Model.Product", b =>
+                {
+                    b.HasOne("StockManagement.Model.Company", "Company")
+                        .WithMany("Products")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("StockManagement.Model.SavoyIceCream", b =>
+                {
+                    b.HasOne("StockManagement.Model.Company", "Company")
+                        .WithMany("SavoyIceCreams")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("StockManagement.Model.Product", "Product")
+                        .WithMany("SavoyIceCreams")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("StockManagement.Model.ZaNZeeIceCream", b =>
+                {
+                    b.HasOne("StockManagement.Model.Company", "Company")
+                        .WithMany("ZaNZeeIceCreams")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("StockManagement.Model.Product", "Product")
+                        .WithMany("ZaNZeeIceCreams")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("StockManagement.Model.Company", b =>
+                {
+                    b.Navigation("IglooIceCreams");
+
+                    b.Navigation("KaziFarmFoods");
+
+                    b.Navigation("LovelloIceCreams");
+
+                    b.Navigation("Products");
+
+                    b.Navigation("SavoyIceCreams");
+
+                    b.Navigation("ZaNZeeIceCreams");
+                });
+
             modelBuilder.Entity("StockManagement.Model.Product", b =>
                 {
                     b.Navigation("Gari1s");
@@ -409,6 +586,16 @@ namespace StockManagement.Migrations
                     b.Navigation("Gari2s");
 
                     b.Navigation("Gari3s");
+
+                    b.Navigation("IglooIceCreams");
+
+                    b.Navigation("KaziFarmFoods");
+
+                    b.Navigation("LovelloIceCreams");
+
+                    b.Navigation("SavoyIceCreams");
+
+                    b.Navigation("ZaNZeeIceCreams");
                 });
 #pragma warning restore 612, 618
         }
