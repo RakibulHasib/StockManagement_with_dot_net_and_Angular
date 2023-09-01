@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StockManagement.DTO;
 using StockManagement.Model;
 using StockManagement.Repository;
+using StockManagement.Services;
 
 namespace StockManagement.Controllers
 {
@@ -8,19 +10,21 @@ namespace StockManagement.Controllers
     [ApiController]
     public class SavoyIceCreamsController : ControllerBase
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly SavoyService _savoyService;
 
-        public SavoyIceCreamsController(UnitOfWork unitOfWork)
+        public SavoyIceCreamsController(SavoyService savoyService)
         {
-            _unitOfWork = unitOfWork;
+            _savoyService = savoyService;
         }
 
-        // GET: api/SavoyIceCreams
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<SavoyIceCream>>> GetsavoyIceCreams()
-        {
-            return await _unitOfWork.SavoyIceCream.GetAsync(x => x.CompanyId != 0);
-        }
+
+
+        //// GET: api/SavoyIceCreams
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<SavoyIceCream>>> GetsavoyIceCreams()
+        //{
+        //    return await _unitOfWork.SavoyIceCream.GetAsync(x => x.CompanyId != 0);
+        //}
 
         //// GET: api/SavoyIceCreams/5
         //[HttpGet("{id}")]
@@ -69,35 +73,13 @@ namespace StockManagement.Controllers
 
         //    return NoContent();
         //}
+        
+        [HttpPost("InsertSavoyData")]
+        public async Task<ActionResult<int>> InsertSavoyData(List<SavoyIceCreamDTO> savoyIceCreamVM)
+        {
+            return Ok(await _savoyService.InsertSavoyData(savoyIceCreamVM));
+        }
 
-        //[HttpPost]
-        //public async Task<ActionResult<int>> PostSavoyIceCream(List<SavoyIceCreamDTO> savoyIceCreamVM)
-        //{
-        //    int result = 0;
-        //    foreach (var item in savoyIceCreamVM)
-        //    {
-        //        var savoyIceCream = new SavoyIceCream
-        //        {
-        //            CompanyId = item.CompanyId,
-        //            ProductId = item.ProductId,
-        //            Eja = item.Total - item.SalesQuantity,
-        //            Price = item.Price,
-        //            NewProduct = item.NewProduct,
-        //            Total = item.Total,
-        //            SalesQuantity = item.SalesQuantity,
-        //            TotalAmount = item.TotalAmount,
-        //            Dumping = item.Dumping,
-        //            Receive = item.Receive,
-        //            Remaining = item.Remaining,
-        //            CreatedDate = DateTime.Now
-        //        };
-        //        _context.savoyIceCreams.Add(savoyIceCream);
-        //    }
-
-        //    result = await _context.SaveChangesAsync();
-
-        //    return result;
-        //}
 
         //// DELETE: api/SavoyIceCreams/5
         //[HttpDelete("{id}")]
