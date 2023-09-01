@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using StockManagement.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockManagement.Model;
+using StockManagement.Repository;
 
 namespace StockManagement.Controllers
 {
@@ -14,123 +8,120 @@ namespace StockManagement.Controllers
     [ApiController]
     public class SavoyIceCreamsController : ControllerBase
     {
-        private readonly StockDBContext _context;
+        private readonly UnitOfWork _unitOfWork;
 
-        public SavoyIceCreamsController(StockDBContext context)
+        public SavoyIceCreamsController(UnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: api/SavoyIceCreams
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SavoyIceCream>>> GetsavoyIceCreams()
         {
-          if (_context.savoyIceCreams == null)
-          {
-              return NotFound();
-          }
-            return await _context.savoyIceCreams.ToListAsync();
+            return await _unitOfWork.SavoyIceCream.GetAsync(x => x.CompanyId != 0);
         }
 
-        // GET: api/SavoyIceCreams/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SavoyIceCream>> GetSavoyIceCream(int id)
-        {
-          if (_context.savoyIceCreams == null)
-          {
-              return NotFound();
-          }
-            var savoyIceCream = await _context.savoyIceCreams.FindAsync(id);
+        //// GET: api/SavoyIceCreams/5
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<SavoyIceCream>> GetSavoyIceCream(int id)
+        //{
+        //    if (_context.savoyIceCreams == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var savoyIceCream = await _context.savoyIceCreams.FindAsync(id);
 
-            if (savoyIceCream == null)
-            {
-                return NotFound();
-            }
+        //    if (savoyIceCream == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return savoyIceCream;
-        }
+        //    return savoyIceCream;
+        //}
 
-        
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSavoyIceCream(int id, SavoyIceCream savoyIceCream)
-        {
-            if (id != savoyIceCream.SavoyIceCreamId)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(savoyIceCream).State = EntityState.Modified;
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutSavoyIceCream(int id, SavoyIceCream savoyIceCream)
+        //{
+        //    if (id != savoyIceCream.SavoyIceCreamId)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SavoyIceCreamExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    _context.Entry(savoyIceCream).State = EntityState.Modified;
 
-            return NoContent();
-        }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!SavoyIceCreamExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-        [HttpPost]
-        public async Task<ActionResult<int>> PostSavoyIceCream(List<SavoyIceCreamDTO> savoyIceCreamVM)
-        {
-            int result = 0;
-            foreach (var item in savoyIceCreamVM)
-            {
-                var savoyIceCream = new SavoyIceCream
-                {
-                    ProductName = item.ProductName,
-                    Eja = item.Total-item.SalesQuantity,
-                    Price = item.Price,
-                    NewProduct = item.NewProduct,
-                    Total = item.Total,
-                    SalesQuantity = item.SalesQuantity,
-                    TotalAmount = item.TotalAmount,
-                    Dumping = item.Dumping,
-                    Receive = item.Receive,
-                    Remaining = item.Remaining,
-                    CreatedDate = DateTime.Now
-                };
-                _context.savoyIceCreams.Add(savoyIceCream);
-            }
+        //    return NoContent();
+        //}
 
-            result=await _context.SaveChangesAsync();
+        //[HttpPost]
+        //public async Task<ActionResult<int>> PostSavoyIceCream(List<SavoyIceCreamDTO> savoyIceCreamVM)
+        //{
+        //    int result = 0;
+        //    foreach (var item in savoyIceCreamVM)
+        //    {
+        //        var savoyIceCream = new SavoyIceCream
+        //        {
+        //            CompanyId = item.CompanyId,
+        //            ProductId = item.ProductId,
+        //            Eja = item.Total - item.SalesQuantity,
+        //            Price = item.Price,
+        //            NewProduct = item.NewProduct,
+        //            Total = item.Total,
+        //            SalesQuantity = item.SalesQuantity,
+        //            TotalAmount = item.TotalAmount,
+        //            Dumping = item.Dumping,
+        //            Receive = item.Receive,
+        //            Remaining = item.Remaining,
+        //            CreatedDate = DateTime.Now
+        //        };
+        //        _context.savoyIceCreams.Add(savoyIceCream);
+        //    }
 
-            return result;
-        }
+        //    result = await _context.SaveChangesAsync();
 
-        // DELETE: api/SavoyIceCreams/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSavoyIceCream(int id)
-        {
-            if (_context.savoyIceCreams == null)
-            {
-                return NotFound();
-            }
-            var savoyIceCream = await _context.savoyIceCreams.FindAsync(id);
-            if (savoyIceCream == null)
-            {
-                return NotFound();
-            }
+        //    return result;
+        //}
 
-            _context.savoyIceCreams.Remove(savoyIceCream);
-            await _context.SaveChangesAsync();
+        //// DELETE: api/SavoyIceCreams/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteSavoyIceCream(int id)
+        //{
+        //    if (_context.savoyIceCreams == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var savoyIceCream = await _context.savoyIceCreams.FindAsync(id);
+        //    if (savoyIceCream == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return NoContent();
-        }
+        //    _context.savoyIceCreams.Remove(savoyIceCream);
+        //    await _context.SaveChangesAsync();
 
-        private bool SavoyIceCreamExists(int id)
-        {
-            return (_context.savoyIceCreams?.Any(e => e.SavoyIceCreamId == id)).GetValueOrDefault();
-        }
+        //    return NoContent();
+        //}
+
+        //private bool SavoyIceCreamExists(int id)
+        //{
+        //    return (_context.savoyIceCreams?.Any(e => e.SavoyIceCreamId == id)).GetValueOrDefault();
+        //}
     }
 }

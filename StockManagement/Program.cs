@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StockManagement.Model;
-using StockManagement.Controllers;
+using StockManagement.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddTransient(typeof(Repository<,>));
+builder.Services.AddScoped(typeof(UnitOfWork));
 
 builder.Services.AddDbContext<StockDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefultConnections")));
 builder.Services.AddControllers();
@@ -21,10 +24,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
+//app.UseAuthorization();
+
+app.UseCors(x =>
+{
+    x.AllowAnyHeader();
+    x.AllowAnyMethod();
+    x.AllowAnyOrigin();
+});
 
 app.MapControllers();
-
-app.MapSavoyIceCreamEndpoints();
 
 app.Run();
