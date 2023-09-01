@@ -3,6 +3,7 @@
     public class SavoyIceCreamDTO
     {
         public int SavoyIceCreamId { get; set; }
+        public int MyProperty { get; set; }
         public int ProductId { get; set; }
         public int CompanyId { get; set; }
         public int? Eja { get; set; }
