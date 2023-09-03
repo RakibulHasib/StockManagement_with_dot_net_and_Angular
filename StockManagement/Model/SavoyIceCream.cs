@@ -16,7 +16,7 @@ namespace StockManagement.Model
         public int? Dumping { get; set; }
         public int? Receive { get; set; }
         public int? Remaining { get; set; }
-        public DateTime? CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public virtual Product? Product { get; set; }
         public virtual Company? Company { get; set; }

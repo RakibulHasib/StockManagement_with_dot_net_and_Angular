@@ -17,4 +17,10 @@
         public int? Remaining { get; set; }
         public DateTime? CreatedDate { get; set; }
     }
+    public class DailyDataDTO
+    {
+        public DateTime CreatedDate { get; set; }
+        public int TotalSalesQuantity { get; set; }
+        public decimal TotalAmount { get; set; }
+    }
 }

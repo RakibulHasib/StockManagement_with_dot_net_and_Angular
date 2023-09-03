@@ -3,22 +3,20 @@ using Microsoft.EntityFrameworkCore;
 using StockManagement.DTO;
 using StockManagement.Model;
 using StockManagement.Repository;
-using System.ComponentModel.Design;
-using System.Linq.Expressions;
 
 namespace StockManagement.Services
 {
-    public class SavoyService
+    public class KaziFarmFoodService
     {
         private readonly UnitOfWork _unitOfWork;
 
-        public SavoyService(UnitOfWork unitOfWork)
+        public KaziFarmFoodService(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetSavoyDataPerDay(DateTime StartDate, DateTime EndDate)
+        public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetKaziFarmDataPerDay(DateTime StartDate, DateTime EndDate)
         {
-            var query = await _unitOfWork.SavoyIceCream.Queryable
+            var query = await _unitOfWork.KaziFarmFood.Queryable
                 .Where(x => x.CreatedDate.Date >= StartDate.Date && x.CreatedDate.Date <= EndDate.Date)
                 .ToListAsync();
 
@@ -40,12 +38,12 @@ namespace StockManagement.Services
         }
 
 
-        public async Task<ActionResult<int>> InsertSavoyData(List<SavoyIceCreamDTO> savoyIceCreamVM)
+        public async Task<ActionResult<int>> InserKaziFarmtData(List<KaziFarmFoodDTO> kazifarmIceCreamVM)
         {
             int result = 0;
-            foreach (var item in savoyIceCreamVM)
+            foreach (var item in kazifarmIceCreamVM)
             {
-                var savoyIceCream = new SavoyIceCream
+                var kazifarmfood = new KaziFarmFood
                 {
                     CompanyId = item.CompanyId,
                     ProductId = item.ProductId,
@@ -60,14 +58,11 @@ namespace StockManagement.Services
                     Remaining = item.Remaining,
                     CreatedDate = DateTime.Now
                 };
-                await _unitOfWork.SavoyIceCream.AddAsync(savoyIceCream);
+                await _unitOfWork.KaziFarmFood.AddAsync(kazifarmfood);
             }
 
             result = await _unitOfWork.SaveChangesAsync();
             return result;
         }
-
-
-
     }
 }
