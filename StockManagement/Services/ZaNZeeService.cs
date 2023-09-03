@@ -3,22 +3,20 @@ using Microsoft.EntityFrameworkCore;
 using StockManagement.DTO;
 using StockManagement.Model;
 using StockManagement.Repository;
-using System.ComponentModel.Design;
-using System.Linq.Expressions;
 
 namespace StockManagement.Services
 {
-    public class SavoyService
+    public class ZaNZeeService
     {
         private readonly UnitOfWork _unitOfWork;
 
-        public SavoyService(UnitOfWork unitOfWork)
+        public ZaNZeeService(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetSavoyDataPerDay(DateTime StartDate, DateTime EndDate)
+        public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetZaNZeeDataPerDay(DateTime StartDate, DateTime EndDate)
         {
-            var query = await _unitOfWork.SavoyIceCream.Queryable
+            var query = await _unitOfWork.ZaNZeeIceCream.Queryable
                 .Where(x => x.CreatedDate.Date >= StartDate.Date && x.CreatedDate.Date <= EndDate.Date)
                 .ToListAsync();
 
@@ -40,12 +38,12 @@ namespace StockManagement.Services
         }
 
 
-        public async Task<ActionResult<int>> InsertSavoyData(List<SavoyIceCreamDTO> savoyIceCreamVM)
+        public async Task<ActionResult<int>> InsertZaNZeeData(List<ZaNZeeIceCreamDTO> zanzeeIceCreamVM)
         {
             int result = 0;
-            foreach (var item in savoyIceCreamVM)
+            foreach (var item in zanzeeIceCreamVM)
             {
-                var savoyIceCream = new SavoyIceCream
+                var zanzeeIceCream = new ZaNZeeIceCream
                 {
                     CompanyId = item.CompanyId,
                     ProductId = item.ProductId,
@@ -60,14 +58,11 @@ namespace StockManagement.Services
                     Remaining = item.Remaining,
                     CreatedDate = DateTime.Now
                 };
-                await _unitOfWork.SavoyIceCream.AddAsync(savoyIceCream);
+                await _unitOfWork.ZaNZeeIceCream.AddAsync(zanzeeIceCream);
             }
 
             result = await _unitOfWork.SaveChangesAsync();
             return result;
         }
-
-
-
     }
 }
