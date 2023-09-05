@@ -1,0 +1,23 @@
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.container {
+  display: block;
+  margin: 15px auto;
+}
+
+.right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

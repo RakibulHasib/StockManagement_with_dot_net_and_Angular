@@ -1,0 +1,33 @@
+.example-card {
+  width: 325px;
+  max-height:200px;
+  display:inline-block;
+  padding:20px;
+  margin:20px;
+}
+mat-card-content{
+    text-align:center;
+    padding:10px;
+    padding-top:15px;
+    font-size:3em;
+}
+#demand {
+  background-color: #4fffe63a;
+}
+
+#trade {
+  background-color: #3bff9f7e; /* Yellow */
+}
+
+#agency {
+  background-color: #4caf5066; /* Green */
+}
+
+#applicant {
+  background-color: #2196f373; /* Blue */
+}
+
+#agent {
+  background-color: #9c27b066; /* Purple */
+}
+
