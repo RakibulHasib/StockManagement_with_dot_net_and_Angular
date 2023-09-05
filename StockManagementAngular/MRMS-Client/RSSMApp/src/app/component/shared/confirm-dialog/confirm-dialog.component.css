@@ -1,0 +1,16 @@
+.right-end {
+  display: flex;
+  justify-content: flex-end;
+  padding: 25px;
+  background:border-box;
+  
+  
+}
+.title {
+  font-weight: 700;
+ /* text-align: center;*/
+  color: red;
+}
+.content {
+  /*text-align:center;*/
+}

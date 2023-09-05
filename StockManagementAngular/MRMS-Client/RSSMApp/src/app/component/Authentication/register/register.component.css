@@ -1,0 +1,64 @@
+:host {
+  display: flex;
+  justify-content: center;
+  margin: 100px 0px;
+}
+.login-toolbar {
+  justify-content: center;
+}
+
+mat-card {
+  max-width: 600px;
+}
+
+mat-card-title,
+mat-card-content {
+  display: flex;
+  justify-content: center;
+}
+
+  mat-card-title form,
+  mat-card-content form {
+    .mat-form-field
+
+{
+  width: 100%;
+  min-width: 300px;
+}
+
+.error {
+  padding: 16px;
+  width: 300px;
+  color: white;
+  background-color: red;
+}
+
+.button {
+  display: flex;
+  justify-content: flex-end;
+}
+}
+
+.form-container {
+  width: 65%;
+  margin: 25px auto;
+}
+
+.f-w {
+  width: 100%;
+  /* margin-left:130px;*/
+}
+/*.socialMediaFlex {
+  margin-left: 140px;
+}*/
+/*.navbar{
+    margin-left:180px;
+}*/
+@media screen and (max-width: 600px) {
+  .form-container {
+    width: 97.5%;
+    margin: 25px auto;
+  }
+} 
+
+

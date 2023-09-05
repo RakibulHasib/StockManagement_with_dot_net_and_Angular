@@ -1,0 +1,78 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav"
+               [opened]="false" mode="side">
+   
+    <mat-toolbar color="primary">
+      <mat-toolbar-row>
+        <mat-label></mat-label>
+      </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-nav-list style="font-size: 13px;">
+      <a mat-list-item [routerLink]="['/home']"><mat-icon class="icon">home</mat-icon> Dashboard</a>
+      <a mat-list-item [routerLink]="['/savoy']"><mat-icon class="icon">home</mat-icon> Savoy</a>
+
+      <a mat-list-item [routerLink]="['/company']"><mat-icon class="icon">list_alt_add</mat-icon> Company</a>
+      <a mat-list-item [routerLink]="['/demand']"><mat-icon class="icon">list_alt_add</mat-icon> Demand</a>
+      <a mat-list-item [routerLink]="['/trade']"><mat-icon class="icon">group_work</mat-icon> Trade</a>
+
+      <a mat-list-item [routerLink]="['/demandFile']"><mat-icon class="icon">group_work</mat-icon>Demand File</a>
+
+      <a mat-list-item [routerLink]="['/applicant']"><mat-icon class="icon">list_alt_add</mat-icon>Applicant</a>
+      <a mat-list-item [routerLink]="['/FileContainer']"><mat-icon class="icon">group_work</mat-icon> File Component</a>
+
+      <a mat-list-item [routerLink]="['/medicalCenter']"><mat-icon class="icon">group_work</mat-icon> Medical Center</a>
+      <a mat-list-item [routerLink]="['/agent']"><mat-icon class="icon">group_work</mat-icon> Agent</a>
+      <a mat-list-item [routerLink]="['/agency']"><mat-icon class="icon">group_work</mat-icon> Agency</a>
+      <a mat-list-item [routerLink]="['/demandIssue']"><mat-icon class="icon">group_work</mat-icon> Demand Issue</a>
+      <a mat-list-item [routerLink]="['/visa']"><mat-icon class="icon">group_work</mat-icon> Visa</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <!--<mat-toolbar color="primary">
+    <mat-toolbar-row> <h3>Recipe Book</h3></mat-toolbar-row>
+
+    <mat-toolbar-row>
+      <span class="spacer"></span>-->
+    <!--<button mat-raised-button color="primary" (click)="logOut()" *ngIf="isAuthenticated()">Logout</button>
+  <button mat-raised-button color="primary" routerLink="/angular-material" *ngIf="isAuthenticated()">{{displayName}}</button>-->
+    <!--</mat-toolbar-row>
+  </mat-toolbar>-->
+    <mat-toolbar color="primary">
+      <mat-toolbar-row>
+        <ng-template [ngIf]="!authService.isAuthenticated()">
+          <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" disabled>
+            <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+          </button>
+          <span>{{ appTitle }}</span>
+        </ng-template>
+        <ng-template [ngIf]="authService.isAuthenticated()">
+          <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+            <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+          </button>
+          <span>{{ appTitle }}</span>
+
+        </ng-template>
+
+        <span class="example-spacer"></span>
+        <div>
+          <ng-template [ngIf]="!authService.isAuthenticated()">
+            <button mat-raised-button color="danger" routerLink="/signin" routerLinkActive="active">LogIn</button>
+            <button mat-raised-button color="danger" routerLink="/signUp" routerLinkActive="active">Register</button>
+          </ng-template>
+        </div>
+        <div>
+          <ng-template [ngIf]="authService.isAuthenticated()">
+         
+            <button mat-raised-button color="primary" (click)="logOut()">Logout</button>
+          </ng-template>
+        </div>
+      </mat-toolbar-row>
+
+    </mat-toolbar>
+    <!-- Add Content Here -->
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

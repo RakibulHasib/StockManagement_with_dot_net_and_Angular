@@ -1,0 +1,131 @@
+
+<!-- <mat-form-field appearance="fill" class="f-w mb-1">
+  <mat-label>File Type</mat-label>
+  <mat-select [(ngModel)]="productData.productId" name="row.fileTypeId" required>
+    <mat-option *ngFor="let f of fileTypes" [value]="f.fileTypeId">{{
+      f.name
+      }}</mat-option>
+  </mat-select>
+  <mat-error *ngIf="row.fileTypeId === undefined || row.fileTypeId === null">
+    File is required.
+  </mat-error>
+</mat-form-field> -->
+
+<!-- <mat-form-field appearance="fill" class="f-w mb-1">
+  <mat-label>Upload File</mat-label>
+  <button type="button" mat-icon-button matPrefix (click)="f_input.click()">
+    <mat-icon>attach_file</mat-icon>
+  </button>
+  <input type="text" readonly matInput [(ngModel)]="row.name" #fileUpload="ngModel" required />
+  <input type="file" multiple hidden #f_input (change)="handleFileInputChange($event)" required />
+  <mat-error *ngIf="fileUpload.invalid && (fileUpload.dirty || fileUpload.touched)">
+    File is required.
+  </mat-error>
+</mat-form-field> -->
+
+<!-- <mat-form-field appearance="fill" class="f-w mb-1">
+  <mat-label>File Description</mat-label>
+  <input matInput required [(ngModel)]="row.description" name="fileDescription" #fileDescriptionInput="ngModel" />
+  <mat-error *ngIf="
+      fileDescriptionInput.invalid &&
+      (fileDescriptionInput.dirty || fileDescriptionInput.touched)
+    ">
+    File description is required.
+  </mat-error>
+</mat-form-field> -->
+
+<!-- <mat-form-field appearance="fill" class="f-w mb-1">
+  <mat-label>File Description</mat-label>
+  <input matInput required [(ngModel)]="row.description" name="fileDescription" #fileDescriptionInput="ngModel" />
+  <mat-error *ngIf="
+      fileDescriptionInput.invalid &&
+      (fileDescriptionInput.dirty || fileDescriptionInput.touched)
+    ">
+    File description is required.
+  </mat-error>
+</mat-form-field> -->
+
+  <mat-form-field [hidden]="true">
+    <mat-label>Product</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.productId">
+  </mat-form-field>
+
+  <mat-form-field [hidden]="true">
+    <mat-label>Company</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.companyId">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-200px mb-1">
+    <mat-label>Product</mat-label>
+
+    <input type="text" matInput [(ngModel)]="productData.productName" [readonly]="true">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-125px mb-1">
+    <mat-label>Price</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.price">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-125px mb-1">
+    <mat-label>Eja</mat-label>
+    <input type="number" matInput placeholder="Ex. 200.00" [(ngModel)]="productData.eja" #ejaInput="ngModel">
+    <mat-error *ngIf="
+          ejaInput.invalid &&
+          (ejaInput.dirty || ejaInput.touched)
+        ">
+      Eja is required.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-125px mb-1">
+    <mat-label>New Product</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.newProduct">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-125px mb-1">
+    <mat-label>Total</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.total">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-125px mb-1">
+    <mat-label>Sales Quantity</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.salesQuantity">
+  </mat-form-field>    
+
+  <mat-form-field appearance="outline" class="w-125px mb-1">
+    <mat-label>Sales Quantity</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.totalAmount">
+  </mat-form-field>    
+
+  <mat-form-field appearance="outline" class="w-125px mb-1">
+    <mat-label>Sales Quantity</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.dumping">
+  </mat-form-field>    
+
+  <mat-form-field appearance="outline" class="w-125px mb-1">
+    <mat-label>Sales Quantity</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.receive">
+  </mat-form-field>    
+
+  <mat-form-field appearance="outline" class="w-125px mb-1">
+    <mat-label>Sales Quantity</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.remaining">
+  </mat-form-field>
+
+<!-- <mat-form-field appearance="fill" class="f-w mb-1">
+  <mat-label>Entry Date</mat-label>
+  <input matInput required [(ngModel)]="row.date" name="uploadDateTime" #uploadDateTimeInput="ngModel"
+    [matDatepicker]="picker" (ngModelChange)="row.date = $event" />
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+  <mat-error *ngIf="
+      uploadDateTimeInput.invalid &&
+      (uploadDateTimeInput.dirty || uploadDateTimeInput.touched)
+    ">
+    Entry Date is required.
+  </mat-error>
+</mat-form-field> -->
+
+<button type="button" title="Remove Item" mat-icon-button>
+  <mat-icon>delete</mat-icon>
+</button>

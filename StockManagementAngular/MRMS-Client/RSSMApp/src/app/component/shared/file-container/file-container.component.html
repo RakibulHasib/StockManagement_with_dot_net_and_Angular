@@ -1,0 +1,90 @@
+<mat-form-field appearance="fill" class="f-w mb-1">
+  <mat-label>File Type</mat-label>
+  <mat-select [(ngModel)]="row.fileTypeId" name="row.fileTypeId" required>
+    <!--<mat-option *ngFor="let f of fileTypes" [value]="f.fileTypeId">{{
+      f.name
+    }}</mat-option>-->
+  </mat-select>
+  <mat-error *ngIf="row.fileTypeId === undefined || row.fileTypeId === null">
+    File is required.
+  </mat-error>
+</mat-form-field>
+
+<mat-form-field appearance="fill" class="f-w mb-1">
+  <mat-label>Upload File</mat-label>
+  <button type="button" mat-icon-button matPrefix (click)="f_input.click()">
+    <mat-icon>attach_file</mat-icon>
+  </button>
+  <input
+    type="text"
+    readonly
+    matInput
+    [(ngModel)]="row.name"
+    #fileUpload="ngModel"
+    required
+  />
+  <input
+    type="file"
+    multiple
+    hidden
+    #f_input
+    (change)="handleFileInputChange($event)"
+    required
+  />
+  <mat-error
+    *ngIf="fileUpload.invalid && (fileUpload.dirty || fileUpload.touched)"
+  >
+    File is required.
+  </mat-error>
+</mat-form-field>
+
+<mat-form-field appearance="fill" class="f-w mb-1">
+  <mat-label>File Description</mat-label>
+  <input
+    matInput
+    required
+    [(ngModel)]="row.description"
+    name="fileDescription"
+    #fileDescriptionInput="ngModel"
+  />
+  <mat-error
+    *ngIf="
+      fileDescriptionInput.invalid &&
+      (fileDescriptionInput.dirty || fileDescriptionInput.touched)
+    "
+  >
+    File description is required.
+  </mat-error>
+</mat-form-field>
+
+<mat-form-field appearance="fill" class="f-w mb-1">
+  <mat-label>Entry Date</mat-label>
+  <input
+    matInput
+    required
+    [(ngModel)]="row.date"
+    name="uploadDateTime"
+    #uploadDateTimeInput="ngModel"
+    [matDatepicker]="picker"
+    (ngModelChange)="row.date = $event"
+  />
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+  <mat-error
+    *ngIf="
+      uploadDateTimeInput.invalid &&
+      (uploadDateTimeInput.dirty || uploadDateTimeInput.touched)
+    "
+  >
+    Entry Date is required.
+  </mat-error>
+</mat-form-field>
+
+<button
+  type="button"
+  title="Remove Item"
+  mat-icon-button
+  (click)="removeItem()"
+>
+  <mat-icon>delete</mat-icon>
+</button>
