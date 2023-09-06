@@ -17,7 +17,7 @@ const user = {
 })
 
 export class AppComponent {
-  title = 'MRMSApp';
+  title = 'RSSMApp';
 
     constructor(private http : HttpClient) {
 

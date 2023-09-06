@@ -13,12 +13,12 @@ import { NotificationService } from 'src/app/services/Shared/notification.servic
 })
 export class SavoyCreateComponent implements OnInit {
   savoyForm: FormGroup = new FormGroup({
-    name: new FormControl('', Validators.required),
-    details: new FormControl('', Validators.required),
-    address: new FormControl('', Validators.required),
-    email: new FormControl('', Validators.required),
-    phone: new FormControl('', null),
-    countryId: new FormControl('', Validators.required)
+    productId: new FormControl('', Validators.required),
+    productName: new FormControl('', Validators.required),
+    price: new FormControl('', Validators.required),
+    companyId: new FormControl('', Validators.required),
+    companyName: new FormControl('', null),
+    eja: new FormControl('', null)
   });
 
   savoyData: Savoy[] = [];

@@ -6,7 +6,7 @@
       </div>
       <div class="d-flex align-items-center">
         <a mat-mini-fab class="btn btn-primary" [routerLink]="['/savoy-create']">
-          <mat-icon>add</mat-icon>
+          <mat-icon>add_box</mat-icon>
         </a>
       </div>
     </div>
@@ -26,10 +26,9 @@
     </div>
   </mat-card-header>
 
-
   <mat-card-content>
 
-    <!--<div class="row mt-2">
+    <div class="row mt-2">
       <div class="col">
         <mat-form-field appearance="fill" class="f-w mb-1">
           <mat-label>Search by Name</mat-label>
@@ -37,31 +36,36 @@
         </mat-form-field>
       </div>
 
-    </div>-->
-    <mat-table [dataSource]="dataSource" matSort>
+    </div>
+    <mat-table [dataSource]="dataSource" matSort style="text-align:center">
 
       <ng-container matColumnDef="createdDate">
         <mat-header-cell *matHeaderCellDef mat-sort-header>CreatedDate</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{element.createdDate}}</mat-cell>
+        <mat-cell *matCellDef="let element" style="text-align:center">{{element.createdDate | date:'yyyy-MM-dd'}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalSalesQuantity">
         <mat-header-cell *matHeaderCellDef mat-sort-header>TotalSalesQuantity</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{element.totalSalesQuantity}}</mat-cell>
+        <mat-cell *matCellDef="let element" class="centered-text">{{element.totalSalesQuantity}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalAmount">
         <mat-header-cell *matHeaderCellDef mat-sort-header>TotalAmount</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{element.totalAmount}}</mat-cell>
+        <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.totalAmount}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="actions" class="action">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>...</mat-header-cell>
-        <!--<mat-cell *matCellDef="let element" class="action">
-          <a [routerLink]="['/company-edit',element.companyId]"><mat-icon>Edit</mat-icon></a>
-          <button mat-icon-button (click)="confirmDelete(element)"><mat-icon
-              class="red-color">Delete</mat-icon></button>
-        </mat-cell>-->
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Action</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="action">
+          <mat-icon class="icon-spacing">edit</mat-icon>
+          <mat-icon class="icon-spacing">delete_sweep</mat-icon>
+          <mat-icon class="icon-spacing">visibility</mat-icon>
+
+
+          <!--<a [routerLink]="['/company-edit',element.companyId]"><mat-icon>Edit</mat-icon></a>-->
+          <!--<button mat-icon-button (click)="confirmDelete(element)"><mat-icon-->
+          <!--class="red-color">Delete</mat-icon></button>-->
+        </mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="columnList"></mat-header-row>
