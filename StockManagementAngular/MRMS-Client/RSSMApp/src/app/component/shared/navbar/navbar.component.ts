@@ -10,7 +10,7 @@ import { AuthenticationService } from '../../../services/Authentication/authenti
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  appTitle = "MRMS"
+  appTitle = "RSSM"
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
