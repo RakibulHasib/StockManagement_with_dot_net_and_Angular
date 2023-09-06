@@ -5,3 +5,20 @@
 .mb-1 {
     margin-bottom: 15px;
 }
+/* 
+.productEntryForm .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix .mat-mdc-floating-label {
+    font-size: 1.2em;
+    left: auto;
+    right: auto;
+    font-weight: 500;
+}
+
+.productEntryForm .mdc-text-field {
+    padding: 0 10px;
+}
+
+.productEntryForm .mdc-text-field--filled .mdc-floating-label--float-above {
+    transform: translateY(-106%) scale(0.75);
+    left: auto;
+    right: auto;
+} */

@@ -12,15 +12,7 @@ import { NotificationService } from 'src/app/services/Shared/notification.servic
   styleUrls: ['./savoy-create.component.css']
 })
 export class SavoyCreateComponent implements OnInit {
-  savoyForm: FormGroup = new FormGroup({
-    productId: new FormControl('', Validators.required),
-    productName: new FormControl('', Validators.required),
-    price: new FormControl('', Validators.required),
-    companyId: new FormControl('', Validators.required),
-    companyName: new FormControl('', null),
-    eja: new FormControl('', null)
-  });
-
+  savoyForm: FormGroup = new FormGroup({});
   savoyData: Savoy[] = [];
 
   // f() {
@@ -32,6 +24,7 @@ export class SavoyCreateComponent implements OnInit {
     private router: Router
   ) { }
   insert(): void {
+    console.log("Submit event initiated...");
     // if (this.companyForm.invalid) return;
     // console.log(this.companyForm.value);
 
