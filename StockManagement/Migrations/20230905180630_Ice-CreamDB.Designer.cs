@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StockManagement.Model;
 
@@ -11,9 +12,10 @@ using StockManagement.Model;
 namespace StockManagement.Migrations
 {
     [DbContext(typeof(StockDBContext))]
-    partial class StockDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230905180630_Ice-CreamDB")]
+    partial class IceCreamDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -317,25 +319,6 @@ namespace StockManagement.Migrations
                     b.ToTable("products");
                 });
 
-            modelBuilder.Entity("StockManagement.Model.RoleAssagin", b =>
-                {
-                    b.Property<int>("RoleAssaginId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleAssaginId"), 1L, 1);
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RoleAssaginId");
-
-                    b.ToTable("RoleAssagin");
-                });
-
             modelBuilder.Entity("StockManagement.Model.RoleMaster", b =>
                 {
                     b.Property<int>("RoleId")
@@ -426,7 +409,7 @@ namespace StockManagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("Token")
@@ -437,6 +420,8 @@ namespace StockManagement.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -614,6 +599,15 @@ namespace StockManagement.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("StockManagement.Model.User", b =>
+                {
+                    b.HasOne("StockManagement.Model.RoleMaster", "RoleMaster")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId");
+
+                    b.Navigation("RoleMaster");
+                });
+
             modelBuilder.Entity("StockManagement.Model.ZaNZeeIceCream", b =>
                 {
                     b.HasOne("StockManagement.Model.Company", "Company")
@@ -665,6 +659,11 @@ namespace StockManagement.Migrations
                     b.Navigation("SavoyIceCreams");
 
                     b.Navigation("ZaNZeeIceCreams");
+                });
+
+            modelBuilder.Entity("StockManagement.Model.RoleMaster", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

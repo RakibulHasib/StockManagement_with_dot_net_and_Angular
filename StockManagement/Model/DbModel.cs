@@ -16,6 +16,9 @@ namespace StockManagement.Model
         public DbSet<Gari1> gari1 { get; set; }
         public DbSet<Gari2> gari2 { get; set; }
         public DbSet<Gari3> gari3 { get; set; }
+        public DbSet<User> Users { get; set; } = default!;
+        public DbSet<RoleMaster> RoleMaster { get; set; } = default!;
+        public DbSet<RoleAssagin> RoleAssagin { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
