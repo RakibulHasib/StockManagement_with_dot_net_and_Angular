@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Pollar\\Desktop\\RSSM\\StockManagement_with_dot_net_and_Angular\\StockManagement\\StockManagement.csproj": {}
+    "C:\\Users\\mdsha\\OneDrive\\Desktop\\ROSS\\StockManagement_with_dot_net_and_Angular\\StockManagement\\StockManagement.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Pollar\\Desktop\\RSSM\\StockManagement_with_dot_net_and_Angular\\StockManagement\\StockManagement.csproj": {
+    "C:\\Users\\mdsha\\OneDrive\\Desktop\\ROSS\\StockManagement_with_dot_net_and_Angular\\StockManagement\\StockManagement.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Pollar\\Desktop\\RSSM\\StockManagement_with_dot_net_and_Angular\\StockManagement\\StockManagement.csproj",
+        "projectUniqueName": "C:\\Users\\mdsha\\OneDrive\\Desktop\\ROSS\\StockManagement_with_dot_net_and_Angular\\StockManagement\\StockManagement.csproj",
         "projectName": "StockManagement",
-        "projectPath": "C:\\Users\\Pollar\\Desktop\\RSSM\\StockManagement_with_dot_net_and_Angular\\StockManagement\\StockManagement.csproj",
-        "packagesPath": "C:\\Users\\Pollar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Pollar\\Desktop\\RSSM\\StockManagement_with_dot_net_and_Angular\\StockManagement\\obj\\",
+        "projectPath": "C:\\Users\\mdsha\\OneDrive\\Desktop\\ROSS\\StockManagement_with_dot_net_and_Angular\\StockManagement\\StockManagement.csproj",
+        "packagesPath": "C:\\Users\\mdsha\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mdsha\\OneDrive\\Desktop\\ROSS\\StockManagement_with_dot_net_and_Angular\\StockManagement\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Pollar\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mdsha\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
