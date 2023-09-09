@@ -1139,3 +1139,7 @@ C:\Users\Pollar\Desktop\RSSM\StockManagement_with_dot_net_and_Angular\StockManag
 C:\Users\Pollar\Desktop\RSSM\StockManagement_with_dot_net_and_Angular\StockManagement\obj\Debug\net6.0\StockManagement.pdb
 C:\Users\Pollar\Desktop\RSSM\StockManagement_with_dot_net_and_Angular\StockManagement\obj\Debug\net6.0\StockManagement.genruntimeconfig.cache
 C:\Users\Pollar\Desktop\RSSM\StockManagement_with_dot_net_and_Angular\StockManagement\obj\Debug\net6.0\ref\StockManagement.dll
+C:\Users\Pollar\Desktop\RSSM\StockManagement_with_dot_net_and_Angular\StockManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Pollar\Desktop\RSSM\StockManagement_with_dot_net_and_Angular\StockManagement\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\Pollar\Desktop\RSSM\StockManagement_with_dot_net_and_Angular\StockManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\Pollar\Desktop\RSSM\StockManagement_with_dot_net_and_Angular\StockManagement\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

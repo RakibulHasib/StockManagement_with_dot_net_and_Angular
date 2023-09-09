@@ -5,6 +5,22 @@
 .mb-1 {
     margin-bottom: 15px;
 }
+
+.child-product-item .mdc-text-field {
+    padding: 0 5px;
+}
+
+mat-form-field .mat-input-element {
+    padding: 0 5px;
+}
+
+.product-item-container{
+    margin-bottom: 12px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px 1px rgba(138, 138, 138, 0.5);
+    -webkit-box-shadow: 0px 0px 3px 1px rgba(138, 138, 138, 0.5);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(138, 138, 138, 0.5);
+}
 /* 
 .productEntryForm .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix .mat-mdc-floating-label {
     font-size: 1.2em;

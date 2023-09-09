@@ -45,19 +45,19 @@
   </mat-error>
 </mat-form-field> -->
 
-  <mat-form-field appearance="fill" class="w-200px mb-1">
+  <mat-form-field appearance="fill" class="w-200px mb-1 product-name">
     <mat-label style="margin:0 auto">Product</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.productName" [readonly]="true">
+    <input type="text" matInput [value]="productData.productName" disabled>
   </mat-form-field>
 
   <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>Price</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.price">
+    <input type="text" matInput [(ngModel)]="productData.price" (ngModelChange)="updateProductData()" placeholder="0">
   </mat-form-field>
 
   <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>Eja</mat-label>
-    <input type="number" matInput placeholder="Ex. 200.00" [(ngModel)]="productData.eja" #ejaInput="ngModel">
+    <input type="number" matInput placeholder="Ex. 200.00" [(ngModel)]="productData.eja" #ejaInput="ngModel" (ngModelChange)="updateProductData()" placeholder="0" disabled>
     <mat-error *ngIf="
           ejaInput.invalid &&
           (ejaInput.dirty || ejaInput.touched)
@@ -68,37 +68,37 @@
 
   <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>New Product</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.newProduct">
+    <input type="text" matInput [(ngModel)]="productData.newProduct" (ngModelChange)="updateProductData()" placeholder="0">
   </mat-form-field>
 
   <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>Total</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.total">
+    <input type="text" matInput [value]="getTotalItem()" disabled>
   </mat-form-field>
 
   <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>Sales Quantity</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.salesQuantity">
+    <input type="text" matInput [(ngModel)]="productData.salesQuantity" (ngModelChange)="updateProductData()" placeholder="0">
   </mat-form-field>    
 
   <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
-    <mat-label>Sales Quantity</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.totalAmount">
+    <mat-label>Total Amount</mat-label>
+    <input type="text" matInput [value]="getTotalPrice()" disabled>
   </mat-form-field>    
 
   <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
-    <mat-label>Sales Quantity</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.dumping">
+    <mat-label>Dumping</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.dumping" (ngModelChange)="updateProductData()" placeholder="0">
   </mat-form-field>    
 
   <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
-    <mat-label>Sales Quantity</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.receive">
+    <mat-label>Receive</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.receive" (ngModelChange)="updateProductData()" placeholder="0">
   </mat-form-field>    
 
   <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
-    <mat-label>Sales Quantity</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.remaining">
+    <mat-label>Remaining</mat-label>
+    <input type="text" matInput [value]="getRemaining()" disabled>
   </mat-form-field>
 
 <!-- <mat-form-field appearance="fill" class="f-w mb-1">

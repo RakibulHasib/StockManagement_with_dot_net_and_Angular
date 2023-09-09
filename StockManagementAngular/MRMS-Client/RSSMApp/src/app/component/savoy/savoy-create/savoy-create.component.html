@@ -6,7 +6,7 @@
   <mat-card-content>
     <form class="productEntryForm" (ngSubmit)="insert()">
       <div class="product-item-container" *ngFor="let product of savoyData ; let i = index; trackBy: trackByProduct">
-        <app-product-item [productData]="product" (productDataChange)="updateProduct($event, i)">
+        <app-product-item [productData]="product" (productDataChange)="updateProduct($event, i)" class="child-product-item">
         </app-product-item>
       </div>
       <div class="f-w mb-1">
