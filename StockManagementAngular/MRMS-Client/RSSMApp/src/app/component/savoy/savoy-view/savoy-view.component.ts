@@ -8,6 +8,8 @@ import { throwError } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { Dailydatadbmodel } from '../../../models/DailyDataModel/dailydatadbmodel';
 import { SavoyService } from '../../../services/Savoy/savoy.service';
+import { DatePipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-savoy-view',
@@ -33,24 +35,42 @@ export class SavoyViewComponent implements OnInit {
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  columnList: string[] = ["createdDate", "totalSalesQuantity", "totalAmount"];
+  columnList: string[] = ["createdDate", "totalSalesQuantity", "totalAmount","actions"];
   startDate: string = '';
   endDate: string = '';
 
   constructor(
     private dailyDataSvc: SavoyService,
     private _notificationSvc: NotificationService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private datePipe: DatePipe
   ) { }
 
-  ngOnInit(): void {
-    this.startDate = '';
-    this.endDate = '';
+
+  ngOnInit() {
+    // Set startDate to 15 days ago
+    const fifteenDaysAgo = new Date();
+    fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
+    this.startDate = this.formatDate(fifteenDaysAgo);
+
+    // Set endDate to today
+    const today = new Date();
+    this.endDate = this.formatDate(today);
+
+    // Fetch data initially
+    this.fetchData();
+  }
+
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   fetchData() {
     if (this.startDate && this.endDate) {
-      this.dailyDataSvc.getDashboardDataPerDay(this.startDate, this.endDate)
+      this.dailyDataSvc.getSavoyDashboardDataPerDay(this.startDate, this.endDate)
         .subscribe(data => {
           this.dailyData = data;
           this.dataSource.data = this.dailyData;
@@ -62,6 +82,11 @@ export class SavoyViewComponent implements OnInit {
     } else {
       this.notificationSvc.message("Please provide both Start Date and End Date", "DISMISS");
     }
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   //confirmDelete(data: Company) {
@@ -86,15 +111,5 @@ export class SavoyViewComponent implements OnInit {
   //         })
   //     }
   //   })
-  //}
-
-  //getCountryName(id: number) {
-  //  let c = this.country.find(c => c.countryId == id);
-  //  return c ? c.name : '';
-  //}
-
-  //applyFilter(event: Event) {
-  //  const filterValue = (event.target as HTMLInputElement).value;
-  //  this.dataSource.filter = filterValue.trim().toLowerCase();
   //}
 }

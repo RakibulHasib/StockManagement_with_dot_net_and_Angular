@@ -45,28 +45,17 @@
   </mat-error>
 </mat-form-field> -->
 
-  <mat-form-field [hidden]="true">
-    <mat-label>Product</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.productId">
-  </mat-form-field>
-
-  <mat-form-field [hidden]="true">
-    <mat-label>Company</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.companyId">
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="w-200px mb-1">
-    <mat-label>Product</mat-label>
-
+  <mat-form-field appearance="fill" class="w-200px mb-1">
+    <mat-label style="margin:0 auto">Product</mat-label>
     <input type="text" matInput [(ngModel)]="productData.productName" [readonly]="true">
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="w-125px mb-1">
+  <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>Price</mat-label>
     <input type="text" matInput [(ngModel)]="productData.price">
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="w-125px mb-1">
+  <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>Eja</mat-label>
     <input type="number" matInput placeholder="Ex. 200.00" [(ngModel)]="productData.eja" #ejaInput="ngModel">
     <mat-error *ngIf="
@@ -77,37 +66,37 @@
     </mat-error>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="w-125px mb-1">
+  <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>New Product</mat-label>
     <input type="text" matInput [(ngModel)]="productData.newProduct">
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="w-125px mb-1">
+  <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>Total</mat-label>
     <input type="text" matInput [(ngModel)]="productData.total">
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="w-125px mb-1">
+  <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>Sales Quantity</mat-label>
     <input type="text" matInput [(ngModel)]="productData.salesQuantity">
   </mat-form-field>    
 
-  <mat-form-field appearance="outline" class="w-125px mb-1">
+  <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>Sales Quantity</mat-label>
     <input type="text" matInput [(ngModel)]="productData.totalAmount">
   </mat-form-field>    
 
-  <mat-form-field appearance="outline" class="w-125px mb-1">
+  <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>Sales Quantity</mat-label>
     <input type="text" matInput [(ngModel)]="productData.dumping">
   </mat-form-field>    
 
-  <mat-form-field appearance="outline" class="w-125px mb-1">
+  <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>Sales Quantity</mat-label>
     <input type="text" matInput [(ngModel)]="productData.receive">
   </mat-form-field>    
 
-  <mat-form-field appearance="outline" class="w-125px mb-1">
+  <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
     <mat-label>Sales Quantity</mat-label>
     <input type="text" matInput [(ngModel)]="productData.remaining">
   </mat-form-field>
@@ -125,7 +114,3 @@
     Entry Date is required.
   </mat-error>
 </mat-form-field> -->
-
-<button type="button" title="Remove Item" mat-icon-button>
-  <mat-icon>delete</mat-icon>
-</button>

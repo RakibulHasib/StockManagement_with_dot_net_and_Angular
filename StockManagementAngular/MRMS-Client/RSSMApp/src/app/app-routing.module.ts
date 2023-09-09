@@ -7,6 +7,10 @@ import { SignInComponent } from './component/Authentication/sign-in/sign-in.comp
 import { AuthGuard } from './component/auth/guards/auth.guard';
 import { SavoyViewComponent } from './component/savoy/savoy-view/savoy-view.component';
 import { SavoyCreateComponent } from './component/savoy/savoy-create/savoy-create.component';
+import { IglooViewComponent } from './component/igloo/igloo-view/igloo-view.component';
+import { LovelloViewComponent } from './component/lovello/lovello-view/lovello-view.component';
+import { ZanzeeViewComponent } from './component/zanzee/zanzee-view/zanzee-view.component';
+import { KazifarmViewComponent } from './component/kazifarm/kazifarm-view/kazifarm-view.component';
 
 
 const routes: Routes = [
@@ -17,6 +21,10 @@ const routes: Routes = [
   { path: 'FileContainer', component: FileContainerComponent, canActivate: [AuthGuard] },
   { path: 'savoy', component: SavoyViewComponent, canActivate: [AuthGuard] },
   { path: 'savoy-create', component: SavoyCreateComponent, canActivate: [AuthGuard] },
+  { path: 'igloo', component: IglooViewComponent, canActivate: [AuthGuard] },
+  { path: 'lovello', component: LovelloViewComponent, canActivate: [AuthGuard] },
+  { path: 'zanzee', component: ZanzeeViewComponent, canActivate: [AuthGuard] },
+  { path: 'kazifarm', component: KazifarmViewComponent, canActivate: [AuthGuard] }
 
 
 ];
