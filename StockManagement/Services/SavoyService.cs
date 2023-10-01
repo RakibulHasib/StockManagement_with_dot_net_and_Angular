@@ -67,6 +67,36 @@ namespace StockManagement.Services
             return result;
         }
 
+        public async Task<ActionResult<IEnumerable<SavoyReportDTO>>> GetSavoyReport(DateTime CreatedDate)
+        {
+            var savoyIceCreamData = await _unitOfWork.SavoyIceCream.Queryable
+                .Where(a => a.CreatedDate.Date == CreatedDate.Date)
+                .ToListAsync();
+
+            var productData = await _unitOfWork.Product.Queryable.ToListAsync();
+
+            var joinedData = from si in savoyIceCreamData
+                             join p in productData on si.ProductId equals p.ProductId
+                             select new SavoyReportDTO
+                             {
+                                 SavoyIceCreamId= si.SavoyIceCreamId,
+                                 CompanyId= si.CompanyId,
+                                 ProductId= si.ProductId,
+                                 ProductName=p.ProductName,
+                                 Eja=si.Eja,
+                                 Price=si.Price,
+                                 NewProduct=si.NewProduct,
+                                 Total=si.Total,
+                                 SalesQuantity=si.SalesQuantity,
+                                 TotalAmount=si.TotalAmount,
+                                 Dumping=si.Dumping,
+                                 Receive=si.Receive,
+                                 Remaining=si.Remaining,
+                                 CreatedDate=si.CreatedDate
+                             };
+
+            return joinedData.ToList();
+        }
 
 
     }

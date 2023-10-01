@@ -33,6 +33,7 @@ import { LovelloCreateComponent } from './component/lovello/lovello-create/lovel
 import { KazifarmViewComponent } from './component/kazifarm/kazifarm-view/kazifarm-view.component';
 import { KazifarmCreateComponent } from './component/kazifarm/kazifarm-create/kazifarm-create.component';
 import { KazifarmEditComponent } from './component/kazifarm/kazifarm-edit/kazifarm-edit.component';
+import { SavoyReportComponent } from './component/report/savoy-report/savoy-report.component';
 
 
 
@@ -59,7 +60,8 @@ import { KazifarmEditComponent } from './component/kazifarm/kazifarm-edit/kazifa
     LovelloCreateComponent,
     KazifarmViewComponent,
     KazifarmCreateComponent,
-    KazifarmEditComponent
+    KazifarmEditComponent,
+    SavoyReportComponent
   ],
   imports: [
     BrowserModule,

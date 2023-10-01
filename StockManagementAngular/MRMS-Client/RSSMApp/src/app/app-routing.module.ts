@@ -11,6 +11,7 @@ import { IglooViewComponent } from './component/igloo/igloo-view/igloo-view.comp
 import { LovelloViewComponent } from './component/lovello/lovello-view/lovello-view.component';
 import { ZanzeeViewComponent } from './component/zanzee/zanzee-view/zanzee-view.component';
 import { KazifarmViewComponent } from './component/kazifarm/kazifarm-view/kazifarm-view.component';
+import { SavoyReportComponent } from './component/report/savoy-report/savoy-report.component';
 
 
 const routes: Routes = [
@@ -24,7 +25,8 @@ const routes: Routes = [
   { path: 'igloo', component: IglooViewComponent, canActivate: [AuthGuard] },
   { path: 'lovello', component: LovelloViewComponent, canActivate: [AuthGuard] },
   { path: 'zanzee', component: ZanzeeViewComponent, canActivate: [AuthGuard] },
-  { path: 'kazifarm', component: KazifarmViewComponent, canActivate: [AuthGuard] }
+  { path: 'kazifarm', component: KazifarmViewComponent, canActivate: [AuthGuard] },
+  { path: 'savoy_report', component: SavoyReportComponent, canActivate: [AuthGuard] }
 
 
 ];

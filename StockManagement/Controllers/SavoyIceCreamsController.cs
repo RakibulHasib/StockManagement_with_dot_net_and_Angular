@@ -31,5 +31,11 @@ namespace StockManagement.Controllers
             return await _savoyService.GetSavoyDataPerDay(StartDate, EndDate);
         }
 
+        [HttpGet("GetSavoyReport")]
+        public async Task<ActionResult<IEnumerable<SavoyReportDTO>>> GetSavoyReport(DateTime CreatedDate)
+        {
+            return await _savoyService.GetSavoyReport(CreatedDate);
+        }
+
     }
 }
