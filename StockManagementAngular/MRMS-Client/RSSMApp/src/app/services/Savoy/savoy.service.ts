@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Dailydatadbmodel } from '../../models/DailyDataModel/dailydatadbmodel';
 import { Savoy } from '../../models/Savoy/Savoy';
+import { SavoyReportModel } from '../../models/Savoy/savoy-report';
 import { IceCreamApiUrl } from '../../models/shared/app-constants';
 
 const endPoint: string = "SavoyIceCreams";
@@ -25,6 +26,9 @@ export class SavoyService {
   }
   getSavoyDashboardDataPerDay(startDate: string, endDate: string): Observable<Dailydatadbmodel[]> {
     return this.http.get<Dailydatadbmodel[]>(`${IceCreamApiUrl}/${endPoint}/GetSavoyDataPerDay?StartDate=${startDate}&EndDate=${endDate}`);
+  }
+  getSavoyReportData(createdDate: string): Observable<SavoyReportModel[]> {
+    return this.http.get<SavoyReportModel[]>(`${IceCreamApiUrl}/${endPoint}/GetSavoyReport?CreatedDate=${createdDate}`);
   }
 
   getById(id: number): Observable<Savoy> {

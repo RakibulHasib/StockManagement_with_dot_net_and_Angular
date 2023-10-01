@@ -89,27 +89,4 @@ export class SavoyViewComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  //confirmDelete(data: Company) {
-  // //console.log(data);
-  // this.dialog.open(ConfirmDialogComponent, {
-  //   width: '450px',
-  //   enterAnimationDuration: '800ms'
-  // }).afterClosed()
-  //   .subscribe(result => {
-  //     //console.log(result);
-  //     if (result) {
-  //       this.companySvc.delete(data)
-  //         .subscribe({
-  //           next: r => {
-  //             this.notificationSvc.message('Demand removed', 'DISMISS');
-  //             this.dataSource.data = this.dataSource.data.filter(c => c.companyId != data.companyId);
-  //           },
-  //           error: err => {
-  //             this.notificationSvc.message('Failed to delete data', 'DISMISS');
-  //             throwError(() => err);
-  //           }
-  //         })
-  //     }
-  //   })
-  //}
 }
