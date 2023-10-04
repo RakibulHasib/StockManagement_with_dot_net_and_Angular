@@ -7,6 +7,8 @@ namespace StockManagement.Model
         public int SavoyIceCreamId { get; set; }
         public int ProductId { get; set; }
         public int CompanyId { get; set; }
+        [ForeignKey("SavoyIceCreamMaster_tbl")]
+        public int SavoyIceCreamMasterId { get; set; }
         public int? Eja { get; set; }
         public decimal Price { get; set; }
         public int? NewProduct { get; set; }
@@ -17,8 +19,9 @@ namespace StockManagement.Model
         public int? Receive { get; set; }
         public int? Remaining { get; set; }
         public DateTime CreatedDate { get; set; }
-
         public virtual Product? Product { get; set; }
         public virtual Company? Company { get; set; }
+
+        public virtual SavoyIceCreamMaster_tbl? SavoyIceCreamMaster_tbl { get; set; }
     }
 }

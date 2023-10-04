@@ -7,6 +7,8 @@ namespace StockManagement.Model
         public int KaziFarmFoodId { get; set; }
         public int ProductId { get; set; }
         public int CompanyId { get; set; }
+        [ForeignKey("KaziFarmFoodMaster_tbl")]
+        public int KaziFarmFoodMasterId { get; set; }
         public int? Eja { get; set; }
         public decimal Price { get; set; }
         public int? NewProduct { get; set; }
@@ -20,5 +22,6 @@ namespace StockManagement.Model
 
         public virtual Product? Product { get; set; }
         public virtual Company? Company { get; set; }
+        public virtual KaziFarmFoodMaster_tbl? KaziFarmFoodMaster_tbl { get; set; }
     }
 }
