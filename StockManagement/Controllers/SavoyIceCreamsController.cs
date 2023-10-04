@@ -32,9 +32,9 @@ namespace StockManagement.Controllers
         }
 
         [HttpGet("GetSavoyReport")]
-        public async Task<ActionResult<IEnumerable<SavoyReportDTO>>> GetSavoyReport(DateTime CreatedDate)
+        public async Task<ActionResult<IEnumerable<SavoyReportDTO>>> GetSavoyReport(int SavoyIceCreamMasterId)
         {
-            return await _savoyService.GetSavoyReport(CreatedDate);
+            return await _savoyService.GetSavoyReport(SavoyIceCreamMasterId);
         }
 
     }

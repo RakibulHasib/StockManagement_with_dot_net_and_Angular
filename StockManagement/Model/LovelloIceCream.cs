@@ -7,6 +7,8 @@ namespace StockManagement.Model
         public int LovelloIceCreamId { get; set; }
         public int ProductId { get; set; }
         public int CompanyId { get; set; }
+        [ForeignKey("LovelloIceCreamMaster_tbl")]
+        public int LovelloIceCreamMasterId { get; set; }
         public int? Eja { get; set; }
         public decimal Price { get; set; }
         public int? NewProduct { get; set; }
@@ -20,5 +22,6 @@ namespace StockManagement.Model
 
         public virtual Product? Product { get; set; }
         public virtual Company? Company { get; set; }
+        public virtual LovelloIceCreamMaster_tbl? LovelloIceCreamMaster_tbl { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 {
     public class SavoyReportDTO
     {
+        public int SavoyIceCreamMasterId { get; set; }
         public int SavoyIceCreamId { get; set; }
         public int ProductId { get; set; }
         public string? ProductName { get; set; }
