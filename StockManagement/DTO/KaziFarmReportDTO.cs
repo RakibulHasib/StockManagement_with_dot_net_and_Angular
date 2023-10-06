@@ -1,10 +1,11 @@
 ﻿namespace StockManagement.DTO
 {
-    public class IglooIceCreamDTO
+    public class KaziFarmReportDTO
     {
-        public int SavoyIceCreamMasterId { get; set; }
-        public int IglooIceCreamId { get; set; }
+        public int KaziFarmFoodMasterId { get; set; }
+        public int KaziFarmFoodId { get; set; }
         public int ProductId { get; set; }
+        public string? ProductName { get; set; }
         public int CompanyId { get; set; }
         public int? Eja { get; set; }
         public decimal Price { get; set; }
