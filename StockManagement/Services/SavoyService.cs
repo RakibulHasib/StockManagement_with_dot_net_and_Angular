@@ -18,25 +18,33 @@ namespace StockManagement.Services
         }
         public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetSavoyDataPerDay(DateTime StartDate, DateTime EndDate)
         {
-            var query = await _unitOfWork.SavoyIceCream.Queryable
-                .Where(x => x.CreatedDate.Date >= StartDate.Date && x.CreatedDate.Date <= EndDate.Date)
-                .ToListAsync();
+            var query = await _unitOfWork.SavoyIceCreamMaster_tbl.Queryable.Where(x => x.CreatedDate.Date >= StartDate.Date && x.CreatedDate.Date <= EndDate.Date)
+                                                                         .Select(query => new DailyDataDTO
+                                                                         {
+                                                                             CreatedDate = query.CreatedDate,
+                                                                             TotalSalesQuantity = query.TotalSalesQuantity ?? 0,
+                                                                             TotalAmount=query.GrandTotalAmount ?? 0
+                                                                         }).ToListAsync();
+            return query;
+            //var query = await _unitOfWork.SavoyIceCream.Queryable
+            //    .Where(x => x.CreatedDate.Date >= StartDate.Date && x.CreatedDate.Date <= EndDate.Date)
+            //    .ToListAsync();
 
-            var groupedQuery = query
-                .GroupBy(x => new
-                {
-                    Date = x.CreatedDate.Date,
-                    TimeWithoutSeconds = x.CreatedDate.ToString("HH:mm:ss").Substring(0, 5)
-                })
-                .Select(group => new DailyDataDTO
-                {
-                    CreatedDate = group.Max(x => x.CreatedDate),
-                    TotalSalesQuantity = group.Sum(x => x.SalesQuantity ?? 0),
-                    TotalAmount = group.Sum(x => x.TotalAmount ?? 0)
-                })
-                .ToList();
+            //var groupedQuery = query
+            //    .GroupBy(x => new
+            //    {
+            //        Date = x.CreatedDate.Date,
+            //        TimeWithoutSeconds = x.CreatedDate.ToString("HH:mm:ss").Substring(0, 5)
+            //    })
+            //    .Select(group => new DailyDataDTO
+            //    {
+            //        CreatedDate = group.Max(x => x.CreatedDate),
+            //        TotalSalesQuantity = group.Sum(x => x.SalesQuantity ?? 0),
+            //        TotalAmount = group.Sum(x => x.TotalAmount ?? 0)
+            //    })
+            //    .ToList();
 
-            return groupedQuery;
+            //return groupedQuery;
         }
 
 
@@ -72,7 +80,7 @@ namespace StockManagement.Services
                     Total = total,
                     Eja = total - (item.SalesQuantity ?? 0),
                     SalesQuantity = item.SalesQuantity,
-                    TotalAmount = (item.SalesQuantity)*(item.Price),
+                    TotalAmount = (item.SalesQuantity) * (item.Price),
                     Dumping = item.Dumping,
                     Receive = item.Receive,
                     Remaining = (item.Dumping ?? 0) - (item.Receive ?? 0),
@@ -109,7 +117,7 @@ namespace StockManagement.Services
                              join p in productData on si.ProductId equals p.ProductId
                              select new SavoyReportDTO
                              {
-                                 SavoyIceCreamMasterId=si.SavoyIceCreamMasterId,
+                                 SavoyIceCreamMasterId = si.SavoyIceCreamMasterId,
                                  SavoyIceCreamId = si.SavoyIceCreamId,
                                  CompanyId = si.CompanyId,
                                  ProductId = si.ProductId,
