@@ -114,10 +114,30 @@ export class SavoyReportComponent implements OnInit {
         var heightLeft = imgHeight;
 
         const contentDataURL = canvas.toDataURL('image/png')
-        let pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF
-        var position = 0;
-        pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
-        pdf.save('SavoyReport.pdf'); // Generated PDF
+        let pdf = new jspdf('landscape', 'mm', 'a4'); // A4 size page of PDF
+
+      pdf.html(data!, {
+          callback: function(doc) {
+              // Save the PDF
+              doc.save('sample-document.pdf');
+          },
+          x: 15,
+          y: 15,
+          width: 150, //target width in the PDF document
+          windowWidth: 297 //window width in CSS pixels
+      });
+
+        // pdf.html(
+        //   data!,
+        //   {
+        //     'width': 180,'elementHandlers': elementHandler
+        //   });
+
+
+
+        // var position = 0;
+        // pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
+        // pdf.save('SavoyReport.pdf'); // Generated PDF
       });
     } else {
       console.error("Element with id 'contentToConvert' not found.");
