@@ -1,10 +1,14 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { SavoyReportModel } from '../../../models/Savoy/savoy-report';
 import { SavoyService } from '../../../services/Savoy/savoy.service';
 import { NotificationService } from '../../../services/Shared/notification.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as jspdf from 'jspdf';
+import html2canvas from 'html2canvas';
+
 
 @Component({
   selector: 'app-savoy-report',
@@ -13,6 +17,7 @@ import { NotificationService } from '../../../services/Shared/notification.servi
 })
 
 export class SavoyReportComponent implements OnInit {
+  [x: string]: any;
   public get dialog(): MatDialog {
     return this._dialog;
   }
@@ -26,41 +31,56 @@ export class SavoyReportComponent implements OnInit {
     this._notificationSvc = value;
   }
   savoyReportData: SavoyReportModel[] = [];
-  dataSource: MatTableDataSource<SavoyReportModel> = new MatTableDataSource(this.savoyReportData);
-
-
-  columnList: string[] = ["savoyIceCreamId", "productId", "productName", "price", "companyId", "eja", "newProduct", "total", "salesQuantity", "totalAmount", "dumping", "receive", "remaining","createdDate"];
-  createdDate: string = '';
 
   constructor(
     private reportDataSvc: SavoyService,
     private _notificationSvc: NotificationService,
     private _dialog: MatDialog,
-    private datePipe: DatePipe
+    private activatedRoute: ActivatedRoute
   ) { }
 
 
   ngOnInit() {
-    this.createdDate = new Date().toISOString();
-    // Fetch data initially
-    this.fetchReportData();
+    let savoyIceCreamMasterID: number = this.activatedRoute.snapshot.params['id'];
+    console.log(savoyIceCreamMasterID);
+    this.fetchReportData(savoyIceCreamMasterID);
   }
 
 
-  fetchReportData() {
-    if (this.createdDate) {
-      this.reportDataSvc.getSavoyReportData(this.createdDate)
+  fetchReportData(savoyIceCreamMasterID: number) {
+    console.log(savoyIceCreamMasterID);
+    if (savoyIceCreamMasterID) {
+      this.reportDataSvc.getSavoyReportData(savoyIceCreamMasterID)
         .subscribe(data => {
+          console.log(data);
           this.savoyReportData = data;
-          this.dataSource.data = this.savoyReportData;
           console.log('Received data:', data);
         }, err => {
           this.notificationSvc.message("Failed to load data", "DISMISS");
         });
     } else {
-      this.notificationSvc.message("Please provide both Start Date and End Date", "DISMISS");
+      this.notificationSvc.message("Data Not Found", "DISMISS");
     }
   }
 
 
+  //title = 'html-to-pdf-angular-application';
+  //public convetToPDF() {
+  //  var data = document.getElementById('contentToConvert');
+  //  html2canvas(data).then(canvas => {
+  //    // Few necessary setting options
+  //    var imgWidth = 208;
+  //    var pageHeight = 295;
+  //    var imgHeight = canvas.height * imgWidth / canvas.width;
+  //    var heightLeft = imgHeight;
+
+  //    const contentDataURL = canvas.toDataURL('image/png')
+  //    let pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF
+  //    var position = 0;
+  //    pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
+  //    pdf.save('new-file.pdf'); // Generated PDF
+  //  });
+  //}
+
 }
+

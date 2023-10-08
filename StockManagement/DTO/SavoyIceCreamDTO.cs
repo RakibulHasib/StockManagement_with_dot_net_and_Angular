@@ -19,6 +19,7 @@
     }
     public class DailyDataDTO
     {
+        public int SavoyIceCreamMasterId { get; set; }
         public DateTime CreatedDate { get; set; }
         public int TotalSalesQuantity { get; set; }
         public decimal TotalAmount { get; set; }

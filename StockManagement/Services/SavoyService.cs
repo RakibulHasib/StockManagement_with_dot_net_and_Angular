@@ -18,14 +18,17 @@ namespace StockManagement.Services
         }
         public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetSavoyDataPerDay(DateTime StartDate, DateTime EndDate)
         {
-            var query = await _unitOfWork.SavoyIceCreamMaster_tbl.Queryable.Where(x => x.CreatedDate.Date >= StartDate.Date && x.CreatedDate.Date <= EndDate.Date)
-                                                                         .Select(query => new DailyDataDTO
-                                                                         {
-                                                                             CreatedDate = query.CreatedDate,
-                                                                             TotalSalesQuantity = query.TotalSalesQuantity ?? 0,
-                                                                             TotalAmount=query.GrandTotalAmount ?? 0
-                                                                         }).ToListAsync();
+            var query = await _unitOfWork.SavoyIceCreamMaster_tbl.Queryable
+                        .Where(x => x.CreatedDate.Date >= StartDate.Date && x.CreatedDate.Date <= EndDate.Date)
+                        .Select(query => new DailyDataDTO
+                        {
+                            SavoyIceCreamMasterId=query.SavoyIceCreamMasterId,
+                            CreatedDate = query.CreatedDate,
+                            TotalSalesQuantity = query.TotalSalesQuantity ?? 0,
+                            TotalAmount=query.GrandTotalAmount ?? 0
+                        }).ToListAsync();
             return query;
+
             //var query = await _unitOfWork.SavoyIceCream.Queryable
             //    .Where(x => x.CreatedDate.Date >= StartDate.Date && x.CreatedDate.Date <= EndDate.Date)
             //    .ToListAsync();

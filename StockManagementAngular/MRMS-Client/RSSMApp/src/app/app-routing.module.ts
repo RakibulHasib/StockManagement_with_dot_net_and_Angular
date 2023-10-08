@@ -26,7 +26,7 @@ const routes: Routes = [
   { path: 'lovello', component: LovelloViewComponent, canActivate: [AuthGuard] },
   { path: 'zanzee', component: ZanzeeViewComponent, canActivate: [AuthGuard] },
   { path: 'kazifarm', component: KazifarmViewComponent, canActivate: [AuthGuard] },
-  { path: 'savoy_report', component: SavoyReportComponent, canActivate: [AuthGuard] }
+  { path: 'savoy_report/:id', component: SavoyReportComponent, canActivate: [AuthGuard] }
 
 
 ];

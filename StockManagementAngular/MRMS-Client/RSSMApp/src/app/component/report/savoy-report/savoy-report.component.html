@@ -7,12 +7,7 @@
 </style>
 <body>
   <div class="col-12">
-
-    <div class="col-2"></div>
-    <div class="col-4">
       <h1 style="text-align:center;font-weight:1000">Savoy Ice Cream</h1>
-    </div>
-    <div class="col-4"></div>
   </div>
 
 
@@ -30,18 +25,18 @@
       <th>Receive</th>
       <th>Remaining</th>
     </tr>
-    <tr>
-      <td>10</td>
-      <td>20</td>
-      <td>30</td>
-      <td>40</td>
-      <td>50</td>
-      <td>60</td>
-      <td>70</td>
-      <td>80</td>
-      <td>90</td>
-      <td>100</td>
-      <td>110</td>
+    <tr *ngFor="let element of savoyReportData; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ element.productName }}</td>
+      <td>{{ element.price }}</td>
+      <td>{{ element.eja }}</td>
+      <td>{{ element.newProduct }}</td>
+      <td>{{ element.total }}</td>
+      <td>{{ element.salesQuantity }}</td>
+      <td>{{ element.totalAmount }}</td>
+      <td>{{ element.dumping }}</td>
+      <td>{{ element.receive }}</td>
+      <td>{{ element.remaining }}</td>
     </tr>
   </table>
 

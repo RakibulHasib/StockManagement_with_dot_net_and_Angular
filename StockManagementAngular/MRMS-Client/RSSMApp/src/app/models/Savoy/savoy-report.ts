@@ -1,5 +1,6 @@
 export class SavoyReportModel {
   constructor(
+    public savoyIceCreamMasterId?: number,
     public savoyIceCreamId?: number,
     public productId?: number,
     public productName?: string,
