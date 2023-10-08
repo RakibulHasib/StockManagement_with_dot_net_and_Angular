@@ -7,11 +7,11 @@
 </style>
 <body>
   <div class="col-12">
-      <h1 style="text-align:center;font-weight:1000">Savoy Ice Cream</h1>
+    <h1 style="text-align:center;font-weight:1000">Savoy Ice Cream</h1>
   </div>
 
 
-  <table style="width:100%">
+  <table style="width:100%" id="contentToConvert" class="table table-primary">
     <tr>
       <th>Sl/No</th>
       <th>Product Name</th>
@@ -39,8 +39,8 @@
       <td>{{ element.remaining }}</td>
     </tr>
   </table>
-
-  <p>To understand the example better, we have added borders to the table.</p>
-
+  <div>
+    <input type="button" value="Convert" (click)="convetToPDF()" />
+  </div>
 </body>
 </html>
