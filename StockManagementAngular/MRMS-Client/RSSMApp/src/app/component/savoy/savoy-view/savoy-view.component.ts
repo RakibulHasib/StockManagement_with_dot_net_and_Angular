@@ -42,8 +42,7 @@ export class SavoyViewComponent implements OnInit {
   constructor(
     private dailyDataSvc: SavoyService,
     private _notificationSvc: NotificationService,
-    private _dialog: MatDialog,
-    private datePipe: DatePipe
+    private _dialog: MatDialog
   ) { }
 
 
@@ -74,6 +73,7 @@ export class SavoyViewComponent implements OnInit {
         .subscribe(data => {
           this.dailyData = data;
           this.dataSource.data = this.dailyData;
+          console.log(data);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         }, err => {

@@ -1,10 +1,11 @@
 ﻿namespace StockManagement.DTO
 {
-    public class SavoyIceCreamDTO
+    public class IglooReportDTO
     {
-        public int SavoyIceCreamId { get; set; }
-        public int MyProperty { get; set; }
+        public int IglooIceCreamMasterId { get; set; }
+        public int IglooIceCreamId { get; set; }
         public int ProductId { get; set; }
+        public string? ProductName { get; set; }
         public int CompanyId { get; set; }
         public int? Eja { get; set; }
         public decimal Price { get; set; }
@@ -15,13 +16,6 @@
         public int? Dumping { get; set; }
         public int? Receive { get; set; }
         public int? Remaining { get; set; }
-        public DateTime? CreatedDate { get; set; }
-    }
-    public class DailyDataDTO
-    {
-        public int SavoyIceCreamMasterId { get; set; }
         public DateTime CreatedDate { get; set; }
-        public int TotalSalesQuantity { get; set; }
-        public decimal TotalAmount { get; set; }
     }
 }

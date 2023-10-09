@@ -27,8 +27,8 @@ export class SavoyService {
   getSavoyDashboardDataPerDay(startDate: string, endDate: string): Observable<Dailydatadbmodel[]> {
     return this.http.get<Dailydatadbmodel[]>(`${IceCreamApiUrl}/${endPoint}/GetSavoyDataPerDay?StartDate=${startDate}&EndDate=${endDate}`);
   }
-  getSavoyReportData(createdDate: string): Observable<SavoyReportModel[]> {
-    return this.http.get<SavoyReportModel[]>(`${IceCreamApiUrl}/${endPoint}/GetSavoyReport?CreatedDate=${createdDate}`);
+  getSavoyReportData(savoyIceCreamMasterID: number): Observable<SavoyReportModel[]> {
+    return this.http.get<SavoyReportModel[]>(`${IceCreamApiUrl}/${endPoint}/GetSavoyReport?SavoyIceCreamMasterId=${savoyIceCreamMasterID}`);
   }
 
   getById(id: number): Observable<Savoy> {

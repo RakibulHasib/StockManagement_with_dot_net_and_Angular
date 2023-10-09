@@ -2,6 +2,7 @@
 {
     public class IglooIceCreamDTO
     {
+        public int SavoyIceCreamMasterId { get; set; }
         public int IglooIceCreamId { get; set; }
         public int ProductId { get; set; }
         public int CompanyId { get; set; }
