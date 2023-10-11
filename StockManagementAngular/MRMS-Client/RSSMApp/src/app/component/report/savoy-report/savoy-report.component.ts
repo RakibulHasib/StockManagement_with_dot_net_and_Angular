@@ -6,11 +6,9 @@ import { SavoyReportModel } from '../../../models/Savoy/savoy-report';
 import { SavoyService } from '../../../services/Savoy/savoy.service';
 import { NotificationService } from '../../../services/Shared/notification.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as moment from 'moment';
-import html2canvas from 'html2canvas';
-import jspdf from 'jspdf';
-
-
+import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-savoy-report',
@@ -66,6 +64,63 @@ export class SavoyReportComponent implements OnInit {
     }
   }
 
+    public convetToPDF() {
+        let docDefinition : any = {
+        pageMargins: [20, 20, 20, 20],
+        content: [
+          {
+            text: 'Savoy Ice-Cream Report - 12 October 2023',
+            bold: true,
+            fontSize: 16, // Adjust the font size as needed
+            alignment: 'center',
+            margin: [0, 0, 0, 15]
+          },
+          {
+            columns : [
+              { width: '*', text: '' },
+              {
+                width: 'auto',
+                table: {
+                body: [
+                    // ['Product', 'Price', 'Eja', 'Total', 'Sales', 'Amount', 'Dumping', 'Receiving', 'Remaining'],
+                    [
+                      { text: 'Product', bold: true }, // Make the heading text bold 
+                      { text: 'Price', bold: true },
+                      { text: 'Eja', bold: true },
+                      { text: 'Total', bold: true },
+                      { text: 'Sales', bold: true },
+                      { text: 'Amount', bold: true },
+                      { text: 'Dumping', bold: true },
+                      { text: 'Receiving', bold: true },
+                      { text: 'Remaining', bold: true }
+                    ],
+                    ...this.savoyReportData.map(x => [
+                      x.productName,
+                      x.price,
+                      x.eja,
+                      x.total,
+                      x.salesQuantity,
+                      x.totalAmount,
+                      x.dumping,
+                      x.receive,
+                      x.remaining
+                    ])
+                  ],
+                  alignment: "center",
+                  // styles: {
+                  //   tableHeader: { bold: true }
+                  // }
+                }
+              },
+              { width: '*', text: '' }
+            ]
+          }
+        ]
+      };
+      pdfMake.createPdf(docDefinition).open();
+    };
+    
+
   //public downloadAsPdf(): void {
   //  let data! = document.getElementById('contentToConvert');
   //  const width = data!.nativeElement.clientWidth;
@@ -102,48 +157,66 @@ export class SavoyReportComponent implements OnInit {
   //    });
   //}
 
-  title = 'html-to-pdf-angular-application';
-  public convetToPDF() {
-    var data = document.getElementById('contentToConvert');
-    if (data) {
-      html2canvas(data).then(canvas => {
-        // Few necessary setting options
-        var imgWidth = 208;
-        var pageHeight = 295;
-        var imgHeight = canvas.height * imgWidth / canvas.width;
-        var heightLeft = imgHeight;
+  // title = 'html-to-pdf-angular-application';
 
-        const contentDataURL = canvas.toDataURL('image/png')
-        let pdf = new jspdf('landscape', 'mm', 'a4'); // A4 size page of PDF
+  // public convetToPDF() {
+  //   var data = document.getElementById('contentToConvert');
+  //   if (data) {
+  //     html2canvas(data).then(canvas => {
+  //       // Few necessary setting options
+  //       var imgWidth = 208;
+  //       var pageHeight = 295;
+  //       var imgHeight = canvas.height * imgWidth / canvas.width;
+  //       var heightLeft = imgHeight;
 
-      pdf.html(data!, {
-          callback: function(doc) {
-              // Save the PDF
-              doc.save('sample-document.pdf');
-          },
-          x: 15,
-          y: 15,
-          width: 150, //target width in the PDF document
-          windowWidth: 297 //window width in CSS pixels
-      });
+  //       const contentDataURL = canvas.toDataURL('image/png')
+  //       let pdf = new jspdf('p', 'pt', 'a4'); // A4 size page of PDF
 
-        // pdf.html(
-        //   data!,
-        //   {
-        //     'width': 180,'elementHandlers': elementHandler
-        //   });
+  //     pdf.html(data!, {
+  //         callback: function(doc) {
+  //           // pdf.internal.pageSize.width = data!.offsetHeight;
+  //           // pdf.internal.pageSize.height = data!.offsetWidth;
+  //             // Save the PDF
+  //             // doc.save('sample-document.pdf');
+  //             // doc.output('datauri');
+  //             pdf.setProperties({
+  //             title: "Report"
+  //             });
+  //             // let componentHeight = data!.offsetHeight;
+  //             // let componentWidth = data!.offsetWidth;
+  //             // pdf.internal.pageSize.width = componentWidth;
+  //             // pdf.internal.pageSize.height = componentHeight;
+  //             // doc.output('datauri');
+  //             pdf.output('dataurlnewwindow');
+  //         },
+  //         margin: [60, 20, 60, 20],
+  //         x: 15,
+  //         y: 15,
+  //         html2canvas: {
+  //             scale: 1, //this was my solution, you have to adjust to your size
+  //             width: 1000 //for some reason width does nothing
+  //         },
+  //         //  width: 100, //target width in the PDF document
+  //         //  windowWidth: 500 //window width in CSS pixels
+  //     });
+
+  //       // pdf.html(
+  //       //   data!,
+  //       //   {
+  //       //     'width': 180,'elementHandlers': elementHandler
+  //       //   });
 
 
 
-        // var position = 0;
-        // pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
-        // pdf.save('SavoyReport.pdf'); // Generated PDF
-      });
-    } else {
-      console.error("Element with id 'contentToConvert' not found.");
-    }
+  //       // var position = 0;
+  //       // pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
+  //       // pdf.save('SavoyReport.pdf'); // Generated PDF
+  //     });
+  //   } else {
+  //     console.error("Element with id 'contentToConvert' not found.");
+  //   }
    
-  }
+  // }
 
 }
 
