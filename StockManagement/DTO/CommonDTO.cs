@@ -4,6 +4,12 @@
     {
     }
 
+    public class CompanyDTO
+    {
+        public int CompanyId { get; set; }
+        public string CompanyName { get; set; } = default!;
+    }
+
     public class RoleMasterDTO
     {
         public int RoleId { get; set; }

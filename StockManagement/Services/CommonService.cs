@@ -22,6 +22,20 @@ namespace StockManagement.Services
 
         //}
 
+        public async Task<ActionResult<int>> InsertCompany(CompanyDTO companyDTO)
+        {
+            int response = 0;
+            var Company = new Company()
+            {
+                CompanyName = companyDTO.CompanyName,
+            };
+
+            await _unitOfWork.Company.AddAsync(Company);
+            response = await _db.SaveChangesAsync();
+
+            return response;
+        }
+
 
         public async Task<ActionResult<int>> InsertIglooData(List<IglooIceCreamDTO> iglooIceCreamVM)
         {
