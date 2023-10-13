@@ -13,4 +13,5 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         .IsRequired(false)
         .HasForeignKey(x => x.CompanyId);
     }
+
 }
