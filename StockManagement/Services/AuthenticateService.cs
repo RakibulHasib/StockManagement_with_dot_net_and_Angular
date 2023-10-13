@@ -1,4 +1,4 @@
-﻿using StockManagement.Model;
+﻿using Entities;
 
 namespace StockManagement.Services
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Entities
+namespace StockManagement.Entities
 {
     public partial class Product
     {
@@ -13,7 +13,5 @@ namespace Entities
         public decimal? Price { get; set; }
         public int? Sequence { get; set; }
         public int IsDeleted { get; set; }
-
-        public virtual Company Company { get; set; } = null!;
     }
 }

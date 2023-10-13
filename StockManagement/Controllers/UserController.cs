@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Contexts;
+using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using StockManagement.DTO;
@@ -36,7 +37,7 @@ namespace StockManagement.Controllers
         [HttpPost("RoleAssing")]
         public async Task<IActionResult> RoleAssing([FromBody] RoleMaster RoleMaster)
         {
-            await _db.RoleMaster.AddAsync(RoleMaster);
+            await _db.RoleMasters.AddAsync(RoleMaster);
             await _db.SaveChangesAsync();
             return Ok();
 
@@ -144,7 +145,7 @@ namespace StockManagement.Controllers
             return Unauthorized();
         }
         [HttpGet("AU")]
-        public User? AuthenticateUser(string userName, string password )
+        public User? AuthenticateUser(string userName, string password)
         {
 
             var user = _db.Users.FirstOrDefault(u => u.UserName == userName && u.Password == password);

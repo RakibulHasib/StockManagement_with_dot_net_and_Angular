@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Contexts;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -45,11 +46,11 @@ builder.Services.Configure<AppSettings>(appSettingsSection);
 
 builder.Services.AddTransient(typeof(Repository<,>));
 builder.Services.AddScoped(typeof(UnitOfWork));
-builder.Services.AddScoped<SavoyService>();
-builder.Services.AddScoped<LovelloService>();
-builder.Services.AddScoped<ZaNZeeService>();
-builder.Services.AddScoped<IglooService>();
-builder.Services.AddScoped<KaziFarmFoodService>();
+//builder.Services.AddScoped<SavoyService>();
+//builder.Services.AddScoped<LovelloService>();
+//builder.Services.AddScoped<ZaNZeeService>();
+//builder.Services.AddScoped<IglooService>();
+//builder.Services.AddScoped<KaziFarmFoodService>();
 
 builder.Services.AddDbContext<StockDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefultConnections")));
 builder.Services.AddControllers();

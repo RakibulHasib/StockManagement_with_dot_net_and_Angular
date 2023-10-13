@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StockManagement.Model;
+﻿using Contexts;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace StockManagement.Repository

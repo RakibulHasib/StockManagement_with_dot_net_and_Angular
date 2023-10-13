@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Entities;
+using StockManagement.Entities;
 
-namespace Contexts
+namespace StockManagement.Contexts
 {
     public partial class StockDBContext : DbContext
     {
@@ -59,10 +59,6 @@ namespace Contexts
                 entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.ProductName).HasMaxLength(200);
-
-                entity.HasOne(d => d.Company)
-                    .WithMany(p => p.Products)
-                    .HasForeignKey(d => d.CompanyId);
             });
 
             modelBuilder.Entity<RoleAssagin>(entity =>
