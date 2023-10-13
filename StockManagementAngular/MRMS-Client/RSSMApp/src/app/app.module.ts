@@ -19,7 +19,7 @@ import { FileContainerComponent } from './component/shared/file-container/file-c
 import { SignInComponent } from './component/Authentication/sign-in/sign-in.component';
 import { RegisterComponent } from './component/Authentication/register/register.component';
 import { SavoyViewComponent } from './component/savoy/savoy-view/savoy-view.component';
-import { SavoyCreateComponent } from './component/savoy/savoy-create/savoy-create.component';
+import { StockCreateComponent } from './component/savoy/stock-create/stock-create.component';
 import { ProductItemComponent } from './component/shared/product-item/product-item.component';
 import { IglooViewComponent } from './component/igloo/igloo-view/igloo-view.component';
 import { IglooCreateComponent } from './component/igloo/igloo-create/igloo-create.component';
@@ -47,7 +47,7 @@ import { SavoyReportComponent } from './component/report/savoy-report/savoy-repo
     SignInComponent,
     RegisterComponent,
     SavoyViewComponent,
-    SavoyCreateComponent,
+    StockCreateComponent,
     ProductItemComponent,
     IglooViewComponent,
     IglooCreateComponent,

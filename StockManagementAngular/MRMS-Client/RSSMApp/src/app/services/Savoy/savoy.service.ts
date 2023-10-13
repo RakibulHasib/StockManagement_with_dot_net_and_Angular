@@ -34,8 +34,8 @@ export class SavoyService {
   getById(id: number): Observable<Savoy> {
     return this.http.get<Savoy>(`${IceCreamApiUrl}/${endPoint}/${id}`);
   }
-  insert(data: Savoy[]): Observable<Savoy[]> {
-    return this.http.post<Savoy[]>(`${IceCreamApiUrl}/${endPoint}/InsertSavoyData`, data);
+  insert(companyId : number, data: Savoy[]): Observable<Savoy[]> {
+    return this.http.post<Savoy[]>(`${IceCreamApiUrl}/${endPoint}/InsertStockData/${companyId}`, data);
   }
   update(data: Savoy): Observable<any> {
     return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}`, data);

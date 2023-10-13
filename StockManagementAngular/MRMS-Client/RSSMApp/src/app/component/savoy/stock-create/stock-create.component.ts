@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Savoy } from 'src/app/models/Savoy/Savoy';
 import { Company } from 'src/app/models/companyenum/company';
 import { ProductService } from 'src/app/services/Product/product.service';
@@ -8,12 +8,13 @@ import { SavoyService } from 'src/app/services/Savoy/savoy.service';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 
 @Component({
-  selector: 'app-savoy-create',
-  templateUrl: './savoy-create.component.html',
-  styleUrls: ['./savoy-create.component.css']
+  selector: 'app-stock-create',
+  templateUrl: './stock-create.component.html',
+  styleUrls: ['./stock-create.component.css']
 })
-export class SavoyCreateComponent implements OnInit {
+export class StockCreateComponent implements OnInit {
 
+  companyId! : number;
   savoyForm: FormGroup = new FormGroup({});
   savoyData: Savoy[] = [];
 
@@ -21,12 +22,13 @@ export class SavoyCreateComponent implements OnInit {
     private notificationSvc: NotificationService,
     private productService: ProductService,
     private savoyService: SavoyService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) { }
   insert(): void {
     console.log("Submit event initiated...");
 
-    this.savoyService.insert(this.savoyData)
+    this.savoyService.insert(this.companyId, this.savoyData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
         this.router.navigate(['/savoy']);
@@ -38,6 +40,7 @@ export class SavoyCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.companyId = this.activatedRoute.snapshot.params['id'];
     this.productService.getProductsWithEja(Company.Savoy)
       .subscribe(r => {
         this.savoyData = r;

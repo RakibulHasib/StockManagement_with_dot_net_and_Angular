@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { SavoyCreateComponent } from './savoy-create.component';
+import { StockCreateComponent } from './stock-create.component';
 
 describe('SavoyCreateComponent', () => {
-  let component: SavoyCreateComponent;
-  let fixture: ComponentFixture<SavoyCreateComponent>;
+  let component: StockCreateComponent;
+  let fixture: ComponentFixture<StockCreateComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SavoyCreateComponent ]
+      declarations: [ StockCreateComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SavoyCreateComponent);
+    fixture = TestBed.createComponent(StockCreateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
