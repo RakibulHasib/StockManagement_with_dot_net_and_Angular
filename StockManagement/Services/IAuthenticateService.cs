@@ -1,9 +1,8 @@
-﻿using Entities;
+﻿using StockManagement.Entities;
 
-namespace StockManagement.Services
+namespace StockManagement.Services;
+
+public interface IAuthenticateService
 {
-    public interface IAuthenticateService
-    {
-        User Authenticate(string username, string password);
-    }
+    User Authenticate(string username, string password);
 }

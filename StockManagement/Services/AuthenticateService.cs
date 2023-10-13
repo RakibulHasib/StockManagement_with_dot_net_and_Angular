@@ -1,12 +1,11 @@
-﻿using Entities;
+﻿using StockManagement.Entities;
 
-namespace StockManagement.Services
+namespace StockManagement.Services;
+
+public class AuthenticateService : IAuthenticateService
 {
-    public class AuthenticateService : IAuthenticateService
+    public User Authenticate(string username, string password)
     {
-        public User Authenticate(string username, string password)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

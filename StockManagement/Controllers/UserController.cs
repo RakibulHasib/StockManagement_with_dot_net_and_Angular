@@ -1,8 +1,8 @@
-﻿using Contexts;
-using Entities;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using StockManagement.Contexts;
 using StockManagement.DTO;
+using StockManagement.Entities;
 using StockManagement.Model;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

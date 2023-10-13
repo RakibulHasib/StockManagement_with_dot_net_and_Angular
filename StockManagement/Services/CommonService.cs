@@ -1,7 +1,7 @@
-﻿using Contexts;
-using Entities;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using StockManagement.Contexts;
 using StockManagement.DTO;
+using StockManagement.Entities;
 using StockManagement.Repository;
 
 namespace StockManagement.Services

@@ -1,6 +1,6 @@
-﻿using Contexts;
-using Entities;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using StockManagement.Contexts;
+using StockManagement.Entities;
 
 namespace StockManagement.Repository
 {
@@ -13,7 +13,7 @@ namespace StockManagement.Repository
         public Repository<Company, int> Company { get; }
 
         public Repository<Stock, long> Stock { get; }
-        public Repository<StockDetail,Guid> StockDetail { get; }
+        public Repository<StockDetail, Guid> StockDetail { get; }
 
         public Repository<SalesDistribute, long> SalesDistribute { get; }
         public Repository<SalesDistributeDetail, Guid> SalesDistributeDetail { get; }
