@@ -1,11 +1,10 @@
 ﻿namespace StockManagement.DTO
 {
-    public class SavoyIceCreamDTO
+    public class StockDTO
     {
         public int SavoyIceCreamId { get; set; }
         public int MyProperty { get; set; }
         public int ProductId { get; set; }
-        public int CompanyId { get; set; }
         public int? Eja { get; set; }
         public decimal Price { get; set; }
         public int? NewProduct { get; set; }
@@ -19,8 +18,8 @@
     }
     public class DailyDataDTO
     {
-        public int SavoyIceCreamMasterId { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public long StockId { get; set; }
+        public DateTime CreationTime { get; set; }
         public int TotalSalesQuantity { get; set; }
         public decimal TotalAmount { get; set; }
     }

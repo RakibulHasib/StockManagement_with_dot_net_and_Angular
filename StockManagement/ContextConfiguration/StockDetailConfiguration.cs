@@ -11,5 +11,10 @@ public class StockDetailConfiguration : IEntityTypeConfiguration<StockDetail>
                .WithMany(x => x.StockDetails)
                .IsRequired(false)
                .HasForeignKey(x => x.StockId);
+
+        builder.HasOne(x => x.Product)
+            .WithMany(x => x.StockDetails)
+            .IsRequired(false)
+            .HasForeignKey(x => x.ProductId);
     }
 }

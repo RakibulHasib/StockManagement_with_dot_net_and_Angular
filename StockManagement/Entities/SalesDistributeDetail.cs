@@ -13,6 +13,7 @@ namespace StockManagement.Entities
         public int ReturnQuantity { get; set; }
         public int SalesQuantity { get; set; }
         public decimal TotalSalesPrice { get; set; }
+        public DateTime CreationTime { get; set; }
         public int IsDeleted { get; set; }
     }
 }

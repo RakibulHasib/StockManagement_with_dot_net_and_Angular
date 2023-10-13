@@ -83,6 +83,10 @@ namespace StockManagement.Contexts
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.CreationTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.GrandTotal).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.TotalPrice).HasColumnType("decimal(18, 2)");
@@ -95,6 +99,10 @@ namespace StockManagement.Contexts
                 entity.Property(e => e.SalesDistributeDetailsId)
                     .ValueGeneratedNever()
                     .HasColumnName("SalesDistributeDetailsID");
+
+                entity.Property(e => e.CreationTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
 
@@ -109,6 +117,10 @@ namespace StockManagement.Contexts
 
                 entity.Property(e => e.StockId).HasColumnName("StockID");
 
+                entity.Property(e => e.CreationTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.GrandTotalAmount).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.TotalPrice).HasColumnType("decimal(18, 2)");
@@ -122,6 +134,10 @@ namespace StockManagement.Contexts
                 entity.Property(e => e.StockDetailsId)
                     .ValueGeneratedNever()
                     .HasColumnName("StockDetailsID");
+
+                entity.Property(e => e.CreationTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
 

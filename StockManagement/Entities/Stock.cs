@@ -16,7 +16,7 @@ namespace StockManagement.Entities
         public int TotalDumping { get; set; }
         public int TotalReceive { get; set; }
         public int TotalRemaining { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreationTime { get; set; }
         public int IsDeleted { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace StockManagement.Entities
         public int? Dumping { get; set; }
         public int? Receive { get; set; }
         public int? Remaining { get; set; }
+        public DateTime CreationTime { get; set; }
         public int IsDeleted { get; set; }
     }
 }

@@ -11,8 +11,8 @@ namespace StockManagement.Entities
         public int TotalReturn { get; set; }
         public int TotalSales { get; set; }
         public decimal GrandTotal { get; set; }
-        public DateTime CreatedDate { get; set; }
         public string? ConcernPerson { get; set; }
+        public DateTime CreationTime { get; set; }
         public int IsDeleted { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StockManagement.Contexts;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace StockManagement.Repository;
 
@@ -37,12 +38,31 @@ public class Repository<TEntity, TId> where TEntity : class
 
     public async Task AddAsync(TEntity entity)
     {
+        PropertyInfo[] properties = entity.GetType().GetProperties();
+        foreach (var property in properties)
+        {
+            if (property.Name.Equals("CreationTime", StringComparison.OrdinalIgnoreCase))
+            {
+                property.SetValue(entity, DateTime.Now);
+            }
+        }
         await _table.AddAsync(entity);
     }
 
 
     public async Task AddRangeAsync(IEnumerable<TEntity> entities)
     {
+        foreach (var entity in entities)
+        {
+            PropertyInfo[] properties = entity.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                if (property.Name.Equals("CreationTime", StringComparison.OrdinalIgnoreCase))
+                {
+                    property.SetValue(entity, DateTime.Now);
+                }
+            }
+        }
         await _table.AddRangeAsync(entities);
     }
 

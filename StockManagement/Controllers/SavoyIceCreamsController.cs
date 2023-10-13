@@ -1,41 +1,38 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
 using StockManagement.Helpers;
-using StockManagement.Model;
-using StockManagement.Repository;
 using StockManagement.Services;
 
-//namespace StockManagement.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    //public class SavoyIceCreamsController : ControllerBase
-//    //{
-//    //    private readonly SavoyService _savoyService;
+namespace StockManagement.Controllers;
 
-//    //    public SavoyIceCreamsController(SavoyService savoyService)
-//    //    {
-//    //        _savoyService = savoyService;
-//    //    }
+[Route("api/[controller]")]
+[ApiController]
+public class SavoyIceCreamsController : ControllerBase
+{
+    private readonly StockService _stockService;
 
-//    //    [Transaction]
-//    //    [HttpPost("InsertSavoyData")]
-//    //    public async Task<ActionResult<int>> InsertSavoyData(List<SavoyIceCreamDTO> savoyIceCreamVM)
-//    //    {
-//    //        return Ok(await _savoyService.InsertSavoyData(savoyIceCreamVM));
-//    //    }
+    public SavoyIceCreamsController(StockService stockService)
+    {
+        _stockService = stockService;
+    }
 
-//    //    [HttpGet("GetSavoyDataPerDay")]
-//    //    public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetSavoyDataPerDay(DateTime StartDate, DateTime EndDate)
-//    //    {
-//    //        return await _savoyService.GetSavoyDataPerDay(StartDate, EndDate);
-//    //    }
+    [Transaction]
+    [HttpPost("InsertStockData/{companyId}")]
+    public async Task<ActionResult<int>> InsertSavoyData([FromRoute] int companyId, List<StockDTO> savoyIceCreamVM)
+    {
+        return Ok(await _stockService.InsertStockData(companyId, savoyIceCreamVM));
+    }
 
-//    //    [HttpGet("GetSavoyReport")]
-//    //    public async Task<ActionResult<IEnumerable<SavoyReportDTO>>> GetSavoyReport(int SavoyIceCreamMasterId)
-//    //    {
-//    //        return await _savoyService.GetSavoyReport(SavoyIceCreamMasterId);
-//    //    }
+    //[HttpGet("GetSavoyDataPerDay")]
+    //public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetSavoyDataPerDay(DateTime StartDate, DateTime EndDate)
+    //{
+    //    return await _savoyService.GetSavoyDataPerDay(StartDate, EndDate);
+    //}
 
-//    //}
-//}
+    //[HttpGet("GetSavoyReport")]
+    //public async Task<ActionResult<IEnumerable<SavoyReportDTO>>> GetSavoyReport(int SavoyIceCreamMasterId)
+    //{
+    //    return await _savoyService.GetSavoyReport(SavoyIceCreamMasterId);
+    //}
+
+}

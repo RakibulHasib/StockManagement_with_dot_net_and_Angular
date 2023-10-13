@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using StockManagement.Contexts;
 using StockManagement.Model;
 using StockManagement.Repository;
+using StockManagement.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,13 +45,13 @@ builder.Services.Configure<AppSettings>(appSettingsSection);
 
 builder.Services.AddTransient(typeof(Repository<,>));
 builder.Services.AddScoped(typeof(UnitOfWork));
-//builder.Services.AddScoped<SavoyService>();
+builder.Services.AddScoped<StockService>();
 //builder.Services.AddScoped<LovelloService>();
 //builder.Services.AddScoped<ZaNZeeService>();
 //builder.Services.AddScoped<IglooService>();
 //builder.Services.AddScoped<KaziFarmFoodService>();
 
-builder.Services.AddDbContext<StockDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefultConnections")));
+builder.Services.AddDbContext<StockDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllers();
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
