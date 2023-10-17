@@ -23,11 +23,11 @@ public class SavoyIceCreamsController : ControllerBase
         return Ok(await _stockService.InsertStockData(companyId, savoyIceCreamVM));
     }
 
-    //[HttpGet("GetSavoyDataPerDay")]
-    //public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetSavoyDataPerDay(DateTime StartDate, DateTime EndDate)
-    //{
-    //    return await _savoyService.GetSavoyDataPerDay(StartDate, EndDate);
-    //}
+    [HttpGet("GetSavoyDataPerDay")]
+    public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetSavoyDataPerDay(int companyId, DateTime StartDate, DateTime EndDate)
+    {
+        return await _stockService.GetStockDataPerDay(companyId, StartDate, EndDate);
+    }
 
     //[HttpGet("GetSavoyReport")]
     //public async Task<ActionResult<IEnumerable<SavoyReportDTO>>> GetSavoyReport(int SavoyIceCreamMasterId)

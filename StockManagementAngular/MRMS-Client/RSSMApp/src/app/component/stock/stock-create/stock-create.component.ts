@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Savoy } from 'src/app/models/Savoy/Savoy';
-import { Company } from 'src/app/models/companyenum/company';
 import { ProductService } from 'src/app/services/Product/product.service';
-import { SavoyService } from 'src/app/services/Savoy/savoy.service';
+import { StockService } from 'src/app/services/Savoy/savoy.service';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 
 @Component({
@@ -21,13 +20,11 @@ export class StockCreateComponent implements OnInit {
   constructor(
     private notificationSvc: NotificationService,
     private productService: ProductService,
-    private savoyService: SavoyService,
+    private savoyService: StockService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) { }
   insert(): void {
-    console.log("Submit event initiated...");
-
     this.savoyService.insert(this.companyId, this.savoyData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
@@ -36,12 +33,11 @@ export class StockCreateComponent implements OnInit {
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");
       })
-
   }
 
   ngOnInit(): void {
     this.companyId = this.activatedRoute.snapshot.params['id'];
-    this.productService.getProductsWithEja(Company.Savoy)
+    this.productService.getProductsWithEja(this.companyId)
       .subscribe(r => {
         this.savoyData = r;
       }, err => {

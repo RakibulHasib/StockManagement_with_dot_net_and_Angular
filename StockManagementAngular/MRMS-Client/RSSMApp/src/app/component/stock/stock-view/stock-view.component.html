@@ -5,7 +5,7 @@
         <mat-card-title class="h5">Savoy all data per day</mat-card-title>
       </div>
       <div class="d-flex align-items-center">
-        <a mat-mini-fab class="btn btn-primary" [routerLink]="['/stock-create', 1]">
+        <a mat-mini-fab class="btn btn-primary" [routerLink]="['/stock-create', companyId]">
           <mat-icon>add_box</mat-icon>
         </a>
       </div>
@@ -41,7 +41,7 @@
 
       <ng-container matColumnDef="createdDate">
         <mat-header-cell *matHeaderCellDef mat-sort-header>CreatedDate</mat-header-cell>
-        <mat-cell *matCellDef="let element" style="text-align:center">{{element.createdDate | date:'yyyy-MM-dd'}}</mat-cell>
+        <mat-cell *matCellDef="let element" style="text-align:center">{{element.creationTime | date:'yyyy-MM-dd'}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalSalesQuantity">

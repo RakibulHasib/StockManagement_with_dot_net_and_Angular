@@ -9,12 +9,12 @@
     </mat-toolbar>
 
     <mat-nav-list style="font-size: 13px;">
-      <a mat-list-item [routerLink]="['/home']"><mat-icon>dashboard</mat-icon> Dashboard</a>
-      <a mat-list-item [routerLink]="['/savoy']">	<mat-icon>open_with</mat-icon> Savoy</a>
-      <a mat-list-item [routerLink]="['/lovello']">	<mat-icon>open_with</mat-icon> Lovello</a>
-      <a mat-list-item [routerLink]="['/igloo']">	<mat-icon>open_with</mat-icon> Igloo</a>
-      <a mat-list-item [routerLink]="['/zanzee']">	<mat-icon>open_with</mat-icon> ZaNZee</a>
-      <a mat-list-item [routerLink]="['/kazifarm']">	<mat-icon>open_with</mat-icon> KaziFarmFood</a>
+      <a mat-list-item [routerLink]="['/home', ]"><mat-icon>dashboard</mat-icon> Dashboard</a>
+      <a mat-list-item [routerLink]="['/stock', companies.Savoy]">	<mat-icon>open_with</mat-icon> Savoy</a>
+      <a mat-list-item [routerLink]="['/stock', companies.Lovello]">	<mat-icon>open_with</mat-icon> Lovello</a>
+      <a mat-list-item [routerLink]="['/stock', companies.Igloo]">	<mat-icon>open_with</mat-icon> Igloo</a>
+      <a mat-list-item [routerLink]="['/stock', companies.ZaNZee]">	<mat-icon>open_with</mat-icon> ZaNZee</a>
+      <a mat-list-item [routerLink]="['/stock', companies.KaziFarmFood]">	<mat-icon>open_with</mat-icon> KaziFarmFood</a>
 
 
     </mat-nav-list>

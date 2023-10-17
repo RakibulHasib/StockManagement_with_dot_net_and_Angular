@@ -11,7 +11,7 @@ const endPoint: string = "SavoyIceCreams";
 @Injectable({
   providedIn: 'root'
 })
-export class SavoyService {
+export class StockService {
 
   constructor(
     private http: HttpClient
@@ -24,8 +24,8 @@ export class SavoyService {
   getProducts(): Observable<Savoy[]> {
     return this.http.get<Savoy[]>(`${IceCreamApiUrl}/${endPoint}/`);
   }
-  getSavoyDashboardDataPerDay(startDate: string, endDate: string): Observable<Dailydatadbmodel[]> {
-    return this.http.get<Dailydatadbmodel[]>(`${IceCreamApiUrl}/${endPoint}/GetSavoyDataPerDay?StartDate=${startDate}&EndDate=${endDate}`);
+  getSavoyDashboardDataPerDay(companyId: number, startDate: string, endDate: string): Observable<Dailydatadbmodel[]> {
+    return this.http.get<Dailydatadbmodel[]>(`${IceCreamApiUrl}/${endPoint}/GetSavoyDataPerDay?CompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}`);
   }
   getSavoyReportData(savoyIceCreamMasterID: number): Observable<SavoyReportModel[]> {
     return this.http.get<SavoyReportModel[]>(`${IceCreamApiUrl}/${endPoint}/GetSavoyReport?SavoyIceCreamMasterId=${savoyIceCreamMasterID}`);

@@ -1,15 +1,23 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, Observable, shareReplay } from 'rxjs';
+import { combineAll, map, Observable, shareReplay } from 'rxjs';
 import { AuthenticationService } from '../../../services/Authentication/authentication.service';
-
+import { Company } from 'src/app/models/companyenum/company';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+
+companies = {
+  Savoy: Company[Company.Savoy],
+  ZaNZee: Company[Company.ZaNZee],
+  Lovello: Company[Company.Lovello],
+  KaziFarmFood: Company[Company.KaziFarmFood],
+  Igloo: Company[Company.Igloo]
+}
   appTitle = "RSSM"
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(

@@ -2,8 +2,6 @@
 {
     public class StockDTO
     {
-        public int SavoyIceCreamId { get; set; }
-        public int MyProperty { get; set; }
         public int ProductId { get; set; }
         public int? Eja { get; set; }
         public decimal Price { get; set; }

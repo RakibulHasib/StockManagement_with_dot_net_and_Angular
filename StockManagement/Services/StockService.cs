@@ -54,6 +54,7 @@ public class StockService
             var total = (item.Eja ?? 0) + (item.NewProduct);
             var stockDetails = new StockDetail
             {
+                StockDetailsId = Guid.NewGuid(),
                 StockId = master.StockId,
                 CompanyId = companyId,
                 ProductId = item.ProductId,

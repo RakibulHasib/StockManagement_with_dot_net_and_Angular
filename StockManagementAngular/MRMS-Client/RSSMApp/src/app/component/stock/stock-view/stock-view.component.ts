@@ -1,34 +1,27 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
-import { throwError } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { Dailydatadbmodel } from '../../../models/DailyDataModel/dailydatadbmodel';
-import { SavoyService } from '../../../services/Savoy/savoy.service';
+import { StockService } from '../../../services/Savoy/savoy.service';
 import { DatePipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { Company } from 'src/app/models/companyenum/company';
 
 
 @Component({
   selector: 'app-savoy-view',
-  templateUrl: './savoy-view.component.html',
-  styleUrls: ['./savoy-view.component.css']
+  templateUrl: './stock-view.component.html',
+  styleUrls: ['./stock-view.component.css']
 })
-export class SavoyViewComponent implements OnInit {
-  public get dialog(): MatDialog {
-    return this._dialog;
-  }
-  public set dialog(value: MatDialog) {
-    this._dialog = value;
-  }
-  public get notificationSvc(): NotificationService {
-    return this._notificationSvc;
-  }
-  public set notificationSvc(value: NotificationService) {
-    this._notificationSvc = value;
-  }
+export class StockViewComponent implements OnInit, OnDestroy {
+  companyId!: number;
+  paramsSubscription! : Subscription;
+
   dailyData: Dailydatadbmodel[] = [];
   dataSource: MatTableDataSource<Dailydatadbmodel> = new MatTableDataSource(this.dailyData);
 
@@ -40,26 +33,30 @@ export class SavoyViewComponent implements OnInit {
   endDate: string = '';
 
   constructor(
-    private dailyDataSvc: SavoyService,
+    private dailyDataSvc: StockService,
     private _notificationSvc: NotificationService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private activatedRoute: ActivatedRoute
   ) { }
 
-
   ngOnInit() {
-    // Set startDate to 15 days ago
+    const today = new Date();
+    this.endDate = this.formatDate(today);
     const fifteenDaysAgo = new Date();
     fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
     this.startDate = this.formatDate(fifteenDaysAgo);
 
-    // Set endDate to today
-    const today = new Date();
-    this.endDate = this.formatDate(today);
-
-    // Fetch data initially
-    this.fetchData();
+    this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
+      const companyKey = params['company'];
+      this.companyId = +Company[companyKey];
+      this.fetchData();
+    });
   }
 
+  ngOnDestroy(){
+    this.paramsSubscription.unsubscribe();
+  }
+  
   formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -69,18 +66,19 @@ export class SavoyViewComponent implements OnInit {
 
   fetchData() {
     if (this.startDate && this.endDate) {
-      this.dailyDataSvc.getSavoyDashboardDataPerDay(this.startDate, this.endDate)
+      this.dailyDataSvc.getSavoyDashboardDataPerDay(this.companyId, this.startDate, this.endDate)
         .subscribe(data => {
           this.dailyData = data;
           this.dataSource.data = this.dailyData;
-          console.log(data);
+          console.log(this.dataSource);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         }, err => {
-          this.notificationSvc.message("Failed to load data", "DISMISS");
+          this.dailyData = [];
+          this._notificationSvc.message("Failed to load data", "DISMISS");
         });
     } else {
-      this.notificationSvc.message("Please provide both Start Date and End Date", "DISMISS");
+      this._notificationSvc.message("Please provide both Start Date and End Date", "DISMISS");
     }
   }
 

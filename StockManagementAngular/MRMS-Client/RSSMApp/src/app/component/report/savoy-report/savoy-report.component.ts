@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { SavoyReportModel } from '../../../models/Savoy/savoy-report';
-import { SavoyService } from '../../../services/Savoy/savoy.service';
+import { StockService } from '../../../services/Savoy/savoy.service';
 import { NotificationService } from '../../../services/Shared/notification.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as pdfMake from "pdfmake/build/pdfmake";
@@ -34,7 +34,7 @@ export class SavoyReportComponent implements OnInit {
   savoyReportData: SavoyReportModel[] = [];
 
   constructor(
-    private reportDataSvc: SavoyService,
+    private reportDataSvc: StockService,
     private _notificationSvc: NotificationService,
     private _dialog: MatDialog,
     private activatedRoute: ActivatedRoute
