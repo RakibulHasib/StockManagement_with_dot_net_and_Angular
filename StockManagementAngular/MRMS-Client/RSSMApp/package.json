@@ -10,7 +10,7 @@
   },
   "private": true,
   "dependencies": {
-    "-": "^0.0.1",    
+    "-": "^0.0.1",
     "@angular/animations": "^16.0.0",
     "@angular/cdk": "^16.0.0",
     "@angular/common": "^16.0.0",
@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "^16.0.0",
     "@ngx-formly/core": "^6.1.4",
     "@ngx-formly/material": "^6.1.4",
-    "@angular/router": "^15.1.0",
+    "@angular/router": "^16.2.9",
     "@types/pdfmake": "^0.1.9",
     "dom-to-image": "^2.6.0",
     "g": "^2.0.1",
@@ -32,9 +32,9 @@
     "zone.js": "^0.13.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^15.1.2",
-    "@angular/cli": "~15.1.2",
-    "@angular/compiler-cli": "^15.1.0",
+    "@angular-devkit/build-angular": "^16.2.6",
+    "@angular/cli": "~16.2.6",
+    "@angular/compiler-cli": "^16.2.9",
     "@types/jasmine": "~4.3.0",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",

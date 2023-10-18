@@ -34,6 +34,8 @@ import { KazifarmViewComponent } from './component/kazifarm/kazifarm-view/kazifa
 import { KazifarmCreateComponent } from './component/kazifarm/kazifarm-create/kazifarm-create.component';
 import { KazifarmEditComponent } from './component/kazifarm/kazifarm-edit/kazifarm-edit.component';
 import { SavoyReportComponent } from './component/report/savoy-report/savoy-report.component';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyMaterialModule } from '@ngx-formly/material';
 
 
 
@@ -73,7 +75,14 @@ import { SavoyReportComponent } from './component/report/savoy-report/savoy-repo
     LayoutModule,
     MatModule,
     MatTabsModule,
-    FormsModule
+    FormsModule,
+    FormlyModule.forRoot({
+      extras: { lazyRender: true, resetFieldOnHide: true },
+      validationMessages: [
+        { name: 'required', message: 'This field is required' },
+      ],
+    }),
+    FormlyMaterialModule
   ],
   providers: [
     HttpClient,
