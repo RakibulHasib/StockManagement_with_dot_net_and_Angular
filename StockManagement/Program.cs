@@ -46,10 +46,6 @@ builder.Services.Configure<AppSettings>(appSettingsSection);
 builder.Services.AddTransient(typeof(Repository<,>));
 builder.Services.AddScoped(typeof(UnitOfWork));
 builder.Services.AddScoped<StockService>();
-//builder.Services.AddScoped<LovelloService>();
-//builder.Services.AddScoped<ZaNZeeService>();
-//builder.Services.AddScoped<IglooService>();
-//builder.Services.AddScoped<KaziFarmFoodService>();
 
 builder.Services.AddDbContext<StockDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllers();

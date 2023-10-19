@@ -7,11 +7,11 @@ namespace StockManagement.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SavoyIceCreamsController : ControllerBase
+public class StockController : ControllerBase
 {
     private readonly StockService _stockService;
 
-    public SavoyIceCreamsController(StockService stockService)
+    public StockController(StockService stockService)
     {
         _stockService = stockService;
     }
@@ -23,16 +23,16 @@ public class SavoyIceCreamsController : ControllerBase
         return Ok(await _stockService.InsertStockData(companyId, savoyIceCreamVM));
     }
 
-    [HttpGet("GetSavoyDataPerDay")]
-    public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetSavoyDataPerDay(int companyId, DateTime StartDate, DateTime EndDate)
+    [HttpGet("GetStockDataPerDay")]
+    public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetStockDataPerDay(int companyId, DateTime StartDate, DateTime EndDate)
     {
         return await _stockService.GetStockDataPerDay(companyId, StartDate, EndDate);
     }
 
-    //[HttpGet("GetSavoyReport")]
-    //public async Task<ActionResult<IEnumerable<SavoyReportDTO>>> GetSavoyReport(int SavoyIceCreamMasterId)
-    //{
-    //    return await _savoyService.GetSavoyReport(SavoyIceCreamMasterId);
-    //}
+    [HttpGet("GetReport")]
+    public async Task<ActionResult<ReportDTO>> GetReport(int StockId)
+    {
+        return await _stockService.GetReport(StockId);
+    }
 
 }
