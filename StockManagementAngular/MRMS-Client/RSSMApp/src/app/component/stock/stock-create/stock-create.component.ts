@@ -12,7 +12,7 @@ import { NotificationService } from 'src/app/services/Shared/notification.servic
   styleUrls: ['./stock-create.component.css']
 })
 export class StockCreateComponent implements OnInit {
-
+  currentDate: Date = new Date();
   companyId! : number;
   savoyForm: FormGroup = new FormGroup({});
   savoyData: Savoy[] = [];

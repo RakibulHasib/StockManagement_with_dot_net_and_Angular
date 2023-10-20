@@ -1,7 +1,7 @@
 <mat-card class="mat-elevation-z3">
   <mat-card-header>
-    <mat-card-title>Add File</mat-card-title>
-    <mat-card-subtitle>Add new File entry</mat-card-subtitle>
+    <mat-card-title> Daily Activity Log </mat-card-title>
+    <mat-card-subtitle class="right-aligned">{{ currentDate | date:'fullDate' }}  </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <form class="productEntryForm" (ngSubmit)="insert()">
