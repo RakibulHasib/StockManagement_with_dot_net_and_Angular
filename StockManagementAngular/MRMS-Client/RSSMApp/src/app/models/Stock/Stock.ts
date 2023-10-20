@@ -1,4 +1,4 @@
-export class Savoy {
+export class Stock {
     constructor(
         public sl?: number,
         public savoyIceCreamId?: number,

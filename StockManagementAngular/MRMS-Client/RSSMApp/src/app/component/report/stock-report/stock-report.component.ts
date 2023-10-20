@@ -2,22 +2,22 @@ import { DatePipe } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { SavoyReportModel } from '../../../models/Savoy/savoy-report';
-import { StockService } from '../../../services/Savoy/savoy.service';
 import { NotificationService } from '../../../services/Shared/notification.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as pdfMake from "pdfmake/build/pdfmake";
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { StockService } from '../../../services/Stock/stock.service';
+import { StockReportModel } from '../../../models/Stock/stock-report';
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
-  selector: 'app-savoy-report',
-  templateUrl: './savoy-report.component.html',
-  styleUrls: ['./savoy-report.component.css']
+  selector: 'app-stock-report',
+  templateUrl: './stock-report.component.html',
+  styleUrls: ['./stock-report.component.css']
 })
 /*@ViewChild('dataToExport', { static: false }) public dataToExport: ElementRef;*/
 
-export class SavoyReportComponent implements OnInit {
+export class StockReportComponent implements OnInit {
   [x: string]: any;
   public get dialog(): MatDialog {
     return this._dialog;
@@ -31,7 +31,7 @@ export class SavoyReportComponent implements OnInit {
   public set notificationSvc(value: NotificationService) {
     this._notificationSvc = value;
   }
-  savoyReportData: SavoyReportModel[] = [];
+  stockReportData: StockReportModel[] = [];
 
   constructor(
     private reportDataSvc: StockService,
@@ -42,19 +42,19 @@ export class SavoyReportComponent implements OnInit {
 
 
   ngOnInit() {
-    let savoyIceCreamMasterID: number = this.activatedRoute.snapshot.params['id'];
-    console.log(savoyIceCreamMasterID);
-    this.fetchReportData(savoyIceCreamMasterID);
+    let stockID: number = this.activatedRoute.snapshot.params['id'];
+    console.log(stockID);
+    this.fetchReportData(stockID);
   }
 
 
-  fetchReportData(savoyIceCreamMasterID: number) {
-    console.log(savoyIceCreamMasterID);
-    if (savoyIceCreamMasterID) {
-      this.reportDataSvc.getSavoyReportData(savoyIceCreamMasterID)
+  fetchReportData(stockID: number) {
+    console.log(stockID);
+    if (stockID) {
+      this.reportDataSvc.getReportData(stockID)
         .subscribe(data => {
           console.log(data);
-          this.savoyReportData = data;
+          this.stockReportData = data;
           console.log('Received data:', data);
         }, err => {
           this.notificationSvc.message("Failed to load data", "DISMISS");
@@ -94,7 +94,7 @@ export class SavoyReportComponent implements OnInit {
                       { text: 'Receiving', bold: true },
                       { text: 'Remaining', bold: true }
                     ],
-                    ...this.savoyReportData.map(x => [
+                    ...this.stockReportData.map(x => [
                       x.productName,
                       x.price,
                       x.eja,

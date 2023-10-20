@@ -7,14 +7,14 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 import { Subscription, throwError } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { Dailydatadbmodel } from '../../../models/DailyDataModel/dailydatadbmodel';
-import { StockService } from '../../../services/Savoy/savoy.service';
+import { StockService } from '../../../services/Stock/stock.service';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Company } from 'src/app/models/companyenum/company';
 
 
 @Component({
-  selector: 'app-savoy-view',
+  selector: 'app-stock-view',
   templateUrl: './stock-view.component.html',
   styleUrls: ['./stock-view.component.css']
 })
@@ -66,7 +66,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
 
   fetchData() {
     if (this.startDate && this.endDate) {
-      this.dailyDataSvc.getSavoyDashboardDataPerDay(this.companyId, this.startDate, this.endDate)
+      this.dailyDataSvc.getDashboardDataPerDay(this.companyId, this.startDate, this.endDate)
         .subscribe(data => {
           this.dailyData = data;
           this.dataSource.data = this.dailyData;

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Savoy } from 'src/app/models/Savoy/Savoy';
+import { Stock } from 'src/app/models/Stock/Stock';
 import { ProductService } from 'src/app/services/Product/product.service';
-import { StockService } from 'src/app/services/Savoy/savoy.service';
+import { StockService } from 'src/app/services/Stock/stock.service';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class StockCreateComponent implements OnInit {
 
   companyId! : number;
   savoyForm: FormGroup = new FormGroup({});
-  savoyData: Savoy[] = [];
+  savoyData: Stock[] = [];
 
   constructor(
     private notificationSvc: NotificationService,
@@ -45,11 +45,11 @@ export class StockCreateComponent implements OnInit {
       })
   }
 
-  updateProduct(updatedProduct: Savoy, index: number) {
+  updateProduct(updatedProduct: Stock, index: number) {
     this.savoyData[index] = updatedProduct;
   }
 
-  trackByProduct(index: number, product: Savoy): any {
+  trackByProduct(index: number, product: Stock): any {
     return product.productId;
   }
 

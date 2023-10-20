@@ -98,8 +98,6 @@ public class StockService
                 CreationTime=query.CreationTime
             }).FirstOrDefaultAsync();
 
-        //var productData = await _unitOfWork.Product.Queryable.ToListAsync();
-
         reportDTO.reportMaster = savoyIceCreamData;
 
         savoyIceCreamData.reportDetails= (from si in _unitOfWork.StockDetail.Queryable

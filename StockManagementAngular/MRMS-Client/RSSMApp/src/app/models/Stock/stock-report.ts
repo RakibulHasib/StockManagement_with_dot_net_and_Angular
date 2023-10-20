@@ -1,12 +1,11 @@
-export class Igloo {
+export class StockReportModel {
   constructor(
-    public sl?: number,
-    public iglooIceCreamId?: number,
+    public savoyIceCreamMasterId?: number,
+    public savoyIceCreamId?: number,
     public productId?: number,
     public productName?: string,
     public price?: number,
     public companyId?: number,
-    public companyName?: string,
     public eja?: number,
     public newProduct?: number,
     public total?: number,

@@ -18,7 +18,7 @@ public class StockController : ControllerBase
 
     [Transaction]
     [HttpPost("InsertStockData/{companyId}")]
-    public async Task<ActionResult<int>> InsertSavoyData([FromRoute] int companyId, List<StockDTO> savoyIceCreamVM)
+    public async Task<ActionResult<int>> InsertStockData([FromRoute] int companyId, List<StockDTO> savoyIceCreamVM)
     {
         return Ok(await _stockService.InsertStockData(companyId, savoyIceCreamVM));
     }
