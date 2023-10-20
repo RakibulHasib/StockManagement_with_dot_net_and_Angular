@@ -87,37 +87,43 @@ public class StockService
         return result;
     }
 
-    //public async Task<ActionResult<IEnumerable<SavoyReportDTO>>> GetSavoyReport(int SavoyIceCreamMasterId)
-    //{
-    //    var savoyIceCreamData = await _unitOfWork.Stock.Queryable
-    //        .Where(a => a.StockId == SavoyIceCreamMasterId)
-    //        .ToListAsync();
+    public async Task<ActionResult<ReportDTO>> GetReport(int StockId)
+    {
+        ReportDTO? reportDTO = new ReportDTO();
+        var savoyIceCreamData = await _unitOfWork.Stock.Queryable
+            .Where(a => a.StockId == StockId)
+            .Select(query => new ReportMaster
+            {
+                StockId = query.StockId,
+                CreationTime = query.CreationTime
+            }).FirstOrDefaultAsync();
 
-    //    var productData = await _unitOfWork.Product.Queryable.ToListAsync();
+        //var productData = await _unitOfWork.Product.Queryable.ToListAsync();
 
-    //    var joinedData = from si in savoyIceCreamData
-    //                     join p in productData on si.ProductId equals p.ProductId
-    //                     select new SavoyReportDTO
-    //                     {
-    //                         SavoyIceCreamMasterId = si.SavoyIceCreamMasterId,
-    //                         SavoyIceCreamId = si.SavoyIceCreamId,
-    //                         CompanyId = si.CompanyId,
-    //                         ProductId = si.ProductId,
-    //                         ProductName = p.ProductName,
-    //                         Eja = si.Eja,
-    //                         Price = si.Price,
-    //                         NewProduct = si.NewProduct,
-    //                         Total = si.Total,
-    //                         SalesQuantity = si.SalesQuantity,
-    //                         TotalAmount = si.TotalAmount,
-    //                         Dumping = si.Dumping,
-    //                         Receive = si.Receive,
-    //                         Remaining = si.Remaining,
-    //                         CreatedDate = si.CreatedDate
-    //                     };
+        reportDTO.reportMaster = savoyIceCreamData;
 
-    //    return joinedData.ToList();
-    //}
+        savoyIceCreamData.reportDetails = (from si in _unitOfWork.StockDetail.Queryable
+                                           join p in _unitOfWork.Product.Queryable on si.ProductId equals p.ProductId
+                                           where si.StockId == StockId
+                                           select new ReportDetail
+                                           {
+                                               StockId = si.StockId,
+                                               StockDetailsId = si.StockDetailsId,
+                                               CompanyId = si.CompanyId,
+                                               ProductId = si.ProductId,
+                                               ProductName = p.ProductName,
+                                               Eja = si.Eja,
+                                               Price = si.Price,
+                                               RestockQuantity = si.RestockQuantity,
+                                               SalesQuantity = si.SalesQuantity,
+                                               TotalQuantity = si.TotalQuantity,
+                                               TotalAmount = si.TotalAmount,
+                                               Dumping = si.Dumping,
+                                               Receive = si.Receive,
+                                               Remaining = si.Remaining,
+                                               CreationTime = si.CreationTime
+                                           }).ToList();
 
-
+        return reportDTO;
+    }
 }

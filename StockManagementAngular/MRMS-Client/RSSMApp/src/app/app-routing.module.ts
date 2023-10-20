@@ -7,11 +7,7 @@ import { SignInComponent } from './component/Authentication/sign-in/sign-in.comp
 import { AuthGuard } from './component/auth/guards/auth.guard';
 import { StockViewComponent } from './component/stock/stock-view/stock-view.component';
 import { StockCreateComponent } from './component/stock/stock-create/stock-create.component';
-import { IglooViewComponent } from './component/igloo/igloo-view/igloo-view.component';
-import { LovelloViewComponent } from './component/lovello/lovello-view/lovello-view.component';
-import { ZanzeeViewComponent } from './component/zanzee/zanzee-view/zanzee-view.component';
-import { KazifarmViewComponent } from './component/kazifarm/kazifarm-view/kazifarm-view.component';
-import { SavoyReportComponent } from './component/report/savoy-report/savoy-report.component';
+import { StockReportComponent } from './component/report/stock-report/stock-report.component';
 
 
 const routes: Routes = [
@@ -22,12 +18,7 @@ const routes: Routes = [
   { path: 'FileContainer', component: FileContainerComponent, canActivate: [AuthGuard] },
   { path: 'stock/:company', component: StockViewComponent, canActivate: [AuthGuard] },
   { path: 'stock-create/:id', component: StockCreateComponent, canActivate: [AuthGuard] },
-  { path: 'igloo', component: IglooViewComponent, canActivate: [AuthGuard] },
-  { path: 'lovello', component: LovelloViewComponent, canActivate: [AuthGuard] },
-  { path: 'zanzee', component: ZanzeeViewComponent, canActivate: [AuthGuard] },
-  { path: 'kazifarm', component: KazifarmViewComponent, canActivate: [AuthGuard] },
-  { path: 'savoy_report/:id', component: SavoyReportComponent, canActivate: [AuthGuard] }
-
+  { path: 'stock-report/:id', component: StockReportComponent, canActivate: [AuthGuard] },
 
 ];
 

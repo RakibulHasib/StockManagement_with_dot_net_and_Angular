@@ -21,19 +21,6 @@ import { RegisterComponent } from './component/Authentication/register/register.
 import { StockViewComponent } from './component/stock/stock-view/stock-view.component';
 import { StockCreateComponent } from './component/stock/stock-create/stock-create.component';
 import { ProductItemComponent } from './component/shared/product-item/product-item.component';
-import { IglooViewComponent } from './component/igloo/igloo-view/igloo-view.component';
-import { IglooCreateComponent } from './component/igloo/igloo-create/igloo-create.component';
-import { IglooEditComponent } from './component/igloo/igloo-edit/igloo-edit.component';
-import { ZanzeeViewComponent } from './component/zanzee/zanzee-view/zanzee-view.component';
-import { ZanzeeCreateComponent } from './component/zanzee/zanzee-create/zanzee-create.component';
-import { ZanzeeEditComponent } from './component/zanzee/zanzee-edit/zanzee-edit.component';
-import { LovelloEditComponent } from './component/lovello/lovello-edit/lovello-edit.component';
-import { LovelloViewComponent } from './component/lovello/lovello-view/lovello-view.component';
-import { LovelloCreateComponent } from './component/lovello/lovello-create/lovello-create.component';
-import { KazifarmViewComponent } from './component/kazifarm/kazifarm-view/kazifarm-view.component';
-import { KazifarmCreateComponent } from './component/kazifarm/kazifarm-create/kazifarm-create.component';
-import { KazifarmEditComponent } from './component/kazifarm/kazifarm-edit/kazifarm-edit.component';
-import { SavoyReportComponent } from './component/report/savoy-report/savoy-report.component';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { ProductRepeatComponent } from './component/shared/product-repeat/product-repeat.component';
@@ -51,21 +38,7 @@ import { ProductRepeatComponent } from './component/shared/product-repeat/produc
     RegisterComponent,
     StockViewComponent,
     StockCreateComponent,
-    ProductItemComponent,
-    IglooViewComponent,
-    IglooCreateComponent,
-    IglooEditComponent,
-    ZanzeeViewComponent,
-    ZanzeeCreateComponent,
-    ZanzeeEditComponent,
-    LovelloEditComponent,
-    LovelloViewComponent,
-    LovelloCreateComponent,
-    KazifarmViewComponent,
-    KazifarmCreateComponent,
-    KazifarmEditComponent,
-    SavoyReportComponent,
-    ProductRepeatComponent
+    ProductItemComponent
   ],
   imports: [
     BrowserModule,

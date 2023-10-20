@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Savoy } from 'src/app/models/Savoy/Savoy';
 import { IceCreamApiUrl } from '../../models/shared/app-constants';
+import { Stock } from '../../models/Stock/Stock';
 
 const endPoint : string = "Products";
 
@@ -15,12 +15,12 @@ export class ProductService {
     private http: HttpClient
   ) { }
 
-  get(): Observable<Savoy[]> {
-    return this.http.get<Savoy[]>(`${IceCreamApiUrl}/${endPoint}/`);
+  get(): Observable<Stock[]> {
+    return this.http.get<Stock[]>(`${IceCreamApiUrl}/${endPoint}/`);
   }
 
-  getProductsWithEja(companyId: number): Observable<Savoy[]> {
-    return this.http.get<Savoy[]>(`${IceCreamApiUrl}/${endPoint}/${companyId}`);
+  getProductsWithEja(companyId: number): Observable<Stock[]> {
+    return this.http.get<Stock[]>(`${IceCreamApiUrl}/${endPoint}/${companyId}`);
   }
 
   // getById(id: number): Observable<Product> {

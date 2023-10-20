@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Stock } from 'src/app/models/Stock/Stock';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { Savoy } from 'src/app/models/Savoy/Savoy';
 import { ProductService } from 'src/app/services/Product/product.service';
-import { StockService } from 'src/app/services/Savoy/savoy.service';
+import { StockService } from 'src/app/services/Stock/stock.service';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 
 @Component({
@@ -13,10 +13,10 @@ import { NotificationService } from 'src/app/services/Shared/notification.servic
   styleUrls: ['./stock-create.component.css']
 })
 export class StockCreateComponent implements OnInit {
-
+  currentDate: Date = new Date();
   companyId! : number;
   savoyForm: FormGroup = new FormGroup({});
-  savoyData: Savoy[] = [];
+  savoyData: Stock[] = [];
 
   form = new FormGroup({});
   options: FormlyFormOptions = {};
@@ -42,7 +42,8 @@ export class StockCreateComponent implements OnInit {
     this.savoyService.insert(this.companyId, this.savoyData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
-        this.router.navigate(['/savoy']);
+        this.router.navigate(['/stockView']);
+        console.log(r);
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");
       })
@@ -59,11 +60,11 @@ export class StockCreateComponent implements OnInit {
       })
   }
 
-  updateProduct(updatedProduct: Savoy, index: number) {
+  updateProduct(updatedProduct: Stock, index: number) {
     this.savoyData[index] = updatedProduct;
   }
 
-  trackByProduct(index: number, product: Savoy): any {
+  trackByProduct(index: number, product: Stock): any {
     return product.productId;
   }
 
