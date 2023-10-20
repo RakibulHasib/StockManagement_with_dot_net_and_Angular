@@ -38,7 +38,8 @@ import { ProductRepeatComponent } from './component/shared/product-repeat/produc
     RegisterComponent,
     StockViewComponent,
     StockCreateComponent,
-    ProductItemComponent
+    ProductItemComponent,
+    ProductRepeatComponent
   ],
   imports: [
     BrowserModule,
