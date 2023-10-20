@@ -4,11 +4,17 @@
     <mat-card-subtitle>Add new File entry</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <form class="productEntryForm" (ngSubmit)="insert()">
+    <!-- <form class="productEntryForm" (ngSubmit)="insert()">
       <div class="product-item-container" *ngFor="let product of savoyData ; let i = index; trackBy: trackByProduct">
         <app-product-item [productData]="product" (productDataChange)="updateProduct($event, i)" class="child-product-item">
         </app-product-item>
       </div>
+      <div class="f-w mb-1">
+        <button type="submit" mat-raised-button color="primary" [disabled]="!form.valid">Save</button>
+      </div>
+    </form> -->
+    <form [formGroup]="form" class="productEntryForm" (ngSubmit)="insert()">
+      <formly-form [model]="savoyData" [fields]="fields" [options]="options" [form]="form"></formly-form>
       <div class="f-w mb-1">
         <button type="submit" mat-raised-button color="primary">Save</button>
       </div>

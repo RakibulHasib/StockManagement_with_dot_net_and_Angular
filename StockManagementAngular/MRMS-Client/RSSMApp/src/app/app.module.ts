@@ -36,6 +36,7 @@ import { KazifarmEditComponent } from './component/kazifarm/kazifarm-edit/kazifa
 import { SavoyReportComponent } from './component/report/savoy-report/savoy-report.component';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
+import { ProductRepeatComponent } from './component/shared/product-repeat/product-repeat.component';
 
 
 
@@ -63,7 +64,8 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
     KazifarmViewComponent,
     KazifarmCreateComponent,
     KazifarmEditComponent,
-    SavoyReportComponent
+    SavoyReportComponent,
+    ProductRepeatComponent
   ],
   imports: [
     BrowserModule,
@@ -80,6 +82,9 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
       extras: { lazyRender: true, resetFieldOnHide: true },
       validationMessages: [
         { name: 'required', message: 'This field is required' },
+      ],
+      types: [
+        { name: 'product-repeat', component: ProductRepeatComponent },
       ],
     }),
     FormlyMaterialModule
