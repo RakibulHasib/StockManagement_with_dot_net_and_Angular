@@ -92,38 +92,38 @@ public class StockService
         ReportDTO? reportDTO = new ReportDTO();
         var savoyIceCreamData = await _unitOfWork.Stock.Queryable
             .Where(a => a.StockId == StockId)
-            .Select(query=>new ReportMaster
+            .Select(query => new ReportMaster
             {
-                StockId=query.StockId,
-                CreationTime=query.CreationTime
+                StockId = query.StockId,
+                CreationTime = query.CreationTime
             }).FirstOrDefaultAsync();
+
+        //var productData = await _unitOfWork.Product.Queryable.ToListAsync();
 
         reportDTO.reportMaster = savoyIceCreamData;
 
-        savoyIceCreamData.reportDetails= (from si in _unitOfWork.StockDetail.Queryable
-                                         join p in _unitOfWork.Product.Queryable on si.ProductId equals p.ProductId
-                                         where si.StockId==StockId
-                                         select new ReportDetail
-                                         {
-                                             StockId=si.StockId,
-                                             StockDetailsId=si.StockDetailsId,
-                                             CompanyId=si.CompanyId,
-                                             ProductId=si.ProductId,
-                                             ProductName=p.ProductName,
-                                             Eja=si.Eja,
-                                             Price=si.Price,
-                                             RestockQuantity=si.RestockQuantity,
-                                             SalesQuantity=si.SalesQuantity,
-                                             TotalQuantity=si.TotalQuantity,
-                                             TotalAmount=si.TotalAmount,
-                                             Dumping=si.Dumping,
-                                             Receive=si.Receive,
-                                             Remaining=si.Remaining,
-                                             CreationTime=si.CreationTime
-                                         }).ToList();
+        savoyIceCreamData.reportDetails = (from si in _unitOfWork.StockDetail.Queryable
+                                           join p in _unitOfWork.Product.Queryable on si.ProductId equals p.ProductId
+                                           where si.StockId == StockId
+                                           select new ReportDetail
+                                           {
+                                               StockId = si.StockId,
+                                               StockDetailsId = si.StockDetailsId,
+                                               CompanyId = si.CompanyId,
+                                               ProductId = si.ProductId,
+                                               ProductName = p.ProductName,
+                                               Eja = si.Eja,
+                                               Price = si.Price,
+                                               RestockQuantity = si.RestockQuantity,
+                                               SalesQuantity = si.SalesQuantity,
+                                               TotalQuantity = si.TotalQuantity,
+                                               TotalAmount = si.TotalAmount,
+                                               Dumping = si.Dumping,
+                                               Receive = si.Receive,
+                                               Remaining = si.Remaining,
+                                               CreationTime = si.CreationTime
+                                           }).ToList();
 
         return reportDTO;
     }
-
-
 }

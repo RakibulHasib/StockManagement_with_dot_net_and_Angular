@@ -12,7 +12,7 @@ import { NotificationService } from 'src/app/services/Shared/notification.servic
   styleUrls: ['./stock-create.component.css']
 })
 export class StockCreateComponent implements OnInit {
-
+  currentDate: Date = new Date();
   companyId! : number;
   savoyForm: FormGroup = new FormGroup({});
   savoyData: Stock[] = [];
@@ -28,7 +28,7 @@ export class StockCreateComponent implements OnInit {
     this.savoyService.insert(this.companyId, this.savoyData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
-        this.router.navigate(['/savoy']);
+        this.router.navigate(['/stockView']);
         console.log(r);
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");

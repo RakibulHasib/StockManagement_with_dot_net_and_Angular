@@ -20,7 +20,6 @@ const routes: Routes = [
   { path: 'stock-create/:id', component: StockCreateComponent, canActivate: [AuthGuard] },
   { path: 'stock-report/:id', component: StockReportComponent, canActivate: [AuthGuard] },
 
-
 ];
 
 @NgModule({
