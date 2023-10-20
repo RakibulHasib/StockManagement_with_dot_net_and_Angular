@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StockManagement.DTO;
+using StockManagement.Helpers;
 using StockManagement.Repository;
+using StockManagement.Services;
 
 namespace StockManagement.Controllers;
 
@@ -9,11 +12,52 @@ namespace StockManagement.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly UnitOfWork _unitOfWork;
+    private readonly ProductService _productService;
 
-    public ProductsController(UnitOfWork unitOfWork)
+    public ProductsController(UnitOfWork unitOfWork, ProductService productService)
     {
         _unitOfWork = unitOfWork;
+        _productService = productService;
     }
+
+    [HttpGet("ProductDashboard")]
+    public async Task<ActionResult<IEnumerable<GetProductData>>> ProductDashboard(int companyId)
+    {
+        return Ok(await _productService.GetProducCompanyWise(companyId));
+    }
+
+    [HttpGet("GetProductByID/{ProductId}")]
+    public async Task<ActionResult<ProductDTO>> GetProductByID(int ProductId)
+    {
+        return await _productService.GetProducByID(ProductId);
+    }
+
+    [Transaction]
+    [HttpPost("InsertNewProduct")]
+    public async Task<ActionResult<int>> InsertNewProduct(ProductDTO product)
+    {
+        return Ok(await _productService.InsertProduct(product));
+    }
+
+
+    [Transaction]
+    [HttpPut("UpdateProduct")]
+    public async Task<ActionResult<int>> UpdateProduct(ProductDTO product)
+    {
+        return Ok(await _productService.InsertProduct(product));
+    }
+
+
+    [Transaction]
+    [HttpPut("DeleteProduct")]
+    public async Task<ActionResult<int>> DeleteProduct(int productId)
+    {
+        return Ok(await _productService.DeleteProduct(productId));
+
+    }
+
+
+
 
     [HttpGet("{companyId}")]
     public async Task<ActionResult<IEnumerable<ProductDto>>> GetProduct(int companyId)

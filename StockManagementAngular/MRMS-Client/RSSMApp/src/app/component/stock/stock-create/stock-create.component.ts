@@ -28,7 +28,7 @@ export class StockCreateComponent implements OnInit {
     this.savoyService.insert(this.companyId, this.savoyData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
-        this.router.navigate(['/savoy']);
+        this.router.navigate(['/stockView']);
         console.log(r);
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");
