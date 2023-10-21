@@ -51,7 +51,7 @@ import { StockReportComponent } from './component/report/stock-report/stock-repo
     CompanyUpdateComponent,
     ProductViewComponent,
     ProductCreateComponent,
-    ProductUpdateComponent
+    ProductUpdateComponent,
     StockReportComponent,
     ProductRepeatComponent
   ],
