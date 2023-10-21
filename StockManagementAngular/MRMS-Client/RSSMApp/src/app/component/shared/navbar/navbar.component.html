@@ -1,23 +1,47 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav"
                [opened]="false" mode="side">
-   
+
     <mat-toolbar color="primary">
       <mat-toolbar-row>
         <mat-label>Rosh Sweets</mat-label>
       </mat-toolbar-row>
     </mat-toolbar>
-
     <mat-nav-list style="font-size: 13px;">
-      <a mat-list-item [routerLink]="['/home', ]"><mat-icon>dashboard</mat-icon> Dashboard</a>
-      <a mat-list-item [routerLink]="['/stock', companies.Savoy]">	<mat-icon>open_with</mat-icon> Savoy</a>
-      <a mat-list-item [routerLink]="['/stock', companies.Lovello]">	<mat-icon>open_with</mat-icon> Lovello</a>
-      <a mat-list-item [routerLink]="['/stock', companies.Igloo]">	<mat-icon>open_with</mat-icon> Igloo</a>
-      <a mat-list-item [routerLink]="['/stock', companies.ZaNZee]">	<mat-icon>open_with</mat-icon> ZaNZee</a>
-      <a mat-list-item [routerLink]="['/stock', companies.KaziFarmFood]">	<mat-icon>open_with</mat-icon> KaziFarmFood</a>
+      <a mat-list-item [routerLink]="['/home']">
+        <mat-icon>dashboard</mat-icon> Dashboard
+      </a>
 
+      <!-- Submenu for Stock -->
+      <mat-list-item (click)="toggleSubmenu('stock')">
+        <a mat-line><mat-icon>open_with</mat-icon> StockDeatils</a>
+      </mat-list-item>
+
+      <div *ngIf="submenus['stock']">
+        <a mat-list-item [routerLink]="['/stock', companies.Savoy]"><mat-icon>games</mat-icon>Savoy</a>
+        <a mat-list-item [routerLink]="['/stock', companies.Lovello]"><mat-icon>games</mat-icon>Lovello</a>
+        <a mat-list-item [routerLink]="['/stock', companies.Igloo]"><mat-icon>games</mat-icon>Igloo</a>
+        <a mat-list-item [routerLink]="['/stock', companies.ZaNZee]"><mat-icon>games</mat-icon>ZaNZee</a>
+        <a mat-list-item [routerLink]="['/stock', companies.KaziFarmFood]"><mat-icon>games</mat-icon>KaziFarmFood</a>
+      </div>
+      <mat-list-item (click)="toggleSubmenu('salesDistribution')">
+        <a mat-line><mat-icon>open_with</mat-icon>SalesDistribution</a>
+      </mat-list-item>
+
+      <!-- Add more menu items or submenus as needed -->
 
     </mat-nav-list>
+
+    <!--<mat-nav-list style="font-size: 13px;">
+    <a mat-list-item [routerLink]="['/home', ]"><mat-icon>dashboard</mat-icon> Dashboard</a>
+    <a mat-list-item [routerLink]="['/stock', companies.Savoy]">	<mat-icon>open_with</mat-icon> Savoy</a>
+    <a mat-list-item [routerLink]="['/stock', companies.Lovello]">	<mat-icon>open_with</mat-icon> Lovello</a>
+    <a mat-list-item [routerLink]="['/stock', companies.Igloo]">	<mat-icon>open_with</mat-icon> Igloo</a>
+    <a mat-list-item [routerLink]="['/stock', companies.ZaNZee]">	<mat-icon>open_with</mat-icon> ZaNZee</a>
+    <a mat-list-item [routerLink]="['/stock', companies.KaziFarmFood]">	<mat-icon>open_with</mat-icon> KaziFarmFood</a>
+
+
+  </mat-nav-list>-->
   </mat-sidenav>
   <mat-sidenav-content>
     <!--<mat-toolbar color="primary">

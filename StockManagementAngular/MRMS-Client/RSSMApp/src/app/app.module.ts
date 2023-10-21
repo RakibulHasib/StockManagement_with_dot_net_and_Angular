@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './component/shared/navbar/navbar.component';
 import { HttpClient,HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NotificationService } from './services/Shared/notification.service';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatModule } from './module/shared/mat/mat.module';
@@ -30,6 +29,7 @@ import { CompanyUpdateComponent } from './component/Company/company-update/compa
 import { ProductViewComponent } from './component/Product/product-view/product-view.component';
 import { ProductCreateComponent } from './component/Product/product-create/product-create.component';
 import { ProductUpdateComponent } from './component/Product/product-update/product-update.component';
+import { StockReportComponent } from './component/report/stock-report/stock-report.component';
 
 
 
@@ -52,10 +52,13 @@ import { ProductUpdateComponent } from './component/Product/product-update/produ
     ProductViewComponent,
     ProductCreateComponent,
     ProductUpdateComponent
+    StockReportComponent,
+    ProductRepeatComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    CommonModule,
     BrowserAnimationsModule,
     HttpClientModule,
     DatePipe,

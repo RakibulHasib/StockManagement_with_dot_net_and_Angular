@@ -91,16 +91,15 @@ public class StockService
     {
         ReportDTO? reportDTO = new ReportDTO();
         var savoyIceCreamData = await _unitOfWork.Stock.Queryable
-            .Where(a => a.StockId == StockId)
-            .Select(query => new ReportMaster
-            {
-                StockId = query.StockId,
-                CreationTime = query.CreationTime
-            }).FirstOrDefaultAsync();
+                                .Where(a => a.StockId == StockId)
+                                .Select(query => new ReportDTO
+                                {
+                                    StockId = query.StockId,
+                                    CreationTime = query.CreationTime,
+                                    CompanyName=query.Company.CompanyName
+                                }).FirstOrDefaultAsync();
 
-        //var productData = await _unitOfWork.Product.Queryable.ToListAsync();
-
-        reportDTO.reportMaster = savoyIceCreamData;
+        reportDTO = savoyIceCreamData;
 
         savoyIceCreamData.reportDetails = (from si in _unitOfWork.StockDetail.Queryable
                                            join p in _unitOfWork.Product.Queryable on si.ProductId equals p.ProductId

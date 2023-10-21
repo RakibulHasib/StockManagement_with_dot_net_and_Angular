@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -7,7 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as pdfMake from "pdfmake/build/pdfmake";
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { StockService } from '../../../services/Stock/stock.service';
-import { StockReportModel } from '../../../models/Stock/stock-report';
+import { stockReportDataModel } from '../../../models/Stock/stock-report';
+
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -16,6 +16,7 @@ import { StockReportModel } from '../../../models/Stock/stock-report';
   styleUrls: ['./stock-report.component.css']
 })
 /*@ViewChild('dataToExport', { static: false }) public dataToExport: ElementRef;*/
+
 
 export class StockReportComponent implements OnInit {
   [x: string]: any;
@@ -31,13 +32,14 @@ export class StockReportComponent implements OnInit {
   public set notificationSvc(value: NotificationService) {
     this._notificationSvc = value;
   }
-  stockReportData: StockReportModel[] = [];
+
+  stockReportData!: stockReportDataModel;
 
   constructor(
     private reportDataSvc: StockService,
     private _notificationSvc: NotificationService,
     private _dialog: MatDialog,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) { }
 
 
@@ -46,7 +48,7 @@ export class StockReportComponent implements OnInit {
     console.log(stockID);
     this.fetchReportData(stockID);
   }
-
+  
 
   fetchReportData(stockID: number) {
     console.log(stockID);
@@ -94,11 +96,11 @@ export class StockReportComponent implements OnInit {
                       { text: 'Receiving', bold: true },
                       { text: 'Remaining', bold: true }
                     ],
-                    ...this.stockReportData.map(x => [
+                    ...this.stockReportData.reportDetails!.map(x => [
                       x.productName,
                       x.price,
                       x.eja,
-                      x.total,
+                      x.totalQuantity,
                       x.salesQuantity,
                       x.totalAmount,
                       x.dumping,

@@ -11,6 +11,12 @@ import { Company } from 'src/app/models/companyenum/company';
 })
 export class NavbarComponent {
 
+  submenus: { [key: string]: boolean } = {};
+
+  toggleSubmenu(submenuKey: string) {
+    this.submenus[submenuKey] = !this.submenus[submenuKey];
+  }
+
 companies = {
   Savoy: Company[Company.Savoy],
   ZaNZee: Company[Company.ZaNZee],
@@ -23,7 +29,8 @@ companies = {
     .pipe(
       map(result => result.matches),
       shareReplay()
-    );
+  );
+
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -31,6 +38,7 @@ companies = {
     private router: Router,
 
   ) { }
+
 
 
   isAuthenticated() {
@@ -66,5 +74,7 @@ companies = {
     this.authService.logout();
     this.router.navigate(['signin']);
   }
+
+
   
 }
