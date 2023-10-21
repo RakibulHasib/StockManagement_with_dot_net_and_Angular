@@ -22,6 +22,7 @@ export class StockCreateComponent implements OnInit {
   options: FormlyFormOptions = {};
 
   fields: FormlyFieldConfig[] = [];
+
   
   submit(){
     console.log("submitted");
@@ -32,8 +33,13 @@ export class StockCreateComponent implements OnInit {
     private savoyService: StockService,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) { }
-
+  )
+  {
+    this.companyId = this.activatedRoute.snapshot.params['id'];
+  }
+  getCompanyRoute(companyId: Number): string {
+    return `/stock/${companyId}`;
+  }
   insert(): void {
     if (this.form.invalid) {
       console.log("invalid submission");
@@ -42,7 +48,7 @@ export class StockCreateComponent implements OnInit {
     this.savoyService.insert(this.companyId, this.savoyData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
-        this.router.navigate(['/stockView']);
+        this.router.navigate(['/stock', this.companyId]);
         console.log(r);
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");
