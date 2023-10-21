@@ -22,6 +22,7 @@ import { StockCreateComponent } from './component/stock/stock-create/stock-creat
 import { ProductItemComponent } from './component/shared/product-item/product-item.component';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
+import { ProductRepeatComponent } from './component/shared/product-repeat/product-repeat.component';
 import { StockReportComponent } from './component/report/stock-report/stock-report.component';
 
 
@@ -38,7 +39,8 @@ import { StockReportComponent } from './component/report/stock-report/stock-repo
     StockViewComponent,
     StockCreateComponent,
     ProductItemComponent,
-    StockReportComponent
+    StockReportComponent,
+    ProductRepeatComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +58,9 @@ import { StockReportComponent } from './component/report/stock-report/stock-repo
       extras: { lazyRender: true, resetFieldOnHide: true },
       validationMessages: [
         { name: 'required', message: 'This field is required' },
+      ],
+      types: [
+        { name: 'product-repeat', component: ProductRepeatComponent },
       ],
     }),
     FormlyMaterialModule

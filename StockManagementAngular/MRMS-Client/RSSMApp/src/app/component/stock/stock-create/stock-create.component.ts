@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Stock } from 'src/app/models/Stock/Stock';
+import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { ProductService } from 'src/app/services/Product/product.service';
 import { StockService } from 'src/app/services/Stock/stock.service';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
@@ -17,6 +18,14 @@ export class StockCreateComponent implements OnInit {
   savoyForm: FormGroup = new FormGroup({});
   savoyData: Stock[] = [];
 
+  form = new FormGroup({});
+  options: FormlyFormOptions = {};
+
+  fields: FormlyFieldConfig[] = [];
+  
+  submit(){
+    console.log("submitted");
+  }
   constructor(
     private notificationSvc: NotificationService,
     private productService: ProductService,
@@ -24,7 +33,12 @@ export class StockCreateComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) { }
+
   insert(): void {
+    if (this.form.invalid) {
+      console.log("invalid submission");
+      return;
+    }
     this.savoyService.insert(this.companyId, this.savoyData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
@@ -40,6 +54,7 @@ export class StockCreateComponent implements OnInit {
     this.productService.getProductsWithEja(this.companyId)
       .subscribe(r => {
         this.savoyData = r;
+        this.generateFormFields();
       }, err => {
         this.notificationSvc.message("Failed to load Company", "DISMISS");
       })
@@ -51,6 +66,164 @@ export class StockCreateComponent implements OnInit {
 
   trackByProduct(index: number, product: Stock): any {
     return product.productId;
+  }
+
+    generateFormFields() {
+    this.fields = [
+      {
+        type: 'product-repeat',
+        fieldArray: {
+          fieldGroupClassName: 'display-flex',
+          fieldGroup: [
+            {
+            className: 'flex-1',
+            type: 'input',
+            key: 'productName',
+            props: {
+              label: 'Product',
+
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages:{required:" "}
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'price',
+            props: {
+              label: 'Price',
+              required: true,
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages:{required:" "}
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'eja',
+            props: {
+              label: 'Eja',
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages:{required:" "}
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'newProduct',
+            props: {
+              label: 'New Product',
+              required: true,
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages:{required:" "}
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'total',
+            props: {
+              label: 'Total',
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages:{required:" "}
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'salesQuantity',
+            props: {
+              label: 'Sales Quantity',
+              required: true,
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages:{required:" "}
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'totalAmount',
+            props: {
+              label: 'Total Amount',
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages:{required:" "}
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'dumping',
+            props: {
+              label: 'Dumping',
+              required: true,
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages:{required:" "}
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'receive',
+            props: {
+              label: 'Receive',
+              required: true,
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages:{required:" "}
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'remaining',
+            props: {
+              label: 'Remaining',
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages:{required:" "}
+            }
+          }     
+          ],
+        }
+      }
+    ]
   }
 
 }
