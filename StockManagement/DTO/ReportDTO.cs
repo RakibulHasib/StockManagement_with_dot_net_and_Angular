@@ -2,12 +2,9 @@
 {
     public class ReportDTO
     {
-        public ReportMaster? reportMaster { get; set; }
-    }
-    public class ReportMaster
-    {
         public long StockId { get; set; }
         public DateTime CreationTime { get; set; }
+        public string? CompanyName { get; set; }
         public List<ReportDetail>? reportDetails { get; set; }
     }
     public class ReportDetail

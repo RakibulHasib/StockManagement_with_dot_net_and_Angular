@@ -6,10 +6,17 @@
   }
 </style>
 <body>
-  <div class="col-12">
-    <h1 style="text-align:center;font-weight:1000">Savoy Ice Cream</h1>
+  <div class="row">
+      <div class="col-4">
+        <h3 style="padding-left:40px;padding-top:10px">Reg No-</h3>
+      </div>
+      <div class="col-4">
+        <h1 style="text-align:center;font-weight:1000">{{stockReportData.companyName}}</h1>
+      </div>
+      <div class="col-4">
+        <h3 style="padding-top:10px;margin-left:250px">Date : {{stockReportData.creationTime| date:'yyyy-MM-dd'}}</h3>
+      </div>
   </div>
-
 
   <table style="width:100%" id="contentToConvert" class="table table-primary">
     <tr>
@@ -25,13 +32,13 @@
       <th>Receive</th>
       <th>Remaining</th>
     </tr>
-    <tr *ngFor="let element of savoyReportData; let i = index">
+    <tr *ngFor="let element of stockReportData?.reportDetails; let i = index">
       <td>{{ i + 1 }}</td>
       <td>{{ element.productName }}</td>
       <td>{{ element.price }}</td>
       <td>{{ element.eja }}</td>
-      <td>{{ element.newProduct }}</td>
-      <td>{{ element.total }}</td>
+      <td>{{ element.restockQuantity }}</td>
+      <td>{{ element.totalQuantity }}</td>
       <td>{{ element.salesQuantity }}</td>
       <td>{{ element.totalAmount }}</td>
       <td>{{ element.dumping }}</td>
@@ -39,6 +46,7 @@
       <td>{{ element.remaining }}</td>
     </tr>
   </table>
+
   <div>
     <input type="button" value="Convert" (click)="convetToPDF()" />
   </div>

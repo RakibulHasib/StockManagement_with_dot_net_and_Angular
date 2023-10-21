@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './component/shared/navbar/navbar.component';
 import { HttpClient,HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NotificationService } from './services/Shared/notification.service';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatModule } from './module/shared/mat/mat.module';
@@ -23,6 +22,7 @@ import { StockCreateComponent } from './component/stock/stock-create/stock-creat
 import { ProductItemComponent } from './component/shared/product-item/product-item.component';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
+import { StockReportComponent } from './component/report/stock-report/stock-report.component';
 
 
 
@@ -37,11 +37,13 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
     RegisterComponent,
     StockViewComponent,
     StockCreateComponent,
-    ProductItemComponent
+    ProductItemComponent,
+    StockReportComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    CommonModule,
     BrowserAnimationsModule,
     HttpClientModule,
     DatePipe,
