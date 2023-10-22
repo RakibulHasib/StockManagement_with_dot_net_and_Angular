@@ -6,6 +6,7 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { ProductService } from 'src/app/services/Product/product.service';
 import { StockService } from 'src/app/services/Stock/stock.service';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
+import { Company } from 'src/app/models/companyenum/company';
 
 @Component({
   selector: 'app-stock-create',
@@ -37,8 +38,8 @@ export class StockCreateComponent implements OnInit {
   {
     this.companyId = this.activatedRoute.snapshot.params['id'];
   }
-  getCompanyRoute(companyId: Number): string {
-    return `/stock/${companyId}`;
+  getCompanyRoute(companyId: any): string {
+    return `/stock/${Company[companyId]}`;
   }
   insert(): void {
     if (this.form.invalid) {
@@ -82,12 +83,12 @@ export class StockCreateComponent implements OnInit {
           fieldGroupClassName: 'display-flex',
           fieldGroup: [
             {
-            className: 'flex-1',
+            className: 'product-name flex-1 width-160',
             type: 'input',
             key: 'productName',
             props: {
               label: 'Product',
-
+              readonly: true,
               floatLabel: 'always',
               hideRequiredMarker: true,
             },
@@ -96,7 +97,7 @@ export class StockCreateComponent implements OnInit {
             }
           },
           {
-            className: 'flex-1',
+            className: 'flex-1 width-80',
             type: 'input',
             key: 'price',
             props: {
@@ -111,11 +112,12 @@ export class StockCreateComponent implements OnInit {
             }
           },
           {
-            className: 'flex-1',
+            className: 'flex-1 width-80',
             type: 'input',
             key: 'eja',
             props: {
               label: 'Eja',
+              readonly: true,
               appearance: 'outline',
               floatLabel: 'always',
               hideRequiredMarker: true,
@@ -125,7 +127,7 @@ export class StockCreateComponent implements OnInit {
             }
           },
           {
-            className: 'flex-1',
+            className: 'flex-1 width-110',
             type: 'input',
             key: 'newProduct',
             props: {
@@ -140,21 +142,25 @@ export class StockCreateComponent implements OnInit {
             }
           },
           {
-            className: 'flex-1',
+            className: 'flex-1 width-80',
             type: 'input',
             key: 'total',
             props: {
               label: 'Total',
+              readonly: true,
               appearance: 'outline',
               floatLabel: 'always',
               hideRequiredMarker: true,
             },
             validation: {
               messages:{required:" "}
+            },
+            expressions: {
+              'model.total': 'parseInt(model.eja) + (model.newProduct ? parseInt(model.newProduct) : 0)',
             }
           },
           {
-            className: 'flex-1',
+            className: 'flex-1 width-115',
             type: 'input',
             key: 'salesQuantity',
             props: {
@@ -169,21 +175,26 @@ export class StockCreateComponent implements OnInit {
             }
           },
           {
-            className: 'flex-1',
+            className: 'flex-1 width-120',
             type: 'input',
             key: 'totalAmount',
             props: {
               label: 'Total Amount',
+              readonly: true,
               appearance: 'outline',
               floatLabel: 'always',
               hideRequiredMarker: true,
             },
             validation: {
               messages:{required:" "}
+            },
+            expressions: {
+              'model.totalAmount': 'parseInt(model.price) * (model.salesQuantity ? parseInt(model.salesQuantity) : 0)',
             }
+            
           },
           {
-            className: 'flex-1',
+            className: 'flex-1 width-90',
             type: 'input',
             key: 'dumping',
             props: {
@@ -198,7 +209,7 @@ export class StockCreateComponent implements OnInit {
             }
           },
           {
-            className: 'flex-1',
+            className: 'flex-1 width-90',
             type: 'input',
             key: 'receive',
             props: {
@@ -213,17 +224,21 @@ export class StockCreateComponent implements OnInit {
             }
           },
           {
-            className: 'flex-1',
+            className: 'flex-1 width-95',
             type: 'input',
             key: 'remaining',
             props: {
               label: 'Remaining',
+              readonly: true,
               appearance: 'outline',
               floatLabel: 'always',
               hideRequiredMarker: true,
             },
             validation: {
               messages:{required:" "}
+            },
+            expressions: {
+              'model.remaining': '(model.dumping ? parseInt(model.dumping) : 0) - (model.receive ? parseInt(model.receive) : 0)',
             }
           }     
           ],
