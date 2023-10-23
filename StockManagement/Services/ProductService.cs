@@ -34,7 +34,6 @@ public class ProductService
                                   CompanyId = product.CompanyId,
                                   CompanyName = company.CompanyName,
                                   IsActive = product.IsActive,
-                                  IsDeleted = product.IsDeleted,
                                   Sequence = product.Sequence
                               }).ToListAsync();
 
@@ -44,7 +43,7 @@ public class ProductService
     public async Task<ActionResult<ProductDTO>> GetProducByID(int ProductId)
     {
         var products = await (from product in _unitOfWork.Product.Queryable
-                              where  product.ProductId == ProductId
+                              where product.ProductId == ProductId
                               select new ProductDTO
                               {
                                   ProductId = product.ProductId,
@@ -53,7 +52,6 @@ public class ProductService
                                   Price = product.Price,
                                   CompanyId = product.CompanyId,
                                   IsActive = product.IsActive,
-                                  IsDeleted = product.IsDeleted,
                                   Sequence = product.Sequence
                               }).FirstOrDefaultAsync();
 
@@ -68,13 +66,13 @@ public class ProductService
             Description = product.Description,
             Price = product.Price,
             CompanyId = product.CompanyId,
-            IsDeleted = 0,
             Sequence = product.Sequence,
             IsActive = product.IsActive,
         };
         await _unitOfWork.Product.AddAsync(products);
 
-        result = await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
+        result = products.ProductId;
 
         return result;
     }
@@ -88,13 +86,13 @@ public class ProductService
             Description = product.Description,
             Price = product.Price,
             CompanyId = product.CompanyId,
-            IsDeleted = 0,
             Sequence = product.Sequence,
             IsActive = product.IsActive,
         };
-         _unitOfWork.Product.Update(products);
+        _unitOfWork.Product.Update(products);
 
-        result = await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
+        result = products.ProductId;
 
         return result;
     }
@@ -108,7 +106,9 @@ public class ProductService
         data.IsActive = 0;
         _unitOfWork.Product.Update(data);
 
-        result = await _unitOfWork.SaveChangesAsync();
+
+        await _unitOfWork.SaveChangesAsync();
+        result = data.ProductId;
 
         return result;
     }

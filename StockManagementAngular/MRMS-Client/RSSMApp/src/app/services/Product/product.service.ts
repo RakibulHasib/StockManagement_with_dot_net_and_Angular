@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IceCreamApiUrl } from '../../models/shared/app-constants';
 import { Stock } from '../../models/Stock/Stock';
+import { Product } from '../../models/Product/product';
 
 const endPoint : string = "Products";
 
@@ -23,17 +24,22 @@ export class ProductService {
     return this.http.get<Stock[]>(`${IceCreamApiUrl}/${endPoint}/${companyId}`);
   }
 
-  // getById(id: number): Observable<Product> {
-  //   return this.http.get<Product>(`${SavoyApiUrl}/${endPoint}/${id}`);
-  // }
-  // insert(data: Product): Observable<Product> {
-  //   return this.http.post<Product>(`${SavoyApiUrl}/${endPoint}`, data);
-  // }
-  // update(data: Product): Observable<any> {
-  //   return this.http.put<any>(`${SavoyApiUrl}/${endPoint}`, data);
-  // }
-  // delete(data: Product): Observable<any> {
-  //   return this.http.delete<any>(`${SavoyApiUrl}/${endPoint}/${data.productId}`);
-  // }
+  //
+  getProductsListCompanyWise(companyId: number): Observable<Product[]> {
+    return this.http.get<Product[]>(`${IceCreamApiUrl}/${endPoint}/ProductDashboard/${companyId}`);
+  }
+
+   getById(productId: number): Observable<Product> {
+     return this.http.get<Product>(`${IceCreamApiUrl}/${endPoint}/GetProductByID/${productId}`);
+   }
+   insert(data: Product): Observable<Product> {
+     return this.http.post<Product>(`${IceCreamApiUrl}/${endPoint}/InsertNewProduct`, data);
+   }
+   update(data: Product): Observable<any> {
+     return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/UpdateProduct`, data);
+   }
+   delete(data: Product): Observable<any> {
+     return this.http.delete<any>(`${IceCreamApiUrl}/${endPoint}/DeleteProduct/${data.productId}`);
+   }
 
 }

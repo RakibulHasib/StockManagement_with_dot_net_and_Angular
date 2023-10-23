@@ -20,7 +20,7 @@ public class ProductsController : ControllerBase
         _productService = productService;
     }
 
-    [HttpGet("ProductDashboard")]
+    [HttpGet("ProductDashboard/{companyId}")]
     public async Task<ActionResult<IEnumerable<GetProductData>>> ProductDashboard(int companyId)
     {
         return Ok(await _productService.GetProducCompanyWise(companyId));
