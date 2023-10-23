@@ -15,22 +15,25 @@ namespace StockManagement.Services
             _unitOfWork = unitOfWork;
         }
 
-        //public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetStockDataPerDay(int companyId, DateTime StartDate, DateTime EndDate)
-        //{
-        //    var query = await _unitOfWork.Stock.Queryable
-        //                .Where(x => x.CreationTime.Date >= StartDate.Date && x.CreationTime.Date <= EndDate.Date
-        //                        && x.CompanyId == companyId)
-        //                .Select(query => new DailyDataDTO
-        //                {
-        //                    StockId = query.StockId,
-        //                    CreationTime = query.CreationTime,
-        //                    TotalSalesQuantity = query.TotalSalesQuantity,
-        //                    TotalAmount = query.GrandTotalAmount
-        //                }).ToListAsync();
-        //    return query;
-        //}
+        public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(DateTime StartDate, DateTime EndDate)
+        {
+            var query = await _unitOfWork.SalesDistribute.Queryable
+                        .Where(x => x.CreationTime.Date >= StartDate.Date && x.CreationTime.Date <= EndDate.Date)
+                        .Select(query => new DailyDistributeDataDTO
+                        {
+                            SalesDistributeId = query.SalesDistributeId,
+                            TotalPrice = query.TotalPrice,
+                            TotalReceive = query.TotalReceive,
+                            TotalReturn = query.TotalReturn,
+                            TotalSales=query.TotalSales,
+                            GrandTotal= query.GrandTotal,
+                            ConcernPerson=query.ConcernPerson,
+                            CreationTime=query.CreationTime
+                        }).ToListAsync();
+            return query;
+        }
 
-        public async Task<ActionResult<int>> InsertSalesDistributeData(int companyId, List<SalesDistributeDTO> salesDistributeVM)
+        public async Task<ActionResult<int>> InsertSalesDistributeData(List<SalesDistributeDTO> salesDistributeVM)
         {
             int result = 0;
             SalesDistribute master = new SalesDistribute
