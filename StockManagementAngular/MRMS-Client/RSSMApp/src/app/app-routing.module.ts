@@ -8,6 +8,9 @@ import { AuthGuard } from './component/auth/guards/auth.guard';
 import { StockViewComponent } from './component/stock/stock-view/stock-view.component';
 import { StockCreateComponent } from './component/stock/stock-create/stock-create.component';
 import { StockReportComponent } from './component/report/stock-report/stock-report.component';
+import { ProductViewComponent } from './component/Product/product-view/product-view.component';
+import { ProductCreateComponent } from './component/Product/product-create/product-create.component';
+
 
 
 const routes: Routes = [
@@ -19,7 +22,8 @@ const routes: Routes = [
   { path: 'stock/:company', component: StockViewComponent, canActivate: [AuthGuard] },
   { path: 'stock-create/:id', component: StockCreateComponent, canActivate: [AuthGuard] },
   { path: 'stock-report/:id', component: StockReportComponent, canActivate: [AuthGuard] },
-
+  { path: 'productView', component: ProductViewComponent, canActivate: [AuthGuard] },
+  { path: 'productAdd', component: ProductCreateComponent, canActivate: [AuthGuard] }
 
 ];
 

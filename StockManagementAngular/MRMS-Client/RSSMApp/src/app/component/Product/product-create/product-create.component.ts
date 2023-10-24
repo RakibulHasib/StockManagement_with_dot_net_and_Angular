@@ -5,6 +5,7 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { NotificationService } from '../../../services/Shared/notification.service';
 import { ProductService } from '../../../services/Product/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Company } from '../../../models/companyenum/company';
 
 @Component({
   selector: 'app-product-create',
@@ -12,9 +13,11 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./product-create.component.css']
 })
 export class ProductCreateComponent {
+  currentDate: Date = new Date();
   companyId!: number;
   producForm: FormGroup = new FormGroup({});
-  productData: Product[] = [];
+  productData: Product = new Product;
+  
 
   form = new FormGroup({});
   options: FormlyFormOptions = {};
@@ -29,37 +32,52 @@ export class ProductCreateComponent {
   ) {
     this.companyId = this.activatedRoute.snapshot.params['id'];
   }
-  //getCompanyRoute(companyId: Number): string {
-  //  //return `/stock/${companyId}`;
-  //}
+
+
+  getCompanyRoute(companyId: any): string {
+    return `/stock/${Company[companyId]}`;
+  }
+  insert(): void {
+    if (this.form.invalid) {
+      console.log("invalid submission");
+      return;
+    }
+    this.productService.insert( this.productData)
+      .subscribe(r => {
+        this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
+        this.router.navigate(['/prductView', this.companyId]);
+        console.log(r);
+      }, err => {
+        this.notificationSvc.message("Failed to save data!!!", "DISMISS");
+      })
+  }
+
+  ngOnInit(): void {
+    //this.companyId = this.activatedRoute.snapshot.params['id'];
+   /* this.productService.getProductsListCompanyWise(this.companyId)*/
+      //.subscribe(r => {
+      //  /*this.productData = r;*/
+      //  this.generateFormFields();
+      //}, err => {
+      //  this.notificationSvc.message("Failed to load Company", "DISMISS");
+      //})
+    this.generateFormFields();
+  }
 
   generateFormFields() {
     this.fields = [
       {
-        fieldArray: {
+        
           fieldGroupClassName: 'display-flex',
           fieldGroup: [
-            {
-              className: 'flex-1',
-              type: 'input',
-              key: 'productId',
-              props: {
-                label: 'Product ID',
-
-                floatLabel: 'always',
-                hideRequiredMarker: true,
-              },
-              validation: {
-                messages: { required: " " }
-              }
-            },
+     
             {
               className: 'flex-1',
               type: 'input',
               key: 'productName',
               props: {
-                label: 'Product',
-
+                label: 'Product Name',
+                appearance:'outline',
                 floatLabel: 'always',
                 hideRequiredMarker: true,
               },
@@ -113,7 +131,8 @@ export class ProductCreateComponent {
             },
             {
               className: 'flex-1',
-              type: 'input',
+              type: 'toggle',
+              defaultValue:true,
               key: 'IsActive',
               props: {
                 label: 'IsActive',
@@ -123,28 +142,18 @@ export class ProductCreateComponent {
               },
               validation: {
                 messages: { required: " " }
-              }
-            },
-            {
-              className: 'flex-1',
-              type: 'input',
-              key: 'IsDeleted',
-              props: {
-                label: 'IsDeleted',
-                required: true,
-                appearance: 'outline',
-                floatLabel: 'always',
-                hideRequiredMarker: true,
               },
-              validation: {
-                messages: { required: " " }
-              }
+              expressions: {
+                'model.IsActive': 'model.IsActive ? 1 : 0'
+
+              },
             },
+ 
             
             
            
           ],
-        }
+        
       }
     ]
   }

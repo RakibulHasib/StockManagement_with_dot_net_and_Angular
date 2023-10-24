@@ -30,6 +30,8 @@ import { ProductViewComponent } from './component/Product/product-view/product-v
 import { ProductCreateComponent } from './component/Product/product-create/product-create.component';
 import { ProductUpdateComponent } from './component/Product/product-update/product-update.component';
 import { StockReportComponent } from './component/report/stock-report/stock-report.component';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+import { FormlyMatToggleModule } from '@ngx-formly/material/toggle';
 
 
 
@@ -67,6 +69,7 @@ import { StockReportComponent } from './component/report/stock-report/stock-repo
     MatModule,
     MatTabsModule,
     FormsModule,
+    FormlyMatToggleModule,
     FormlyModule.forRoot({
       extras: { lazyRender: true, resetFieldOnHide: true },
       validationMessages: [

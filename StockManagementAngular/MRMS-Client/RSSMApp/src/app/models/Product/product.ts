@@ -6,7 +6,6 @@ export class Product {
     public price?: number,
     public sequence?: number,
     public IsActive?: number,
-    public IsDeleted?: number,
     public description?: string,
 
   ) { }

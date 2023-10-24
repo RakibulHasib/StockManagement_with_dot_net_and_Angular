@@ -57,17 +57,22 @@
       <ng-container matColumnDef="actions" class="action">
         <mat-header-cell *matHeaderCellDef mat-sort-header  class="action" >Action</mat-header-cell>
         <mat-cell *matCellDef="let element" class="action">
-          <!--<mat-icon class="icon-spacing">edit</mat-icon>-->
-          <!--<mat-icon class="icon-spacing">delete_sweep</mat-icon>-->
-          <button mat-raised-button color="primary" class="icon-spacing">Edit</button>
-          <button mat-raised-button color="warn" class="icon-spacing">Delete</button>
+
           <button mat-raised-button [routerLink]="['/stock-report',element.stockId]" class="icon-spacing">View</button>
+          <mat-icon color="primary" class="icon-spacing" (click)="showExpandButton = !showExpandButton">more_vert</mat-icon>
 
-          <!--<mat-icon class="icon-spacing" [routerLink]="['/stock-report',element.stockId]">visibility</mat-icon>-->
 
-          <!--<a [routerLink]="['/company-edit',element.companyId]"><mat-icon>Edit</mat-icon></a>-->
-          <!--<button mat-icon-button (click)="confirmDelete(element)"><mat-icon-->
-          <!--class="red-color">Delete</mat-icon></button>-->
+          <!--<div *ngIf="showExpandButton" class="expand-section">
+
+            <button mat-raised-button color="primary" class="icon-spacing">Edit</button>
+            <button mat-raised-button color="warn" class="icon-spacing">Delete</button>
+          </div>-->
+          <div [@expandCollapse]="showExpandButton ? 'expanded' : 'collapsed'" class="expand-section">
+            <button mat-raised-button color="primary" class="icon-spacing">Edit</button>
+            <button mat-raised-button color="warn" class="icon-spacing">Delete</button>
+          </div>
+
+
         </mat-cell>
       </ng-container>
 
