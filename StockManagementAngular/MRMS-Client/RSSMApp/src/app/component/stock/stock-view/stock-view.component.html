@@ -40,34 +40,38 @@
     <mat-table [dataSource]="dataSource" matSort style="text-align:center">
 
       <ng-container matColumnDef="createdDate">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>CreatedDate</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header >CreatedDate</mat-header-cell>
         <mat-cell *matCellDef="let element" style="text-align:center">{{element.creationTime | date:'yyyy-MM-dd'}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalSalesQuantity">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>TotalSalesQuantity</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header >TotalSalesQuantity</mat-header-cell>
         <mat-cell *matCellDef="let element" class="centered-text">{{element.totalSalesQuantity}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalAmount">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>TotalAmount</mat-header-cell>
-        <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.totalAmount}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header >TotalAmount</mat-header-cell>
+        <mat-cell *matCellDef="let element" [style.text-align]="'center'" >{{element.totalAmount}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="actions" class="action">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Action</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header  class="action" >Action</mat-header-cell>
         <mat-cell *matCellDef="let element" class="action">
-          <mat-icon class="icon-spacing">edit</mat-icon>
-          <mat-icon class="icon-spacing">delete_sweep</mat-icon>
-          <mat-icon class="icon-spacing" [routerLink]="['/stock-report',element.stockId]">visibility</mat-icon>
-          
+          <!--<mat-icon class="icon-spacing">edit</mat-icon>-->
+          <!--<mat-icon class="icon-spacing">delete_sweep</mat-icon>-->
+          <button mat-raised-button color="primary" class="icon-spacing">Edit</button>
+          <button mat-raised-button color="warn" class="icon-spacing">Delete</button>
+          <button mat-raised-button [routerLink]="['/stock-report',element.stockId]" class="icon-spacing">View</button>
+
+          <!--<mat-icon class="icon-spacing" [routerLink]="['/stock-report',element.stockId]">visibility</mat-icon>-->
+
           <!--<a [routerLink]="['/company-edit',element.companyId]"><mat-icon>Edit</mat-icon></a>-->
           <!--<button mat-icon-button (click)="confirmDelete(element)"><mat-icon-->
           <!--class="red-color">Delete</mat-icon></button>-->
         </mat-cell>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="columnList"></mat-header-row>
+      <mat-header-row *matHeaderRowDef="columnList" class="bold-header"></mat-header-row>
       <mat-row *matRowDef="let row; columns: columnList;"></mat-row>
 
     </mat-table>
