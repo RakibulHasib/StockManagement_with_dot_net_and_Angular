@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
+import { Observable, of } from 'rxjs';
+import { Product } from '../../../models/Product/product';
 import { SalesDistribution } from '../../../models/sales/sales-distribution';
 import { SalesDistributionService } from '../../../services/sales/sales-distribution.service';
 import { NotificationService } from '../../../services/Shared/notification.service';
@@ -15,6 +17,7 @@ export class DistributionCreateComponent implements OnInit {
   currentDate: Date = new Date();
   distributeForm: FormGroup = new FormGroup({});
   formData: SalesDistribution[] = [{}];
+  productData: Product[] = [];
 
   form = new FormGroup({});
   options: FormlyFormOptions = {};
@@ -32,9 +35,26 @@ export class DistributionCreateComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) { }
 
-    ngOnInit(): void {
-      this.generatedistributeFormFields();
-    }
+  ngOnInit(): void {
+
+    this.getProduct();
+    this.generatedistributeFormFields();
+  }
+
+  //getDropdownData(): Observable<any[]> {
+  //  return of(this.productData);
+  //}
+
+  getProduct(): Product[] {
+    this.salesService.getProduct()
+      .subscribe(a => {
+        console.log(a)
+        this.productData = a;
+      }, err => {
+        this.notificationSvc.message("No data found!!", "DISMISS")
+      })
+    return this.productData;
+  }
 
   insert(): void {
     if (this.form.invalid) {
@@ -63,6 +83,25 @@ export class DistributionCreateComponent implements OnInit {
               props: {
                 label: 'Concern Person',
                 floatLabel: 'always',
+                appearance: 'outline',
+                hideRequiredMarker: true,
+              },
+              validation: {
+                messages: { required: " " }
+              }
+            },
+            {
+              className: 'product flex-1 width-160',
+              type: 'select',
+              key: 'productId',
+              props: {
+                label: 'ProductName',
+                floatLabel: 'always',
+                appearance: 'outline',
+                templateOptions: {
+                  options: this.productData,
+                  },
+
                 hideRequiredMarker: true,
               },
               validation: {
@@ -76,6 +115,7 @@ export class DistributionCreateComponent implements OnInit {
               props: {
                 label: 'Price',
                 floatLabel: 'always',
+                appearance: 'outline',
                 hideRequiredMarker: true,
               },
               validation: {
@@ -89,6 +129,7 @@ export class DistributionCreateComponent implements OnInit {
               props: {
                 label: 'ReceiveQuantity',
                 floatLabel: 'always',
+                appearance: 'outline',
                 hideRequiredMarker: true,
               },
               validation: {
@@ -102,6 +143,7 @@ export class DistributionCreateComponent implements OnInit {
               props: {
                 label: 'ReturnQuantity',
                 floatLabel: 'always',
+                appearance: 'outline',
                 hideRequiredMarker: true,
               },
               validation: {
@@ -115,6 +157,7 @@ export class DistributionCreateComponent implements OnInit {
               props: {
                 label: 'SalesQuantity',
                 floatLabel: 'always',
+                appearance: 'outline',
                 hideRequiredMarker: true,
               },
               validation: {
@@ -128,6 +171,7 @@ export class DistributionCreateComponent implements OnInit {
               props: {
                 label: 'TotalSalesPrice',
                 floatLabel: 'always',
+                appearance: 'outline',
                 hideRequiredMarker: true,
               },
               validation: {

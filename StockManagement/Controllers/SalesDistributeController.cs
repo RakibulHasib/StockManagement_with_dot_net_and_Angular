@@ -29,5 +29,11 @@ namespace StockManagement.Controllers
         {
             return Ok(await _salesDistributeService.InsertSalesDistributeData(salesDistributeVM));
         }
+
+        [HttpGet("GetProduct")]
+        public async Task<ActionResult<List<ProductDTO>>> GetProduct()
+        {
+            return Ok(await _salesDistributeService.GetProduct());
+        }
     }
 }
