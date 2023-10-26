@@ -43,9 +43,7 @@ namespace StockManagement.Services
                 TotalReturn=0,
                 TotalSales = 0,
                 GrandTotal = 0,
-                ConcernPerson = salesDistributeVM[0].ConcernPerson,
-                CreationTime= DateTime.Now,
-                IsDeleted=0
+                ConcernPerson = salesDistributeVM[0].ConcernPerson
             };
             await _unitOfWork.SalesDistribute.AddAsync(master);
             await _unitOfWork.SaveChangesAsync();
@@ -61,9 +59,7 @@ namespace StockManagement.Services
                     ReceiveQuantity= item.ReceiveQuantity,
                     ReturnQuantity = item.ReturnQuantity,
                     SalesQuantity = item.SalesQuantity,
-                    TotalSalesPrice= item.TotalSalesPrice,
-                    CreationTime= DateTime.Now,
-                    IsDeleted=0
+                    TotalSalesPrice= item.TotalSalesPrice
                 };
                 await _unitOfWork.SalesDistributeDetail.AddAsync(Details);
             }

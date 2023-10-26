@@ -28,6 +28,10 @@
         <a mat-line><mat-icon>open_with</mat-icon>SalesDistribution</a>
       </mat-list-item>
 
+      <div *ngIf="submenus['salesDistribution']">
+        <a mat-list-item [routerLink]="['/sales-create']"><mat-icon>games</mat-icon>Distribution</a>
+      </div>
+
       <!-- Add more menu items or submenus as needed -->
 
     </mat-nav-list>
