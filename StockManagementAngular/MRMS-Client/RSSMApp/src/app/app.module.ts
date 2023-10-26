@@ -33,6 +33,8 @@ import { StockReportComponent } from './component/report/stock-report/stock-repo
 import { DistributionViewComponent } from './component/distribution/distribution-view/distribution-view.component';
 import { DistributionCreateComponent } from './component/distribution/distribution-create/distribution-create.component';
 import { DistributionConfigComponent } from './component/distribution/distribution-config/distribution-config.component';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+import { FormlyMatToggleModule } from '@ngx-formly/material/toggle';
 
 
 
@@ -73,6 +75,7 @@ import { DistributionConfigComponent } from './component/distribution/distributi
     MatModule,
     MatTabsModule,
     FormsModule,
+    FormlyMatToggleModule,
     FormlyModule.forRoot({
       extras: { lazyRender: true, resetFieldOnHide: true },
       validationMessages: [

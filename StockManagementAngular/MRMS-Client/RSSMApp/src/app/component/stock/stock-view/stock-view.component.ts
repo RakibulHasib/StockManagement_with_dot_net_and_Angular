@@ -11,14 +11,25 @@ import { StockService } from '../../../services/Stock/stock.service';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Company } from 'src/app/models/companyenum/company';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+
 
 
 @Component({
   selector: 'app-stock-view',
   templateUrl: './stock-view.component.html',
-  styleUrls: ['./stock-view.component.css']
+  styleUrls: ['./stock-view.component.css'],
+  animations: [
+    trigger('expandCollapse', [ // This defines an animation trigger named 'expandCollapse'
+      state('collapsed', style({ height: '0px', display: 'none' })), // This is the 'collapsed' state configuration
+      state('expanded', style({ height: '*', display: 'block' })), // This is the 'expanded' state configuration
+      transition('collapsed <=> expanded', animate('0.3s ease-in-out')) // This is the transition between the states
+    ])
+  ]
 })
 export class StockViewComponent implements OnInit, OnDestroy {
+  showExpandButton = false;
   companyId!: number;
   paramsSubscription! : Subscription;
 

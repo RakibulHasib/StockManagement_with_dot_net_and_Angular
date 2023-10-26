@@ -100,6 +100,10 @@
 :host ::ng-deep .width-160 {
     width: 160px;
 }
+.expand-section {
+  margin-top: 10px; /* Adjust as needed */
+}
+
 /* 
 .f-w {
     width: 100%;

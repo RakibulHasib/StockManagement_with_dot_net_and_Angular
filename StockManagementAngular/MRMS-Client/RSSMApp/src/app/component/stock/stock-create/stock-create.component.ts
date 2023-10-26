@@ -14,10 +14,13 @@ import { Company } from 'src/app/models/companyenum/company';
   styleUrls: ['./stock-create.component.css']
 })
 export class StockCreateComponent implements OnInit {
+
   currentDate: Date = new Date();
   companyId! : number;
   savoyForm: FormGroup = new FormGroup({});
   savoyData: Stock[] = [];
+
+
 
   form = new FormGroup({});
   options: FormlyFormOptions = {};
