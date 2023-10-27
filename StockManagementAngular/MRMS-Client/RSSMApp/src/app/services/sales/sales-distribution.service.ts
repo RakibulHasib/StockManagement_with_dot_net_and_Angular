@@ -23,7 +23,9 @@ export class SalesDistributionService {
   //getReportData(stockID: number): Observable<stockReportDataModel> {
   //  return this.http.get<stockReportDataModel>(`${IceCreamApiUrl}/${endPoint}/GetReport?StockId=${stockID}`);
   //}
-
+  getPrice(productID: number): Observable<{ price: number }> {
+    return this.http.get<{ price: number }>(`${IceCreamApiUrl}/${endPoint}/GetProductWisePrice?ProductID=${productID}`);
+  }
   getProduct(): Observable<Product[]> {
     return this.http.get<Product[]>(`${IceCreamApiUrl}/${endPoint}/GetProduct`);
   }

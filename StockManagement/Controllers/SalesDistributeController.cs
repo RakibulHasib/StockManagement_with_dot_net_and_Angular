@@ -35,5 +35,11 @@ namespace StockManagement.Controllers
         {
             return Ok(await _salesDistributeService.GetProduct());
         }
+
+        [HttpGet("GetProductWisePrice")]
+        public async Task<ActionResult<List<ProductDTO>>> GetProductWisePrice(int ProductID)
+        {
+            return Ok(await _salesDistributeService.GetProductWisePrice(ProductID));
+        }
     }
 }

@@ -20,4 +20,9 @@ namespace StockManagement.DTO
         public DateTime CreationTime { get; set; }
         public int IsDeleted { get; set; }
     }
+
+    public class ProductPriceDTO
+    {
+        public decimal Price { get; set; }
+    }
 }

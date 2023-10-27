@@ -25,10 +25,10 @@ namespace StockManagement.Services
                             TotalPrice = query.TotalPrice,
                             TotalReceive = query.TotalReceive,
                             TotalReturn = query.TotalReturn,
-                            TotalSales=query.TotalSales,
-                            GrandTotal= query.GrandTotal,
-                            ConcernPerson=query.ConcernPerson,
-                            CreationTime=query.CreationTime
+                            TotalSales = query.TotalSales,
+                            GrandTotal = query.GrandTotal,
+                            ConcernPerson = query.ConcernPerson,
+                            CreationTime = query.CreationTime
                         }).ToListAsync();
             return query;
         }
@@ -40,7 +40,7 @@ namespace StockManagement.Services
             {
                 TotalPrice = 0,
                 TotalReceive = 0,
-                TotalReturn=0,
+                TotalReturn = 0,
                 TotalSales = 0,
                 GrandTotal = 0,
                 ConcernPerson = concernPerson
@@ -56,10 +56,10 @@ namespace StockManagement.Services
                     SalesDistributeId = master.SalesDistributeId,
                     ProductId = item.ProductId,
                     Price = item.Price,
-                    ReceiveQuantity= item.ReceiveQuantity,
+                    ReceiveQuantity = item.ReceiveQuantity,
                     ReturnQuantity = item.ReturnQuantity,
                     SalesQuantity = item.SalesQuantity,
-                    TotalSalesPrice= item.TotalSalesPrice
+                    TotalSalesPrice = item.TotalSalesPrice
                 };
                 await _unitOfWork.SalesDistributeDetail.AddAsync(Details);
             }
@@ -79,20 +79,24 @@ namespace StockManagement.Services
         public async Task<List<ProductDTO>> GetProduct()
         {
             var data = await _unitOfWork.Product.Queryable
-                                       .Where(a => a.IsDeleted == 0 && a.IsActive==1)
+                                       .Where(a => a.IsDeleted == 0 && a.IsActive == 1)
                                        .Select(query => new ProductDTO
                                        {
-                                           ProductId= query.ProductId,
-                                           ProductName= query.ProductName
+                                           ProductId = query.ProductId,
+                                           ProductName = query.ProductName
                                        }).ToListAsync();
             return data;
         }
 
-        //public async Task<> GetProductWisePrice(int ProductID)
-        //{
-        //    var data=await _unitOfWork.Product.Queryable
-        //                              .Where(a => a.IsDeleted == 0 && a.IsActive == 1)
-        //                              .Select(query=>)
-        //}
+        public async Task<ProductPriceDTO> GetProductWisePrice(int ProductID)
+        {
+            var data = await _unitOfWork.Product.Queryable
+                                      .Where(a => a.IsDeleted == 0 && a.IsActive == 1 && a.ProductId == ProductID)
+                                      .Select(query => new ProductPriceDTO
+                                      {
+                                          Price = query.Price ?? 0
+                                      }).FirstOrDefaultAsync();
+            return data;
+        }
     }
 }

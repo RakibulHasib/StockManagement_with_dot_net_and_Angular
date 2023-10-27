@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, startWith, switchMap } from 'rxjs';
 import { Product } from '../../../models/Product/product';
 import { SalesDistribution } from '../../../models/sales/sales-distribution';
 import { SalesDistributionService } from '../../../services/sales/sales-distribution.service';
@@ -109,10 +109,26 @@ export class DistributionCreateComponent implements OnInit {
                 floatLabel: 'always',
                 appearance: 'outline',
                 hideRequiredMarker: true,
+                readonly: true
               },
               validation: {
                 messages: { required: " " }
-              }
+              },
+              hooks: {
+                onInit: (field: FormlyFieldConfig) => {
+                  field.form?.get('productId')
+                    ?.valueChanges.subscribe(value => {
+                      this.salesService.getPrice(value)
+                        .subscribe(r => {
+                          field.formControl?.setValue(r.price);
+                          console.log(r.price);
+                          
+                        }, err => {
+                          this.notificationSvc.message("Failed to load price", "DISMISS");
+                        })
+                      })
+                }
+                }
             },
             {
               className: 'receiveQuantity flex-1 width-160',
