@@ -36,25 +36,10 @@ export class DistributionCreateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
-    this.getProduct();
     this.generatedistributeFormFields();
   }
 
-  //getDropdownData(): Observable<any[]> {
-  //  return of(this.productData);
-  //}
 
-  getProduct(): Product[] {
-    this.salesService.getProduct()
-      .subscribe(a => {
-        console.log(a)
-        this.productData = a;
-      }, err => {
-        this.notificationSvc.message("No data found!!", "DISMISS")
-      })
-    return this.productData;
-  }
 
   insert(): void {
     if (this.form.invalid) {
@@ -72,38 +57,35 @@ export class DistributionCreateComponent implements OnInit {
   generatedistributeFormFields() {
     this.fields = [
       {
+        className: 'concernPerson width-80',
+        type: 'input',
+        key: 'concernPerson',
+        props: {
+          label: 'ConcernPerson',
+          floatLabel: 'always',
+          appearance: 'outline',
+          hideRequiredMarker: true,
+        },
+        validation: {
+          messages: { required: " " }
+        }
+      },
+      {
         type: 'product-distribution',
         fieldArray: {
           fieldGroupClassName: 'display-flex',
           fieldGroup: [
             {
-              className: 'concern-Person flex-1 width-160',
-              type: 'input',
-              key: 'concernPerson',
-              props: {
-                label: 'Concern Person',
-                floatLabel: 'always',
-                appearance: 'outline',
-                hideRequiredMarker: true,
-              },
-              validation: {
-                messages: { required: " " }
-              }
-            },
-            {
               className: 'product flex-1 width-160',
               type: 'select',
               key: 'productId',
-              props: {
-                label: 'ProductName',
-                floatLabel: 'always',
-                appearance: 'outline',
-                templateOptions: {
-                  options: this.productData,
-                  },
-
-                hideRequiredMarker: true,
+              templateOptions: {
+                label: 'Product Name',
+                options: this.salesService.getProduct(),
+                valueProp:'productId',
+                labelProp:'productName'
               },
+
               validation: {
                 messages: { required: " " }
               }

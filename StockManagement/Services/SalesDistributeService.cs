@@ -76,19 +76,23 @@ namespace StockManagement.Services
             return result;
         }
 
-        public async Task<ActionResult<List<ProductDTO>>> GetProduct()
+        public async Task<List<ProductDTO>> GetProduct()
         {
             var data = await _unitOfWork.Product.Queryable
                                        .Where(a => a.IsDeleted == 0 && a.IsActive==1)
                                        .Select(query => new ProductDTO
                                        {
                                            ProductId= query.ProductId,
-                                           ProductName= query.ProductName,
-                                           Description= query.Description,
-                                           CompanyId= query.CompanyId,
-                                           Price=query.Price
+                                           ProductName= query.ProductName
                                        }).ToListAsync();
             return data;
         }
+
+        //public async Task<> GetProductWisePrice(int ProductID)
+        //{
+        //    var data=await _unitOfWork.Product.Queryable
+        //                              .Where(a => a.IsDeleted == 0 && a.IsActive == 1)
+        //                              .Select(query=>)
+        //}
     }
 }
