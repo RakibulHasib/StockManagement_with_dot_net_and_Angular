@@ -20,6 +20,10 @@ export class DistributionCreateComponent implements OnInit {
   productData: Product[] = [];
 
   form = new FormGroup({});
+  model = {
+    concernPerson:'',
+    formData: this.formData
+  }
   options: FormlyFormOptions = {};
 
   fields: FormlyFieldConfig[] = [];
@@ -42,11 +46,15 @@ export class DistributionCreateComponent implements OnInit {
 
 
   insert(): void {
+    console.log(this.model);
     if (this.form.invalid) {
       console.log("invalid submission");
       return;
     }
-    this.salesService.insert(this.formData)
+    this.salesService.insert({
+        concernPerson:this.model.concernPerson,
+        salesDistribute: this.model.formData
+    })
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
         console.log(r);
@@ -64,6 +72,7 @@ export class DistributionCreateComponent implements OnInit {
           label: 'ConcernPerson',
           floatLabel: 'always',
           appearance: 'outline',
+          required: true,
           hideRequiredMarker: true,
         },
         validation: {
@@ -71,6 +80,7 @@ export class DistributionCreateComponent implements OnInit {
         }
       },
       {
+        key: 'formData',
         type: 'product-distribution',
         fieldArray: {
           fieldGroupClassName: 'display-flex',

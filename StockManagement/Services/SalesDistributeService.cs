@@ -33,7 +33,7 @@ namespace StockManagement.Services
             return query;
         }
 
-        public async Task<ActionResult<int>> InsertSalesDistributeData(List<SalesDistributeDTO> salesDistributeVM)
+        public async Task<ActionResult<int>> InsertSalesDistributeData(string concernPerson, List<SalesDistributeDTO> salesDistributeVM)
         {
             int result = 0;
             SalesDistribute master = new SalesDistribute
@@ -43,7 +43,7 @@ namespace StockManagement.Services
                 TotalReturn=0,
                 TotalSales = 0,
                 GrandTotal = 0,
-                ConcernPerson = salesDistributeVM[0].ConcernPerson
+                ConcernPerson = concernPerson
             };
             await _unitOfWork.SalesDistribute.AddAsync(master);
             await _unitOfWork.SaveChangesAsync();

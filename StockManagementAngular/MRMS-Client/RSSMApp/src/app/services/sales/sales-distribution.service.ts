@@ -27,7 +27,7 @@ export class SalesDistributionService {
   getProduct(): Observable<Product[]> {
     return this.http.get<Product[]>(`${IceCreamApiUrl}/${endPoint}/GetProduct`);
   }
-  insert(data: SalesDistribution[]): Observable<SalesDistribution[]> {
+  insert(data: {concernPerson: string, salesDistribute: SalesDistribution[]}): Observable<any> {
     return this.http.post<SalesDistribution[]>(`${IceCreamApiUrl}/${endPoint}/InsertSalesDistributeData`, data);
   }
 }

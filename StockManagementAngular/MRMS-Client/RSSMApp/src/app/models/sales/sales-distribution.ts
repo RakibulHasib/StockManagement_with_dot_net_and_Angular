@@ -1,7 +1,6 @@
 export class SalesDistribution {
   constructor(
     public sl?: number,
-    public concernPerson?: string,
     public productId?: number,
     public price?: number,
     public receiveQuantity?: number,

@@ -25,9 +25,9 @@ namespace StockManagement.Controllers
 
         [Transaction]
         [HttpPost("InsertSalesDistributeData")]
-        public async Task<ActionResult<int>> InsertSalesDistributeData(List<SalesDistributeDTO> salesDistributeVM)
+        public async Task<ActionResult<int>> InsertSalesDistributeData(SalesDistributeDataDto data)
         {
-            return Ok(await _salesDistributeService.InsertSalesDistributeData(salesDistributeVM));
+            return Ok(await _salesDistributeService.InsertSalesDistributeData(data.concernPerson, data.salesDistribute));
         }
 
         [HttpGet("GetProduct")]
