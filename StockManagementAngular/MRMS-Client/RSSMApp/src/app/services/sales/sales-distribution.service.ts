@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Product } from '../../models/Product/product';
 import { SalesDistribution } from '../../models/sales/sales-distribution';
 import { IceCreamApiUrl } from '../../models/shared/app-constants';
+import { DailyDistributionModel } from 'src/app/models/DailyDataModel/daily-distribution-model';
 
 
   const endPoint: string = "SalesDistribute";
@@ -17,9 +18,9 @@ export class SalesDistributionService {
     private http: HttpClient
   ) { }
 
-  //getSalesDistributeDataPerDay(startDate: string, endDate: string): Observable<Dailydatadbmodel[]> {
-  //  return this.http.get<Dailydatadbmodel[]>(`${IceCreamApiUrl}/${endPoint}/GetStockDataPerDay?CompanyId=${companyId}&StartDate=${startDate}&EndDate=${endDate}`);
-  //}
+  getSalesDistributeDataPerDay(startDate: string, endDate: string): Observable<DailyDistributionModel[]> {
+   return this.http.get<DailyDistributionModel[]>(`${IceCreamApiUrl}/${endPoint}/GetSalesDistributeDataPerDay?StartDate=${startDate}&EndDate=${endDate}`);
+  }
   //getReportData(stockID: number): Observable<stockReportDataModel> {
   //  return this.http.get<stockReportDataModel>(`${IceCreamApiUrl}/${endPoint}/GetReport?StockId=${stockID}`);
   //}

@@ -22,12 +22,12 @@ namespace StockManagement.Services
                         .Select(query => new DailyDistributeDataDTO
                         {
                             SalesDistributeId = query.SalesDistributeId,
-                            TotalPrice = query.TotalPrice,
+                            ConcernPerson = query.ConcernPerson,
                             TotalReceive = query.TotalReceive,
                             TotalReturn = query.TotalReturn,
                             TotalSales = query.TotalSales,
+                            TotalPrice = query.TotalPrice,
                             GrandTotal = query.GrandTotal,
-                            ConcernPerson = query.ConcernPerson,
                             CreationTime = query.CreationTime
                         }).ToListAsync();
             return query;

@@ -100,6 +100,26 @@
 :host ::ng-deep .width-160 {
   width: 160px;
 }
+:host ::ng-deep .width-50-percent {
+  width: 50%;
+}
+
+/* .f-w{
+  text-align: end;
+  margin-right: 40px;
+  margin-top: -67px;
+} */
+
+.header{
+  padding-bottom: 20px;
+  margin-left: 500px;
+  text-align: center;
+}
+
+:host ::ng-deep app-distribution-config{
+  position: relative;
+}
+
 /* 
 .f-w {
     width: 100%;

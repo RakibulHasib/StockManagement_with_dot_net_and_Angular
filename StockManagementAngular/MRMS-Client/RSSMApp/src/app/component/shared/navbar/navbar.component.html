@@ -21,18 +21,18 @@
       </mat-list-item>
 
       <div *ngIf="submenus['stock']">
-        <a mat-list-item [routerLink]="['/stock', companies.Savoy]"><mat-icon>games</mat-icon>Savoy</a>
-        <a mat-list-item [routerLink]="['/stock', companies.Lovello]"><mat-icon>games</mat-icon>Lovello</a>
-        <a mat-list-item [routerLink]="['/stock', companies.Igloo]"><mat-icon>games</mat-icon>Igloo</a>
-        <a mat-list-item [routerLink]="['/stock', companies.ZaNZee]"><mat-icon>games</mat-icon>ZaNZee</a>
-        <a mat-list-item [routerLink]="['/stock', companies.KaziFarmFood]"><mat-icon>games</mat-icon>KaziFarmFood</a>
+        <a mat-list-item [routerLink]="['/stock', companies.Savoy]"><mat-icon>label_important</mat-icon>Savoy</a>
+        <a mat-list-item [routerLink]="['/stock', companies.Lovello]"><mat-icon>label_important</mat-icon>Lovello</a>
+        <a mat-list-item [routerLink]="['/stock', companies.Igloo]"><mat-icon>label_important</mat-icon>Igloo</a>
+        <a mat-list-item [routerLink]="['/stock', companies.ZaNZee]"><mat-icon>label_important</mat-icon>ZaNZee</a>
+        <a mat-list-item [routerLink]="['/stock', companies.KaziFarmFood]"><mat-icon>label_important</mat-icon>KaziFarmFood</a>
       </div>
       <mat-list-item (click)="toggleSubmenu('salesDistribution')">
         <a mat-line><mat-icon>open_with</mat-icon>SalesDistribution</a>
       </mat-list-item>
 
       <div *ngIf="submenus['salesDistribution']">
-        <a mat-list-item [routerLink]="['/sales-create']"><mat-icon>games</mat-icon>Distribution</a>
+        <a mat-list-item [routerLink]="['/sales-view']"><mat-icon>label_important</mat-icon>Distribution</a>
       </div>
 
       <!-- Add more menu items or submenus as needed -->

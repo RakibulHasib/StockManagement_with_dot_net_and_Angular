@@ -7,6 +7,7 @@ import { Product } from '../../../models/Product/product';
 import { SalesDistribution } from '../../../models/sales/sales-distribution';
 import { SalesDistributionService } from '../../../services/sales/sales-distribution.service';
 import { NotificationService } from '../../../services/Shared/notification.service';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-distribution-create',
@@ -63,21 +64,28 @@ export class DistributionCreateComponent implements OnInit {
       })
   }
   generatedistributeFormFields() {
+    
     this.fields = [
       {
-        className: 'concernPerson width-80',
-        type: 'input',
-        key: 'concernPerson',
-        props: {
+        fieldGroupClassName: 'display-flex',
+          fieldGroup: [
+          {
+            className: 'concernPerson width-50-percent',
+            type: 'input',
+            key: 'concernPerson',
+          props: {
           label: 'ConcernPerson',
           floatLabel: 'always',
           appearance: 'outline',
           required: true,
           hideRequiredMarker: true,
+      
         },
         validation: {
           messages: { required: " " }
         }
+          }
+        ],  
       },
       {
         key: 'formData',
@@ -166,11 +174,32 @@ export class DistributionCreateComponent implements OnInit {
                 label: 'SalesQuantity',
                 floatLabel: 'always',
                 appearance: 'outline',
+                readonly: true,
                 hideRequiredMarker: true,
               },
               validation: {
                 messages: { required: " " }
+              },
+              hooks: {
+                onInit: (field: FormlyFieldConfig) => {
+                  field.form?.get('receiveQuantity')?.valueChanges.subscribe({
+                    next: (value) => {
+                      const receiveQ = value;
+                      const returnQ=(field.form?.get('returnQuantity')?.value || 0) 
+                      field.formControl?.setValue(receiveQ - returnQ);
+                    }
+                  });
+            
+                  field.form?.get('returnQuantity')?.valueChanges.subscribe({
+                    next: (value) => {
+                      const returnQ = value;
+                      const receiveQ=(field.form?.get('receiveQuantity')?.value || 0)
+                      field.formControl?.setValue(receiveQ - returnQ);
+                    }
+                  });
+                }
               }
+       
             },
             {
               className: 'totalSalesPrice flex-1 width-160',
@@ -180,10 +209,30 @@ export class DistributionCreateComponent implements OnInit {
                 label: 'TotalSalesPrice',
                 floatLabel: 'always',
                 appearance: 'outline',
+                readonly: true,
                 hideRequiredMarker: true,
               },
               validation: {
                 messages: { required: " " }
+              },
+              hooks: {
+                onInit: (field: FormlyFieldConfig) => {
+                  field.form?.get('price')?.valueChanges.subscribe({
+                    next: (value) => {
+                      const price = value;
+                      const salesQ=(field.form?.get('salesQuantity')?.value || 0)
+                      field.formControl?.setValue(price * salesQ );
+                    }
+                  });
+            
+                  field.form?.get('salesQuantity')?.valueChanges.subscribe({
+                    next: (value) => {
+                      const salesQ = value;
+                      const price=(field.form?.get('price')?.value || 0)
+                      field.formControl?.setValue( price * salesQ);
+                    }
+                  });
+                }
               }
             }
           ],
