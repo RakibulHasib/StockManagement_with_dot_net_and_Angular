@@ -79,7 +79,7 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header  class="action" >Action</mat-header-cell>
           <mat-cell *matCellDef="let element" class="action">
   
-            <button mat-raised-button [routerLink]="['/stock-report',element.stockId]" class="icon-spacing">View</button>
+            <button mat-raised-button [routerLink]="['/sales-report',element.salesDistributeId]" class="icon-spacing">View</button>
             <mat-icon color="primary" class="icon-spacing" (click)="showExpandButton = !showExpandButton">more_vert</mat-icon>
   
   

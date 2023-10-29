@@ -35,6 +35,8 @@ import { DistributionCreateComponent } from './component/distribution/distributi
 import { DistributionConfigComponent } from './component/distribution/distribution-config/distribution-config.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { FormlyMatToggleModule } from '@ngx-formly/material/toggle';
+import { DistributionReportComponent } from './component/distribution/distribution-report/distribution-report.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 
@@ -61,7 +63,8 @@ import { FormlyMatToggleModule } from '@ngx-formly/material/toggle';
     ProductRepeatComponent,
     DistributionViewComponent,
     DistributionCreateComponent,
-    DistributionConfigComponent
+    DistributionConfigComponent,
+    DistributionReportComponent
   ],
   imports: [
     BrowserModule,
@@ -76,6 +79,7 @@ import { FormlyMatToggleModule } from '@ngx-formly/material/toggle';
     MatTabsModule,
     FormsModule,
     FormlyMatToggleModule,
+    MatExpansionModule,
     FormlyModule.forRoot({
       extras: { lazyRender: true, resetFieldOnHide: true },
       validationMessages: [

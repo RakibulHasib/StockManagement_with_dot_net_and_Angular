@@ -29,10 +29,10 @@ public class StockController : ControllerBase
         return await _stockService.GetStockDataPerDay(companyId, StartDate, EndDate);
     }
 
-    [HttpGet("GetReport")]
-    public async Task<ActionResult<ReportDTO>> GetReport(int StockId)
-    {
-        return await _stockService.GetReport(StockId);
-    }
+        [HttpGet("GetReport")]
+        public async Task<ActionResult<ReportDTO>> GetReport(int StockId)
+        {
+            return await _stockService.GetReport(StockId);
+        }
 
 }

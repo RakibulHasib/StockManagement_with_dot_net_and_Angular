@@ -41,5 +41,11 @@ namespace StockManagement.Controllers
         {
             return Ok(await _salesDistributeService.GetProductWisePrice(ProductID));
         }
+
+        [HttpGet("GetSalesDistributeReport")]
+        public async Task<ActionResult<SalesDistributeReportDTO>> GetSalesDistributeReport(int SalesDistributeId)
+        {
+            return await _salesDistributeService.GetSalesDistributeReport(SalesDistributeId);
+        }
     }
 }

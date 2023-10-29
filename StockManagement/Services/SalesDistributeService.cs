@@ -98,5 +98,39 @@ namespace StockManagement.Services
                                       }).FirstOrDefaultAsync();
             return data;
         }
+
+        public async Task<SalesDistributeReportDTO> GetSalesDistributeReport(int SalesDistributeId)
+        {
+            SalesDistributeReportDTO? reportDTO = new SalesDistributeReportDTO();
+            var salesdistributeData = await _unitOfWork.SalesDistribute.Queryable
+                                    .Where(a => a.SalesDistributeId == SalesDistributeId)
+                                    .Select(query => new SalesDistributeReportDTO
+                                    {
+                                        SalesDistributeId = query.SalesDistributeId,
+                                        ConcernPerson = query.ConcernPerson,
+                                        CreationTime = query.CreationTime
+                                    }).FirstOrDefaultAsync();
+
+            reportDTO = salesdistributeData;
+
+            salesdistributeData.reportDetails = (from si in _unitOfWork.SalesDistributeDetail.Queryable
+                                               join p in _unitOfWork.Product.Queryable on si.ProductId equals p.ProductId
+                                               where si.SalesDistributeId == SalesDistributeId
+                                                 select new SalesDistributeReportDetail
+                                               {
+                                                   SalesDistributeId = si.SalesDistributeId,
+                                                   SalesDistributeDetailsId = si.SalesDistributeDetailsId,
+                                                   ProductId = si.ProductId,
+                                                   ProductName = p.ProductName,
+                                                   Price = si.Price,
+                                                   ReceiveQuantity = si.ReceiveQuantity,
+                                                   ReturnQuantity = si.ReturnQuantity,
+                                                   SalesQuantity = si.SalesQuantity,
+                                                   TotalSalesPrice = si.TotalSalesPrice,
+                                                   CreationTime = si.CreationTime
+                                               }).ToList();
+
+            return reportDTO;
+        }
     }
 }

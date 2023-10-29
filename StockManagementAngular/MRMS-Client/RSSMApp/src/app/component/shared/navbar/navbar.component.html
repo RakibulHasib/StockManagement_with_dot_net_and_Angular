@@ -7,59 +7,35 @@
         <mat-label>Rosh Sweets</mat-label>
       </mat-toolbar-row>
     </mat-toolbar>
-    <mat-nav-list style="font-size: 13px;">
-      <a mat-list-item [routerLink]="['/home']">
-        <mat-icon>dashboard</mat-icon> Dashboard
-      </a>
-      <a mat-list-item [routerLink]="['/productView']">
-        <mat-icon>dashboard</mat-icon>Product
-      </a>
 
-      <!-- Submenu for Stock -->
-      <mat-list-item (click)="toggleSubmenu('stock')">
-        <a mat-line><mat-icon>open_with</mat-icon> StockDeatils</a>
+    <mat-nav-list>
+      <mat-list-item [routerLink]="['/home']">
+          <mat-icon>dashboard</mat-icon><span>Dashboard</span>
       </mat-list-item>
-
-      <div *ngIf="submenus['stock']">
-        <a mat-list-item [routerLink]="['/stock', companies.Savoy]"><mat-icon>label_important</mat-icon>Savoy</a>
-        <a mat-list-item [routerLink]="['/stock', companies.Lovello]"><mat-icon>label_important</mat-icon>Lovello</a>
-        <a mat-list-item [routerLink]="['/stock', companies.Igloo]"><mat-icon>label_important</mat-icon>Igloo</a>
-        <a mat-list-item [routerLink]="['/stock', companies.ZaNZee]"><mat-icon>label_important</mat-icon>ZaNZee</a>
-        <a mat-list-item [routerLink]="['/stock', companies.KaziFarmFood]"><mat-icon>label_important</mat-icon>KaziFarmFood</a>
-      </div>
-      <mat-list-item (click)="toggleSubmenu('salesDistribution')">
-        <a mat-line><mat-icon>open_with</mat-icon>SalesDistribution</a>
-      </mat-list-item>
-
-      <div *ngIf="submenus['salesDistribution']">
-        <a mat-list-item [routerLink]="['/sales-view']"><mat-icon>label_important</mat-icon>Distribution</a>
-      </div>
-
-      <!-- Add more menu items or submenus as needed -->
-
-    </mat-nav-list>
-
-    <!--<mat-nav-list style="font-size: 13px;">
-    <a mat-list-item [routerLink]="['/home', ]"><mat-icon>dashboard</mat-icon> Dashboard</a>
-    <a mat-list-item [routerLink]="['/stock', companies.Savoy]">	<mat-icon>open_with</mat-icon> Savoy</a>
-    <a mat-list-item [routerLink]="['/stock', companies.Lovello]">	<mat-icon>open_with</mat-icon> Lovello</a>
-    <a mat-list-item [routerLink]="['/stock', companies.Igloo]">	<mat-icon>open_with</mat-icon> Igloo</a>
-    <a mat-list-item [routerLink]="['/stock', companies.ZaNZee]">	<mat-icon>open_with</mat-icon> ZaNZee</a>
-    <a mat-list-item [routerLink]="['/stock', companies.KaziFarmFood]">	<mat-icon>open_with</mat-icon> KaziFarmFood</a>
-
-
-  </mat-nav-list>-->
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+          <mat-expansion-panel-header>
+            StockDeatils
+          </mat-expansion-panel-header>
+          <mat-nav-list>
+            <a mat-list-item [routerLink]="['/stock', companies.Savoy]"><mat-icon>label_important</mat-icon>Savoy</a>
+            <a mat-list-item [routerLink]="['/stock', companies.Lovello]"><mat-icon>label_important</mat-icon>Lovello</a>
+            <a mat-list-item [routerLink]="['/stock', companies.Igloo]"><mat-icon>label_important</mat-icon>Igloo</a>
+            <a mat-list-item [routerLink]="['/stock', companies.ZaNZee]"><mat-icon>label_important</mat-icon>ZaNZee</a>
+            <a mat-list-item [routerLink]="['/stock', companies.KaziFarmFood]"><mat-icon>label_important</mat-icon>KaziFarmFood</a>
+          </mat-nav-list>
+      </mat-expansion-panel>
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+          <mat-expansion-panel-header>
+            SalesDistribution
+          </mat-expansion-panel-header>
+          <mat-nav-list>
+            <a mat-list-item [routerLink]="['/sales-view']"><mat-icon>label_important</mat-icon>Distribution</a>
+          </mat-nav-list>
+      </mat-expansion-panel>
+  </mat-nav-list>
   </mat-sidenav>
+  
   <mat-sidenav-content>
-    <!--<mat-toolbar color="primary">
-    <mat-toolbar-row> <h3>Recipe Book</h3></mat-toolbar-row>
-
-    <mat-toolbar-row>
-      <span class="spacer"></span>-->
-    <!--<button mat-raised-button color="primary" (click)="logOut()" *ngIf="isAuthenticated()">Logout</button>
-  <button mat-raised-button color="primary" routerLink="/angular-material" *ngIf="isAuthenticated()">{{displayName}}</button>-->
-    <!--</mat-toolbar-row>
-  </mat-toolbar>-->
     <mat-toolbar color="primary">
       <mat-toolbar-row>
         <ng-template [ngIf]="!authService.isAuthenticated()">

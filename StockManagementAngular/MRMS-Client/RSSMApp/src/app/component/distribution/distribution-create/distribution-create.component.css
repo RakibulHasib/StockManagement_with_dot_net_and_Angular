@@ -119,6 +119,10 @@
 :host ::ng-deep app-distribution-config{
   position: relative;
 }
+.f-w{
+  display: flex;
+  justify-content: space-between;
+}
 
 /* 
 .f-w {

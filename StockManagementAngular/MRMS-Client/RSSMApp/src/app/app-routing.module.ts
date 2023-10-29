@@ -12,6 +12,7 @@ import { DistributionCreateComponent } from './component/distribution/distributi
 import { ProductViewComponent } from './component/Product/product-view/product-view.component';
 import { ProductCreateComponent } from './component/Product/product-create/product-create.component';
 import { DistributionViewComponent } from './component/distribution/distribution-view/distribution-view.component';
+import { DistributionReportComponent } from './component/distribution/distribution-report/distribution-report.component';
 
 
 
@@ -26,6 +27,7 @@ const routes: Routes = [
   { path: 'stock-report/:id', component: StockReportComponent, canActivate: [AuthGuard] },
   { path: 'sales-create', component: DistributionCreateComponent, canActivate: [AuthGuard] },
   { path: 'sales-view', component: DistributionViewComponent, canActivate: [AuthGuard] },
+  {path:'sales-report/:id', component:DistributionReportComponent,canActivate:[AuthGuard]},
   { path: 'productView', component: ProductViewComponent, canActivate: [AuthGuard] },
   { path: 'productAdd', component: ProductCreateComponent, canActivate: [AuthGuard] }
 
