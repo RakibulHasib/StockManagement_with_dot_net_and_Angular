@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { Observable, of, startWith, switchMap } from 'rxjs';
+import { Observable, map, of, startWith, switchMap, tap } from 'rxjs';
 import { Product } from '../../../models/Product/product';
 import { SalesDistribution } from '../../../models/sales/sales-distribution';
 import { SalesDistributionService } from '../../../services/sales/sales-distribution.service';
@@ -15,6 +15,9 @@ import { ConnectionPositionPair } from '@angular/cdk/overlay';
   styleUrls: ['./distribution-create.component.css']
 })
 export class DistributionCreateComponent implements OnInit {
+  
+
+
   currentDate: Date = new Date();
   distributeForm: FormGroup = new FormGroup({});
   formData: SalesDistribution[] = [{}];
@@ -99,14 +102,34 @@ export class DistributionCreateComponent implements OnInit {
               key: 'productId',
               templateOptions: {
                 label: 'Product Name',
-                options: this.salesService.getProduct(),
+                options: this.salesService.getProduct().pipe(
+                  map(
+                    x => x.filter(a=>!this.formData
+                          .filter(a => a !== undefined)
+                          .map(a=>a.productId)
+                        .includes(a.productId))       
+                  )
+                ),
                 valueProp:'productId',
                 labelProp:'productName'
               },
 
               validation: {
                 messages: { required: " " }
-              }
+              },
+              // hooks:{
+              //   onChanges:(field:FormlyFieldConfig)=>{
+              //     const updatedOptions = this.salesService.getProduct().pipe(
+              //       tap(value=>value.filter(
+              //         x=>this.model.formData.some(d=>d.productId !== x.productId)
+              //       ))
+              //     );
+              //     console.log(updatedOptions);
+              //     // field.model.productId=updatedOptions;
+              //     // console.log(updatedOptions)
+                
+              //   }
+              // }
             },
             {
               className: 'price flex-1 width-160',
