@@ -19,11 +19,11 @@ public class ProductService
         _db = db;
     }
 
-    public async Task<ActionResult<IEnumerable<GetProductData>>> GetProducCompanyWise(int CompanyId)
+    public async Task<IEnumerable<GetProductData>> GetProducCompanyWise(int CompanyId)
     {
         var products = await (from product in _unitOfWork.Product.Queryable
-                              join company in _unitOfWork.Company.Queryable
-                              on product.CompanyId equals company.CompanyId
+                              //join company in _unitOfWork.Company.Queryable
+                              //on product.CompanyId equals company.CompanyId
                               where /*product.IsDeleted == 0 && product.IsActive == 1 &&*/ product.CompanyId == CompanyId
                               select new GetProductData
                               {
@@ -32,7 +32,7 @@ public class ProductService
                                   Description = product.Description,
                                   Price = product.Price,
                                   CompanyId = product.CompanyId,
-                                  CompanyName = company.CompanyName,
+                                  //CompanyName = company.CompanyName,
                                   IsActive = product.IsActive,
                                   Sequence = product.Sequence
                               }).ToListAsync();
@@ -40,7 +40,7 @@ public class ProductService
         return products.ToList();
     }
 
-    public async Task<ActionResult<ProductDTO>> GetProducByID(int ProductId)
+    public async Task<ProductDTO> GetProducByID(int ProductId)
     {
         var products = await (from product in _unitOfWork.Product.Queryable
                               where product.ProductId == ProductId
@@ -57,7 +57,7 @@ public class ProductService
 
         return products;
     }
-    public async Task<ActionResult<int>> InsertProduct(ProductDTO product)
+    public async Task<int> InsertProduct(ProductDTO product)
     {
         int result = 0;
         Product products = new Product
@@ -76,7 +76,7 @@ public class ProductService
 
         return result;
     }
-    public async Task<ActionResult<int>> UpdateProduct(ProductDTO product)
+    public async Task<int> UpdateProduct(ProductDTO product)
     {
         int result = 0;
         Product products = new Product
@@ -98,7 +98,7 @@ public class ProductService
     }
 
 
-    public async Task<ActionResult<int>> DeleteProduct(int ProductId)
+    public async Task<int> DeleteProduct(int ProductId)
     {
         int result = 0;
         var data = await _db.Products.Where(a => a.ProductId == ProductId).FirstOrDefaultAsync();

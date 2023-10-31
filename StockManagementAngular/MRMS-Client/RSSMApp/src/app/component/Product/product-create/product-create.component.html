@@ -1,5 +1,5 @@
 <mat-card class="mat-elevation-z3">
-  <mat-card-header>
+  <mat-card-header style="margin-bottom:10px">
     <mat-card-title> Add New Product </mat-card-title>
     <mat-card-subtitle class="right-aligned">{{ currentDate | date:'fullDate' }}  </mat-card-subtitle>
   </mat-card-header>
@@ -14,7 +14,7 @@
       </div>
     </form> -->
     <form [formGroup]="form" class="productEntryForm" (ngSubmit)="insert()">
-      <formly-form [model]="productData" [fields]="fields" [options]="options" [form]="form"></formly-form>
+      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
       <div class="f-w mb-1">
         <button type="submit" mat-raised-button color="primary">Save</button>
       </div>
@@ -22,6 +22,6 @@
 
   </mat-card-content>
   <mat-card-actions>
-    <a mat-flat-button [routerLink]="[getCompanyRoute(companyId)]">Back to list</a>
+    <a mat-flat-button [routerLink]="[getCompanyRoute(null)]">Back to list</a>
   </mat-card-actions>
 </mat-card>

@@ -5,7 +5,10 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { NotificationService } from '../../../services/Shared/notification.service';
 import { ProductService } from '../../../services/Product/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Company } from '../../../models/companyenum/company';
+
+import { CompanyService } from '../../../service/Company/company.service';
+import { filter, map } from 'rxjs';
+import { Company } from '../../../models/company/company';
 
 @Component({
   selector: 'app-product-create',
@@ -17,8 +20,12 @@ export class ProductCreateComponent {
   companyId!: number;
   producForm: FormGroup = new FormGroup({});
   productData: Product = new Product;
-  
 
+  companyData: Company[] = [];
+
+  model = {
+    productData: this.productData
+  }
   form = new FormGroup({});
   options: FormlyFormOptions = {};
 
@@ -28,24 +35,25 @@ export class ProductCreateComponent {
     private notificationSvc: NotificationService,
     private productService: ProductService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private companyService: CompanyService
   ) {
     this.companyId = this.activatedRoute.snapshot.params['id'];
   }
 
 
   getCompanyRoute(companyId: any): string {
-    return `/stock/${Company[companyId]}`;
+    return `/productView`;
   }
   insert(): void {
     if (this.form.invalid) {
       console.log("invalid submission");
       return;
     }
-    this.productService.insert( this.productData)
+    this.productService.insert(this.productData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
-        this.router.navigate(['/prductView', this.companyId]);
+        //this.router.navigate(['/prductView']);
         console.log(r);
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");
@@ -54,106 +62,150 @@ export class ProductCreateComponent {
 
   ngOnInit(): void {
     //this.companyId = this.activatedRoute.snapshot.params['id'];
-   /* this.productService.getProductsListCompanyWise(this.companyId)*/
-      //.subscribe(r => {
-      //  /*this.productData = r;*/
-      //  this.generateFormFields();
-      //}, err => {
-      //  this.notificationSvc.message("Failed to load Company", "DISMISS");
-      //})
+    /* this.productService.getProductsListCompanyWise(this.companyId)*/
+    //.subscribe(r => {
+    //  /*this.productData = r;*/
+    //  this.generateFormFields();
+    //}, err => {
+    //  this.notificationSvc.message("Failed to load Company", "DISMISS");
+    //})
     this.generateFormFields();
   }
 
   generateFormFields() {
     this.fields = [
       {
-        
-          fieldGroupClassName: 'display-flex',
-          fieldGroup: [
-     
-            {
-              className: 'flex-1',
-              type: 'input',
-              key: 'productName',
-              props: {
-                label: 'Product Name',
-                appearance:'outline',
-                floatLabel: 'always',
-                hideRequiredMarker: true,
-              },
-              validation: {
-                messages: { required: " " }
-              }
-            },
-            {
-              className: 'flex-1',
-              type: 'input',
-              key: 'price',
-              props: {
-                label: 'Price',
-                required: true,
-                appearance: 'outline',
-                floatLabel: 'always',
-                hideRequiredMarker: true,
-              },
-              validation: {
-                messages: { required: " " }
-              }
-            },
-            {
-              className: 'flex-1',
-              type: 'input',
-              key: 'sequence',
-              props: {
-                label: 'Sequence',
-                appearance: 'outline',
-                floatLabel: 'always',
-                hideRequiredMarker: true,
-              },
-              validation: {
-                messages: { required: " " }
-              }
-            },
-            {
-              className: 'flex-1',
-              type: 'input',
-              key: 'description',
-              props: {
-                label: 'Description',
-                required: true,
-                appearance: 'outline',
-                floatLabel: 'always',
-                hideRequiredMarker: true,
-              },
-              validation: {
-                messages: { required: " " }
-              }
-            },
-            {
-              className: 'flex-1',
-              type: 'toggle',
-              defaultValue:true,
-              key: 'IsActive',
-              props: {
-                label: 'IsActive',
-                appearance: 'outline',
-                floatLabel: 'always',
-                hideRequiredMarker: true,
-              },
-              validation: {
-                messages: { required: " " }
-              },
-              expressions: {
-                'model.IsActive': 'model.IsActive ? 1 : 0'
 
-              },
+        fieldGroupClassName: 'display-flex',
+        key: 'productData',
+        fieldGroup: [
+
+          //{
+          //  className: 'flex-1',
+          //  type: 'select',
+          //  key: 'companyId',
+          //  templateOptions: {
+          //    label: 'Company Name',
+          //    options: this.companyService.getCompany().pipe(
+          //      map(
+          //        a => a.filter(b => !this.companyData
+          //          .filter(a => a !== undefined)
+          //          .map(a => a.companyId)
+          //          .includes(a => a.companyId)
+          //        )
+          //      )
+          //    ),
+          //    valueProp: 'companyId',
+          //    labelProp: 'companyName'
+          //  },
+          //  validation: {
+          //    messages: { required: " " }
+          //  },
+
+          //},
+          {
+            className: 'flex-1',
+            type: 'select',
+            key: 'companyId',
+            templateOptions: {
+              label: 'Company Name',
+              options: this.companyService.getCompany().pipe(
+                map(companies => companies.filter(company =>
+                  !this.companyData.some(existingCompany =>
+                    existingCompany.companyId === company.companyId
+                  )
+                ))
+              ),
+              valueProp: 'companyId',
+              labelProp: 'companyName'
             },
- 
-            
-            
-           
-          ],
-        
+            validation: {
+              messages: { required: " " }
+            },
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'productName',
+            props: {
+              label: 'Product Name',
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages: { required: " " }
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'price',
+            props: {
+              label: 'Price',
+              required: true,
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages: { required: " " }
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'sequence',
+            props: {
+              label: 'Sequence',
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages: { required: " " }
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'description',
+            props: {
+              label: 'Description',
+              required: true,
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages: { required: " " }
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'toggle',
+            defaultValue: true,
+            key: 'IsActive',
+            props: {
+              label: 'IsActive',
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages: { required: " " }
+            },
+            expressions: {
+              'model.IsActive': 'model.IsActive ? 1 : 0'
+
+            },
+          },
+
+
+
+
+        ],
+
       }
     ]
   }

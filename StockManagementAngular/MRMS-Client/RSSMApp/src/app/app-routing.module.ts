@@ -29,7 +29,7 @@ const routes: Routes = [
   { path: 'sales-view', component: DistributionViewComponent, canActivate: [AuthGuard] },
   {path:'sales-report/:id', component:DistributionReportComponent,canActivate:[AuthGuard]},
   { path: 'productView', component: ProductViewComponent, canActivate: [AuthGuard] },
-  { path: 'productAdd', component: ProductCreateComponent, canActivate: [AuthGuard] }
+  { path: 'productAdd', component: ProductCreateComponent, canActivate: [AuthGuard] },
 
 ];
 
