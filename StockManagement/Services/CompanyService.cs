@@ -18,7 +18,7 @@ public class CompanyService
         _db = db;
     }
 
-    public async Task<ActionResult<IEnumerable<CompaniesDTO>>>GetCompanyList()
+    public async Task<IEnumerable<CompaniesDTO>>GetCompanyList()
     {
         var companies = await _unitOfWork.Company.Queryable
                                 .Select(query => new CompaniesDTO
@@ -39,7 +39,7 @@ public class CompanyService
         }).ToList();
     }
 
-    public async Task<ActionResult<CompaniesDTO>> GetCompanyByID(int CompanyId)
+    public async Task<CompaniesDTO> GetCompanyByID(int CompanyId)
     {
         var companie = await _unitOfWork.Company.Queryable
                                 .Select(query => new CompaniesDTO
@@ -53,7 +53,7 @@ public class CompanyService
         return companie;
 
     }
-    public async Task<ActionResult<int>> InsertCompany(CompaniesDTO companies)
+    public async Task<int> InsertCompany(CompaniesDTO companies)
     {
         int result = 0;
         Company company = new Company
@@ -69,7 +69,7 @@ public class CompanyService
         return result;
     }
 
-    public async Task<ActionResult<int>> UpdateCompany(CompaniesDTO companies)
+    public async Task<int> UpdateCompany(CompaniesDTO companies)
     {
         int result = 0;
         Company company = new Company
@@ -86,7 +86,7 @@ public class CompanyService
         return result;
     }
 
-    public async Task<ActionResult<int>> DeleteCompany(int CompanyId)
+    public async Task<int> DeleteCompany(int CompanyId)
     {
         int result = 0;
         var data = await _db.Companies.Where(a => a.CompanyId == CompanyId).FirstOrDefaultAsync();

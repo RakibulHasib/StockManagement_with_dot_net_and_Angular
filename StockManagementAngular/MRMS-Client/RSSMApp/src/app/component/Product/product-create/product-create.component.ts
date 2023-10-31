@@ -35,7 +35,7 @@ export class ProductCreateComponent {
 
 
   getCompanyRoute(companyId: any): string {
-    return `/stock/${Company[companyId]}`;
+    return `/productView`;
   }
   insert(): void {
     if (this.form.invalid) {
@@ -45,7 +45,7 @@ export class ProductCreateComponent {
     this.productService.insert( this.productData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
-        this.router.navigate(['/prductView', this.companyId]);
+        this.router.navigate(['/prductView']);
         console.log(r);
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");

@@ -47,6 +47,7 @@ builder.Services.AddTransient(typeof(Repository<,>));
 builder.Services.AddScoped(typeof(UnitOfWork));
 builder.Services.AddScoped<StockService>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CompanyService>();
 
 builder.Services.AddDbContext<StockDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllers();

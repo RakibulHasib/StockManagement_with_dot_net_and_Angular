@@ -19,11 +19,11 @@ public class ProductService
         _db = db;
     }
 
-    public async Task<ActionResult<IEnumerable<GetProductData>>> GetProducCompanyWise(int CompanyId)
+    public async Task<IEnumerable<GetProductData>> GetProducCompanyWise(int CompanyId)
     {
         var products = await (from product in _unitOfWork.Product.Queryable
-                              join company in _unitOfWork.Company.Queryable
-                              on product.CompanyId equals company.CompanyId
+                              //join company in _unitOfWork.Company.Queryable
+                              //on product.CompanyId equals company.CompanyId
                               where /*product.IsDeleted == 0 && product.IsActive == 1 &&*/ product.CompanyId == CompanyId
                               select new GetProductData
                               {
@@ -32,7 +32,7 @@ public class ProductService
                                   Description = product.Description,
                                   Price = product.Price,
                                   CompanyId = product.CompanyId,
-                                  CompanyName = company.CompanyName,
+                                  //CompanyName = company.CompanyName,
                                   IsActive = product.IsActive,
                                   Sequence = product.Sequence
                               }).ToListAsync();
