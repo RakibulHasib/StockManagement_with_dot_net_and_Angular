@@ -7,7 +7,7 @@ export class Product {
     public sequence?: number,
     public IsActive?: number,
     public description?: string,
-    public companyUd?:number
+    public companyId?:number
 
   ) { }
 }
