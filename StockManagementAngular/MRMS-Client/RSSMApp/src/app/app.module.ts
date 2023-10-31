@@ -30,8 +30,13 @@ import { ProductViewComponent } from './component/Product/product-view/product-v
 import { ProductCreateComponent } from './component/Product/product-create/product-create.component';
 import { ProductUpdateComponent } from './component/Product/product-update/product-update.component';
 import { StockReportComponent } from './component/report/stock-report/stock-report.component';
+import { DistributionViewComponent } from './component/distribution/distribution-view/distribution-view.component';
+import { DistributionCreateComponent } from './component/distribution/distribution-create/distribution-create.component';
+import { DistributionConfigComponent } from './component/distribution/distribution-config/distribution-config.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { FormlyMatToggleModule } from '@ngx-formly/material/toggle';
+import { DistributionReportComponent } from './component/distribution/distribution-report/distribution-report.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 
@@ -55,7 +60,11 @@ import { FormlyMatToggleModule } from '@ngx-formly/material/toggle';
     ProductCreateComponent,
     ProductUpdateComponent,
     StockReportComponent,
-    ProductRepeatComponent
+    ProductRepeatComponent,
+    DistributionViewComponent,
+    DistributionCreateComponent,
+    DistributionConfigComponent,
+    DistributionReportComponent
   ],
   imports: [
     BrowserModule,
@@ -70,6 +79,7 @@ import { FormlyMatToggleModule } from '@ngx-formly/material/toggle';
     MatTabsModule,
     FormsModule,
     FormlyMatToggleModule,
+    MatExpansionModule,
     FormlyModule.forRoot({
       extras: { lazyRender: true, resetFieldOnHide: true },
       validationMessages: [
@@ -77,6 +87,7 @@ import { FormlyMatToggleModule } from '@ngx-formly/material/toggle';
       ],
       types: [
         { name: 'product-repeat', component: ProductRepeatComponent },
+        { name: 'product-distribution', component: DistributionConfigComponent }
       ],
     }),
     FormlyMaterialModule
