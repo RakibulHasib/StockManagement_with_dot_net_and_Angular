@@ -53,7 +53,7 @@ export class ProductCreateComponent {
     this.productService.insert(this.productData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
-        //this.router.navigate(['/prductView']);
+        this.router.navigate(['/productView']);
         console.log(r);
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");
@@ -80,48 +80,32 @@ export class ProductCreateComponent {
         key: 'productData',
         fieldGroup: [
 
-          //{
-          //  className: 'flex-1',
-          //  type: 'select',
-          //  key: 'companyId',
-          //  templateOptions: {
-          //    label: 'Company Name',
-          //    options: this.companyService.getCompany().pipe(
-          //      map(
-          //        a => a.filter(b => !this.companyData
-          //          .filter(a => a !== undefined)
-          //          .map(a => a.companyId)
-          //          .includes(a => a.companyId)
-          //        )
-          //      )
-          //    ),
-          //    valueProp: 'companyId',
-          //    labelProp: 'companyName'
-          //  },
-          //  validation: {
-          //    messages: { required: " " }
-          //  },
-
-          //},
           {
             className: 'flex-1',
             type: 'select',
             key: 'companyId',
-            templateOptions: {
+            defaultValue:1,
+            props: {
               label: 'Company Name',
-              options: this.companyService.getCompany().pipe(
-                map(companies => companies.filter(company =>
-                  !this.companyData.some(existingCompany =>
-                    existingCompany.companyId === company.companyId
-                  )
-                ))
-              ),
+              options: this.companyService.getCompany(),
               valueProp: 'companyId',
-              labelProp: 'companyName'
+              labelProp: 'companyName',
+              appearance: 'outline'
+              
+            },
+            expressionProperties: {
+              'templateOptions.style': () => ({
+                border: '2px solid #ff5722', 
+                borderRadius: '5px', 
+                padding: '5px 10px' 
+              })
             },
             validation: {
               messages: { required: " " }
             },
+            hooks: {
+          
+              }
           },
           {
             className: 'flex-1',

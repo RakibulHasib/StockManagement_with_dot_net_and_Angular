@@ -1,8 +1,10 @@
 <mat-card class="mat-elevation-z3">
-  <mat-card-header style="margin-bottom:10px">
+
+  <mat-card-header class="header" >
     <mat-card-title> Add New Product </mat-card-title>
-    <mat-card-subtitle class="right-aligned">{{ currentDate | date:'fullDate' }}  </mat-card-subtitle>
+    <mat-card-subtitle>{{ currentDate | date:'fullDate' }}</mat-card-subtitle>
   </mat-card-header>
+
   <mat-card-content>
     <!-- <form class="productEntryForm" (ngSubmit)="insert()">
       <div class="product-item-container" *ngFor="let product of savoyData ; let i = index; trackBy: trackByProduct">
