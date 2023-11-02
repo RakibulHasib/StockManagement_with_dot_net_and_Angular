@@ -1,33 +1,34 @@
 .example-card {
-  width: 325px;
-  max-height:200px;
+  width: 219px;
+  max-height:700px;
   display:inline-block;
   padding:20px;
   margin:20px;
+  text-align: center;
+  border-radius: 2rem;
+  box-shadow: 20rem;
+  border-width: 2px;
+  padding-right: -6px;
+  position: relative;
 }
 mat-card-content{
+
     text-align:center;
     padding:10px;
     padding-top:15px;
-    font-size:3em;
+    font-size:1.2em;
+    color: whitesmoke;
+    position: relative;
 }
-#demand {
-  background-color: #4fffe63a;
-}
-
-#trade {
-  background-color: #3bff9f7e; /* Yellow */
-}
-
-#agency {
-  background-color: #4caf5066; /* Green */
-}
-
-#applicant {
-  background-color: #2196f373; /* Blue */
+.background-image {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 2rem;
 }
 
-#agent {
-  background-color: #9c27b066; /* Purple */
-}
+
+
 
