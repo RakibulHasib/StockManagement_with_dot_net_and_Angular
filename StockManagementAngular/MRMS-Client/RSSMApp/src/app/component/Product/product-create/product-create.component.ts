@@ -18,6 +18,7 @@ import { Company } from '../../../models/company/company';
 export class ProductCreateComponent {
   currentDate: Date = new Date();
   companyId!: number;
+  
   producForm: FormGroup = new FormGroup({});
   productData: Product = new Product;
 
@@ -85,6 +86,7 @@ export class ProductCreateComponent {
             type: 'select',
             key: 'companyId',
             defaultValue:1,
+
             props: {
               label: 'Company Name',
               options: this.companyService.getCompany(),
@@ -104,7 +106,17 @@ export class ProductCreateComponent {
               messages: { required: " " }
             },
             hooks: {
+              // onInit: (field: FormlyFieldConfig) => {
+               
+              //       // this.companyService.getCompany()
+              //       //   .subscribe(r => {
+              //       //     field.defaultValue=r[0].companyId;
+              //       //     console.log(r[0].companyId);
+              //       //   }, err => {
+              //       //     this.notificationSvc.message("No Company ", "DISMISS");
+              //       //   })
           
+              // }
               }
           },
           {
