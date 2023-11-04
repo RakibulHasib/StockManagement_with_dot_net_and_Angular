@@ -84,7 +84,7 @@ export class ProductCreateComponent {
             className: 'flex-1',
             type: 'select',
             key: 'companyId',
-            defaultValue:1,
+            
             props: {
               label: 'Company Name',
               options: this.companyService.getCompany(),
@@ -104,7 +104,11 @@ export class ProductCreateComponent {
               messages: { required: " " }
             },
             hooks: {
-          
+              onInit: (field: FormlyFieldConfig) => {
+                this.companyService.getCompany().subscribe(control => {
+                    field.formControl?.setValue(control[0].companyId);
+                });               
+                }
               }
           },
           {
