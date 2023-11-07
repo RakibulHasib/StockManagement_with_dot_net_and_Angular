@@ -4,11 +4,25 @@ import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from '../../../services/Shared/notification.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as pdfMake from "pdfmake/build/pdfmake";
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+// import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import * as custom_fonts  from 'src/assets/custom_fonts/custom_fonts';
 import { StockService } from '../../../services/Stock/stock.service';
 import { stockReportDataModel } from '../../../models/Stock/stock-report';
 
-(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
+(pdfMake as any).vfs = custom_fonts.pdfMake.vfs;
+
+(pdfMake as any).fonts = {
+        Roboto: {
+            normal: 'Roboto-Regular.ttf',
+            bold: 'Roboto-Medium.ttf',
+            italics: 'Roboto-Italic.ttf',
+            bolditalics: 'Roboto-MediumItalic.ttf'
+        },
+        Adorsholipi: {
+           normal: 'AdorshoLipi.ttf',
+           bold: 'AdorshoLipi.ttf'
+        }
+     };
 
 @Component({
   selector: 'app-stock-report',
@@ -68,21 +82,72 @@ export class StockReportComponent implements OnInit {
 
     public convetToPDF() {
         let docDefinition : any = {
-        pageMargins: [20, 20, 20, 20],
+        pageMargins: [40, 20, 40, 20],
         content: [
           {
-            text: 'Savoy Ice-Cream Report - 12 October 2023',
+            font: 'Adorsholipi',
+            text: 'বিসমিল্লাহির রাহ্‌মানির রাহীম',
             bold: true,
-            fontSize: 16, // Adjust the font size as needed
+            fontSize: 10,
             alignment: 'center',
-            margin: [0, 0, 0, 15]
+          },
+          {
+            layout: 'noBorders',
+            table: {
+              headerRows: 1,
+              widths: [ 100, '*', 100 ],
+              body: [
+                [
+                  {
+                    margin: [0, 10, 0, 0],
+                    font: 'Adorsholipi',
+                    text: 'রেজিঃ নং- ',
+                    bold: true,
+                    fontSize: 11,
+                    alignment: 'left'
+                  },
+                  {
+                    font: 'Adorsholipi',
+                    text: 'জা. এন. জি আইসক্রিম',
+                    bold: true,
+                    fontSize: 22,
+                    alignment: 'center',
+                  },
+                  {
+                    margin: [0, 10, 0, 0],
+                    columns: [
+                      {
+                        font: 'Adorsholipi',
+                        text: 'তারিখঃ ',
+                        bold: true,
+                        fontSize: 11,
+                      },
+                      {
+                        width: 70,
+                        margin: [5, 0, 0, 0],
+                        table: {
+                          heights: 10,
+                          headerRows: 1,
+                          widths: [ '*', '*', '*' ],
+                          body: [
+                            [ '', '', '' ],
+                          ]
+                        }
+                      },
+                    ]
+                  }
+                ],
+              ],
+              style: [{border:'0'}]
+            }
           },
           {
             columns : [
               { width: '*', text: '' },
               {
-                width: 'auto',
+                width: '100%',
                 table: {
+                  widths: ['*', 35, 30, 30, 35, 45, 50, 55, 60],
                 body: [
                     // ['Product', 'Price', 'Eja', 'Total', 'Sales', 'Amount', 'Dumping', 'Receiving', 'Remaining'],
                     [
