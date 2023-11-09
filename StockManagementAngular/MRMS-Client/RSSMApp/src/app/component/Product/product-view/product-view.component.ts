@@ -30,6 +30,7 @@ export class ProductViewComponent implements OnInit {
 
 
   onDropdownSelectionChange(selectedValue: any) {
+    console.log(selectedValue);
     this.fetchData(selectedValue);
   }
 

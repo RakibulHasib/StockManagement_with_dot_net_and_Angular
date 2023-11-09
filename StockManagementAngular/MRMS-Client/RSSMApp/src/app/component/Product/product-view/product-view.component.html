@@ -45,7 +45,7 @@
   <mat-card-content style="display: flex; flex-direction: column; align-items: center;">
     <mat-form-field style="width: 60%;">
       <mat-label> Select Company </mat-label>
-      <mat-select>
+      <mat-select (selectionChange)="onDropdownSelectionChange($event.value)" [value]="companies.length > 0 ? companies[0].companyId : null">
         <mat-option *ngFor="let company of companies" [value]="company.companyId">
           {{company.companyName}}
         </mat-option>
