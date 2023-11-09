@@ -4,3 +4,26 @@
  flex-direction: column;
  align-items: center
 }
+.productEntryForm .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix .mat-mdc-floating-label {
+    font-size: 1.2em;
+    left: auto;
+    right: auto;
+    font-weight: 500;
+}
+
+.productEntryForm .mdc-text-field {
+    padding: 0 10px;
+}
+
+.productEntryForm .mdc-text-field--filled .mdc-floating-label--float-above {
+    transform: translateY(-106%) scale(0.75);
+    left: auto;
+    right: auto;
+    width: 50%;
+} 
+
+.custom-formly-form .formly-field {
+    max-width: 200px;
+    margin-left: 50px;
+  }
+  
