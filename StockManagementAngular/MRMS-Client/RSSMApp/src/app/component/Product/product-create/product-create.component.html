@@ -8,12 +8,13 @@
   <mat-card-content>
 
     <form [formGroup]="form" class="productEntryForm" (ngSubmit)="insert()">
-      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
+      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
       <div class="f-w mb-1">
         <button type="submit" mat-raised-button color="primary">Save</button>
       </div>
     </form>
 
+    
   </mat-card-content>
   <mat-card-actions>
     <a mat-flat-button [routerLink]="[getCompanyRoute(null)]">Back to list</a>

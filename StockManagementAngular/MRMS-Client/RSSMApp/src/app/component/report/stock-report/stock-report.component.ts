@@ -8,6 +8,7 @@ import * as pdfMake from "pdfmake/build/pdfmake";
 import * as custom_fonts  from 'src/assets/custom_fonts/custom_fonts';
 import { StockService } from '../../../services/Stock/stock.service';
 import { stockReportDataModel } from '../../../models/Stock/stock-report';
+import { DatePipe } from '@angular/common';
 
 (pdfMake as any).vfs = custom_fonts.pdfMake.vfs;
 
@@ -54,6 +55,7 @@ export class StockReportComponent implements OnInit {
     private _notificationSvc: NotificationService,
     private _dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
+    private datePipe : DatePipe
   ) { }
 
 
@@ -94,6 +96,7 @@ export class StockReportComponent implements OnInit {
           {
             layout: 'noBorders',
             table: {
+              color: 'blue',
               headerRows: 1,
               widths: [ 100, '*', 100 ],
               body: [
@@ -108,7 +111,7 @@ export class StockReportComponent implements OnInit {
                   },
                   {
                     font: 'Adorsholipi',
-                    text: 'জা. এন. জি আইসক্রিম',
+                    text: this.stockReportData.companyName,
                     bold: true,
                     fontSize: 22,
                     alignment: 'center',
@@ -125,12 +128,13 @@ export class StockReportComponent implements OnInit {
                       {
                         width: 70,
                         margin: [5, 0, 0, 0],
+                        layout: 'noBorders',
                         table: {
                           heights: 10,
                           headerRows: 1,
-                          widths: [ '*', '*', '*' ],
+                          widths: [ '*' ],
                           body: [
-                            [ '', '', '' ],
+                            [this.datePipe.transform(this.stockReportData.creationTime, 'yyyy-MM-dd')],
                           ]
                         }
                       },
@@ -148,18 +152,17 @@ export class StockReportComponent implements OnInit {
                 width: '100%',
                 table: {
                   widths: ['*', 35, 30, 30, 35, 45, 50, 55, 60],
-                body: [
-                    // ['Product', 'Price', 'Eja', 'Total', 'Sales', 'Amount', 'Dumping', 'Receiving', 'Remaining'],
+                  body: [
                     [
-                      { text: 'Product', bold: true }, // Make the heading text bold 
-                      { text: 'Price', bold: true },
-                      { text: 'Eja', bold: true },
-                      { text: 'Total', bold: true },
-                      { text: 'Sales', bold: true },
-                      { text: 'Amount', bold: true },
-                      { text: 'Dumping', bold: true },
-                      { text: 'Receiving', bold: true },
-                      { text: 'Remaining', bold: true }
+                      { text: 'পণ্যের নাম', bold: true, font: 'Adorsholipi', alignment: 'center' },
+                      { text: 'মূল্য', bold: true, font: 'Adorsholipi', alignment: 'center' },
+                      { text: 'ইজা', bold: true, font: 'Adorsholipi', alignment: 'center' },
+                      { text: 'মোট', bold: true, font: 'Adorsholipi', alignment: 'center' },
+                      { text: 'বিক্রি', bold: true, font: 'Adorsholipi', alignment: 'center' },
+                      { text: 'টাকা', bold: true, font: 'Adorsholipi', alignment: 'center' },
+                      { text: 'ডাম্পিং', bold: true, font: 'Adorsholipi', alignment: 'center' },
+                      { text: 'ফেরৎ', bold: true, font: 'Adorsholipi', alignment: 'center' },
+                      { text: 'অবশিষ্ট', bold: true, font: 'Adorsholipi', alignment: 'center' }
                     ],
                     ...this.stockReportData.reportDetails!.map(x => [
                       x.productName,
@@ -174,15 +177,23 @@ export class StockReportComponent implements OnInit {
                     ])
                   ],
                   alignment: "center",
-                  // styles: {
-                  //   tableHeader: { bold: true }
-                  // }
-                }
+                },
+                layout: {
+                  hLineWidth: () => 0.5,
+                  vLineWidth: () => 0.5,
+                  hLineColor: '#253da1',
+                  vLineColor: '#253da1',
+                  // hLineStyle: {dash: {length: 10, space: 4}},
+                  // vLineStyle: {dash: {length: 4}}
+                  }
               },
               { width: '*', text: '' }
             ]
           }
-        ]
+        ],
+        defaultStyle:{
+          color: '#253da1'
+        }
       };
       pdfMake.createPdf(docDefinition).open();
     };
