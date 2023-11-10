@@ -8,29 +8,29 @@
 <body>
   <div class="row">
       <div class="col-4">
-        <h3 style="padding-left:40px;padding-top:10px">Reg No-</h3>
+        <h3 style="padding-left:40px;padding-top:10px">রেজি নং-</h3>
       </div>
       <div class="col-4">
         <h1 style="text-align:center;font-weight:1000">{{stockReportData.companyName}}</h1>
       </div>
       <div class="col-4">
-        <h3 style="padding-top:10px;margin-left:250px">Date : {{stockReportData.creationTime| date:'yyyy-MM-dd'}}</h3>
+        <h3 style="padding-top:10px;margin-left:250px">তারিখ : {{stockReportData.creationTime| date:'yyyy-MM-dd'}}</h3>
       </div>
   </div>
 
   <table style="width:100%" id="contentToConvert" class="table table-primary">
     <tr>
-      <th>Sl/No</th>
-      <th>Product Name</th>
-      <th>Price</th>
-      <th>Eja</th>
-      <th>New Product</th>
-      <th>Total</th>
-      <th>Sales Quantity</th>
-      <th>Total Amount</th>
-      <th>Dumping</th>
-      <th>Receive</th>
-      <th>Remaining</th>
+      <th>ক্রঃনং</th>
+      <th>পণ্যের নাম</th>
+      <th>মূল্য</th>
+      <th>ইজা</th>
+      <th>নতুন</th>
+      <th>মোট</th>
+      <th>বিক্রি</th>
+      <th>টাকা</th>
+      <th>ডাম্পিং</th>
+      <th>গ্রহণ</th>
+      <th>অবশিষ্ট</th>
     </tr>
     <tr *ngFor="let element of stockReportData?.reportDetails; let i = index">
       <td>{{ i + 1 }}</td>
