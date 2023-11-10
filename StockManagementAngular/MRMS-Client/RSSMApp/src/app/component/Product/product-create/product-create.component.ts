@@ -18,6 +18,7 @@ import { Company } from '../../../models/company/company';
 export class ProductCreateComponent {
   currentDate: Date = new Date();
   companyId!: number;
+  
   producForm: FormGroup = new FormGroup({});
   productData: Product = new Product;
 

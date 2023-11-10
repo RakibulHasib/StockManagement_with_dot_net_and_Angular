@@ -152,8 +152,8 @@ mat-form-field .mat-input-element {
     -webkit-box-shadow: 0px 0px 3px 1px rgba(138, 138, 138, 0.5);
     -moz-box-shadow: 0px 0px 5px 1px rgba(138, 138, 138, 0.5);
 } */
-/* 
-.productEntryForm .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix .mat-mdc-floating-label {
+ 
+/* .productEntryForm .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix .mat-mdc-floating-label {
     font-size: 1.2em;
     left: auto;
     right: auto;
@@ -168,4 +168,4 @@ mat-form-field .mat-input-element {
     transform: translateY(-106%) scale(0.75);
     left: auto;
     right: auto;
-} */
+}  */
