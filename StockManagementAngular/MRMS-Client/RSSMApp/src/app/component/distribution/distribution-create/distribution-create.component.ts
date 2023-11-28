@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+  import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
@@ -109,6 +109,7 @@ export class DistributionCreateComponent implements OnInit {
                           .map(a=>a.productId)
                         .includes(a.productId))       
                   )
+
                 ),
                 valueProp:'productId',
                 labelProp:'productName'

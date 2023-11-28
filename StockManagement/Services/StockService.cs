@@ -41,10 +41,7 @@ public class StockService
             TotalNewProduct = 0,
             GrandTotal = 0,
             TotalSalesQuantity = 0,
-            GrandTotalAmount = 0,
-            TotalDumping = 0,
-            TotalReceive = 0,
-            TotalRemaining = 0,
+            GrandTotalAmount = 0
         };
         await _unitOfWork.Stock.AddAsync(master);
         await _unitOfWork.SaveChangesAsync();
@@ -64,9 +61,7 @@ public class StockService
                 Eja = total - (item.SalesQuantity ?? 0),
                 SalesQuantity = item.SalesQuantity,
                 TotalAmount = (item.SalesQuantity) * (item.Price),
-                Dumping = item.Dumping,
-                Receive = item.Receive,
-                Remaining = (item.Dumping ?? 0) - (item.Receive ?? 0),
+                DamageQuantity=item.DamageQuantity ?? 0
             };
             await _unitOfWork.StockDetail.AddAsync(stockDetails);
         }
@@ -78,9 +73,6 @@ public class StockService
         master.GrandTotal = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.TotalQuantity ?? 0);
         master.TotalSalesQuantity = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.SalesQuantity ?? 0);
         master.GrandTotalAmount = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.TotalAmount ?? 0);
-        master.TotalDumping = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.Dumping ?? 0);
-        master.TotalReceive = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.Receive ?? 0);
-        master.TotalRemaining = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.Remaining ?? 0);
 
         _unitOfWork.Stock.Update(master);
         result = await _unitOfWork.SaveChangesAsync();
@@ -117,9 +109,6 @@ public class StockService
                                                SalesQuantity = si.SalesQuantity,
                                                TotalQuantity = si.TotalQuantity,
                                                TotalAmount = si.TotalAmount,
-                                               Dumping = si.Dumping,
-                                               Receive = si.Receive,
-                                               Remaining = si.Remaining,
                                                CreationTime = si.CreationTime
                                            }).ToList();
 

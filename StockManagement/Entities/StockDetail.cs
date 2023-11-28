@@ -15,10 +15,8 @@ namespace StockManagement.Entities
         public decimal Price { get; set; }
         public int? TotalQuantity { get; set; }
         public decimal? TotalAmount { get; set; }
-        public int? Dumping { get; set; }
-        public int? Receive { get; set; }
-        public int? Remaining { get; set; }
         public DateTime CreationTime { get; set; }
         public int IsDeleted { get; set; }
+        public int? DamageQuantity { get; set; }
     }
 }

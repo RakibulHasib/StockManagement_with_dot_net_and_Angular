@@ -13,10 +13,9 @@ namespace StockManagement.Entities
         public int GrandTotal { get; set; }
         public int TotalSalesQuantity { get; set; }
         public decimal GrandTotalAmount { get; set; }
-        public int TotalDumping { get; set; }
-        public int TotalReceive { get; set; }
-        public int TotalRemaining { get; set; }
         public DateTime CreationTime { get; set; }
         public int IsDeleted { get; set; }
+        public decimal DamageAmount { get; set; }
+        public decimal Srcommission { get; set; }
     }
 }

@@ -70,18 +70,30 @@ public class ProductsController : ControllerBase
         if (company is null)
             return NotFound();
 
-
-        var products = await _unitOfWork.Product.Queryable
-                        .Where(x => x.IsActive == 1 && x.CompanyId == companyId)
-                        .Select(x => new ProductDto
-                        {
-                            ProductId = x.ProductId,
-                            ProductName = x.ProductName,
-                            Price = x.Price ?? 0,
-                            Eja = x.StockDetails.OrderByDescending(x => x.CreationTime)
-                                                    .Select(x => x.Eja ?? 0)
-                                                    .FirstOrDefault()
-                        }).ToListAsync();
+        var products = await (from p in _unitOfWork.Product.Queryable
+                              let salesQ= _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ProductId==p.ProductId).Sum(a=>a.SalesQuantity)
+                              where p.IsActive==1 && p.CompanyId== companyId
+                              select new ProductDto
+                              {
+                                  ProductId = p.ProductId,
+                                  ProductName = p.ProductName,
+                                  Price = p.Price ?? 0,
+                                  Eja = p.StockDetails.OrderByDescending(x => x.CreationTime)
+                                                                              .Select(x => x.Eja ?? 0)
+                                                                              .FirstOrDefault(),
+                                  SalesQuantity= salesQ
+                              }).ToListAsync();
+        //var products = await _unitOfWork.Product.Queryable
+        //                .Where(x => x.IsActive == 1 && x.CompanyId == companyId)
+        //                .Select(x => new ProductDto
+        //                {
+        //                    ProductId = x.ProductId,
+        //                    ProductName = x.ProductName,
+        //                    Price = x.Price ?? 0,
+        //                    Eja = x.StockDetails.OrderByDescending(x => x.CreationTime)
+        //                                            .Select(x => x.Eja ?? 0)
+        //                                            .FirstOrDefault()
+        //                }).ToListAsync();
 
         return products;
     }
@@ -92,6 +104,7 @@ public class ProductsController : ControllerBase
         public string? ProductName { get; set; }
         public decimal Price { get; set; }
         public int Eja { get; set; }
+        public int SalesQuantity { get; set; }
     }
 
 }

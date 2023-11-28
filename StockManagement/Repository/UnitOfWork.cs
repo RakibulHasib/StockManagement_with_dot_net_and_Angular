@@ -18,6 +18,8 @@ namespace StockManagement.Repository
         public Repository<SalesDistribute, long> SalesDistribute { get; }
         public Repository<SalesDistributeDetail, Guid> SalesDistributeDetail { get; }
 
+        public Repository<ConcernPerson, int> ConcernPerson { get; }
+
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -31,7 +33,7 @@ namespace StockManagement.Repository
 
         private bool disposed;
 
-        public UnitOfWork(StockDBContext context, Repository<Product, int> product, Repository<Company, int> company, Repository<Stock, long> stock, Repository<StockDetail, Guid> stockDetail, Repository<SalesDistribute, long> salesDistribute, Repository<SalesDistributeDetail, Guid> salesDistributeDetail)
+        public UnitOfWork(StockDBContext context, Repository<Product, int> product, Repository<Company, int> company, Repository<Stock, long> stock, Repository<StockDetail, Guid> stockDetail, Repository<SalesDistribute, long> salesDistribute, Repository<SalesDistributeDetail, Guid> salesDistributeDetail, Repository<ConcernPerson, int> concernPerson)
         {
             this.context = context;
             Product = product;
@@ -40,6 +42,7 @@ namespace StockManagement.Repository
             StockDetail = stockDetail;
             SalesDistribute = salesDistribute;
             SalesDistributeDetail = salesDistributeDetail;
+            ConcernPerson = concernPerson;
         }
 
         public void Dispose()

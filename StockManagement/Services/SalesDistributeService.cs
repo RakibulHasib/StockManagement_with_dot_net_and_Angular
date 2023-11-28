@@ -17,23 +17,24 @@ namespace StockManagement.Services
 
         public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(DateTime StartDate, DateTime EndDate)
         {
-            var query = await _unitOfWork.SalesDistribute.Queryable
-                        .Where(x => x.CreationTime.Date >= StartDate.Date && x.CreationTime.Date <= EndDate.Date)
-                        .Select(query => new DailyDistributeDataDTO
+            var query = await (from sd in _unitOfWork.SalesDistribute.Queryable
+                               join cp in _unitOfWork.ConcernPerson.Queryable on sd.ConcernPersonId equals cp.ConcernPersonId
+                        where sd.CreationTime.Date >= StartDate.Date && sd.CreationTime.Date <= EndDate.Date
+                        select new DailyDistributeDataDTO
                         {
-                            SalesDistributeId = query.SalesDistributeId,
-                            ConcernPerson = query.ConcernPerson,
-                            TotalReceive = query.TotalReceive,
-                            TotalReturn = query.TotalReturn,
-                            TotalSales = query.TotalSales,
-                            TotalPrice = query.TotalPrice,
-                            GrandTotal = query.GrandTotal,
-                            CreationTime = query.CreationTime
+                            SalesDistributeId = sd.SalesDistributeId,
+                            ConcernPerson = cp.ConcernPersonName,
+                            TotalReceive = sd.TotalReceive,
+                            TotalReturn = sd.TotalReturn,
+                            TotalSales = sd.TotalSales,
+                            TotalPrice = sd.TotalPrice,
+                            GrandTotal = sd.GrandTotal,
+                            CreationTime = sd.CreationTime
                         }).ToListAsync();
             return query;
         }
 
-        public async Task<ActionResult<int>> InsertSalesDistributeData(string concernPerson, List<SalesDistributeDTO> salesDistributeVM)
+        public async Task<ActionResult<int>> InsertSalesDistributeData(int ConcernPersonID, List<SalesDistributeDTO> salesDistributeVM)
         {
             int result = 0;
             SalesDistribute master = new SalesDistribute
@@ -43,7 +44,7 @@ namespace StockManagement.Services
                 TotalReturn = 0,
                 TotalSales = 0,
                 GrandTotal = 0,
-                ConcernPerson = concernPerson
+                ConcernPersonId = ConcernPersonID
             };
             await _unitOfWork.SalesDistribute.AddAsync(master);
             await _unitOfWork.SaveChangesAsync();
@@ -102,18 +103,19 @@ namespace StockManagement.Services
         public async Task<SalesDistributeReportDTO> GetSalesDistributeReport(int SalesDistributeId)
         {
             SalesDistributeReportDTO? reportDTO = new SalesDistributeReportDTO();
-            var salesdistributeData = await _unitOfWork.SalesDistribute.Queryable
-                                    .Where(a => a.SalesDistributeId == SalesDistributeId)
-                                    .Select(query => new SalesDistributeReportDTO
-                                    {
-                                        SalesDistributeId = query.SalesDistributeId,
-                                        ConcernPerson = query.ConcernPerson,
-                                        CreationTime = query.CreationTime
-                                    }).FirstOrDefaultAsync();
+            var salesdistributeData = await (from sd in _unitOfWork.SalesDistribute.Queryable
+                                             join cp in _unitOfWork.ConcernPerson.Queryable on sd.ConcernPersonId equals cp.ConcernPersonId
+                                            where sd.SalesDistributeId == SalesDistributeId
+                                            select new SalesDistributeReportDTO
+                                            {
+                                                SalesDistributeId = sd.SalesDistributeId,
+                                                ConcernPerson = cp.ConcernPersonName,
+                                                CreationTime = sd.CreationTime
+                                            }).FirstOrDefaultAsync();
 
             reportDTO = salesdistributeData;
 
-            salesdistributeData.reportDetails = (from si in _unitOfWork.SalesDistributeDetail.Queryable
+            salesdistributeData.reportDetails = await (from si in _unitOfWork.SalesDistributeDetail.Queryable
                                                join p in _unitOfWork.Product.Queryable on si.ProductId equals p.ProductId
                                                where si.SalesDistributeId == SalesDistributeId
                                                  select new SalesDistributeReportDetail
@@ -128,9 +130,11 @@ namespace StockManagement.Services
                                                    SalesQuantity = si.SalesQuantity,
                                                    TotalSalesPrice = si.TotalSalesPrice,
                                                    CreationTime = si.CreationTime
-                                               }).ToList();
+                                               }).ToListAsync();
 
             return reportDTO;
         }
+
+
     }
 }

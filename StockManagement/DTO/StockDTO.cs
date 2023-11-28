@@ -13,6 +13,7 @@
         public int? Receive { get; set; }
         public int? Remaining { get; set; }
         public DateTime? CreatedDate { get; set; }
+        public int? DamageQuantity { get; set; }
     }
     public class DailyDataDTO
     {

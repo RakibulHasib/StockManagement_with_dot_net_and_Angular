@@ -18,6 +18,7 @@ namespace StockManagement.Contexts
         }
 
         public virtual DbSet<Company> Companies { get; set; } = null!;
+        public virtual DbSet<ConcernPerson> ConcernPeople { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<RoleAssagin> RoleAssagins { get; set; } = null!;
         public virtual DbSet<RoleMaster> RoleMasters { get; set; } = null!;
@@ -44,6 +45,11 @@ namespace StockManagement.Contexts
                 entity.Property(e => e.CompanyId).ValueGeneratedNever();
 
                 entity.Property(e => e.Picture).HasMaxLength(200);
+            });
+
+            modelBuilder.Entity<ConcernPerson>(entity =>
+            {
+                entity.ToTable("ConcernPerson");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -78,10 +84,6 @@ namespace StockManagement.Contexts
                 entity.ToTable("SalesDistribute");
 
                 entity.Property(e => e.SalesDistributeId).HasColumnName("SalesDistributeID");
-
-                entity.Property(e => e.ConcernPerson)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.CreationTime)
                     .HasColumnType("datetime")
@@ -121,7 +123,16 @@ namespace StockManagement.Contexts
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.DamageAmount)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasDefaultValueSql("((0.00))");
+
                 entity.Property(e => e.GrandTotalAmount).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.Srcommission)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("SRCommission")
+                    .HasDefaultValueSql("((0.00))");
 
                 entity.Property(e => e.TotalPrice).HasColumnType("decimal(18, 2)");
             });

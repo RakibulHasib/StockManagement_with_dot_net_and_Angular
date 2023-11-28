@@ -22,7 +22,7 @@ namespace StockManagement.Controllers
         public async Task<ActionResult<CompanySalesPriceWeeklyDTO>> GetCompanySalesPriceWeekly()
         {
             DateTime endDate = DateTime.Now.Date;
-            DateTime startDate = endDate.AddDays(-7);
+            DateTime startDate = endDate.AddDays(-30);
 
             var companyIds = new List<int> { 1, 2, 3, 4, 5 };
 

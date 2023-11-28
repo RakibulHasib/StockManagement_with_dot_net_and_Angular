@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
 using StockManagement.Helpers;
@@ -27,7 +28,7 @@ namespace StockManagement.Controllers
         [HttpPost("InsertSalesDistributeData")]
         public async Task<ActionResult<int>> InsertSalesDistributeData(SalesDistributeDataDto data)
         {
-            return Ok(await _salesDistributeService.InsertSalesDistributeData(data.concernPerson, data.salesDistribute));
+            return Ok(await _salesDistributeService.InsertSalesDistributeData(data.ConcernPersonID, data.salesDistribute));
         }
 
         [HttpGet("GetProduct")]
