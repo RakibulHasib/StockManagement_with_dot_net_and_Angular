@@ -13,6 +13,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Company } from 'src/app/models/companyenum/company';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { DamageaddComponent } from '../../modal/damageadd/damageadd.component';
+import { CommisionaddComponent } from '../../modal/commisionadd/commisionadd.component';
 
 
 
@@ -42,19 +44,21 @@ export class StockViewComponent implements OnInit, OnDestroy {
   columnList: string[] = ["createdDate", "totalSalesQuantity", "totalAmount","actions"];
   startDate: string = '';
   endDate: string = '';
+  // companyID: number=0;
 
   constructor(
     private dailyDataSvc: StockService,
     private _notificationSvc: NotificationService,
     private _dialog: MatDialog,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private dialogRef : MatDialog
   ) { }
 
   ngOnInit() {
     const today = new Date();
     this.endDate = this.formatDate(today);
     const fifteenDaysAgo = new Date();
-    fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
+    fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 30);
     this.startDate = this.formatDate(fifteenDaysAgo);
 
     this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
@@ -98,4 +102,53 @@ export class StockViewComponent implements OnInit, OnDestroy {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-}
+  
+  openDamageDialog(stockId: any){
+    const dialogRef = this.dialogRef.open(DamageaddComponent,{
+      data:{
+        stockId:stockId
+      }
+    })
+    dialogRef.afterClosed().subscribe(result => {
+      this.UpdateDamage(stockId, Number(result));
+    });
+  }
+
+    UpdateDamage(stockId : number,amount : number) {
+      if (stockId && amount) {
+        this.dailyDataSvc.updateDamage(stockId, amount)
+          .subscribe(data => {
+            this._notificationSvc.message("Successfully Updated", "DISMISS");
+          }, err => {
+            this._notificationSvc.message("Failed to update data", "DISMISS");
+          });
+      } else {
+        this._notificationSvc.message("PopUp has been closed", "DISMISS");
+      }
+    }
+    openCommissionDialog(stockId: any){
+      const dialogRef = this.dialogRef.open(CommisionaddComponent,{
+        data:{
+          stockId:stockId
+        }
+      })
+      dialogRef.afterClosed().subscribe(result => {
+        this.UpdateCommission(stockId, Number(result));
+      });
+    }
+
+    UpdateCommission(stockId : number,commission : number) {
+      if (stockId && commission) {
+        this.dailyDataSvc.updateCommission(stockId, commission)
+          .subscribe(data => {
+            this._notificationSvc.message("Successfully Updated", "DISMISS");
+          }, err => {
+            this._notificationSvc.message("Failed to update data", "DISMISS");
+          });
+      } else {
+        this._notificationSvc.message("PopUp has been closed", "DISMISS");
+      }
+    }
+
+  }
+

@@ -114,4 +114,50 @@ public class StockService
 
         return reportDTO;
     }
+
+    public async Task<int> UpdateDamageAmount(int StockId,decimal DamageAmount)
+    {
+        int result = 0;
+        var stock = await _unitOfWork.Stock.Queryable.Where(a => a.StockId == StockId).FirstOrDefaultAsync();
+        if(stock != null)
+        {
+            stock.DamageAmount = DamageAmount;
+            _unitOfWork.Stock.Update(stock);
+            result=await _unitOfWork.SaveChangesAsync();
+        }
+        return result;
+    }
+
+    public async Task<decimal> GetDamageAmountByID(int StockId)
+    {
+        var stock = await _unitOfWork.Stock.Queryable
+                        .Where(a => a.StockId == StockId)
+                        .Select(a=>a.DamageAmount)
+                        .FirstOrDefaultAsync();
+
+        return stock;
+    }
+
+    public async Task<int> UpdateSRCommission([FromQuery] int StockId, [FromQuery] decimal Commission)
+    {
+        int result = 0;
+        var stock = await _unitOfWork.Stock.Queryable.Where(a => a.StockId == StockId).FirstOrDefaultAsync();
+        if (stock != null)
+        {
+            stock.Srcommission = Commission;
+            _unitOfWork.Stock.Update(stock);
+            result = await _unitOfWork.SaveChangesAsync();
+        }
+        return result;
+    }
+
+    public async Task<decimal> GetCommissionByID(int StockId)
+    {
+        var stock = await _unitOfWork.Stock.Queryable
+                        .Where(a => a.StockId == StockId)
+                        .Select(a=>a.Srcommission)
+                        .FirstOrDefaultAsync();
+
+        return stock;
+    }
 }

@@ -1,0 +1,16 @@
+.example-container {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 200px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.example-container > * {
+    width: 100%;
+    box-sizing: border-box;
+}
+

@@ -10,7 +10,9 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatModule } from './module/shared/mat/mat.module';
-import { MatTabsModule } from '@angular/material/tabs'
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTabsModule } from '@angular/material/tabs';
+import {MatMenuModule} from '@angular/material/menu';
 import { ConfirmDialogComponent } from './component/shared/confirm-dialog/confirm-dialog.component';
 import { HomeComponent } from './component/home/home.component';
 import { AuthInterceptor } from './Shared/authconfig.interceptor';
@@ -37,6 +39,8 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { FormlyMatToggleModule } from '@ngx-formly/material/toggle';
 import { DistributionReportComponent } from './component/distribution/distribution-report/distribution-report.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { DamageaddComponent } from './component/modal/damageadd/damageadd.component';
+import { CommisionaddComponent } from './component/modal/commisionadd/commisionadd.component';
 
 
 
@@ -64,7 +68,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
     DistributionViewComponent,
     DistributionCreateComponent,
     DistributionConfigComponent,
-    DistributionReportComponent
+    DistributionReportComponent,
+    DamageaddComponent,
+    CommisionaddComponent
   ],
   imports: [
     BrowserModule,
@@ -76,6 +82,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     ReactiveFormsModule,
     LayoutModule,
     MatModule,
+    MatDialogModule,
+    MatMenuModule,
     MatTabsModule,
     FormsModule,
     FormlyMatToggleModule,

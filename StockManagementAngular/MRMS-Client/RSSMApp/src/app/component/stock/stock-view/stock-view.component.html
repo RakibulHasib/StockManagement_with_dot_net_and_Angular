@@ -10,6 +10,13 @@
         </a>
       </div>
     </div>
+    <!-- <div>
+      <mat-label for="companyDropdown" class="form-label">Company</mat-label>
+      <mat-select id="companyDropdown" [(ngModel)]="companyID" class="form-control">
+        <mat-option *ngFor="let company of companies" [value]="company.id">{{ company.name }}</mat-option>
+      </mat-select>
+    </div> -->
+    
 
     <div class="col-5">
       <mat-label for="startDate" class="form-label">Start Date</mat-label>
@@ -59,18 +66,41 @@
         <mat-cell *matCellDef="let element" class="action">
 
           <button mat-raised-button [routerLink]="['/stock-report',element.stockId]" class="icon-spacing">View</button>
-          <mat-icon color="primary" class="icon-spacing" (click)="showExpandButton = !showExpandButton">more_vert</mat-icon>
+          <!-- <mat-icon color="primary" class="icon-spacing" (click)="showExpandButton = !showExpandButton">more_vert</mat-icon> -->
 
 
-          <!--<div *ngIf="showExpandButton" class="expand-section">
+          <!-- <div *ngIf="showExpandButton" class="expand-section">
 
             <button mat-raised-button color="primary" class="icon-spacing">Edit</button>
             <button mat-raised-button color="warn" class="icon-spacing">Delete</button>
-          </div>-->
-          <div [@expandCollapse]="showExpandButton ? 'expanded' : 'collapsed'" class="expand-section">
+          </div> -->
+          <!-- <div [@expandCollapse]="showExpandButton ? 'expanded' : 'collapsed'" class="expand-section">
             <button mat-raised-button color="primary" class="icon-spacing">Edit</button>
             <button mat-raised-button color="warn" class="icon-spacing">Delete</button>
-          </div>
+            <button mat-raised-button color="primary" class="icon-spacing" (click)="openDialog(element.stockId)">Damage</button>
+          </div> -->
+
+          <button mat-icon-button [matMenuTriggerFor]="stockmenu" aria-label="Example icon-button with a menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #stockmenu="matMenu">
+            <button mat-menu-item color="warn">
+              <mat-icon>dialpad</mat-icon>
+              <span>Edit</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>dialpad</mat-icon>
+              <span>Delete</span>
+            </button>
+            <button mat-menu-item (click)="openDamageDialog(element.stockId)">
+              <mat-icon>dialpad</mat-icon>
+              <span>DamageAdd</span>
+            </button>
+            <button mat-menu-item (click)="openCommissionDialog(element.stockId)">
+              <mat-icon>dialpad</mat-icon>
+              <span>CommissionAdd</span>
+            </button>
+          </mat-menu>
 
 
         </mat-cell>

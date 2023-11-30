@@ -1,0 +1,19 @@
+
+    <div class="example-container">
+        <mat-form-field>
+          <input matInput [(ngModel)]="amount" placeholder="Damage Amount">
+        </mat-form-field>
+        <div mat-dialog-actions style="display: flex;justify-content: center;">
+            <button [mat-dialog-close]="amount" cdkFocusInitial mat-raised-button color="warn" class="icon-spacing">Update</button>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-button (click)="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+
+
+
+
+
+  

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { AuthApiUrl } from './models/shared/app-constants';
 import { AuthenticationService } from './services/Authentication/authentication.service';
 
+
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -22,7 +23,7 @@ export class AppComponent {
 
     constructor(
       private http : HttpClient,
-      private auth: AuthenticationService,
+      private auth: AuthenticationService
       ) {
 
     // this.http.post<any>(AuthApiUrl, user, httpOptions)

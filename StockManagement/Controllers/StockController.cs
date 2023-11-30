@@ -29,10 +29,34 @@ public class StockController : ControllerBase
         return await _stockService.GetStockDataPerDay(companyId, StartDate, EndDate);
     }
 
-        [HttpGet("GetReport")]
-        public async Task<ActionResult<ReportDTO>> GetReport(int StockId)
-        {
-            return await _stockService.GetReport(StockId);
-        }
+    [HttpGet("GetReport")]
+    public async Task<ActionResult<ReportDTO>> GetReport(int StockId)
+    {
+        return await _stockService.GetReport(StockId);
+    }
+
+    [HttpPut("UpdateDamage")]
+    public async Task<ActionResult<int>> UpdateDamageAmount(int StockId, decimal DamageAmount)
+    {
+        return Ok(await _stockService.UpdateDamageAmount(StockId, DamageAmount));
+    }
+
+    [HttpPut("UpdateSRCommission")]
+    public async Task<ActionResult<int>> UpdateSRCommission(int StockId, decimal Commission)
+    {
+        return Ok(await _stockService.UpdateSRCommission(StockId, Commission));
+    }
+
+    [HttpGet("GetDamageAmountByID")]
+    public async Task<ActionResult<decimal>> GetDamageAmountByID(int StockId)
+    {
+        return await _stockService.GetDamageAmountByID(StockId);
+    }
+
+    [HttpGet("GetCommissionByID")]
+    public async Task<ActionResult<decimal>> GetCommissionByID(int StockId)
+    {
+        return await _stockService.GetCommissionByID(StockId);
+    }
 
 }
