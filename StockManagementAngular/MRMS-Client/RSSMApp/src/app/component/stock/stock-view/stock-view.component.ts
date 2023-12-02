@@ -10,11 +10,13 @@ import { Dailydatadbmodel } from '../../../models/DailyDataModel/dailydatadbmode
 import { StockService } from '../../../services/Stock/stock.service';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { Company } from 'src/app/models/companyenum/company';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { DamageaddComponent } from '../../modal/damageadd/damageadd.component';
 import { CommisionaddComponent } from '../../modal/commisionadd/commisionadd.component';
+import { CompanyService } from 'src/app/service/Company/company.service';
+import { Company } from 'src/app/models/company/company';
+
 
 
 
@@ -34,6 +36,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
   showExpandButton = false;
   companyId!: number;
   paramsSubscription! : Subscription;
+  companies: Company[] = [];
 
   dailyData: Dailydatadbmodel[] = [];
   dataSource: MatTableDataSource<Dailydatadbmodel> = new MatTableDataSource(this.dailyData);
@@ -44,15 +47,18 @@ export class StockViewComponent implements OnInit, OnDestroy {
   columnList: string[] = ["createdDate", "totalSalesQuantity", "totalAmount","actions"];
   startDate: string = '';
   endDate: string = '';
+  selectedValue: number= 1;
   // companyID: number=0;
 
   constructor(
     private dailyDataSvc: StockService,
+    private companySvc: CompanyService,
     private _notificationSvc: NotificationService,
     private _dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
     private dialogRef : MatDialog
   ) { }
+
 
   ngOnInit() {
     const today = new Date();
@@ -63,9 +69,23 @@ export class StockViewComponent implements OnInit, OnDestroy {
 
     this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
       const companyKey = params['company'];
-      this.companyId = +Company[companyKey];
+      // this.companyId = +Company[companyKey];
+      this.fetchCompanyData();
       this.fetchData();
     });
+  }
+
+
+  fetchCompanyData(){
+    if(true){
+      this.companySvc.getCompany()
+      .subscribe(data=>{
+        this.companies=data;
+      }, err => {
+
+        this._notificationSvc.message("Failed to load data", "DISMISS");
+      });
+    }
   }
 
   ngOnDestroy(){
@@ -79,9 +99,14 @@ export class StockViewComponent implements OnInit, OnDestroy {
     return `${year}-${month}-${day}`;
   }
 
+  onDropdownSelectionChange(selectedValue: number) {
+    this.selectedValue=selectedValue;
+  }
+
+
   fetchData() {
     if (this.startDate && this.endDate) {
-      this.dailyDataSvc.getDashboardDataPerDay(this.companyId, this.startDate, this.endDate)
+      this.dailyDataSvc.getDashboardDataPerDay(this.selectedValue, this.startDate, this.endDate)
         .subscribe(data => {
           this.dailyData = data;
           this.dataSource.data = this.dailyData;
