@@ -4,18 +4,19 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
-import { Subscription, throwError } from 'rxjs';
+import {Subscription} from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { Dailydatadbmodel } from '../../../models/DailyDataModel/dailydatadbmodel';
 import { StockService } from '../../../services/Stock/stock.service';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { DamageaddComponent } from '../../modal/damageadd/damageadd.component';
 import { CommisionaddComponent } from '../../modal/commisionadd/commisionadd.component';
 import { CompanyService } from 'src/app/service/Company/company.service';
 import { Company } from 'src/app/models/company/company';
+import { StateService } from 'src/app/services/Shared/state.service';
 
 
 
@@ -47,7 +48,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
   columnList: string[] = ["createdDate", "totalSalesQuantity", "totalAmount","actions"];
   startDate: string = '';
   endDate: string = '';
-  selectedValue: number= 1;
+  selectedCompany: number= 1;
   // companyID: number=0;
 
   constructor(
@@ -56,16 +57,32 @@ export class StockViewComponent implements OnInit, OnDestroy {
     private _notificationSvc: NotificationService,
     private _dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
-    private dialogRef : MatDialog
+    private dialogRef : MatDialog,
+    private stateService: StateService,
+    private router: Router,
   ) { }
 
 
   ngOnInit() {
+    this.selectedCompany = this.stateService.getPreviousState(1)?.selectedCompany || 1;
+    this.startDate = this.stateService.getPreviousState(1)?.startDate || null;
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        const currentRoute = this.activatedRoute.root;
+        if (!currentRoute.snapshot.children.some(child => child.routeConfig?.path === 'stock-create/:id' || child.routeConfig?.path === 'stock/:company')) {
+          this.resetState();
+        }
+      }
+    });
+
+    if(this.startDate==null){
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      this.startDate = this.formatDate(thirtyDaysAgo);
+    }
     const today = new Date();
     this.endDate = this.formatDate(today);
-    const fifteenDaysAgo = new Date();
-    fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 30);
-    this.startDate = this.formatDate(fifteenDaysAgo);
 
     this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
       const companyKey = params['company'];
@@ -99,14 +116,20 @@ export class StockViewComponent implements OnInit, OnDestroy {
     return `${year}-${month}-${day}`;
   }
 
-  onDropdownSelectionChange(selectedValue: number) {
-    this.selectedValue=selectedValue;
+
+  resetState(): void {
+    this.stateService.resetState();
+  }
+
+  onDropdownSelectionChange(selectedCompany: number) {
+    this.selectedCompany=selectedCompany;
   }
 
 
   fetchData() {
+    this.stateService.updateState({ selectedCompany: this.selectedCompany,startDate:this.startDate});
     if (this.startDate && this.endDate) {
-      this.dailyDataSvc.getDashboardDataPerDay(this.selectedValue, this.startDate, this.endDate)
+      this.dailyDataSvc.getDashboardDataPerDay(this.selectedCompany, this.startDate, this.endDate)
         .subscribe(data => {
           this.dailyData = data;
           this.dataSource.data = this.dailyData;

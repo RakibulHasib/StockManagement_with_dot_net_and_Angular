@@ -5,7 +5,7 @@
         <mat-card-title class="h5">Savoy all data per day</mat-card-title>
       </div>
       <div class="d-flex align-items-center">
-        <a mat-mini-fab class="btn btn-primary" [routerLink]="['/stock-create', selectedValue]">
+        <a mat-mini-fab class="btn btn-primary" [routerLink]="['/stock-create', selectedCompany]">
           <mat-icon>add_box</mat-icon>
         </a>
       </div>
@@ -14,7 +14,7 @@
     <mat-card-content style="display: flex; flex-direction: column; align-items: center;">
       <mat-form-field style="width: 60%;">
         <mat-label> Select Company </mat-label>
-        <mat-select (selectionChange)="onDropdownSelectionChange($event.value)" [value]="companies.length > 0 ? companies[0].companyId : null">
+        <mat-select (selectionChange)="onDropdownSelectionChange($event.value)" [value]="selectedCompany">
           <mat-option *ngFor="let company of companies" [value]="company.companyId">
             {{company.companyName}}
           </mat-option>
