@@ -55,18 +55,19 @@ public class CompanyService
     }
     public async Task<int> InsertCompany(CompaniesDTO companies)
     {
-        int result = 0;
         Company company = new Company
         {
             CompanyName = companies.CompanyName,
             IsDeleted = 0,
-            Picture = companies.Picture
+            Picture = companies.Picture ?? "",
+            
+
         };
         await _unitOfWork.Company.AddAsync(company);
 
-        result= await _unitOfWork.SaveChangesAsync();
+         await _unitOfWork.SaveChangesAsync();
 
-        return result;
+        return company.CompanyId;
     }
 
     public async Task<int> UpdateCompany(CompaniesDTO companies)
