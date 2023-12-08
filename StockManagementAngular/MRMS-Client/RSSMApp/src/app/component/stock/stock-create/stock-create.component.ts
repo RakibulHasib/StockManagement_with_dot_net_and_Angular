@@ -86,7 +86,7 @@ export class StockCreateComponent implements OnInit {
           fieldGroupClassName: 'display-flex',
           fieldGroup: [
             {
-            className: 'product-name flex-1 width-160',
+            className: 'product-name flex-1 width-180',
             type: 'input',
             key: 'productName',
             props: {
@@ -100,7 +100,7 @@ export class StockCreateComponent implements OnInit {
             }
           },
           {
-            className: 'flex-1 width-80',
+            className: 'flex-1 width-100',
             type: 'input',
             key: 'price',
             props: {
@@ -115,7 +115,7 @@ export class StockCreateComponent implements OnInit {
             }
           },
           {
-            className: 'flex-1 width-80',
+            className: 'flex-1 width-100',
             type: 'input',
             key: 'eja',
             props: {
@@ -145,7 +145,7 @@ export class StockCreateComponent implements OnInit {
             }
           },
           {
-            className: 'flex-1 width-80',
+            className: 'flex-1 width-100',
             type: 'input',
             key: 'total',
             props: {
@@ -197,53 +197,17 @@ export class StockCreateComponent implements OnInit {
             
           },
           {
-            className: 'flex-1 width-90',
+            className: 'flex-1 width-140',
             type: 'input',
-            key: 'dumping',
+            key: 'damageQuantity',
             props: {
-              label: 'Dumping',
-              required: true,
+              label: 'Damage Quantity',
+              required: false,
               appearance: 'outline',
               floatLabel: 'always',
               hideRequiredMarker: true,
-            },
-            validation: {
-              messages:{required:" "}
             }
-          },
-          {
-            className: 'flex-1 width-90',
-            type: 'input',
-            key: 'receive',
-            props: {
-              label: 'Receive',
-              required: true,
-              appearance: 'outline',
-              floatLabel: 'always',
-              hideRequiredMarker: true,
-            },
-            validation: {
-              messages:{required:" "}
-            }
-          },
-          {
-            className: 'flex-1 width-95',
-            type: 'input',
-            key: 'remaining',
-            props: {
-              label: 'Remaining',
-              readonly: true,
-              appearance: 'outline',
-              floatLabel: 'always',
-              hideRequiredMarker: true,
-            },
-            validation: {
-              messages:{required:" "}
-            },
-            expressions: {
-              'model.remaining': '(model.dumping ? parseInt(model.dumping) : 0) - (model.receive ? parseInt(model.receive) : 0)',
-            }
-          }     
+          },            
           ],
         }
       }

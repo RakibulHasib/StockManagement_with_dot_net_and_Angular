@@ -14,11 +14,11 @@
         <h1 style="text-align:center;font-weight:1000">{{stockReportData.companyName}}</h1>
       </div>
       <div class="col-4">
-        <h3 style="padding-top:10px;margin-left:250px">তারিখ : {{stockReportData.creationTime| date:'yyyy-MM-dd'}}</h3>
+        <h3 style="padding-top:10px;margin-left:240px">তারিখ : {{stockReportData.creationTime| date:'yyyy-MM-dd'}}</h3>
       </div>
   </div>
 
-  <table style="width:100%" id="contentToConvert" class="table table-primary">
+  <table style="width:100%; text-align: center;" id="contentToConvert" class="table table-primary">
     <tr>
       <th>ক্রঃনং</th>
       <th>পণ্যের নাম</th>
@@ -28,9 +28,7 @@
       <th>মোট</th>
       <th>বিক্রি</th>
       <th>টাকা</th>
-      <th>ডাম্পিং</th>
-      <th>গ্রহণ</th>
-      <th>অবশিষ্ট</th>
+      <th>ডেমেজ</th>
     </tr>
     <tr *ngFor="let element of stockReportData?.reportDetails; let i = index">
       <td>{{ i + 1 }}</td>
@@ -41,14 +39,38 @@
       <td>{{ element.totalQuantity }}</td>
       <td>{{ element.salesQuantity }}</td>
       <td>{{ element.totalAmount }}</td>
-      <td>{{ element.dumping }}</td>
-      <td>{{ element.receive }}</td>
-      <td>{{ element.remaining }}</td>
+      <td>{{ element.damageQuantity }}</td>
+    </tr>
+    <tr style="font-weight: bold; ">
+      <td colspan="7" style="text-align:right;border-bottom-style: hidden;">Total Price : &nbsp; </td>
+      <td style="border-bottom-style: hidden;">{{stockReportData.totalPrice}}</td>
+      <td style="border-bottom-style: hidden;"></td>
+    </tr>
+    <tr style="font-weight: bold;">
+      <td colspan="7" style="text-align:right;border-bottom-style: hidden;">(-)&nbsp;Damage : &nbsp;</td>
+      <td style="border-bottom-style: hidden;">{{stockReportData.damageAmount}}</td>
+      <td style="border-bottom-style: hidden;"></td>
+    </tr>
+    <tr style="font-weight: bold;">
+      <td colspan="7" style="text-align:right;border-bottom-style: hidden;">Total Price : &nbsp;</td>
+      <td style="border-bottom-style: hidden;">{{stockReportData.afterDamagePrice}}</td>
+      <td style="border-bottom-style: hidden;"></td>
+    </tr>
+    <tr style="font-weight: bold;">
+      <td colspan="7" style="text-align:right;border-bottom-style: hidden;">(-)&nbsp;S/R Commission : &nbsp;</td>
+      <td style="border-bottom-style: hidden;">{{stockReportData.srcommission}}</td>
+      <td style="border-bottom-style: hidden;"></td>
+    </tr>
+    <tr style="font-weight: bold;">
+      <td colspan="7" style="text-align:right;">Net Price : &nbsp;</td>
+      <td style="text-decoration: underline double; text-decoration-color: black;">{{stockReportData.afterSrCommission}}</td>
+      <td></td>
     </tr>
   </table>
 
-  <div>
-    <input type="button" value="Convert" (click)="convetToPDF()" />
+  <div style="display: flex; justify-content: space-between;">
+    <button mat-flat-button (click)="convetToPDF()">Convert</button>
+    <button mat-flat-button [routerLink]="['/stock', stockReportData.companyID]">Back to list</button>
   </div>
 </body>
 </html>

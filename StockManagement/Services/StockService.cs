@@ -25,7 +25,7 @@ public class StockService
                         CreationTime = query.CreationTime,
                         TotalSalesQuantity = query.TotalSalesQuantity,
                         TotalAmount = query.GrandTotalAmount
-                    }).ToListAsync();
+                    }).OrderByDescending(a=>a.StockId).ToListAsync();
         return query;
     }
 
@@ -88,7 +88,13 @@ public class StockService
                                 {
                                     StockId = query.StockId,
                                     CreationTime = query.CreationTime,
-                                    CompanyName=query.Company.CompanyName
+                                    CompanyID=query.CompanyId,
+                                    CompanyName=query.Company.CompanyName,
+                                    TotalPrice=query.GrandTotalAmount,
+                                    DamageAmount=query.DamageAmount,
+                                    AfterDamagePrice=query.GrandTotalAmount-(query.DamageAmount==null?0: query.DamageAmount),
+                                    Srcommission=query.Srcommission,
+                                    AfterSrCommission= (query.GrandTotalAmount - (query.DamageAmount == null ? 0 : query.DamageAmount))-(query.Srcommission==null?0:query.Srcommission)
                                 }).FirstOrDefaultAsync();
 
         reportDTO = savoyIceCreamData;
@@ -109,6 +115,7 @@ public class StockService
                                                SalesQuantity = si.SalesQuantity,
                                                TotalQuantity = si.TotalQuantity,
                                                TotalAmount = si.TotalAmount,
+                                               DamageQuantity=si.DamageQuantity,
                                                CreationTime = si.CreationTime
                                            }).ToList();
 

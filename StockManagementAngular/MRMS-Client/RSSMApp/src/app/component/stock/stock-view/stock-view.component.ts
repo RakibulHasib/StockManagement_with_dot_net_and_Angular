@@ -64,8 +64,10 @@ export class StockViewComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     this.selectedCompany = this.stateService.getPreviousState(1)?.selectedCompany || 1;
-    this.startDate = this.stateService.getPreviousState(1)?.startDate || null;
+    this.startDate = this.stateService.getPreviousState(1)?.startDate || this.formatDate(thirtyDaysAgo);
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -76,11 +78,6 @@ export class StockViewComponent implements OnInit, OnDestroy {
       }
     });
 
-    if(this.startDate==null){
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      this.startDate = this.formatDate(thirtyDaysAgo);
-    }
     const today = new Date();
     this.endDate = this.formatDate(today);
 

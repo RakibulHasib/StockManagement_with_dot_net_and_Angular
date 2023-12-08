@@ -87,19 +87,13 @@
   </mat-form-field>    
 
   <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
-    <mat-label>Dumping</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.dumping" (ngModelChange)="updateProductData()" placeholder="0">
+    <mat-label>DamageQuantity</mat-label>
+    <input type="text" matInput [(ngModel)]="productData.damageQuantity" (ngModelChange)="updateProductData()" placeholder="0">
   </mat-form-field>    
 
-  <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
-    <mat-label>Receive</mat-label>
-    <input type="text" matInput [(ngModel)]="productData.receive" (ngModelChange)="updateProductData()" placeholder="0">
-  </mat-form-field>    
+ 
 
-  <mat-form-field appearance="fill" floatLabel="always" class="w-125px mb-1">
-    <mat-label>Remaining</mat-label>
-    <input type="text" matInput [value]="getRemaining()" disabled>
-  </mat-form-field>
+
 
 <!-- <mat-form-field appearance="fill" class="f-w mb-1">
   <mat-label>Entry Date</mat-label>

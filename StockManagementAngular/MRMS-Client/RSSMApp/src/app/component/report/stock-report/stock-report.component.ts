@@ -149,9 +149,9 @@ export class StockReportComponent implements OnInit {
             columns : [
               { width: '*', text: '' },
               {
-                width: '100%',
+                width: '125%',
                 table: {
-                  widths: ['*', 35, 30, 30, 35, 45, 50, 55, 60],
+                  widths: [ 80, 58, 50, 58, 100, 60, 50],
                   body: [
                     [
                       { text: 'পণ্যের নাম', bold: true, font: 'Adorsholipi', alignment: 'center' },
@@ -160,9 +160,7 @@ export class StockReportComponent implements OnInit {
                       { text: 'মোট', bold: true, font: 'Adorsholipi', alignment: 'center' },
                       { text: 'বিক্রি', bold: true, font: 'Adorsholipi', alignment: 'center' },
                       { text: 'টাকা', bold: true, font: 'Adorsholipi', alignment: 'center' },
-                      { text: 'ডাম্পিং', bold: true, font: 'Adorsholipi', alignment: 'center' },
-                      { text: 'ফেরৎ', bold: true, font: 'Adorsholipi', alignment: 'center' },
-                      { text: 'অবশিষ্ট', bold: true, font: 'Adorsholipi', alignment: 'center' }
+                      { text: 'ডেমেজ', bold: true, font: 'Adorsholipi', alignment: 'center' }
                     ],
                     ...this.stockReportData.reportDetails!.map(x => [
                       x.productName,
@@ -171,21 +169,74 @@ export class StockReportComponent implements OnInit {
                       x.totalQuantity,
                       x.salesQuantity,
                       x.totalAmount,
-                      x.dumping,
-                      x.receive,
-                      x.remaining
-                    ])
+                      x.damageQuantity
+                    ]),  
+                    [
+                      {},
+                      {},
+                      {},
+                      {},
+                      { text: 'Total Price : ', bold: true, fontSize: 10, alignment: 'right' },
+                      { text: this.stockReportData.totalPrice, bold: true, fontSize: 10, alignment: 'left' },
+                      {}
+                    ],
+                    [
+                      {},
+                      {},
+                      {},
+                      {},
+                      { text: '(-) Damage Price : ', bold: true, fontSize: 10, alignment: 'right' },
+                      { text: this.stockReportData.damageAmount, bold: true, fontSize: 10, alignment: 'left' },
+                      {}
+                    ],
+                    [
+                      {},
+                      {},
+                      {},
+                      {},
+                      { text: 'Total Price : ', bold: true, fontSize: 10, alignment: 'right' },
+                      { text: this.stockReportData.afterDamagePrice, bold: true, fontSize: 10, alignment: 'left' },
+                      {}
+                    ],
+                    [
+                      {},
+                      {},
+                      {},
+                      {},
+                      { text: '(-) S/R Commission : ', bold: true, fontSize: 10, alignment: 'right' },
+                      { text: this.stockReportData.srcommission, bold: true, fontSize: 10, alignment: 'left' },
+                      {}
+                    ],
+                    [
+                      {},
+                      {},
+                      {},
+                      {},
+                      { text: 'Net Price : ', bold: true, fontSize: 10, alignment: 'right' },
+                      { text: this.stockReportData.afterSrCommission, bold: true, fontSize: 10, alignment: 'left' },
+                      {}
+                    ],
                   ],
-                  alignment: "center",
+                  alignment: "center"
                 },
                 layout: {
-                  hLineWidth: () => 0.5,
-                  vLineWidth: () => 0.5,
+                  hLineWidth: (i: number, node: any) => {
+                    const totalRows = node.table.body.length;
+                    const descendingOrder = totalRows - i;
+                    return (descendingOrder === 1 || descendingOrder === 2 || descendingOrder === 3 || descendingOrder === 4) ? 0 : 0.5;
+                  },
+                  vLineWidth: 
+                  (i: number, node: any) => {
+                    const totalRows = node.table.body.length;
+                    const descendingOrder = totalRows - i;
+                    
+                    // Remove vertical borders for rows with descending order from 1 to 5
+                    return (descendingOrder >= 1 && descendingOrder <= 5) ? 0 : 0.5;
+                },
+                
                   hLineColor: '#253da1',
                   vLineColor: '#253da1',
-                  // hLineStyle: {dash: {length: 10, space: 4}},
-                  // vLineStyle: {dash: {length: 4}}
-                  }
+                },
               },
               { width: '*', text: '' }
             ]

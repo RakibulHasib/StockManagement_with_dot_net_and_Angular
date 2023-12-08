@@ -27,10 +27,10 @@ export class ProductItemComponent {
     return price * quantity;
   }
 
-  getRemaining() : number{
-    const dumping = Number(this.productData.dumping || 0);
-    const receive = Number(this.productData.receive || 0);
-    return dumping - receive;
-  }
+  // getRemaining() : number{
+  //   const dumping = Number(this.productData.dumping || 0);
+  //   const receive = Number(this.productData.receive || 0);
+  //   return dumping - receive;
+  // }
 
 }
