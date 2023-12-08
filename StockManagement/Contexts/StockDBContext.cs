@@ -42,7 +42,7 @@ namespace StockManagement.Contexts
             {
                 entity.ToTable("Company");
 
-                entity.Property(e => e.CompanyId).ValueGeneratedNever();
+              //  entity.Property(e => e.CompanyId).ValueGeneratedNever();
 
                 entity.Property(e => e.Picture).HasMaxLength(200);
             });

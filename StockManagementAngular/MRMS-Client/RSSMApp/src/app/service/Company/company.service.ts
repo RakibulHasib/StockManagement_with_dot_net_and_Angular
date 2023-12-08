@@ -23,16 +23,16 @@ export class CompanyService {
     return this.http.get<Company[]>(`${IceCreamApiUrl}/${endPoint}/CompanyDashboard`);
   }
 
-  //getById(productId: number): Observable<Company> {
-  //  return this.http.get<Company>(`${IceCreamApiUrl}/${endPoint}/GetProductByID/${productId}`);
-  //}
-  //insert(data: Company): Observable<Company> {
-  //  return this.http.post<Company>(`${IceCreamApiUrl}/${endPoint}/InsertNewProduct`, data);
-  //}
-  //update(data: Company): Observable<any> {
-  //  return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/UpdateProduct`, data);
-  //}
-  //delete(data: Company): Observable<any> {
-  //  return this.http.delete<any>(`${IceCreamApiUrl}/${endPoint}/DeleteProduct/${data}`);
-  //}
+  getById(companyId: number): Observable<Company> {
+   return this.http.get<Company>(`${IceCreamApiUrl}/${endPoint}/GetCompanyByID/${companyId}`);
+  }
+  insert(data: Company): Observable<Company> {
+   return this.http.post<Company>(`${IceCreamApiUrl}/${endPoint}/InsertNewCompany`, data);
+  }
+  update(data: Company): Observable<any> {
+   return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/UpdateCompany`, data);
+  }
+  delete(data: Company): Observable<any> {
+   return this.http.delete<any>(`${IceCreamApiUrl}/${endPoint}/DeleteCompany/${data}`);
+  }
 }
