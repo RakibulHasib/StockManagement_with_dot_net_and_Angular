@@ -1,3 +1,9 @@
+.mat-elevation-z3{
+    width: 500px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+              0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+}
 .header {
     margin-bottom: 10px;
     display: flex;
@@ -13,6 +19,7 @@
    
    .concernpersonEntryForm .mdc-text-field {
        padding: 0 10px;
+       
    }
    
    .concernpersonEntryForm .mdc-text-field--filled .mdc-floating-label--float-above {
@@ -23,7 +30,7 @@
    } 
    
    .custom-formly-form .formly-field {
-       max-width: 200px;
+       max-width: 150px;
        margin-left: 50px;
      }
      ::ng-deep .custom-button {

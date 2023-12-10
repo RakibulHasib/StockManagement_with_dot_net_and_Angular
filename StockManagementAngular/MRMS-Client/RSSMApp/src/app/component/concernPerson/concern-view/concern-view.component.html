@@ -6,12 +6,13 @@
         </div>
         <div class="d-flex align-items-center">
          
-            <a mat-mini-fab class="btn btn-primary" [routerLink]="['/concernpersoncreate']">
+            <!-- <a mat-mini-fab class="btn btn-primary" [routerLink]="['/concernpersoncreate']">
                 <mat-icon>add_box</mat-icon>
-              </a>
-          <!-- <button mat-mini-fab class="btn btn-primary" (click)="openCompanyDialog()">
-            <mat-icon>add_box</mat-icon>
-              </button> -->
+              </a> -->
+              <button mat-mini-fab class="btn btn-primary" (click)="openConcernDialog()">
+                <mat-icon>add_box</mat-icon>
+              </button>
+              
         </div>
        
       </div>
@@ -43,8 +44,8 @@
           <mat-cell *matCellDef="let element" class="action">
   
             <button mat-raised-button [routerLink]="['',element]" color="primary" class="icon-spacing">Edit</button>
-            <!-- <button mat-raised-button [routerLink]="['',element]" color="warn" class="icon-spacing">Delete</button> -->
-            <button mat-icon-button (click)="confirmDelete(element.concernPersonId)"><mat-icon class="red-color">delete</mat-icon></button>
+            <!-- <button mat-raised-button [routerLink]="['',element]" color="warn" class="icon-spacing">Delete</button> <mat-icon class="red-color">delete</mat-icon>-->
+            <button mat-raised-button (click)="confirmDelete(element.concernPersonId)"color="warn" class="icon-spacing" disabled="true">Delete</button>
           </mat-cell>
         </ng-container>
   

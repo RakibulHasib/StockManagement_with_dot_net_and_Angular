@@ -43,6 +43,27 @@ export class ConcernViewComponent {
       this._notifitions.message("Failed to load data", "DISMISS");
     })
   }
+  openConcernDialog(){
+    const dialogRef = this._dialog.open(ConcernCreateComponent,{
+      data:{
+        
+      }
+    })
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.handleFormSubmit(result);
+      }
+    });
+   
+  }
+
+ 
+  handleFormSubmit(formData: ConcernPerson): void {
+  
+    console.log('Form submitted in CompanyViewComponent with data:', formData.concernPersonName);
+    
+  
+  }
   
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -73,27 +94,7 @@ export class ConcernViewComponent {
       })
   }
 
-  // openCompanyDialog(){
-  //   const dialogRef = this._dialog.open(ConcernCreateComponent,{
-  //     data:{
-        
-  //     }
-  //   })
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //       this.handleFormSubmit(result);
-  //     }
-  //   });
-   
-  // }
-
- 
-  // handleFormSubmit(formData: ConcernPerson): void {
   
-  //   console.log('Form submitted in CompanyViewComponent with data:', formData.concernPersonName);
-    
-  
-  // }
 
 
 }
