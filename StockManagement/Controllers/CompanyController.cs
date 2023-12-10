@@ -47,7 +47,7 @@ public class CompanyController : ControllerBase
 
 
     [Transaction]
-    [HttpPut("DeleteCompany")]
+    [HttpPut("DeleteCompany/{companyId}")]
     public async Task<ActionResult<int>> DeleteCompany(int companyId)
     {
         return Ok(await _companyService.DeleteCompany(companyId));

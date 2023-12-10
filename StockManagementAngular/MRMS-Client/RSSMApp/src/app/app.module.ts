@@ -41,6 +41,9 @@ import { DistributionReportComponent } from './component/distribution/distributi
 import { MatExpansionModule } from '@angular/material/expansion';
 import { DamageaddComponent } from './component/modal/damageadd/damageadd.component';
 import { CommisionaddComponent } from './component/modal/commisionadd/commisionadd.component';
+import { ConcernCreateComponent } from './component/concernPerson/concern-create/concern-create.component';
+import { ConcernUpdateComponent } from './component/concernPerson/concern-update/concern-update.component';
+import { ConcernViewComponent } from './component/concernPerson/concern-view/concern-view.component';
 
 
 
@@ -70,7 +73,10 @@ import { CommisionaddComponent } from './component/modal/commisionadd/commisiona
     DistributionConfigComponent,
     DistributionReportComponent,
     DamageaddComponent,
-    CommisionaddComponent
+    CommisionaddComponent,
+    ConcernCreateComponent,
+    ConcernUpdateComponent,
+    ConcernViewComponent
   ],
   imports: [
     BrowserModule,

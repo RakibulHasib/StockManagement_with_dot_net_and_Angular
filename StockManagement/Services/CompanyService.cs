@@ -27,30 +27,24 @@ public class CompanyService
                                     CompanyName = query.CompanyName,
                                     IsDeleted = query.IsDeleted,
                                     Picture = query.Picture
-                                })
-                                .ToListAsync();
+                                }).Where(a => a.IsDeleted == 0).ToListAsync();
 
-        return companies.Select(c => new CompaniesDTO
-        {
-            CompanyId = c.CompanyId,
-            CompanyName = c.CompanyName,
-            IsDeleted = c.IsDeleted,
-            Picture = c.Picture
-        }).ToList();
+        return companies;
     }
 
     public async Task<CompaniesDTO> GetCompanyByID(int CompanyId)
     {
-        var companie = await _unitOfWork.Company.Queryable
+
+        var companies = await _unitOfWork.Company.Queryable
                                 .Select(query => new CompaniesDTO
                                 {
                                     CompanyId = query.CompanyId,
                                     CompanyName = query.CompanyName,
                                     IsDeleted = query.IsDeleted,
                                     Picture = query.Picture
-                                }).FirstOrDefaultAsync();
+                                }).Where(a=>a.CompanyId==CompanyId).FirstOrDefaultAsync();
 
-        return companie;
+        return companies;
 
     }
     public async Task<int> InsertCompany(CompaniesDTO companies)

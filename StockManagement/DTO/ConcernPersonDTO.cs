@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace StockManagement.Entities
+﻿namespace StockManagement.DTO
 {
-    public partial class ConcernPerson
+    public class ConcernPersonDTO
     {
         public int ConcernPersonId { get; set; }
         public string? ConcernPersonName { get; set; } 
