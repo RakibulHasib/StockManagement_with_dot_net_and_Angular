@@ -8,6 +8,7 @@ import { SalesDistribution } from '../../../models/sales/sales-distribution';
 import { SalesDistributionService } from '../../../services/sales/sales-distribution.service';
 import { NotificationService } from '../../../services/Shared/notification.service';
 import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ConcernPersonService } from 'src/app/services/concernPerson/concern-person.service';
 
 @Component({
   selector: 'app-distribution-create',
@@ -25,7 +26,7 @@ export class DistributionCreateComponent implements OnInit {
 
   form = new FormGroup({});
   model = {
-    concernPerson:'',
+    concernPersonId:0,
     formData: this.formData
   }
   options: FormlyFormOptions = {};
@@ -40,7 +41,8 @@ export class DistributionCreateComponent implements OnInit {
     private notificationSvc: NotificationService,
     private salesService: SalesDistributionService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private concernPersonSvc: ConcernPersonService
   ) { }
 
   ngOnInit(): void {
@@ -56,7 +58,7 @@ export class DistributionCreateComponent implements OnInit {
       return;
     }
     this.salesService.insert({
-        concernPerson:this.model.concernPerson,
+      concernPersonId:this.model.concernPersonId,
         salesDistribute: this.model.formData
     })
       .subscribe(r => {
@@ -74,16 +76,14 @@ export class DistributionCreateComponent implements OnInit {
           fieldGroup: [
           {
             className: 'concernPerson width-50-percent',
-            type: 'input',
-            key: 'concernPerson',
-          props: {
-          label: 'ConcernPerson',
-          floatLabel: 'always',
-          appearance: 'outline',
-          required: true,
-          hideRequiredMarker: true,
-      
-        },
+            type: 'select',
+            key: 'concernPersonId',
+            templateOptions: {
+              label: 'Concern Person',
+              options: this.concernPersonSvc.getConcernPerson(),
+              valueProp:'concernPersonId',
+              labelProp:'concernPersonName'
+            },
         validation: {
           messages: { required: " " }
         }
