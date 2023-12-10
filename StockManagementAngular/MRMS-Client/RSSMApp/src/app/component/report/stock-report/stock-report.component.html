@@ -27,8 +27,8 @@
       <th>নতুন</th>
       <th>মোট</th>
       <th>বিক্রি</th>
-      <th>টাকা</th>
       <th>ডেমেজ</th>
+      <th>টাকা</th>
     </tr>
     <tr *ngFor="let element of stockReportData?.reportDetails; let i = index">
       <td>{{ i + 1 }}</td>
@@ -38,33 +38,28 @@
       <td>{{ element.restockQuantity }}</td>
       <td>{{ element.totalQuantity }}</td>
       <td>{{ element.salesQuantity }}</td>
-      <td>{{ element.totalAmount }}</td>
       <td>{{ element.damageQuantity }}</td>
+      <td>{{ element.totalAmount }}</td>
     </tr>
     <tr style="font-weight: bold; ">
-      <td colspan="7" style="text-align:right;border-bottom-style: hidden;">Total Price : &nbsp; </td>
+      <td colspan="8" style="text-align:right;border-bottom-style: hidden;">Total Price : &nbsp; </td>
       <td style="border-bottom-style: hidden;">{{stockReportData.totalPrice}}</td>
-      <td style="border-bottom-style: hidden;"></td>
     </tr>
     <tr style="font-weight: bold;">
-      <td colspan="7" style="text-align:right;border-bottom-style: hidden;">(-)&nbsp;Damage : &nbsp;</td>
+      <td colspan="8" style="text-align:right;border-bottom-style: hidden;">(-)&nbsp;Damage : &nbsp;</td>
       <td style="border-bottom-style: hidden;">{{stockReportData.damageAmount}}</td>
-      <td style="border-bottom-style: hidden;"></td>
     </tr>
     <tr style="font-weight: bold;">
-      <td colspan="7" style="text-align:right;border-bottom-style: hidden;">Total Price : &nbsp;</td>
+      <td colspan="8" style="text-align:right;border-bottom-style: hidden;">Total Price : &nbsp;</td>
       <td style="border-bottom-style: hidden;">{{stockReportData.afterDamagePrice}}</td>
-      <td style="border-bottom-style: hidden;"></td>
     </tr>
     <tr style="font-weight: bold;">
-      <td colspan="7" style="text-align:right;border-bottom-style: hidden;">(-)&nbsp;S/R Commission : &nbsp;</td>
+      <td colspan="8" style="text-align:right;border-bottom-style: hidden;">(-)&nbsp;S/R Commission : &nbsp;</td>
       <td style="border-bottom-style: hidden;">{{stockReportData.srcommission}}</td>
-      <td style="border-bottom-style: hidden;"></td>
     </tr>
     <tr style="font-weight: bold;">
-      <td colspan="7" style="text-align:right;">Net Price : &nbsp;</td>
+      <td colspan="8" style="text-align:right;">Net Price : &nbsp;</td>
       <td style="text-decoration: underline double; text-decoration-color: black;">{{stockReportData.afterSrCommission}}</td>
-      <td></td>
     </tr>
   </table>
 

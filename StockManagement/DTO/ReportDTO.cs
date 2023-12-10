@@ -25,8 +25,8 @@
         public int? SalesQuantity { get; set; }
         public decimal Price { get; set; }
         public int? TotalQuantity { get; set; }
-        public decimal? TotalAmount { get; set; }
         public int? DamageQuantity { get; set; }
+        public decimal? TotalAmount { get; set; }
         public DateTime CreationTime { get; set; }
     }
 }

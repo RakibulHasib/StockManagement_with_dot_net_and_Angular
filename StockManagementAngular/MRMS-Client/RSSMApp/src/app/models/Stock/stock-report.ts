@@ -9,8 +9,8 @@ export class StockReportModel {
   public restockQuantity?: number,
   public totalQuantity?: number,
   public salesQuantity?: number,
-  public totalAmount?: number,
-  public damageQuantity?: number
+  public damageQuantity?: number,
+  public totalAmount?: number
   ) { }
 }
 
