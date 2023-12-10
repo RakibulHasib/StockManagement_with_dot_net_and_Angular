@@ -27,7 +27,16 @@ export class ConcernPersonService {
   update(data: ConcernPerson): Observable<any> {
    return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/UpdateConcernPerson`, data);
   }
-  delete(ConcernPersonById: number): Observable<any> {
-   return this.http.delete<any>(`${IceCreamApiUrl}/${endPoint}/DeleteConcernPerson/${ConcernPersonById}`);
+  // delete(ConcernPersonById: number): Observable<any> {
+  //  return this.http.delete<any>(`${IceCreamApiUrl}/${endPoint}/DeleteConcernPerson/${ConcernPersonById}`);
+  // }
+  // putConcern(data: number): Observable<any> {
+  //   return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/DeleteConcernPerson/${concernPersonId}`);
+  // }
+
+  delete(concernPersonId: number): Observable<number> {
+    const Qparams={concernPersonId:concernPersonId}
+    const options={params:Qparams}
+    return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/DeleteConcernPerson/`,null,options);
   }
 }
