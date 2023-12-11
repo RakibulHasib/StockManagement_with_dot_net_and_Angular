@@ -1,105 +1,21 @@
-<mat-card class="example-card" id="demand" style="position: relative;">
-    <img src="assets/Images/savoy.png" alt="Background Image" class="background-image">
-  <mat-card-content >
+<mat-card class="example-card" style="position: relative;" *ngFor="let data of dashboardModel; let i = index">
+  <mat-card-header>
+    <mat-card-title-group>
+      <mat-card-title style="color:green;">{{data?.companyName}}</mat-card-title>
+      <img style="margin-top: -11px;" mat-card-sm-image src="assets/Images/Screenshot 2023-12-11 124453.png" >
+    </mat-card-title-group>
+  </mat-card-header>
+  <mat-card-content>
     <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div style="background-color: white;color: black;border-radius: 10px;">
-      <p style="padding: 4%;">Sales Quantity : {{dashboardModel.savoySalesQ}}</p>
+    <div style="background-color: white; color: black; border-radius: 10px;width: 150px;margin-bottom: 1px;">
+      <p>পরিমান : {{data?.salesQuantity}}</p>
     </div>
-    <br>
-      <div style="background-color: white;color: black;border-radius:10px;">
-        <p style="padding: 4%;">Sales Price : {{dashboardModel.savoySalesP}}</p> 
-      </div>
+    <div style="background-color: white; color: black; border-radius: 10px;">
+      <p>মূল্য : {{data?.salesPrice}}</p>
+    </div>
   </mat-card-content>
 </mat-card>
 
-<mat-card class="example-card" id="demand" style="position: relative;">
-  <img src="assets/Images/zanzee.png" alt="Background Image" class="background-image">
-<mat-card-content >
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <div style="background-color: white;color: black;border-radius: 10px;">
-    <p style="padding: 4%;">Sales Quantity : {{dashboardModel.zanZeeSalesQ}}</p>
-  </div>
-  <br>
-    <div style="background-color: white;color: black;border-radius:10px;">
-      <p style="padding: 4%;">Sales Price : {{dashboardModel.zanZeeSalesP}}</p> 
-    </div>
-</mat-card-content>
-</mat-card>
-
-<mat-card class="example-card" id="demand" style="position: relative;">
-  <img src="assets/Images/lovello.png" alt="Background Image" class="background-image">
-<mat-card-content >
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <div style="background-color: white;color: black;border-radius: 10px;">
-    <p style="padding: 4%;">Sales Quantity : {{dashboardModel.lovelloSalesQ}}</p>
-  </div>
-  <br>
-    <div style="background-color: white;color: black;border-radius:10px;">
-      <p style="padding: 4%;">Sales Price : {{dashboardModel.lovelloSalesP}}</p> 
-    </div>
-</mat-card-content>
-</mat-card>
-
-<mat-card class="example-card" id="demand" style="position: relative;">
-  <img src="assets/Images/igloo.png" alt="Background Image" class="background-image">
-<mat-card-content >
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <div style="background-color: white;color: black;border-radius: 10px;">
-    <p style="padding: 4%;">Sales Quantity : {{dashboardModel.iglooSalesQ}}</p>
-  </div>
-  <br>
-    <div style="background-color: white;color: black;border-radius:10px;">
-      <p style="padding: 4%;">Sales Price : {{dashboardModel.iglooSalesP}}</p> 
-    </div>
-</mat-card-content>
-</mat-card>
 
 
-<mat-card class="example-card" id="demand" style="position: relative;">
-  <img src="assets/Images/kazifarm.png" alt="Background Image" class="background-image">
-<mat-card-content >
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <div style="background-color: white;color: black;border-radius: 10px;">
-    <p style="padding: 4%;">Sales Quantity : {{dashboardModel.kaziFarmSalesQ}}</p>
-  </div>
-  <br>
-    <div style="background-color: white;color: black;border-radius:10px;">
-      <p style="padding: 4%;">Sales Price : {{dashboardModel.kaziFarmSalesP}}</p> 
-    </div>
-</mat-card-content>
-</mat-card>
+

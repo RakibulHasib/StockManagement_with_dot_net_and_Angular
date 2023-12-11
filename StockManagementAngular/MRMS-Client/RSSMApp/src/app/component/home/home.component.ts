@@ -11,7 +11,7 @@ import { Dashboarddata } from 'src/app/models/dashboard/dashboarddata';
 })
 export class HomeComponent {
 
-  dashboardModel: Dashboarddata=new Dashboarddata;
+  dashboardModel: Dashboarddata[] = [];
   constructor(
     private notificationSvc: NotificationService,
     private dashboardService: DashboardServiceService

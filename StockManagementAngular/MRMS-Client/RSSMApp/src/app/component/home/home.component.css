@@ -1,6 +1,5 @@
 .example-card {
   width: 219px;
-  max-height:700px;
   display:inline-block;
   padding:20px;
   margin:20px;
@@ -11,24 +10,15 @@
   padding-right: -6px;
   position: relative;
 }
-mat-card-content{
 
-    text-align:center;
-    padding:10px;
-    padding-top:15px;
-    font-size:1.2em;
-    color: whitesmoke;
-    position: relative;
-}
-.background-image {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 2rem;
-}
-
-
-
-
+   p {
+        font-weight: bold;
+        width: 140px;
+        font-size: 15px; /* Adjust the font size as needed */
+        color: #333; /* Set your desired text color */
+        margin: 0; /* Remove any default margin */
+        padding: 10px; /* Add some padding for spacing */
+        background-color: #f8f8f8; /* Set a background color for better visibility */
+        border-radius: 8px; /* Add rounded corners */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+    }

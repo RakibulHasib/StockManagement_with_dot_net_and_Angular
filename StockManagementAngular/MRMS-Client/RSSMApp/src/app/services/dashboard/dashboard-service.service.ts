@@ -14,7 +14,7 @@ export class DashboardServiceService {
     private http: HttpClient
   ) { }
 
-  getDashboardData(): Observable<Dashboarddata> {
-    return this.http.get<Dashboarddata>(`${IceCreamApiUrl}/${endPoint}/GetCompanySalesPriceWeekly`);
+  getDashboardData(): Observable<Dashboarddata[]> {
+    return this.http.get<Dashboarddata[]>(`${IceCreamApiUrl}/${endPoint}/GetCompanySalesPriceWeekly`);
   }
 }
