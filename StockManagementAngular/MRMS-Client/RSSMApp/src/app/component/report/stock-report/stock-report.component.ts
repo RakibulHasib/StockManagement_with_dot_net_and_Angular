@@ -22,6 +22,10 @@ import { DatePipe } from '@angular/common';
         Adorsholipi: {
            normal: 'AdorshoLipi.ttf',
            bold: 'AdorshoLipi.ttf'
+        },
+        Kalpurush: {
+          normal: 'Kalpurush.ttf',
+          bold: 'Kalpurush.ttf'
         }
      };
 
@@ -162,58 +166,67 @@ export class StockReportComponent implements OnInit {
                       { text: 'ডেমেজ', bold: true, font: 'Adorsholipi', alignment: 'center' },
                       { text: 'টাকা', bold: true, font: 'Adorsholipi', alignment: 'center' }
                     ],
-                    ...this.stockReportData.reportDetails!.map(x => [
-                      x.productName,
+                    // ...this.stockReportData.reportDetails!.map(x => [
+                    //   x.productName,
+                    //   x.price,
+                    //   x.eja,
+                    //   x.totalQuantity,
+                    //   x.salesQuantity,
+                    //   x.damageQuantity,
+                    //   x.totalAmount
+                    // ]
+                      ...this.stockReportData.reportDetails!.map(x => [
+                      { text: x.productName, bold: true, font: 'Kalpurush', alignment: 'center' },
                       x.price,
                       x.eja,
                       x.totalQuantity,
                       x.salesQuantity,
                       x.damageQuantity,
                       x.totalAmount
-                    ]),  
+                    ]),
                     [
+                      { colSpan:6, text: 'Total Price : ', bold: true, fontSize: 10, alignment: 'right' },
                       {},
                       {},
                       {},
                       {},
                       {},
-                      { text: 'Total Price : ', bold: true, fontSize: 10, alignment: 'right' },
                       { text: this.stockReportData.totalPrice, bold: true, fontSize: 10, alignment: 'left' },
                     ],
                     [
+                      { colSpan:6, text: '(-) Damage Price : ', bold: true, fontSize: 10, alignment: 'right' },
                       {},
                       {},
                       {},
                       {},
                       {},
-                      { text: '(-) Damage Price : ', bold: true, fontSize: 10, alignment: 'right' },
                       { text: this.stockReportData.damageAmount, bold: true, fontSize: 10, alignment: 'left' },
                     ],
                     [
+                      { colSpan:6, text: 'Total Price : ', bold: true, fontSize: 10, alignment: 'right' },
                       {},
                       {},
                       {},
                       {},
                       {},
-                      { text: 'Total Price : ', bold: true, fontSize: 10, alignment: 'right' },
                       { text: this.stockReportData.afterDamagePrice, bold: true, fontSize: 10, alignment: 'left' },
                     ],
                     [
+                      { colSpan:6, text: '(-) S/R Commission : ', bold: true, fontSize: 10, alignment: 'right' },
                       {},
                       {},
                       {},
                       {},
                       {},
-                      { text: '(-) S/R Commission : ', bold: true, fontSize: 10, alignment: 'right' },
                       { text: this.stockReportData.srcommission, bold: true, fontSize: 10, alignment: 'left' },
                     ],
                     [
+                      { colSpan:6, text: 'Net Price : ', bold: true, fontSize: 10, alignment: 'right' },
                       {},
                       {},
                       {},
                       {},
                       {},
-                      { text: 'Net Price : ', bold: true, fontSize: 10, alignment: 'right' },
                       { text: this.stockReportData.afterSrCommission, bold: true, fontSize: 10, alignment: 'left' },
                     ],
                   ],
@@ -221,6 +234,7 @@ export class StockReportComponent implements OnInit {
                 },
                 layout: {
                   hLineWidth: (i: number, node: any) => {
+                    // return 0.5;
                     const totalRows = node.table.body.length;
                     const descendingOrder = totalRows - i;
                     return (descendingOrder === 1 || descendingOrder === 2 || descendingOrder === 3 || descendingOrder === 4) ? 0 : 0.5;
@@ -229,31 +243,32 @@ export class StockReportComponent implements OnInit {
                 
                 
                 vLineWidth: (i: number, node: any) => {
-                  const totalRows = node.table.body.length;
-                  const totalColumns = node.table.widths.length;
+                  return 0.5;
+                  // const totalRows = node.table.body.length;
+                  // const totalColumns = node.table.widths.length;
                 
-                  const descendingOrder = totalRows - i;
+                  // const descendingOrder = totalRows - i;
                 
-                  // Keep vertical borders for the first two rows
-                  // if (i < 2) {
+                  // // Keep vertical borders for the first two rows
+                  // // if (i < 2) {
+                  // //   return 0.5;
+                  // // }
+                
+                  // // Remove vertical borders for rows with descending order from 3 to 7
+                  // if (descendingOrder >= 3 && descendingOrder <= 7) {
+                  //   // Check if it's one of the specified columns
+                  //   const targetColumns = [1, 2, 3, 4, 5];
+                  //   if (targetColumns.includes(i % totalColumns)) {
+                  //     // Set the vertical line width to 0 for the specified columns
+                  //     return 0;
+                  //   } else {
+                  //     // Set a default width for other columns
+                  //     return 0.5;
+                  //   }
+                  // } else {
+                  //   // Set a default width for rows outside the specified range
                   //   return 0.5;
                   // }
-                
-                  // Remove vertical borders for rows with descending order from 3 to 7
-                  if (descendingOrder >= 3 && descendingOrder <= 7) {
-                    // Check if it's one of the specified columns
-                    const targetColumns = [1, 2, 3, 4, 5];
-                    if (targetColumns.includes(i % totalColumns)) {
-                      // Set the vertical line width to 0 for the specified columns
-                      return 0;
-                    } else {
-                      // Set a default width for other columns
-                      return 0.5;
-                    }
-                  } else {
-                    // Set a default width for rows outside the specified range
-                    return 0.5;
-                  }
                 },
                 
                 

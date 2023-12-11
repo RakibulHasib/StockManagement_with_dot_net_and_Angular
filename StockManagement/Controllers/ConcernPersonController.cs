@@ -45,7 +45,7 @@ public class ConcernPersonController : ControllerBase
 
 
     [Transaction]
-    [HttpPut("DeleteConcernPerson/{ConcernPersonId}")]
+    [HttpPut("DeleteConcernPerson")]
     public async Task<ActionResult<int>> DeleteConcernPerson(int ConcernPersonId)
     {
         return Ok(await _concernPersonService.DeleteConcernPerson(ConcernPersonId));
