@@ -1,55 +1,42 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Stock } from 'src/app/models/Stock/Stock';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { ProductService } from 'src/app/services/Product/product.service';
-import { StockService } from 'src/app/services/Stock/stock.service';
+import { Stock } from 'src/app/models/Stock/Stock';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
-import { Company } from 'src/app/models/companyenum/company';
+import { StockService } from 'src/app/services/Stock/stock.service';
 
 @Component({
-  selector: 'app-stock-create',
-  templateUrl: './stock-create.component.html',
-  styleUrls: ['./stock-create.component.css']
+  selector: 'app-stock-edit',
+  templateUrl: './stock-edit.component.html',
+  styleUrls: ['./stock-edit.component.css']
 })
-export class StockCreateComponent implements OnInit {
-
+export class StockEditComponent {
   currentDate: Date = new Date();
   companyId! : number;
   savoyForm: FormGroup = new FormGroup({});
   savoyData: Stock[] = [];
-
+  stockId!: number;
 
 
   form = new FormGroup({});
   options: FormlyFormOptions = {};
-
   fields: FormlyFieldConfig[] = [];
 
   
-  submit(){
-    console.log("submitted");
-  }
   constructor(
     private notificationSvc: NotificationService,
-    private productService: ProductService,
     private savoyService: StockService,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  )
-  {
-    this.companyId = this.activatedRoute.snapshot.params['id'];
-  }
-  getCompanyRoute(companyId: any): string {
-    return `/stock/${Company[companyId]}`;
-  }
-  insert(): void {
+  ){ }
+
+  updateStock(): void {
     if (this.form.invalid) {
       console.log("invalid submission");
       return;
     }
-    this.savoyService.insert(this.companyId, this.savoyData)
+    this.savoyService.updateStock(this.companyId, this.savoyData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
         this.router.navigate(['/stock-view']);
@@ -60,22 +47,22 @@ export class StockCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.companyId = this.activatedRoute.snapshot.params['id'];
-    this.productService.getProductsWithEja(this.companyId)
+    this.stockId = this.activatedRoute.snapshot.params['id'];
+    this.savoyService.getStockById(this.stockId)
       .subscribe(r => {
         this.savoyData = r;
+
+        const companyIdFromSavoyData = this.savoyData[0]?.companyId;
+        if (companyIdFromSavoyData !== undefined) {
+            this.companyId = companyIdFromSavoyData;
+        } else {
+          this.notificationSvc.message("Company not laoded", "DISMISS");
+        }
+
         this.generateFormFields();
       }, err => {
         this.notificationSvc.message("Failed to load Company", "DISMISS");
       })
-  }
-
-  updateProduct(updatedProduct: Stock, index: number) {
-    this.savoyData[index] = updatedProduct;
-  }
-
-  trackByProduct(index: number, product: Stock): any {
-    return product.productId;
   }
 
     generateFormFields() {
@@ -157,10 +144,10 @@ export class StockCreateComponent implements OnInit {
             },
             validation: {
               messages:{required:" "}
-            },
-            expressions: {
-              'model.total': 'parseInt(model.eja) + (model.newProduct ? parseInt(model.newProduct) : 0)',
             }
+            // expressions: {
+            //   'model.total': 'parseInt(model.eja) + (model.newProduct ? parseInt(model.newProduct) : 0)',
+            // }
           },
           {
             className: 'flex-1 width-115',
@@ -213,5 +200,4 @@ export class StockCreateComponent implements OnInit {
       }
     ]
   }
-
 }

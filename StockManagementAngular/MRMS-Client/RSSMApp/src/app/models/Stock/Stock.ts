@@ -1,7 +1,8 @@
 export class Stock {
     constructor(
         public sl?: number,
-        public savoyIceCreamId?: number,
+        public stockId?: number,
+        public stockDetailsId?: number,
         public productId?: number,
         public productName?: string,
         public price?:number,

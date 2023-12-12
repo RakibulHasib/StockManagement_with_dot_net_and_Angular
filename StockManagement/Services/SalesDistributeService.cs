@@ -15,22 +15,23 @@ namespace StockManagement.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(DateTime StartDate, DateTime EndDate)
+        public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID, DateTime StartDate, DateTime EndDate)
         {
-            var query = await (from sd in _unitOfWork.SalesDistribute.Queryable
+            var query = await (from sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0)
                                join cp in _unitOfWork.ConcernPerson.Queryable on sd.ConcernPersonId equals cp.ConcernPersonId
-                        where sd.CreationTime.Date >= StartDate.Date && sd.CreationTime.Date <= EndDate.Date
-                        select new DailyDistributeDataDTO
-                        {
-                            SalesDistributeId = sd.SalesDistributeId,
-                            ConcernPerson = cp.ConcernPersonName,
-                            TotalReceive = sd.TotalReceive,
-                            TotalReturn = sd.TotalReturn,
-                            TotalSales = sd.TotalSales,
-                            TotalPrice = sd.TotalPrice,
-                            GrandTotal = sd.GrandTotal,
-                            CreationTime = sd.CreationTime
-                        }).ToListAsync();
+                               where sd.CreationTime.Date >= StartDate.Date && sd.CreationTime.Date <= EndDate.Date
+                                      && cp.ConcernPersonId == ConcernPersonID
+                               select new DailyDistributeDataDTO
+                               {
+                                   SalesDistributeId = sd.SalesDistributeId,
+                                   ConcernPerson = cp.ConcernPersonName,
+                                   TotalReceive = sd.TotalReceive,
+                                   TotalReturn = sd.TotalReturn,
+                                   TotalSales = sd.TotalSales,
+                                   TotalPrice = sd.TotalPrice,
+                                   GrandTotal = sd.GrandTotal,
+                                   CreationTime = sd.CreationTime
+                               }).OrderByDescending(a => a.SalesDistributeId).ToListAsync();
             return query;
         }
 
@@ -44,7 +45,8 @@ namespace StockManagement.Services
                 TotalReturn = 0,
                 TotalSales = 0,
                 GrandTotal = 0,
-                ConcernPersonId = ConcernPersonID
+                ConcernPersonId = ConcernPersonID,
+                IsDeleted = 0
             };
             await _unitOfWork.SalesDistribute.AddAsync(master);
             await _unitOfWork.SaveChangesAsync();
@@ -60,7 +62,8 @@ namespace StockManagement.Services
                     ReceiveQuantity = item.ReceiveQuantity,
                     ReturnQuantity = item.ReturnQuantity,
                     SalesQuantity = item.SalesQuantity,
-                    TotalSalesPrice = item.TotalSalesPrice
+                    TotalSalesPrice = item.TotalSalesPrice,
+                    IsDeleted=0
                 };
                 await _unitOfWork.SalesDistributeDetail.AddAsync(Details);
             }
@@ -105,32 +108,32 @@ namespace StockManagement.Services
             SalesDistributeReportDTO? reportDTO = new SalesDistributeReportDTO();
             var salesdistributeData = await (from sd in _unitOfWork.SalesDistribute.Queryable
                                              join cp in _unitOfWork.ConcernPerson.Queryable on sd.ConcernPersonId equals cp.ConcernPersonId
-                                            where sd.SalesDistributeId == SalesDistributeId
-                                            select new SalesDistributeReportDTO
-                                            {
-                                                SalesDistributeId = sd.SalesDistributeId,
-                                                ConcernPerson = cp.ConcernPersonName,
-                                                CreationTime = sd.CreationTime
-                                            }).FirstOrDefaultAsync();
+                                             where sd.SalesDistributeId == SalesDistributeId
+                                             select new SalesDistributeReportDTO
+                                             {
+                                                 SalesDistributeId = sd.SalesDistributeId,
+                                                 ConcernPerson = cp.ConcernPersonName,
+                                                 CreationTime = sd.CreationTime
+                                             }).FirstOrDefaultAsync();
 
             reportDTO = salesdistributeData;
 
             salesdistributeData.reportDetails = await (from si in _unitOfWork.SalesDistributeDetail.Queryable
-                                               join p in _unitOfWork.Product.Queryable on si.ProductId equals p.ProductId
-                                               where si.SalesDistributeId == SalesDistributeId
-                                                 select new SalesDistributeReportDetail
-                                               {
-                                                   SalesDistributeId = si.SalesDistributeId,
-                                                   SalesDistributeDetailsId = si.SalesDistributeDetailsId,
-                                                   ProductId = si.ProductId,
-                                                   ProductName = p.ProductName,
-                                                   Price = si.Price,
-                                                   ReceiveQuantity = si.ReceiveQuantity,
-                                                   ReturnQuantity = si.ReturnQuantity,
-                                                   SalesQuantity = si.SalesQuantity,
-                                                   TotalSalesPrice = si.TotalSalesPrice,
-                                                   CreationTime = si.CreationTime
-                                               }).ToListAsync();
+                                                       join p in _unitOfWork.Product.Queryable on si.ProductId equals p.ProductId
+                                                       where si.SalesDistributeId == SalesDistributeId
+                                                       select new SalesDistributeReportDetail
+                                                       {
+                                                           SalesDistributeId = si.SalesDistributeId,
+                                                           SalesDistributeDetailsId = si.SalesDistributeDetailsId,
+                                                           ProductId = si.ProductId,
+                                                           ProductName = p.ProductName,
+                                                           Price = si.Price,
+                                                           ReceiveQuantity = si.ReceiveQuantity,
+                                                           ReturnQuantity = si.ReturnQuantity,
+                                                           SalesQuantity = si.SalesQuantity,
+                                                           TotalSalesPrice = si.TotalSalesPrice,
+                                                           CreationTime = si.CreationTime
+                                                       }).ToListAsync();
 
             return reportDTO;
         }

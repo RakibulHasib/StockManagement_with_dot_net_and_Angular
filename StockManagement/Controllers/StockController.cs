@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
+using StockManagement.Entities;
 using StockManagement.Helpers;
 using StockManagement.Services;
 
@@ -16,11 +17,30 @@ public class StockController : ControllerBase
         _stockService = stockService;
     }
 
+    [HttpGet("GetStockByID")]
+    public async Task<ActionResult<IEnumerable<StockDTO>>> GetStockByID(int StockID)
+    {
+        return await _stockService.GetStockByID(StockID);
+    }
+
     [Transaction]
     [HttpPost("InsertStockData/{companyId}")]
     public async Task<ActionResult<int>> InsertStockData([FromRoute] int companyId, List<StockDTO> savoyIceCreamVM)
     {
         return Ok(await _stockService.InsertStockData(companyId, savoyIceCreamVM));
+    }
+
+    [Transaction]
+    [HttpPut("UpdateStockData/{companyId}")]
+    public async Task<ActionResult<int>> UpdateStockData([FromRoute] int companyId, List<StockDTO> savoyIceCreamVM)
+    {
+        return Ok(await _stockService.UpdateStockData(companyId, savoyIceCreamVM));
+    }
+    [Transaction]
+    [HttpPut("DeleteStock")]
+    public async Task<ActionResult<int>> DeleteStock(int StockId)
+    {
+        return Ok(await _stockService.DeleteStock(StockId));
     }
 
     [HttpGet("GetStockDataPerDay")]
@@ -59,4 +79,15 @@ public class StockController : ControllerBase
         return await _stockService.GetCommissionByID(StockId);
     }
 
+    [HttpGet("CheckTodayStock")]
+    public async Task<ActionResult<bool>> CheckTodayStock(int CompanyID)
+    {
+        return await _stockService.CheckTodayStock(CompanyID);
+    }
+
+    [HttpGet("CheckTodayStockforUpdate")]
+    public async Task<ActionResult<bool>> CheckTodayStockforUpdate(int StockID)
+    {
+        return await _stockService.CheckTodayStockforUpdate(StockID);
+    }
 }

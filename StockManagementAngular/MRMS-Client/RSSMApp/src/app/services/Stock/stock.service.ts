@@ -35,11 +35,14 @@ export class StockService {
   getById(id: number): Observable<Stock> {
     return this.http.get<Stock>(`${IceCreamApiUrl}/${endPoint}/${id}`);
   }
+  getStockById(stockId: number): Observable<Stock[]> {
+    return this.http.get<Stock[]>(`${IceCreamApiUrl}/${endPoint}/GetStockByID?StockID=${stockId}`);
+  }
   insert(companyId: number, data: Stock[]): Observable<Stock[]> {
     return this.http.post<Stock[]>(`${IceCreamApiUrl}/${endPoint}/InsertStockData/${companyId}`, data);
   }
-  update(data: Stock): Observable<any> {
-    return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}`, data);
+  updateStock(companyId: number,data: Stock[]): Observable<any> {
+    return this.http.put<Stock[]>(`${IceCreamApiUrl}/${endPoint}/UpdateStockData/${companyId}`, data);
   }
   updateDamage(stockId: number, damageAmount: number,): Observable<number> {
     const Qparams={stockId:stockId,damageAmount:damageAmount}
@@ -59,5 +62,18 @@ export class StockService {
   }
   delete(data: Stock): Observable<any> {
     return this.http.delete<any>(`${IceCreamApiUrl}/${endPoint}/${data.productId}`);
+  }
+  checkStockUpdate(companyID: number):Observable<boolean>{
+    return this.http.get<boolean>(`${IceCreamApiUrl}/${endPoint}/CheckTodayStock?CompanyID=${companyID}`);
+  }
+
+  checkTodayStockUpdate(stockId: number):Observable<boolean>{
+    return this.http.get<boolean>(`${IceCreamApiUrl}/${endPoint}/CheckTodayStockforUpdate?StockID=${stockId}`);
+  }
+
+  deleteStock(stockId: number): Observable<any> {
+    const Qparams={stockId:stockId}
+    const options={params:Qparams}
+    return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/DeleteStock`,null,options);
   }
 }

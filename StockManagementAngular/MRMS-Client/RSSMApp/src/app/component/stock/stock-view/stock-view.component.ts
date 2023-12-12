@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
-import {Subscription} from 'rxjs';
+import {Subscription, throwError} from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { Dailydatadbmodel } from '../../../models/DailyDataModel/dailydatadbmodel';
 import { StockService } from '../../../services/Stock/stock.service';
@@ -17,6 +17,7 @@ import { CommisionaddComponent } from '../../modal/commisionadd/commisionadd.com
 import { CompanyService } from 'src/app/service/Company/company.service';
 import { Company } from 'src/app/models/company/company';
 import { StateService } from 'src/app/services/Shared/state.service';
+import { Stock } from 'src/app/models/Stock/Stock';
 
 
 
@@ -49,7 +50,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
   startDate: string = '';
   endDate: string = '';
   selectedCompany: number= 1;
-  // companyID: number=0;
+  stock: Stock[]=[];
 
   constructor(
     private dailyDataSvc: StockService,
@@ -72,7 +73,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const currentRoute = this.activatedRoute.root;
-        if (!currentRoute.snapshot.children.some(child => child.routeConfig?.path === 'stock-create/:id' || child.routeConfig?.path === 'stock/:company')) {
+        if (!currentRoute.snapshot.children.some(child => child.routeConfig?.path === 'stock-create/:id' || child.routeConfig?.path === 'stock-view' || child.routeConfig?.path === 'stock-report/:id' || child.routeConfig?.path === 'stock-edit/:id')) {
           this.resetState();
         }
       }
@@ -89,9 +90,15 @@ export class StockViewComponent implements OnInit, OnDestroy {
     });
   }
 
+  stateUpdate():void{
+    this.stateService.updateState({ selectedCompany: this.selectedCompany,startDate:this.startDate});
+  }
+
+  resetState(): void {
+    this.stateService.resetState();
+  }
 
   fetchCompanyData(){
-    if(true){
       this.companySvc.getCompany()
       .subscribe(data=>{
         this.companies=data;
@@ -99,8 +106,35 @@ export class StockViewComponent implements OnInit, OnDestroy {
 
         this._notificationSvc.message("Failed to load data", "DISMISS");
       });
-    }
   }
+   checkStockUpdate(){
+      this.dailyDataSvc.checkStockUpdate(this.selectedCompany).toPromise().then(
+        x => {
+          if(x === true){
+            this._notificationSvc.message("Today stock is already updated", "DISMISS");
+          }
+          else{
+            this.stateUpdate();
+            this.router.navigate(['/stock-create', this.selectedCompany]);
+          }
+        }
+      );
+  }
+
+  checkTodayStockUpdate(stockId: number){
+    this.dailyDataSvc.checkTodayStockUpdate(stockId).toPromise().then(
+      x => {
+        if(x === false){
+          this._notificationSvc.message("This data update not possible", "DISMISS");
+        }
+        else{
+          this.stateUpdate();
+          this.router.navigate(['/stock-edit', stockId]);
+        }
+      }
+    );
+}
+
 
   ngOnDestroy(){
     this.paramsSubscription.unsubscribe();
@@ -113,18 +147,13 @@ export class StockViewComponent implements OnInit, OnDestroy {
     return `${year}-${month}-${day}`;
   }
 
-
-  resetState(): void {
-    this.stateService.resetState();
-  }
-
   onDropdownSelectionChange(selectedCompany: number) {
     this.selectedCompany=selectedCompany;
+    this.fetchData();
   }
 
 
   fetchData() {
-    this.stateService.updateState({ selectedCompany: this.selectedCompany,startDate:this.startDate});
     if (this.startDate && this.endDate) {
       this.dailyDataSvc.getDashboardDataPerDay(this.selectedCompany, this.startDate, this.endDate)
         .subscribe(data => {
@@ -150,6 +179,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
   
   openDamageDialog(stockId: any){
     const dialogRef = this.dialogRef.open(DamageaddComponent,{
+      enterAnimationDuration: '400ms',
       data:{
         stockId:stockId
       }
@@ -167,12 +197,11 @@ export class StockViewComponent implements OnInit, OnDestroy {
           }, err => {
             this._notificationSvc.message("Failed to update data", "DISMISS");
           });
-      } else {
-        this._notificationSvc.message("PopUp has been closed", "DISMISS");
       }
     }
     openCommissionDialog(stockId: any){
       const dialogRef = this.dialogRef.open(CommisionaddComponent,{
+        enterAnimationDuration: '400ms',
         data:{
           stockId:stockId
         }
@@ -190,9 +219,30 @@ export class StockViewComponent implements OnInit, OnDestroy {
           }, err => {
             this._notificationSvc.message("Failed to update data", "DISMISS");
           });
-      } else {
-        this._notificationSvc.message("PopUp has been closed", "DISMISS");
       }
+    }
+
+    confirmDelete(stockId: any) {
+      this._dialog.open(ConfirmDialogComponent, {
+        width: '450px',
+        enterAnimationDuration: '400ms'
+      }).afterClosed()
+        .subscribe(result => {
+          console.log(result);
+          if (result) {
+            this.dailyDataSvc.deleteStock(stockId)
+              .subscribe({
+                next: r => {
+                  this._notificationSvc.message('Stock Deleted Successfully', 'DISMISS');
+                   this.dataSource.data = this.dataSource.data.filter(c => c.stockId != stockId);
+                },
+                error: err => {
+                  this._notificationSvc.message('Failed to delete data', 'DISMISS');
+                  throwError(() => err);
+                }
+              })
+          }
+        })
     }
 
   }

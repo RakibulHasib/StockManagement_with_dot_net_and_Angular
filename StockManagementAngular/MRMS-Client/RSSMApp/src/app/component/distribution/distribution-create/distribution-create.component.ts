@@ -63,7 +63,7 @@ export class DistributionCreateComponent implements OnInit {
     })
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
-        console.log(r);
+        this.router.navigate(['/sales-view']);
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");
       })
