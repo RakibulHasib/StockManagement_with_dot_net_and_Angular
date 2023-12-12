@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using StockManagement.DTO;
 using StockManagement.Repository;
 
-namespace StockManagement.Features.Company
+namespace StockManagement.Features.CompanyFeatures
 {
     public class GetCompanyByCompanyIdQuery : IRequest<CompaniesDTO?>
     {
