@@ -6,6 +6,7 @@ using StockManagement.Contexts;
 using StockManagement.Model;
 using StockManagement.Repository;
 using StockManagement.Services;
+using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +51,7 @@ builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<SalesDistributeService>();
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<ConcernPersonService>();
+builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 builder.Services.AddDbContext<StockDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllers();

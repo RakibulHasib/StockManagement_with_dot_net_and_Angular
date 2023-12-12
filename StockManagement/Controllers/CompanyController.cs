@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
+using StockManagement.Features.Company;
 using StockManagement.Helpers;
 using StockManagement.Services;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StockManagement.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-public class CompanyController : ControllerBase
+public class CompanyController : BaseController<CompanyController>
 {
     private readonly CompanyService _companyService;
 
@@ -19,22 +18,22 @@ public class CompanyController : ControllerBase
 
 
     [HttpGet("CompanyDashboard")]
-    public async Task<ActionResult<IEnumerable<CompaniesDTO>>> CompanyDashboard()
+    public async Task<ActionResult<IEnumerable<CompaniesDTO>>> CompanyDashboard(GetCompanyListQuery query)
     {
-        return Ok(await _companyService.GetCompanyList());
+        return await _mediator.Send(new GetCompanyListQuery());
     }
 
     [HttpGet("GetCompanyByID/{companyId}")]
-    public async Task<ActionResult<CompaniesDTO>> GetCompanyByID(int companyId)
+    public async Task<ActionResult<CompaniesDTO?>> GetCompanyByID(int companyId)
     {
-        return await _companyService.GetCompanyByID(companyId);
+        return await _mediator.Send(new GetCompanyByCompanyIdQuery { CompanyId = companyId });
     }
 
     [Transaction]
     [HttpPost("InsertNewCompany")]
     public async Task<ActionResult<int>> InsertNewCompany(CompaniesDTO companies)
     {
-        return Ok(await _companyService.InsertCompany( companies));
+        return Ok(await _companyService.InsertCompany(companies));
     }
 
 
