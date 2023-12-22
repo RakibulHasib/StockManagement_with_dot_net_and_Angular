@@ -80,20 +80,47 @@ export class ProductViewComponent implements OnInit {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const currentRoute = this.activatedRoute.root;
-        if (!currentRoute.snapshot.children.some(child => child.routeConfig?.path === 'productView/:id' || child.routeConfig?.path === 'productAdd/:id')) {
+        if (!currentRoute.snapshot.children.some(child => child.routeConfig?.path === 'productView' || child.routeConfig?.path === 'productAdd/:id')) {
           this.resetState();
         }
       }
     });
-    this.companyService.getCompany()
-    .subscribe(data => {
-      this.companies = data;
-      this.selectedCompanyId = this.companies.length > 0 ? this.companies[0].companyId : null;
+
+    this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
+      const companyKey = params['id'];
+      // this.companyId = +Company[companyKey];
       this.fetchCompanyData();
-      this.fetchData(this.selectedCompany);
-    }, err => {
-      this._notificationSvc.message("Failed to load data", "DISMISS");
+    
+      // Call the company service inside the paramsSubscription
+      this.companyService.getCompany().subscribe(
+        data => {
+          this.companies = data;
+          this.selectedCompanyId = this.companies.length > 0 ? this.companies[0].companyId : null;
+    
+          this.fetchData(this.selectedCompanyId);
+        },
+        err => {
+          this._notificationSvc.message("Failed to load data", "DISMISS");
+        }
+      );
     });
+
+    // this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
+    //   const companyKey = params['company'];
+    //   // this.companyId = +Company[companyKey];
+    //   this.fetchCompanyData();
+      
+    // });
+    // this.companyService.getCompany()
+    // .subscribe(data => {
+    //   this.companies = data;
+    //   this.selectedCompanyId = this.companies.length > 0 ? this.companies[0].companyId : null;
+
+    //   this.fetchCompanyData();
+    //   this.fetchData(this.selectedCompany);
+    // }, err => {
+    //   this._notificationSvc.message("Failed to load data", "DISMISS");
+    // });
     // this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
     //   const companyKey = params['company'];
     //   const selectedCompany = this.companies.find(company => company.companyId === companyKey);

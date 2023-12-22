@@ -67,7 +67,7 @@ export class ProductCreateComponent {
         const selectedCompanyId = this.productData.companyId;
 
       
-      const routeWithCompanyId = `/productView/${selectedCompanyId}`;
+      const routeWithCompanyId = `/productView`;
       console.log("CompanyID",selectedCompanyId);
       this.router.navigate([routeWithCompanyId]);
 
