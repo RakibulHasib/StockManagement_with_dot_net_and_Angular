@@ -5,6 +5,7 @@ export class SalesDistribution {
     public price?: number,
     public receiveQuantity?: number,
     public returnQuantity?: number,
+    public totalQuantity?: number,
     public salesQuantity?: number,
     public totalSalesPrice?: number
   ) { }

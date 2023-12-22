@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
 using StockManagement.Entities;
+using StockManagement.Features.StockFeatures;
 using StockManagement.Helpers;
 using StockManagement.Services;
 
 namespace StockManagement.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-public class StockController : ControllerBase
+public class StockController : BaseController<StockController>
 {
     private readonly StockService _stockService;
 
@@ -44,9 +43,9 @@ public class StockController : ControllerBase
     }
 
     [HttpGet("GetStockDataPerDay")]
-    public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetStockDataPerDay(int companyId, DateTime StartDate, DateTime EndDate)
+    public async Task<ActionResult<IEnumerable<DailyDataDTO>>> GetStockDataPerDay([FromQuery] GetStockDataPerDayQuery query)
     {
-        return await _stockService.GetStockDataPerDay(companyId, StartDate, EndDate);
+        return await _mediator.Send(query);
     }
 
     [HttpGet("GetReport")]

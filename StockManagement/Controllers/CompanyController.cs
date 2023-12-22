@@ -18,7 +18,7 @@ public class CompanyController : BaseController<CompanyController>
 
 
     [HttpGet("CompanyDashboard")]
-    public async Task<ActionResult<IEnumerable<CompaniesDTO>>> CompanyDashboard(GetCompanyListQuery query)
+    public async Task<ActionResult<IEnumerable<CompaniesDTO>>> CompanyDashboard()
     {
         return await _mediator.Send(new GetCompanyListQuery());
     }

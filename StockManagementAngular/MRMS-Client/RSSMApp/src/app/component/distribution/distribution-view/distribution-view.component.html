@@ -85,28 +85,25 @@
             <mat-cell *matCellDef="let element" [style.text-align]="'center'" >{{element.creationTime| date:'yyyy-MM-dd'}} </mat-cell>
           </ng-container>
         
-  
-        <ng-container matColumnDef="actions" class="action">
-          <mat-header-cell *matHeaderCellDef mat-sort-header  class="action" >Action</mat-header-cell>
-          <mat-cell *matCellDef="let element" class="action">
-  
-            <button mat-raised-button [routerLink]="['/sales-report',element.salesDistributeId]" class="icon-spacing">View</button>
-            <mat-icon color="primary" class="icon-spacing" (click)="showExpandButton = !showExpandButton">more_vert</mat-icon>
-  
-  
-            <!--<div *ngIf="showExpandButton" class="expand-section">
-  
-              <button mat-raised-button color="primary" class="icon-spacing">Edit</button>
-              <button mat-raised-button color="warn" class="icon-spacing">Delete</button>
-            </div>-->
-            <div [@expandCollapse]="showExpandButton ? 'expanded' : 'collapsed'" class="expand-section">
-              <button mat-raised-button color="primary" class="icon-spacing">Edit</button>
-              <button mat-raised-button color="warn" class="icon-spacing">Delete</button>
-            </div>
-  
-  
-          </mat-cell>
-        </ng-container>
+          <ng-container matColumnDef="actions" class="action">
+            <mat-header-cell *matHeaderCellDef mat-sort-header  class="action" >Action</mat-header-cell>
+            <mat-cell *matCellDef="let element" class="action">
+              <button mat-raised-button [routerLink]="['/sales-report',element.salesDistributeId]" class="icon-spacing">View</button>
+              <button mat-icon-button [matMenuTriggerFor]="stockmenu" aria-label="Example icon-button with a menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #stockmenu="matMenu">
+                <button mat-menu-item>
+                  <mat-icon>dialpad</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button mat-menu-item>
+                  <mat-icon>dialpad</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </mat-cell>
+          </ng-container>
   
         <mat-header-row *matHeaderRowDef="columnList" class="bold-header"></mat-header-row>
         <mat-row *matRowDef="let row; columns: columnList;"></mat-row>

@@ -35,6 +35,18 @@ namespace StockManagement.Services
             return query;
         }
 
+        //public async Task<List<SalesDistributeDataDto>> GetDistributeDataByID(int SalesDistributeId)
+        //{
+        //    var master=await _unitOfWork.SalesDistribute.Queryable
+        //        .Where(a=>a.SalesDistributeId==SalesDistributeId)
+        //        .Select(query=>new SalesDistributeDataDto
+        //        {
+        //            ConcernPersonID= query.ConcernPersonId
+        //        }).FirstOrDefaultAsync();
+        //    master.salesDistribute=await _unitOfWork.SalesDistributeDetail.Queryable
+        //        .Where(a=>a)
+        //}
+
         public async Task<ActionResult<int>> InsertSalesDistributeData(int ConcernPersonID, List<SalesDistributeDTO> salesDistributeVM)
         {
             int result = 0;
@@ -53,17 +65,18 @@ namespace StockManagement.Services
 
             foreach (var item in salesDistributeVM)
             {
+                var remaining = ((item.ReceiveQuantity ?? 0) + (item.ReturnQuantity ?? 0) - item.SalesQuantity ?? 0);
                 var Details = new SalesDistributeDetail
                 {
                     SalesDistributeDetailsId = Guid.NewGuid(),
                     SalesDistributeId = master.SalesDistributeId,
                     ProductId = item.ProductId,
                     Price = item.Price,
-                    ReceiveQuantity = item.ReceiveQuantity,
-                    ReturnQuantity = item.ReturnQuantity,
-                    SalesQuantity = item.SalesQuantity,
+                    ReceiveQuantity = item.ReceiveQuantity ?? 0,
+                    ReturnQuantity = remaining,
+                    SalesQuantity = item.SalesQuantity ?? 0,
                     TotalSalesPrice = item.TotalSalesPrice,
-                    IsDeleted=0
+                    IsDeleted = 0
                 };
                 await _unitOfWork.SalesDistributeDetail.AddAsync(Details);
             }
@@ -95,12 +108,33 @@ namespace StockManagement.Services
         public async Task<ProductPriceDTO> GetProductWisePrice(int ProductID)
         {
             var data = await _unitOfWork.Product.Queryable
-                                      .Where(a => a.IsDeleted == 0 && a.IsActive == 1 && a.ProductId == ProductID)
+                                      .Where(a => a.IsDeleted == 0 && a.IsActive == 1 && a.ProductId == ProductID && a.IsDeleted == 0)
                                       .Select(query => new ProductPriceDTO
                                       {
                                           Price = query.Price ?? 0
                                       }).FirstOrDefaultAsync();
             return data;
+        }
+
+        public async Task<int> GetProductWiseRemaining(int ProductID, int ConcernPersonID)
+        {
+            var SalesDistributeId = await _unitOfWork.SalesDistribute.Queryable
+                .Where(a => a.ConcernPersonId == ConcernPersonID && a.IsDeleted == 0)
+                .OrderByDescending(a => a.SalesDistributeId)
+                .Select(a => a.SalesDistributeId)
+                .FirstOrDefaultAsync();
+
+            int RemainQuantity = 0;
+
+            if (SalesDistributeId != 0)
+            {
+                RemainQuantity = await _unitOfWork.SalesDistributeDetail.Queryable
+                    .Where(a => a.ProductId == ProductID && a.SalesDistributeId == SalesDistributeId && a.IsDeleted == 0)
+                    .Select(a => a.ReturnQuantity)
+                    .FirstOrDefaultAsync();
+            }
+
+            return RemainQuantity;
         }
 
         public async Task<SalesDistributeReportDTO> GetSalesDistributeReport(int SalesDistributeId)
@@ -138,6 +172,15 @@ namespace StockManagement.Services
             return reportDTO;
         }
 
+        public async Task<bool> CheckTodayConcernPersonDistribution(int ConcernPersonId)
+        {
+            var data = await _unitOfWork.SalesDistribute.Queryable
+                .Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ConcernPersonId == ConcernPersonId)
+                .Select(a => a.ConcernPersonId)
+                .FirstOrDefaultAsync();
+
+            return data != 0;
+        }
 
     }
 }

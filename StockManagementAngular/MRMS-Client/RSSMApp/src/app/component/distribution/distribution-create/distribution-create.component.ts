@@ -49,24 +49,32 @@ export class DistributionCreateComponent implements OnInit {
     this.generatedistributeFormFields();
   }
 
-
-
   insert(): void {
     console.log(this.model);
     if (this.form.invalid) {
       console.log("invalid submission");
       return;
     }
-    this.salesService.insert({
-      concernPersonId:this.model.concernPersonId,
-        salesDistribute: this.model.formData
-    })
-      .subscribe(r => {
-        this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
-        this.router.navigate(['/sales-view']);
-      }, err => {
-        this.notificationSvc.message("Failed to save data!!!", "DISMISS");
-      })
+    this.salesService.checkTodayConcernPersonDistribution(this.model.concernPersonId).toPromise().then(
+      x => {
+        console.log(x)
+        if(x === true){
+          this.notificationSvc.message("This data update not possible", "DISMISS");
+        }
+        else{
+          this.salesService.insert({
+            concernPersonId:this.model.concernPersonId,
+              salesDistribute: this.model.formData
+          })
+            .subscribe(r => {
+              this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
+              this.router.navigate(['/sales-view']);
+            }, err => {
+              this.notificationSvc.message("Failed to save data!!!", "DISMISS");
+          });
+        }
+      }
+    );
   }
   generatedistributeFormFields() {
     
@@ -86,6 +94,22 @@ export class DistributionCreateComponent implements OnInit {
             },
         validation: {
           messages: { required: " " }
+        },
+        hooks:{
+          onInit:(field:FormlyFieldConfig)=>{
+            field.form?.get('concernPersonId')
+              ?.valueChanges.subscribe(value =>{
+                this.salesService.checkTodayConcernPersonDistribution(value).toPromise().then(
+                  x => {
+                    console.log(x)
+                    if(x === true){
+                      this.notificationSvc.message("This person distribution already updated", "DISMISS");
+                    }
+                  }
+                );
+            })
+
+          }
         }
           }
         ],  
@@ -152,9 +176,7 @@ export class DistributionCreateComponent implements OnInit {
                     ?.valueChanges.subscribe(value => {
                       this.salesService.getPrice(value)
                         .subscribe(r => {
-                          field.formControl?.setValue(r.price);
-                          console.log(r.price);
-                          
+                          field.formControl?.setValue(r.price);                          
                         }, err => {
                           this.notificationSvc.message("Failed to load price", "DISMISS");
                         })
@@ -170,10 +192,15 @@ export class DistributionCreateComponent implements OnInit {
                 label: 'ReceiveQuantity',
                 floatLabel: 'always',
                 appearance: 'outline',
-                hideRequiredMarker: true,
+                hideRequiredMarker: true
               },
               validation: {
-                messages: { required: " " }
+                messages: { required: "Rececive Quantity required" }
+              },
+              hooks:{
+                onInit:(field:FormlyFieldConfig)=>{
+                  field.formControl?.setValue(0);
+                }
               }
             },
             {
@@ -181,13 +208,61 @@ export class DistributionCreateComponent implements OnInit {
               type: 'input',
               key: 'returnQuantity',
               props: {
-                label: 'ReturnQuantity',
+                label: 'RemainingQuantity',
                 floatLabel: 'always',
                 appearance: 'outline',
                 hideRequiredMarker: true,
+                readonly:true
               },
               validation: {
                 messages: { required: " " }
+              },
+              hooks: {
+                onInit: (field: FormlyFieldConfig) => {
+                    field.form?.get('productId')?.valueChanges
+                    .subscribe((value: number)=>{
+                        this.salesService.getRemaining(value,this.model.concernPersonId)
+                          .subscribe(r => {
+                            field.formControl?.setValue(r);                     
+                          }, err => {
+                            this.notificationSvc.message("Failed to load remaining", "DISMISS");
+                          })
+                        }
+                    )}
+                                
+                }
+            },
+            {
+              className: 'totalQuantity flex-1 width-160',
+              type: 'input',
+              key: 'totalQuantity',
+              props: {
+                label: 'TotalQuantity',
+                floatLabel: 'always',
+                appearance: 'outline',
+                hideRequiredMarker: true,
+                readonly:true
+              },
+              validation: {
+                messages: { required: " " }
+              },
+              hooks:{
+                onInit:(field:FormlyFieldConfig)=>{
+                  field.form?.get('receiveQuantity')?.valueChanges.subscribe({
+                    next:(value)=>{
+                      const receiveQ = +value;
+                      const returnQ=(field.form?.get('returnQuantity')?.value || 0)
+                      field.formControl?.setValue(receiveQ + returnQ);
+                    }
+                  });
+                  field.form?.get('returnQuantity')?.valueChanges.subscribe({
+                    next:(value)=>{
+                      const returnQ= +value;
+                      const receiveQ=(field.form?.get('receiveQuantity')?.value || 0)
+                      field.formControl?.setValue(receiveQ+returnQ);
+                    }
+                  })
+                }
               }
             },
             {
@@ -198,32 +273,12 @@ export class DistributionCreateComponent implements OnInit {
                 label: 'SalesQuantity',
                 floatLabel: 'always',
                 appearance: 'outline',
-                readonly: true,
                 hideRequiredMarker: true,
+                required:true
               },
               validation: {
-                messages: { required: " " }
+                messages: { required: "Sales quantity required" }
               },
-              hooks: {
-                onInit: (field: FormlyFieldConfig) => {
-                  field.form?.get('receiveQuantity')?.valueChanges.subscribe({
-                    next: (value) => {
-                      const receiveQ = value;
-                      const returnQ=(field.form?.get('returnQuantity')?.value || 0) 
-                      field.formControl?.setValue(receiveQ - returnQ);
-                    }
-                  });
-            
-                  field.form?.get('returnQuantity')?.valueChanges.subscribe({
-                    next: (value) => {
-                      const returnQ = value;
-                      const receiveQ=(field.form?.get('receiveQuantity')?.value || 0)
-                      field.formControl?.setValue(receiveQ - returnQ);
-                    }
-                  });
-                }
-              }
-       
             },
             {
               className: 'totalSalesPrice flex-1 width-160',
