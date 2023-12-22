@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
-using StockManagement.Features.Company;
+using StockManagement.Features.CompanyFeatures;
 using StockManagement.Helpers;
 using StockManagement.Services;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -31,9 +31,9 @@ public class CompanyController : BaseController<CompanyController>
 
     [Transaction]
     [HttpPost("InsertNewCompany")]
-    public async Task<ActionResult<int>> InsertNewCompany(CompaniesDTO companies)
+    public async Task<ActionResult<int>> InsertNewCompany(InsertNewCompanyCommand command)
     {
-        return Ok(await _companyService.InsertCompany(companies));
+        return  await _mediator.Send(command);
     }
 
 
