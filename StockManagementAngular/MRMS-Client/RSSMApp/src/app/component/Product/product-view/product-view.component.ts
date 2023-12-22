@@ -7,11 +7,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ProductService } from '../../../services/Product/product.service';
 import { NotificationService } from '../../../services/Shared/notification.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
 import { CompanyService } from '../../../service/Company/company.service';
 import { Company } from '../../../models/company/company';
+import { StateService } from 'src/app/services/Shared/state.service';
 
 @Component({
   selector: 'app-product-view',
@@ -23,15 +24,19 @@ export class ProductViewComponent implements OnInit {
 
   companyId!: number;
   paramsSubscription!: Subscription;
-
-
-
   companies: Company[]=[];
+  selectedCompany: number= 1;
+  selectedCompanyId: any;
+
+  // onDropdownSelectionChange(selectedValue: any) {
+  //   console.log(selectedValue);
+  //   this.fetchData(selectedValue);
+  // }
 
 
-  onDropdownSelectionChange(selectedValue: any) {
-    console.log(selectedValue);
-    this.fetchData(selectedValue);
+  onDropdownSelectionChange(companyId: any) {
+    this.selectedCompanyId = companyId;
+    this.fetchData(companyId);
   }
 
 
@@ -51,7 +56,9 @@ export class ProductViewComponent implements OnInit {
     private _notificationSvc: NotificationService,
     private _dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
-    private companyService: CompanyService
+    private companyService: CompanyService,
+    private stateService: StateService,
+    private router: Router,
   
   )
   {
@@ -63,24 +70,56 @@ export class ProductViewComponent implements OnInit {
 
 
   ngOnInit() {
-
+    this.selectedCompany = this.stateService.getPreviousState(1)?.selectedCompany || 1;
     const today = new Date();
     this.endDate = this.formatDate(today);
     const fifteenDaysAgo = new Date();
     fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
     this.startDate = this.formatDate(fifteenDaysAgo);
-    if (true) {
-      this.companyService.getCompany()
-        .subscribe(data => {
-          this.companies = data;
-        }, err => {
+   
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        const currentRoute = this.activatedRoute.root;
+        if (!currentRoute.snapshot.children.some(child => child.routeConfig?.path === 'productView/:id' || child.routeConfig?.path === 'productAdd/:id')) {
+          this.resetState();
+        }
+      }
+    });
+    this.companyService.getCompany()
+    .subscribe(data => {
+      this.companies = data;
+      this.selectedCompanyId = this.companies.length > 0 ? this.companies[0].companyId : null;
+      this.fetchCompanyData();
+      this.fetchData(this.selectedCompany);
+    }, err => {
+      this._notificationSvc.message("Failed to load data", "DISMISS");
+    });
+    // this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
+    //   const companyKey = params['company'];
+    //   const selectedCompany = this.companies.find(company => company.companyId === companyKey);
+    //   this.selectedCompanyId = selectedCompany ? selectedCompany.companyId : null;
+    //   this.fetchCompanyData();
+    //   this.fetchData(this.selectedCompanyId);
+    // });
 
-          this._notificationSvc.message("Failed to load data", "DISMISS");
-        });
-    } else {
-      this._notificationSvc.message("Please provide both Start Date and End Date", "DISMISS");
-    }
-    this.fetchData(1);
+    // this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
+    //   const companyKey = params['company'];
+    //   // this.companyId = +Company[companyKey];
+    //   this.fetchCompanyData();
+    //   this.fetchData(this.selectedCompany);
+    // });
+    // if (true) {
+    //   this.companyService.getCompany()
+    //     .subscribe(data => {
+    //       this.companies = data;
+    //     }, err => {
+
+    //       this._notificationSvc.message("Failed to load data", "DISMISS");
+    //     });
+    // } else {
+    //   this._notificationSvc.message("Please provide both Start Date and End Date", "DISMISS");
+    // }
+    //this.fetchData(1);
 
   }
   
@@ -95,10 +134,25 @@ export class ProductViewComponent implements OnInit {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
+  navigateToAddProduct() {
+   
+    this.router.navigate(['/productAdd', this.selectedCompany]);
+  }
 
+   resetState(): void {
+    this.stateService.resetState();
+  }
+  fetchCompanyData(){
+    if(true){
+      this.companyService.getCompany()
+      .subscribe(data=>{
+        this.companies=data;
+      }, err => {
 
-  
-
+        this._notificationSvc.message("Failed to load data", "DISMISS");
+      });
+    }
+  }
   fetchData(companyId:any) {
     if (true) {
       this.productDataSvc.getProductsListCompanyWise(companyId)
