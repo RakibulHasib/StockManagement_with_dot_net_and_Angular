@@ -6,7 +6,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { DailyDistributionModel } from 'src/app/models/DailyDataModel/daily-distribution-model';
+import { ConcernPerson } from 'src/app/models/concernPerson/concern-person';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
+import { ConcernPersonService } from 'src/app/services/concernPerson/concern-person.service';
 import { SalesDistributionService } from 'src/app/services/sales/sales-distribution.service';
 
 @Component({
@@ -24,6 +26,8 @@ import { SalesDistributionService } from 'src/app/services/sales/sales-distribut
 export class DistributionViewComponent {
   showExpandButton = false;
   companyId!: number;
+  concernPerson: ConcernPerson[]=[];
+  selectedConcernPerson: number=1;
 
   dailyDistributeData: DailyDistributionModel[] = [];
   dataSource: MatTableDataSource<DailyDistributionModel> = new MatTableDataSource(this.dailyDistributeData);
@@ -38,6 +42,7 @@ export class DistributionViewComponent {
   constructor(
     private salesService: SalesDistributionService,
     private _notificationSvc: NotificationService,
+    private concernPersonSvc: ConcernPersonService,
     private _dialog: MatDialog,
     private activatedRoute: ActivatedRoute
   ) { }
@@ -50,6 +55,24 @@ export class DistributionViewComponent {
     this.startDate = this.formatDate(fifteenDaysAgo);
 
       this.fetchData();
+      this.fetchConcernPersonData();
+  }
+
+  fetchConcernPersonData(){
+    if(true){
+      this.concernPersonSvc.getConcernPerson()
+      .subscribe(data=>{
+        this.concernPerson=data;
+      }, err => {
+
+        this._notificationSvc.message("Failed to load data", "DISMISS");
+      });
+    }
+  }
+
+  onDropdownSelectionChange(selectedConcernPerson: number) {
+    this.selectedConcernPerson=selectedConcernPerson;
+    this.fetchData();
   }
   
   formatDate(date: Date): string {
@@ -61,7 +84,7 @@ export class DistributionViewComponent {
 
   fetchData() {
     if (this.startDate && this.endDate) {
-      this.salesService.getSalesDistributeDataPerDay(this.startDate, this.endDate)
+      this.salesService.getSalesDistributeDataPerDay(this.selectedConcernPerson,this.startDate, this.endDate)
         .subscribe(data => {
           this.dailyDistributeData = data;
           this.dataSource.data = this.dailyDistributeData;

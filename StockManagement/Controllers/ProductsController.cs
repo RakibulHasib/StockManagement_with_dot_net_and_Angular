@@ -71,17 +71,17 @@ public class ProductsController : ControllerBase
         //    return NotFound();
 
         var products = await (from p in _unitOfWork.Product.Queryable
-                              let salesQ= _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ProductId==p.ProductId).Sum(a=>a.SalesQuantity)
-                              where p.IsActive==1 && p.CompanyId== companyId
+                              let salesQ = _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ProductId == p.ProductId && a.IsDeleted == 0).Sum(a => a.SalesQuantity)
+                              where p.IsActive == 1 && p.CompanyId == companyId
                               select new ProductDto
                               {
                                   ProductId = p.ProductId,
                                   ProductName = p.ProductName,
                                   Price = p.Price ?? 0,
-                                  Eja = p.StockDetails.OrderByDescending(x => x.CreationTime)
+                                  Eja = p.StockDetails.Where(a => a.IsDeleted == 0).OrderByDescending(x => x.CreationTime)
                                                                               .Select(x => x.Eja ?? 0)
                                                                               .FirstOrDefault(),
-                                  SalesQuantity= salesQ
+                                  SalesQuantity = salesQ
                               }).ToListAsync();
 
         //var products = await _unitOfWork.Product.Queryable

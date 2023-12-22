@@ -44,6 +44,7 @@ import { CommisionaddComponent } from './component/modal/commisionadd/commisiona
 import { ConcernCreateComponent } from './component/concernPerson/concern-create/concern-create.component';
 import { ConcernUpdateComponent } from './component/concernPerson/concern-update/concern-update.component';
 import { ConcernViewComponent } from './component/concernPerson/concern-view/concern-view.component';
+import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
 
 
 
@@ -76,7 +77,8 @@ import { ConcernViewComponent } from './component/concernPerson/concern-view/con
     CommisionaddComponent,
     ConcernCreateComponent,
     ConcernUpdateComponent,
-    ConcernViewComponent
+    ConcernViewComponent,
+    StockEditComponent
   ],
   imports: [
     BrowserModule,

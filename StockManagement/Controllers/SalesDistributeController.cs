@@ -19,9 +19,9 @@ namespace StockManagement.Controllers
         }
 
         [HttpGet("GetSalesDistributeDataPerDay")]
-        public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(DateTime StartDate, DateTime EndDate)
+        public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID,DateTime StartDate, DateTime EndDate)
         {
-            return await _salesDistributeService.GetSalesDistributeDataPerDay(StartDate, EndDate);
+            return await _salesDistributeService.GetSalesDistributeDataPerDay(ConcernPersonID, StartDate, EndDate);
         }
 
         [Transaction]
@@ -38,15 +38,27 @@ namespace StockManagement.Controllers
         }
 
         [HttpGet("GetProductWisePrice")]
-        public async Task<ActionResult<List<ProductDTO>>> GetProductWisePrice(int ProductID)
+        public async Task<ActionResult<ProductPriceDTO>> GetProductWisePrice(int ProductID)
         {
             return Ok(await _salesDistributeService.GetProductWisePrice(ProductID));
+        }
+
+        [HttpGet("GetProductWiseRemaining")]
+        public async Task<ActionResult<int>> GetProductWiseRemaining(int ProductID, int ConcernPersonID)
+        {
+            return Ok(await _salesDistributeService.GetProductWiseRemaining(ProductID, ConcernPersonID));
         }
 
         [HttpGet("GetSalesDistributeReport")]
         public async Task<ActionResult<SalesDistributeReportDTO>> GetSalesDistributeReport(int SalesDistributeId)
         {
             return await _salesDistributeService.GetSalesDistributeReport(SalesDistributeId);
+        }
+
+        [HttpGet("CheckTodayConcernPersonDistribution")]
+        public async Task<ActionResult<bool>> CheckTodayConcernPersonDistribution(int ConcernPersonId)
+        {
+            return await _salesDistributeService.CheckTodayConcernPersonDistribution(ConcernPersonId);
         }
     }
 }

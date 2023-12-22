@@ -19,8 +19,8 @@ export class SalesDistributionService {
     private http: HttpClient
   ) { }
 
-  getSalesDistributeDataPerDay(startDate: string, endDate: string): Observable<DailyDistributionModel[]> {
-   return this.http.get<DailyDistributionModel[]>(`${IceCreamApiUrl}/${endPoint}/GetSalesDistributeDataPerDay?StartDate=${startDate}&EndDate=${endDate}`);
+  getSalesDistributeDataPerDay(concernPersonID: number,startDate: string, endDate: string): Observable<DailyDistributionModel[]> {
+   return this.http.get<DailyDistributionModel[]>(`${IceCreamApiUrl}/${endPoint}/GetSalesDistributeDataPerDay?ConcernPersonID=${concernPersonID}&StartDate=${startDate}&EndDate=${endDate}`);
   }
   getReportData(salesDistributeID: number): Observable<SalesReportModel> {
    return this.http.get<SalesReportModel>(`${IceCreamApiUrl}/${endPoint}/GetSalesDistributeReport?SalesDistributeId=${salesDistributeID}`);
@@ -28,10 +28,16 @@ export class SalesDistributionService {
   getPrice(productID: number): Observable<{ price: number }> {
     return this.http.get<{ price: number }>(`${IceCreamApiUrl}/${endPoint}/GetProductWisePrice?ProductID=${productID}`);
   }
+  getRemaining(productID: number,concernPersonID:number): Observable<number> {
+    return this.http.get<number>(`${IceCreamApiUrl}/${endPoint}/GetProductWiseRemaining?ProductID=${productID}&ConcernPersonID=${concernPersonID}`);
+  }
   getProduct(): Observable<Product[]> {
     return this.http.get<Product[]>(`${IceCreamApiUrl}/${endPoint}/GetProduct`);
   }
   insert(data: {concernPersonId: number, salesDistribute: SalesDistribution[]}): Observable<any> {
     return this.http.post<SalesDistribution[]>(`${IceCreamApiUrl}/${endPoint}/InsertSalesDistributeData`, data);
+  }
+  checkTodayConcernPersonDistribution(concernPersonID: number):Observable<boolean>{
+    return this.http.get<boolean>(`${IceCreamApiUrl}/${endPoint}/CheckTodayConcernPersonDistribution?ConcernPersonId=${concernPersonID}`);
   }
 }

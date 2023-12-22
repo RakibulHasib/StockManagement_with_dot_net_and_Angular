@@ -74,22 +74,22 @@ namespace StockManagement.Controllers
             var salesData = await _unitofwork.Company.Queryable
                 .GroupJoin(
                     _unitofwork.Stock.Queryable
-                    .Where(x=>x.CreationTime.Date >= startDate && x.CreationTime.Date <= endDate),
+                    .Where(x => x.CreationTime.Date >= startDate && x.CreationTime.Date <= endDate && x.IsDeleted == 0),
                     company => company.CompanyId,
                     stock => stock.CompanyId,
-                    (company,stock) => new {Company = company,Stock=stock }
+                    (company, stock) => new { Company = company, Stock = stock }
                     )
                 .SelectMany(
-                x=>x.Stock.DefaultIfEmpty(),
-                (company, stock)=> new { Company=company,Stock=stock}
+                x => x.Stock.DefaultIfEmpty(),
+                (company, stock) => new { Company = company, Stock = stock }
                 )
-                .GroupBy(a=>a.Company.Company.CompanyId)
-                .Select(a=>new CompanySalesPriceWeeklyDTO
+                .GroupBy(a => a.Company.Company.CompanyId)
+                .Select(a => new CompanySalesPriceWeeklyDTO
                 {
                     CompanyID = a.Key,
-                    CompanyName = a.Max(x=>x.Company.Company.CompanyName),
-                    SalesQuantity =a.Sum(x=>x.Stock.TotalSalesQuantity),
-                    SalesPrice = a.Sum(x=>x.Stock.TotalPrice)
+                    CompanyName = a.Max(x => x.Company.Company.CompanyName),
+                    SalesQuantity = a.Sum(x => x.Stock.TotalSalesQuantity),
+                    SalesPrice = a.Sum(x => x.Stock.TotalPrice)
                 }).ToListAsync();
 
             return salesData;
