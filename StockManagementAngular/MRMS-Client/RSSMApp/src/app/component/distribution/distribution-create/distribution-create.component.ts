@@ -9,6 +9,7 @@ import { SalesDistributionService } from '../../../services/sales/sales-distribu
 import { NotificationService } from '../../../services/Shared/notification.service';
 import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ConcernPersonService } from 'src/app/services/concernPerson/concern-person.service';
+import { StateService } from 'src/app/services/Shared/state.service';
 
 @Component({
   selector: 'app-distribution-create',
@@ -42,11 +43,14 @@ export class DistributionCreateComponent implements OnInit {
     private salesService: SalesDistributionService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private concernPersonSvc: ConcernPersonService
+    private concernPersonSvc: ConcernPersonService,
+    private stateService:StateService
   ) { }
 
   ngOnInit(): void {
     this.generatedistributeFormFields();
+    this.model.concernPersonId =Number( this.activatedRoute.snapshot.params['id']);
+    
   }
 
   insert(): void {
@@ -68,7 +72,10 @@ export class DistributionCreateComponent implements OnInit {
           })
             .subscribe(r => {
               this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
-              this.router.navigate(['/sales-view']);
+              this.stateService.updateState('concernPersonId');
+              //this.router.navigate(['/sales-view']);
+              const routeD = `/sales-view`;
+              this.router.navigate([routeD]);
             }, err => {
               this.notificationSvc.message("Failed to save data!!!", "DISMISS");
           });
@@ -97,7 +104,7 @@ export class DistributionCreateComponent implements OnInit {
         },
         hooks:{
           onInit:(field:FormlyFieldConfig)=>{
-            field.form?.get('concernPersonId')
+            field.form?.get('concernPersonId')//
               ?.valueChanges.subscribe(value =>{
                 this.salesService.checkTodayConcernPersonDistribution(value).toPromise().then(
                   x => {

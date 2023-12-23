@@ -1,3 +1,4 @@
+import { StateService } from 'src/app/services/Shared/state.service';
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Product } from '../../../models/Product/product';
@@ -43,7 +44,8 @@ export class ProductCreateComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private companyService: CompanyService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private stateservice: StateService
   ) {
     
   }
@@ -65,7 +67,7 @@ export class ProductCreateComponent {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
         //this.router.navigate(['/productView', { companyId: r.companyId }]);
         const selectedCompanyId = this.productData.companyId;
-
+        this.stateservice.updateState(this.productData.companyId);
       
       const routeWithCompanyId = `/productView`;
       console.log("CompanyID",selectedCompanyId);

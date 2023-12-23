@@ -25,8 +25,8 @@ export class ProductViewComponent implements OnInit {
   companyId!: number;
   paramsSubscription!: Subscription;
   companies: Company[]=[];
-  selectedCompany: number= 1;
-  selectedCompanyId: any;
+  
+  selectedCompanyId: number= 1;
 
   // onDropdownSelectionChange(selectedValue: any) {
   //   console.log(selectedValue);
@@ -36,7 +36,7 @@ export class ProductViewComponent implements OnInit {
 
   onDropdownSelectionChange(companyId: any) {
     this.selectedCompanyId = companyId;
-    this.fetchData(companyId);
+    this.fetchData();
   }
 
 
@@ -62,7 +62,7 @@ export class ProductViewComponent implements OnInit {
   
   )
   {
-  // this.levelKeys = Object.keys(Company).filter(f => !isNaN(Number(f)));
+
   }
 
 
@@ -70,7 +70,7 @@ export class ProductViewComponent implements OnInit {
 
 
   ngOnInit() {
-    this.selectedCompany = this.stateService.getPreviousState(1)?.selectedCompany || 1;
+    this.selectedCompanyId = this.stateService.getPreviousState(1)?.selectedCompanyId || 1;
     const today = new Date();
     this.endDate = this.formatDate(today);
     const fifteenDaysAgo = new Date();
@@ -86,74 +86,48 @@ export class ProductViewComponent implements OnInit {
       }
     });
 
-    this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
-      const companyKey = params['id'];
-      // this.companyId = +Company[companyKey];
-      this.fetchCompanyData();
-    
-      // Call the company service inside the paramsSubscription
-      this.companyService.getCompany().subscribe(
-        data => {
-          this.companies = data;
-          this.selectedCompanyId = this.companies.length > 0 ? this.companies[0].companyId : null;
-    
-          this.fetchData(this.selectedCompanyId);
-        },
-        err => {
-          this._notificationSvc.message("Failed to load data", "DISMISS");
-        }
-      );
-    });
-
     // this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
-    //   const companyKey = params['company'];
+    //   const companyKey = params['id'];
     //   // this.companyId = +Company[companyKey];
     //   this.fetchCompanyData();
-      
+    
+    //   // Call the company service inside the paramsSubscription
+    //   this.companyService.getCompany().subscribe(
+    //     data => {
+    //       this.companies = data;
+    //       this.selectedCompanyId = this.companies.length > 0 ? this.companies[0].companyId : null;
+    
+    //       this.fetchData(this.selectedCompanyId);
+    //     },
+    //     err => {
+    //       this._notificationSvc.message("Failed to load data", "DISMISS");
+    //     }
+    //   );
     // });
+
+     this.fetchCompanyData();
+      this.fetchData();
+    
     // this.companyService.getCompany()
     // .subscribe(data => {
     //   this.companies = data;
     //   this.selectedCompanyId = this.companies.length > 0 ? this.companies[0].companyId : null;
 
     //   this.fetchCompanyData();
-    //   this.fetchData(this.selectedCompany);
+    //   this.fetchData(this.selectedCompanyId);
     // }, err => {
     //   this._notificationSvc.message("Failed to load data", "DISMISS");
     // });
-    // this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
-    //   const companyKey = params['company'];
-    //   const selectedCompany = this.companies.find(company => company.companyId === companyKey);
-    //   this.selectedCompanyId = selectedCompany ? selectedCompany.companyId : null;
-    //   this.fetchCompanyData();
-    //   this.fetchData(this.selectedCompanyId);
-    // });
 
-    // this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
-    //   const companyKey = params['company'];
-    //   // this.companyId = +Company[companyKey];
-    //   this.fetchCompanyData();
-    //   this.fetchData(this.selectedCompany);
-    // });
-    // if (true) {
-    //   this.companyService.getCompany()
-    //     .subscribe(data => {
-    //       this.companies = data;
-    //     }, err => {
-
-    //       this._notificationSvc.message("Failed to load data", "DISMISS");
-    //     });
-    // } else {
-    //   this._notificationSvc.message("Please provide both Start Date and End Date", "DISMISS");
-    // }
-    //this.fetchData(1);
+  //   this.fetchCompanyData();
+  //  this.fetchData(this.selectedCompanyId);
 
   }
   
 
-  //ngOnDestroy() {
-  //  this.paramsSubscription.unsubscribe();
-  //}
+  ngOnDestroy() {
+   
+  }
 
   formatDate(date: Date): string {
     const year = date.getFullYear();
@@ -162,8 +136,11 @@ export class ProductViewComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
   navigateToAddProduct() {
-   
-    this.router.navigate(['/productAdd', this.selectedCompany]);
+    this.stateUpdate();
+    this.router.navigate(['/productAdd', this.selectedCompanyId]);
+  }
+  stateUpdate():void{
+    this.stateService.updateState({ selectedCompanyId: this.selectedCompanyId});
   }
 
    resetState(): void {
@@ -180,14 +157,12 @@ export class ProductViewComponent implements OnInit {
       });
     }
   }
-  fetchData(companyId:any) {
+  fetchData() {
     if (true) {
-      this.productDataSvc.getProductsListCompanyWise(companyId)
+      this.productDataSvc.getProductsListCompanyWise(this.selectedCompanyId)
         .subscribe(data => {
           this.productData = data;
           this.dataSource.data = this.productData;
-          console.log(data);
-          console.log(this.dataSource.data);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         }, err => {

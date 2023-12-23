@@ -4,10 +4,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DailyDistributionModel } from 'src/app/models/DailyDataModel/daily-distribution-model';
 import { ConcernPerson } from 'src/app/models/concernPerson/concern-person';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
+import { StateService } from 'src/app/services/Shared/state.service';
 import { ConcernPersonService } from 'src/app/services/concernPerson/concern-person.service';
 import { SalesDistributionService } from 'src/app/services/sales/sales-distribution.service';
 
@@ -28,7 +29,12 @@ export class DistributionViewComponent {
   companyId!: number;
   concernPerson: ConcernPerson[]=[];
   selectedConcernPerson: number=1;
+  distibutionId : number = 0;
 
+   onDropdownSelectionChange(selectedConcernPerson: number) {
+    this.selectedConcernPerson=selectedConcernPerson;
+    this.fetchData();
+  }
   dailyDistributeData: DailyDistributionModel[] = [];
   dataSource: MatTableDataSource<DailyDistributionModel> = new MatTableDataSource(this.dailyDistributeData);
 
@@ -44,18 +50,32 @@ export class DistributionViewComponent {
     private _notificationSvc: NotificationService,
     private concernPersonSvc: ConcernPersonService,
     private _dialog: MatDialog,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private route:Router,
+    private stateService: StateService
   ) { }
 
   ngOnInit() {
+    this.selectedConcernPerson = this.stateService.getPreviousState(1)?.selectedConcernPerson || 1;
+    this.distibutionId=this.stateService.getPreviousState(1)?.distibutionId||1;
+
     const today = new Date();
     this.endDate = this.formatDate(today);
     const fifteenDaysAgo = new Date();
     fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
     this.startDate = this.formatDate(fifteenDaysAgo);
+    this.route.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        const currentRoute = this.activatedRoute.root;
+        if (!currentRoute.snapshot.children.some(child => child.routeConfig?.path === 'sales-view'|| child.routeConfig?.path==='sales-report/:id' || child.routeConfig?.path === 'sales-create/:id')) {
+          this.resetState();
+        }
+      }
+    });
 
       this.fetchData();
       this.fetchConcernPersonData();
+      console.log("DATA",this.selectedConcernPerson);
   }
 
   fetchConcernPersonData(){
@@ -70,10 +90,23 @@ export class DistributionViewComponent {
     }
   }
 
-  onDropdownSelectionChange(selectedConcernPerson: number) {
-    this.selectedConcernPerson=selectedConcernPerson;
-    this.fetchData();
+  navigateToAdddistribution() {
+    this.stateUpdate();
+    this.route.navigate(['/sales-create', this.selectedConcernPerson]);
   }
+  navigateToViewistribution() {
+    this.stateUpdate();
+    this.route.navigate(['/sales-report', this.distibutionId ]);
+  }
+  stateUpdate():void{
+    this.stateService.updateState({ selectedConcernPerson: this.selectedConcernPerson});
+  }
+
+   resetState(): void {
+    this.stateService.resetState();
+  }
+
+ 
   
   formatDate(date: Date): string {
     const year = date.getFullYear();
