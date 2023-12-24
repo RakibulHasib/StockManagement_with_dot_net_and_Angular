@@ -24,6 +24,12 @@ namespace StockManagement.Controllers
             return await _salesDistributeService.GetSalesDistributeDataPerDay(ConcernPersonID, StartDate, EndDate);
         }
 
+        [HttpGet("GetDistributeDataByID")]
+        public async Task<ActionResult<SalesDistributeDataDto>> GetDistributeDataByID(int SalesDistributeId)
+        {
+            return await _salesDistributeService.GetDistributeDataByID(SalesDistributeId);
+        }
+
         [Transaction]
         [HttpPost("InsertSalesDistributeData")]
         public async Task<ActionResult<int>> InsertSalesDistributeData(SalesDistributeDataDto data)
@@ -59,6 +65,13 @@ namespace StockManagement.Controllers
         public async Task<ActionResult<bool>> CheckTodayConcernPersonDistribution(int ConcernPersonId)
         {
             return await _salesDistributeService.CheckTodayConcernPersonDistribution(ConcernPersonId);
+        }
+
+        [Transaction]
+        [HttpPut("DeleteDistribution")]
+        public async Task<ActionResult<int>> DeleteDistribution(int SalesDistributeId)
+        {
+            return Ok(await _salesDistributeService.DeleteDistribution(SalesDistributeId));
         }
     }
 }

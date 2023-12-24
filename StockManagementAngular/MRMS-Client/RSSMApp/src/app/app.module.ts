@@ -45,6 +45,7 @@ import { ConcernCreateComponent } from './component/concernPerson/concern-create
 import { ConcernUpdateComponent } from './component/concernPerson/concern-update/concern-update.component';
 import { ConcernViewComponent } from './component/concernPerson/concern-view/concern-view.component';
 import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
+import { DistributionEditComponent } from './component/distribution/distribution-edit/distribution-edit.component';
 
 
 
@@ -78,7 +79,8 @@ import { StockEditComponent } from './component/stock/stock-edit/stock-edit.comp
     ConcernCreateComponent,
     ConcernUpdateComponent,
     ConcernViewComponent,
-    StockEditComponent
+    StockEditComponent,
+    DistributionEditComponent
   ],
   imports: [
     BrowserModule,

@@ -40,4 +40,12 @@ export class SalesDistributionService {
   checkTodayConcernPersonDistribution(concernPersonID: number):Observable<boolean>{
     return this.http.get<boolean>(`${IceCreamApiUrl}/${endPoint}/CheckTodayConcernPersonDistribution?ConcernPersonId=${concernPersonID}`);
   }
+  getDistributionById(salesDistributeID: number): Observable<{concernPersonID: number, salesDistribute: SalesDistribution[]}> {
+    return this.http.get<{concernPersonID: number, salesDistribute: SalesDistribution[]}>(`${IceCreamApiUrl}/${endPoint}/GetDistributeDataByID?SalesDistributeId=${salesDistributeID}`);
+  }
+  deleteDistribution(salesDistributeId: number): Observable<any> {
+    const Qparams={salesDistributeId:salesDistributeId}
+    const options={params:Qparams}
+    return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/DeleteDistribution`,null,options);
+  }
 }

@@ -18,7 +18,7 @@ namespace StockManagement.Services
         public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID, DateTime StartDate, DateTime EndDate)
         {
             var query = await (from sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0)
-                               join cp in _unitOfWork.ConcernPerson.Queryable on sd.ConcernPersonId equals cp.ConcernPersonId
+                               join cp in _unitOfWork.ConcernPerson.Queryable.Where(a => a.IsDeleted == 0) on sd.ConcernPersonId equals cp.ConcernPersonId
                                where sd.CreationTime.Date >= StartDate.Date && sd.CreationTime.Date <= EndDate.Date
                                       && cp.ConcernPersonId == ConcernPersonID
                                select new DailyDistributeDataDTO
@@ -35,17 +35,38 @@ namespace StockManagement.Services
             return query;
         }
 
-        //public async Task<List<SalesDistributeDataDto>> GetDistributeDataByID(int SalesDistributeId)
-        //{
-        //    var master=await _unitOfWork.SalesDistribute.Queryable
-        //        .Where(a=>a.SalesDistributeId==SalesDistributeId)
-        //        .Select(query=>new SalesDistributeDataDto
-        //        {
-        //            ConcernPersonID= query.ConcernPersonId
-        //        }).FirstOrDefaultAsync();
-        //    master.salesDistribute=await _unitOfWork.SalesDistributeDetail.Queryable
-        //        .Where(a=>a)
-        //}
+        public async Task<SalesDistributeDataDto> GetDistributeDataByID(int SalesDistributeId)
+        {
+            var master = await _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0)
+                .Where(a => a.SalesDistributeId == SalesDistributeId)
+                .Select(query => new SalesDistributeDataDto
+                {
+                    ConcernPersonID = query.ConcernPersonId
+                }).FirstOrDefaultAsync();
+
+            master.salesDistribute = await _unitOfWork.SalesDistributeDetail.Queryable
+                .Where(a => a.SalesDistributeId == SalesDistributeId && a.IsDeleted == 0)
+                .Select(data => new SalesDistributeDTO
+                {
+                    SalesDistributeDetailsId = data.SalesDistributeDetailsId,
+                    SalesDistributeId = data.SalesDistributeId,
+                    ProductId = data.ProductId,
+                    Price = data.Price,
+                    ReceiveQuantity = data.ReceiveQuantity,
+                    ReturnQuantity = 0,
+                    SalesQuantity = data.SalesQuantity,
+                    TotalSalesPrice = data.TotalSalesPrice,
+                    CreationTime = data.CreationTime,
+                    IsDeleted = data.IsDeleted
+                }).ToListAsync();
+
+            foreach (var item in master.salesDistribute)
+            {
+                item.ReturnQuantity = await GetProductWiseRemainingSkipOne(item.ProductId, master.ConcernPersonID);
+            }
+
+            return master;
+        }
 
         public async Task<ActionResult<int>> InsertSalesDistributeData(int ConcernPersonID, List<SalesDistributeDTO> salesDistributeVM)
         {
@@ -136,12 +157,33 @@ namespace StockManagement.Services
 
             return RemainQuantity;
         }
+        public async Task<int> GetProductWiseRemainingSkipOne(int ProductID, int ConcernPersonID)
+        {
+            var SalesDistributeId = await _unitOfWork.SalesDistribute.Queryable
+                .Where(a => a.ConcernPersonId == ConcernPersonID && a.IsDeleted == 0)
+                .OrderByDescending(a => a.SalesDistributeId)
+                .Skip(1)
+                .Select(a => a.SalesDistributeId)
+                .FirstOrDefaultAsync();
+
+            int RemainQuantity = 0;
+
+            if (SalesDistributeId != 0)
+            {
+                RemainQuantity = await _unitOfWork.SalesDistributeDetail.Queryable
+                    .Where(a => a.ProductId == ProductID && a.SalesDistributeId == SalesDistributeId && a.IsDeleted == 0)
+                    .Select(a => a.ReturnQuantity)
+                    .FirstOrDefaultAsync();
+            }
+
+            return RemainQuantity;
+        }
 
         public async Task<SalesDistributeReportDTO> GetSalesDistributeReport(int SalesDistributeId)
         {
             SalesDistributeReportDTO? reportDTO = new SalesDistributeReportDTO();
-            var salesdistributeData = await (from sd in _unitOfWork.SalesDistribute.Queryable
-                                             join cp in _unitOfWork.ConcernPerson.Queryable on sd.ConcernPersonId equals cp.ConcernPersonId
+            var salesdistributeData = await (from sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0)
+                                             join cp in _unitOfWork.ConcernPerson.Queryable.Where(a => a.IsDeleted == 0) on sd.ConcernPersonId equals cp.ConcernPersonId
                                              where sd.SalesDistributeId == SalesDistributeId
                                              select new SalesDistributeReportDTO
                                              {
@@ -152,8 +194,8 @@ namespace StockManagement.Services
 
             reportDTO = salesdistributeData;
 
-            salesdistributeData.reportDetails = await (from si in _unitOfWork.SalesDistributeDetail.Queryable
-                                                       join p in _unitOfWork.Product.Queryable on si.ProductId equals p.ProductId
+            salesdistributeData.reportDetails = await (from si in _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.IsDeleted == 0)
+                                                       join p in _unitOfWork.Product.Queryable.Where(a => a.IsDeleted == 0) on si.ProductId equals p.ProductId
                                                        where si.SalesDistributeId == SalesDistributeId
                                                        select new SalesDistributeReportDetail
                                                        {
@@ -180,6 +222,27 @@ namespace StockManagement.Services
                 .FirstOrDefaultAsync();
 
             return data != 0;
+        }
+
+        public async Task<int> DeleteDistribution(int SalesDistributeId)
+        {
+            int result = 0;
+            var master = await _unitOfWork.SalesDistribute.Queryable.Where(a => a.SalesDistributeId == SalesDistributeId).FirstOrDefaultAsync();
+            if (master != null)
+            {
+                master.IsDeleted = 1;
+                _unitOfWork.SalesDistribute.Update(master);
+                await _unitOfWork.SaveChangesAsync();
+
+                var detail = await _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.SalesDistributeId == SalesDistributeId).ToListAsync();
+                foreach (var item in detail)
+                {
+                    item.IsDeleted = 1;
+                    _unitOfWork.SalesDistributeDetail.Update(item);
+                }
+                result = await _unitOfWork.SaveChangesAsync();
+            }
+            return result;
         }
 
     }

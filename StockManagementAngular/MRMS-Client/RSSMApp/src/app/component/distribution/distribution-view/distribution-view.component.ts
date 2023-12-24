@@ -10,6 +10,8 @@ import { ConcernPerson } from 'src/app/models/concernPerson/concern-person';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { ConcernPersonService } from 'src/app/services/concernPerson/concern-person.service';
 import { SalesDistributionService } from 'src/app/services/sales/sales-distribution.service';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-distribution-view',
@@ -103,5 +105,27 @@ export class DistributionViewComponent {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  confirmDelete(salesDistributeId: any) {
+    this._dialog.open(ConfirmDialogComponent, {
+      width: '450px',
+      enterAnimationDuration: '400ms'
+    }).afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.salesService.deleteDistribution(salesDistributeId)
+            .subscribe({
+              next: r => {
+                this._notificationSvc.message('Distribution Deleted Successfully', 'DISMISS');
+                 this.dataSource.data = this.dataSource.data.filter(c => c.salesDistributeId != salesDistributeId);
+              },
+              error: err => {
+                this._notificationSvc.message('Failed to delete data', 'DISMISS');
+                throwError(() => err);
+              }
+            })
+        }
+      })
   }
 }

@@ -5,7 +5,7 @@ namespace StockManagement.DTO
     public class SalesDistributeDataDto
     {
         public int ConcernPersonID { get; set; }
-        public List<SalesDistributeDTO> salesDistribute  { get; set; }
+        public List<SalesDistributeDTO>? salesDistribute  { get; set; }
     }
     public class SalesDistributeDTO
     {

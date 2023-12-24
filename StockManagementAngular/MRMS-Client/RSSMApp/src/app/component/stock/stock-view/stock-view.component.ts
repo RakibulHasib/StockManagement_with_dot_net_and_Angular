@@ -228,7 +228,6 @@ export class StockViewComponent implements OnInit, OnDestroy {
         enterAnimationDuration: '400ms'
       }).afterClosed()
         .subscribe(result => {
-          console.log(result);
           if (result) {
             this.dailyDataSvc.deleteStock(stockId)
               .subscribe({

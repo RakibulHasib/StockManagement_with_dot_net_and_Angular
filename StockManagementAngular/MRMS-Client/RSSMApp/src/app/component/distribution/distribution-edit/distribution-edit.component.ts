@@ -1,41 +1,32 @@
-  import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { Observable, map, of, startWith, switchMap, tap } from 'rxjs';
-import { Product } from '../../../models/Product/product';
-import { SalesDistribution } from '../../../models/sales/sales-distribution';
-import { SalesDistributionService } from '../../../services/sales/sales-distribution.service';
-import { NotificationService } from '../../../services/Shared/notification.service';
-import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { map } from 'rxjs';
+import { Product } from 'src/app/models/Product/product';
+import { SalesDistribution } from 'src/app/models/sales/sales-distribution';
+import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { ConcernPersonService } from 'src/app/services/concernPerson/concern-person.service';
+import { SalesDistributionService } from 'src/app/services/sales/sales-distribution.service';
 
 @Component({
-  selector: 'app-distribution-create',
-  templateUrl: './distribution-create.component.html',
-  styleUrls: ['./distribution-create.component.css']
+  selector: 'app-distribution-edit',
+  templateUrl: './distribution-edit.component.html',
+  styleUrls: ['./distribution-edit.component.css']
 })
-export class DistributionCreateComponent implements OnInit {
-  
-
-
-  currentDate: Date = new Date();
+export class DistributionEditComponent {
   distributeForm: FormGroup = new FormGroup({});
   formData: SalesDistribution[] = [{}];
   productData: Product[] = [];
-  
-  form = new FormGroup({});
+  salesDistributeId!: number;
+
   model = {
     concernPersonId:0,
     formData: this.formData
   }
+  form = new FormGroup({});
   options: FormlyFormOptions = {};
-
   fields: FormlyFieldConfig[] = [];
-
-  submit() {
-    console.log("submitted");
-  }
 
   constructor(
     private notificationSvc: NotificationService,
@@ -45,47 +36,21 @@ export class DistributionCreateComponent implements OnInit {
     private concernPersonSvc: ConcernPersonService
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void{
+    this.salesDistributeId = this.activatedRoute.snapshot.params['id'];
+    this.salesService.getDistributionById(this.salesDistributeId)
+      .subscribe(r => {
+        this.model.concernPersonId = r.concernPersonID;
+        this.model.formData=r.salesDistribute;
 
-    // this.salesService.getProduct()
-    // .subscribe(data=>{
-    //   this.productData=data;
-    // }, err => {
-
-    //   this.notificationSvc.message("Failed to load data", "DISMISS");
-    // });
-
-    this.generatedistributeFormFields();
-
+        this.generatedistributeFormFields();
+      }, err => {
+        this.notificationSvc.message("Failed to load data", "DISMISS");
+      })
   }
 
-  insert(): void {
-    console.log(this.model);
-    if (this.form.invalid) {
-      console.log("invalid submission");
-      return;
-    }
-    this.salesService.checkTodayConcernPersonDistribution(this.model.concernPersonId).toPromise().then(
-      x => {
-        if(x === true){
-          this.notificationSvc.message("This data update not possible", "DISMISS");
-        }
-        else{
-          this.salesService.insert({
-            concernPersonId:this.model.concernPersonId,
-              salesDistribute: this.model.formData
-          })
-            .subscribe(r => {
-              this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
-              this.router.navigate(['/sales-view']);
-            }, err => {
-              this.notificationSvc.message("Failed to save data!!!", "DISMISS");
-          });
-        }
-      }
-    );
-  }
   generatedistributeFormFields() {
+    
     this.fields = [
       {
         fieldGroupClassName: 'display-flex',
@@ -134,19 +99,7 @@ export class DistributionCreateComponent implements OnInit {
               key: 'productId',
               templateOptions: {
                 label: 'Product Name',
-                options: 
-                
-                // of(this.productData).pipe(
-                //   map(
-                //     x=>x.filter(a=>!this.formData
-                //       .filter(a=>a!==undefined)
-                //       .map(a=>a.productId)
-                //       .includes(a.productId)
-                //       )
-                //   )
-                // ),
-                
-                this.salesService.getProduct().pipe(
+                options: this.salesService.getProduct().pipe(
                   map(
                     x => x.filter(a=>!this.formData
                           .filter(a => a !== undefined)
@@ -216,11 +169,6 @@ export class DistributionCreateComponent implements OnInit {
               },
               validation: {
                 messages: { required: "Rececive Quantity required" }
-              },
-              hooks:{
-                onInit:(field:FormlyFieldConfig)=>{
-                  field.formControl?.setValue(0);
-                }
               }
             },
             {
@@ -268,14 +216,18 @@ export class DistributionCreateComponent implements OnInit {
               },
               hooks:{
                 onInit:(field:FormlyFieldConfig)=>{
-                  field.form?.get('receiveQuantity')?.valueChanges.subscribe({
+                  const receiveQField = field.form?.get('receiveQuantity');
+                  const returnQField = field.form?.get('returnQuantity');
+                  field.formControl?.setValue(receiveQField?.value || 0 + returnQField?.value || 0);
+
+                  receiveQField?.valueChanges.subscribe({
                     next:(value)=>{
                       const receiveQ = +value;
                       const returnQ=(field.form?.get('returnQuantity')?.value || 0)
                       field.formControl?.setValue(receiveQ + returnQ);
                     }
                   });
-                  field.form?.get('returnQuantity')?.valueChanges.subscribe({
+                  returnQField?.valueChanges.subscribe({
                     next:(value)=>{
                       const returnQ= +value;
                       const receiveQ=(field.form?.get('receiveQuantity')?.value || 0)
@@ -339,5 +291,4 @@ export class DistributionCreateComponent implements OnInit {
       }
     ]
   }
-
 }

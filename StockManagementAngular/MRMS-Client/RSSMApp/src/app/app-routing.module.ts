@@ -18,6 +18,7 @@ import { CompanyCreateComponent } from './component/Company/company-create/compa
 import { ConcernViewComponent } from './component/concernPerson/concern-view/concern-view.component';
 import { ConcernCreateComponent } from './component/concernPerson/concern-create/concern-create.component';
 import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
+import { DistributionEditComponent } from './component/distribution/distribution-edit/distribution-edit.component';
 
 
 
@@ -33,6 +34,7 @@ const routes: Routes = [
   { path: 'stock-report/:id', component: StockReportComponent, canActivate: [AuthGuard] },
   { path: 'sales-create', component: DistributionCreateComponent, canActivate: [AuthGuard] },
   { path: 'sales-view', component: DistributionViewComponent, canActivate: [AuthGuard] },
+  { path: 'sales-edit/:id', component: DistributionEditComponent, canActivate: [AuthGuard] },
   {path:'sales-report/:id', component:DistributionReportComponent,canActivate:[AuthGuard]},
   { path: 'productView', component: ProductViewComponent, canActivate: [AuthGuard] },
   { path: 'productAdd', component: ProductCreateComponent, canActivate: [AuthGuard] },

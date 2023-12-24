@@ -33,9 +33,9 @@ public class StockService
 
     public async Task<List<StockDTO>> GetStockByID(int StockID)
     {
-        var data = await (from sd in _unitOfWork.StockDetail.Queryable
-                          join sm in _unitOfWork.Stock.Queryable on sd.StockId equals sm.StockId
-                          join p in _unitOfWork.Product.Queryable on sd.ProductId equals p.ProductId
+        var data = await (from sd in _unitOfWork.StockDetail.Queryable.Where(a => a.IsDeleted == 0)
+                          join sm in _unitOfWork.Stock.Queryable.Where(a => a.IsDeleted == 0) on sd.StockId equals sm.StockId
+                          join p in _unitOfWork.Product.Queryable.Where(a => a.IsDeleted == 0) on sd.ProductId equals p.ProductId
                           let salesQ = _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ProductId == p.ProductId && a.IsDeleted == 0).Sum(a => a.SalesQuantity)
                           where sd.StockId == StockID
                           select new StockDTO
@@ -178,7 +178,7 @@ public class StockService
     {
         ReportDTO? reportDTO = new ReportDTO();
         var savoyIceCreamData = await _unitOfWork.Stock.Queryable
-                                .Where(a => a.StockId == StockId)
+                                .Where(a => a.StockId == StockId && a.IsDeleted == 0)
                                 .Select(query => new ReportDTO
                                 {
                                     StockId = query.StockId,
@@ -194,8 +194,8 @@ public class StockService
 
         reportDTO = savoyIceCreamData;
 
-        savoyIceCreamData.reportDetails = (from si in _unitOfWork.StockDetail.Queryable
-                                           join p in _unitOfWork.Product.Queryable on si.ProductId equals p.ProductId
+        savoyIceCreamData.reportDetails = (from si in _unitOfWork.StockDetail.Queryable.Where(a=>a.IsDeleted==0)
+                                           join p in _unitOfWork.Product.Queryable.Where(a => a.IsDeleted == 0) on si.ProductId equals p.ProductId
                                            where si.StockId == StockId
                                            select new ReportDetail
                                            {
