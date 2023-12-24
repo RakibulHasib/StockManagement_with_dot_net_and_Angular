@@ -5,7 +5,7 @@
         <mat-card-title class="h5 mb-0 mx-auto">Company List</mat-card-title>
       </div>-->
       <div class="d-flex align-items-center">
-        <a mat-mini-fab class="btn btn-primary" [routerLink]="['/productAdd']">
+        <a mat-mini-fab class="btn btn-primary" (click)="navigateToAddProduct()">
           <mat-icon>add_box</mat-icon>
         </a>
       </div>
@@ -45,11 +45,16 @@
   <mat-card-content style="display: flex; flex-direction: column; align-items: center;">
     <mat-form-field style="width: 60%;">
       <mat-label> Select Company </mat-label>
-      <mat-select (selectionChange)="onDropdownSelectionChange($event.value)" [value]="companies.length > 0 ? companies[0].companyId : null">
+      <mat-select [(ngModel)]="selectedCompanyId" (selectionChange)="onDropdownSelectionChange($event.value)"[value]="selectedCompanyId" >
+        <mat-option *ngFor="let company of companies" [value]="company.companyId">
+          {{ company.companyName }}
+        </mat-option>
+      </mat-select>      
+      <!-- <mat-select (selectionChange)="onDropdownSelectionChange($event.value)" [value]="companies.length > 0 ? companies[0].companyId : null">
         <mat-option *ngFor="let company of companies" [value]="company.companyId">
           {{company.companyName}}
         </mat-option>
-      </mat-select>
+      </mat-select> -->
     </mat-form-field>
   </mat-card-content>
 
