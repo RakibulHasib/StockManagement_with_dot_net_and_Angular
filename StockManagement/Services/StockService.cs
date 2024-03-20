@@ -45,10 +45,11 @@ public class StockService
                               CompanyId = sm.CompanyId,
                               ProductId = sd.ProductId,
                               ProductName = p.ProductName,
-                              Eja = p.StockDetails.Where(a => a.IsDeleted == 0).OrderByDescending(x => x.CreationTime)
-                                                                              .Select(x => x.Eja ?? 0)
-                                                                              .Skip(1)
-                                                                              .FirstOrDefault(),
+                              Eja = p.StockDetails.Where(a => a.IsDeleted == 0)
+                                                  .OrderByDescending(x => x.CreationTime)
+                                                  .Select(x => x.Eja ?? 0)
+                                                  .Skip(1)
+                                                  .FirstOrDefault(),
                               Price = sd.Price,
                               NewProduct = sd.RestockQuantity ?? 0,
                               Total = sd.TotalQuantity,
@@ -194,7 +195,7 @@ public class StockService
 
         reportDTO = savoyIceCreamData;
 
-        savoyIceCreamData.reportDetails = (from si in _unitOfWork.StockDetail.Queryable.Where(a=>a.IsDeleted==0)
+        savoyIceCreamData.reportDetails = (from si in _unitOfWork.StockDetail.Queryable.Where(a => a.IsDeleted == 0)
                                            join p in _unitOfWork.Product.Queryable.Where(a => a.IsDeleted == 0) on si.ProductId equals p.ProductId
                                            where si.StockId == StockId
                                            select new ReportDetail

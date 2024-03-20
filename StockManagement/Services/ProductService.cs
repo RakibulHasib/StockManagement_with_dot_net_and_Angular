@@ -21,24 +21,38 @@ public class ProductService
 
     public async Task<IEnumerable<GetProductData>> GetProducCompanyWise(int CompanyId)
     {
-        var products = await (from product in _unitOfWork.Product.Queryable
-                              //join company in _unitOfWork.Company.Queryable
-                              //on product.CompanyId equals company.CompanyId
-                              where /*product.IsDeleted == 0 && product.IsActive == 1 &&*/ product.CompanyId == CompanyId
-                              select new GetProductData
-                              {
-                                  ProductId = product.ProductId,
-                                  ProductName = product.ProductName,
-                                  Description = product.Description,
-                                  Price = product.Price,
-                                  CompanyId = product.CompanyId,
-                                  //CompanyName = company.CompanyName,
-                                  IsActive = product.IsActive,
-                                  Sequence = product.Sequence
-                              }).ToListAsync();
+        var products = await _unitOfWork.Product.Queryable
+            .Where(product => product.CompanyId == CompanyId)
+            .ToListAsync();
 
-        return products.ToList();
+        var lastStockPerProduct = await _unitOfWork.StockDetail.Queryable
+            .Where(a => a.CompanyId == CompanyId)
+            .GroupBy(stock => stock.ProductId)
+            .Select(group => group.OrderByDescending(stock => stock.CreationTime).FirstOrDefault())
+            .ToListAsync();
+
+        var productsWithStock = from product in products
+                                join stock in lastStockPerProduct
+                                on product.ProductId equals stock.ProductId into productStock
+                                from ps in productStock.DefaultIfEmpty()
+                                select new GetProductData
+                                {
+                                    ProductId = product.ProductId,
+                                    ProductName = product.ProductName,
+                                    Description = product.Description,
+                                    Price = product.Price,
+                                    CompanyId = product.CompanyId,
+                                    IsActive = product.IsActive,
+                                    Sequence = product.Sequence,
+                                    CurrentStock = (ps.Eja + ps.RestockQuantity) - ps.SalesQuantity,
+                                    PreviousStock = ps.Eja
+                                };
+
+        return productsWithStock.ToList();
     }
+
+
+
 
     public async Task<ProductDTO> GetProducByID(int ProductId)
     {

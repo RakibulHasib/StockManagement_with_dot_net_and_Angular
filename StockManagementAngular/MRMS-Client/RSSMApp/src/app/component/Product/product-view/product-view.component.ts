@@ -47,7 +47,7 @@ export class ProductViewComponent implements OnInit {
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  columnList: string[] = ["productName", "price", "sequence", "description","IsActive", "actions"];
+  columnList: string[] = ["productName", "price", "currentStock", "previousStock", "sequence", "description","IsActive", "actions"];
   startDate: string = '';
   endDate: string = '';
 
@@ -60,14 +60,7 @@ export class ProductViewComponent implements OnInit {
     private stateService: StateService,
     private router: Router,
   
-  )
-  {
-
-  }
-
-
-
-
+  ){}
 
   ngOnInit() {
     this.selectedCompanyId = this.stateService.getPreviousState(1)?.selectedCompanyId || 1;
@@ -86,41 +79,8 @@ export class ProductViewComponent implements OnInit {
       }
     });
 
-    // this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
-    //   const companyKey = params['id'];
-    //   // this.companyId = +Company[companyKey];
-    //   this.fetchCompanyData();
-    
-    //   // Call the company service inside the paramsSubscription
-    //   this.companyService.getCompany().subscribe(
-    //     data => {
-    //       this.companies = data;
-    //       this.selectedCompanyId = this.companies.length > 0 ? this.companies[0].companyId : null;
-    
-    //       this.fetchData(this.selectedCompanyId);
-    //     },
-    //     err => {
-    //       this._notificationSvc.message("Failed to load data", "DISMISS");
-    //     }
-    //   );
-    // });
-
      this.fetchCompanyData();
       this.fetchData();
-    
-    // this.companyService.getCompany()
-    // .subscribe(data => {
-    //   this.companies = data;
-    //   this.selectedCompanyId = this.companies.length > 0 ? this.companies[0].companyId : null;
-
-    //   this.fetchCompanyData();
-    //   this.fetchData(this.selectedCompanyId);
-    // }, err => {
-    //   this._notificationSvc.message("Failed to load data", "DISMISS");
-    // });
-
-  //   this.fetchCompanyData();
-  //  this.fetchData(this.selectedCompanyId);
 
   }
   
@@ -165,6 +125,7 @@ export class ProductViewComponent implements OnInit {
           this.dataSource.data = this.productData;
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
+          console.log(this.productData);
         }, err => {
           this.productData = [];
           this._notificationSvc.message("Failed to load data", "DISMISS");

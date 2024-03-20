@@ -7,7 +7,8 @@ export class Product {
     public sequence?: number,
     public IsActive?: number,
     public description?: string,
-    public companyId?:number
-
+    public companyId?: number,
+    public currentStock?: number,
+    public previousStock?: number
   ) { }
 }
