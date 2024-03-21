@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NotificationService } from '../../services/Shared/notification.service';
 import { DashboardServiceService } from 'src/app/services/dashboard/dashboard-service.service';
 import { Dashboarddata } from 'src/app/models/dashboard/dashboarddata';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -14,7 +15,8 @@ export class HomeComponent {
   dashboardModel: Dashboarddata[] = [];
   constructor(
     private notificationSvc: NotificationService,
-    private dashboardService: DashboardServiceService
+    private dashboardService: DashboardServiceService,
+    private _modal: NgbModal
   ) { }
 
   ngOnInit(): void {
@@ -25,5 +27,9 @@ export class HomeComponent {
      }, err => {
        this.notificationSvc.message("Failed to load data!!!", "DISMISS");
      });
+  }
+
+  openModal(modalName: any){
+    this._modal.open(modalName, {size: 'lg'});
   }
 }

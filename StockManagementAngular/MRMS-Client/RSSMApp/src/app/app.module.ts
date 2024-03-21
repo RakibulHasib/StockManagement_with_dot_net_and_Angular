@@ -46,6 +46,7 @@ import { ConcernUpdateComponent } from './component/concernPerson/concern-update
 import { ConcernViewComponent } from './component/concernPerson/concern-view/concern-view.component';
 import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
 import { DistributionEditComponent } from './component/distribution/distribution-edit/distribution-edit.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -84,6 +85,7 @@ import { DistributionEditComponent } from './component/distribution/distribution
   ],
   imports: [
     BrowserModule,
+    NgbModule,
     AppRoutingModule,
     CommonModule,
     BrowserAnimationsModule,
