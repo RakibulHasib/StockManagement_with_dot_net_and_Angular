@@ -1,20 +1,13 @@
-﻿using MediatR;
-using StockManagement.Contexts;
-using StockManagement.DTO;
-using StockManagement.Entities;
-using StockManagement.Repository;
+﻿namespace StockManagement.Features.CompanyFeatures;
 
-
-namespace StockManagement.Features.CompanyFeatures;
-
-public class InsertNewCompanyCommand:IRequest<int>
+public class InsertNewCompanyCommand:IRequest<ApiResponse>
 {
     public int CompanyId { get; set; }
     public string? CompanyName { get; set; }
     public string? Picture { get; set; }
     public int IsDeleted { get; set; }
 
-    internal sealed class InsertNewCompanyCommandHandler : IRequestHandler<InsertNewCompanyCommand, int>
+    internal sealed class InsertNewCompanyCommandHandler : IRequestHandler<InsertNewCompanyCommand, ApiResponse>
     {
         private readonly UnitOfWork _unitOfWork;
 
@@ -23,23 +16,43 @@ public class InsertNewCompanyCommand:IRequest<int>
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(InsertNewCompanyCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(InsertNewCompanyCommand request, CancellationToken cancellationToken)
         {
-            Company company = new Company
+
+            try
             {
-                CompanyName = request.CompanyName,
-                IsDeleted = 0,
-                Picture = request.Picture ?? "",
+                Company company = new Company
+                {
+                    CompanyName = request.CompanyName,
+                    IsDeleted = 0,
+                    Picture = request.Picture ?? "",
 
+                };
+                await _unitOfWork.Company.AddAsync(company);
 
-            };
-            await _unitOfWork.Company.AddAsync(company);
+                await _unitOfWork.SaveChangesAsync();
+                return new ApiResponse<int> { Success = true ,Data=company.CompanyId};
+            }
+            catch (Exception)
+            {
 
-            await _unitOfWork.SaveChangesAsync();
-
-            return company.CompanyId;
+                return new ApiResponse { Success = true,Message = "Internal Server Error "};
+            } 
 
         }
+
+
     }
    
+}
+
+public class CompanyValidator : AbstractValidator<InsertNewCompanyCommand>
+{
+    public CompanyValidator()
+    {
+        RuleFor(a => a.CompanyName)
+        .NotEmpty();
+    }
+
+  
 }

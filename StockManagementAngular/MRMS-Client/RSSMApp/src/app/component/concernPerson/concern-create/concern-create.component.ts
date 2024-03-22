@@ -85,8 +85,7 @@ export class ConcernCreateComponent {
               label: 'Person Name',
               appearance: 'outline',
               floatLabel: 'always',
-              hideRequiredMarker: true,
-              
+              required:true
             },
             validation: {
               messages: { required: " " }

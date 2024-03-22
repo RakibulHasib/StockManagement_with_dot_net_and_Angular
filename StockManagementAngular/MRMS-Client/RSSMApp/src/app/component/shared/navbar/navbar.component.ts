@@ -1,9 +1,10 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component } from '@angular/core';
+import { Component, ViewChild, ViewChildren } from '@angular/core';
 import { Router } from '@angular/router';
 import { combineAll, map, Observable, shareReplay } from 'rxjs';
 import { AuthenticationService } from '../../../services/Authentication/authentication.service';
 import { Company } from 'src/app/models/companyenum/company';
+import { MatDrawer, MatSidenav } from '@angular/material/sidenav';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -30,12 +31,13 @@ companies = {
       map(result => result.matches),
       shareReplay()
   );
-
-
+  @ViewChild('drawer', { static: false }) drawer!: MatDrawer;
+  
   constructor(
     private breakpointObserver: BreakpointObserver,
     public authService: AuthenticationService,
     private router: Router,
+    
 
   ) { }
 
@@ -45,34 +47,11 @@ companies = {
     return this.authService.isAuthenticated();
   }
 
-  //logOut() {
-  //  this.authService.signOut().subscribe(
-  //    response => {
-  //      // Clear any user-specific data or perform additional tasks upon successful logout
-  //      console.log('User logged out successfully.');
-  //    },
-  //    error => {
-  //      // Handle any errors that occurred during the logout process
-  //      console.error('An error occurred while logging out:', error);
-  //    }
-  //  );
-
-  //logOut() {
-  //  this.authService.signOut().subscribe(
-  //    () => {
-  //      // Logout successful
-  //      // Perform any additional actions after logout (e.g., redirect)
-  //    },
-  //    (error) => {
-  //      // Handle error if logout fails
-  //    }
-  //  );
-  //}
-
-
   logOut() {
-    this.authService.logout();
-    this.router.navigate(['signin']);
+   this.authService.logout();
+   this.isAuthenticated();
+   this.router.navigate(['signin']);
+   this.drawer.close()
   }
 
 

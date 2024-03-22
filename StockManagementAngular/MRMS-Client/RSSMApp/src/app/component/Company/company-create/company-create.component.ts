@@ -1,3 +1,4 @@
+import { style } from '@angular/animations';
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -53,7 +54,6 @@ export class CompanyCreateComponent {
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
         this.router.onSameUrlNavigation = 'reload';
         this.router.navigate(['/companyview']);
-        console.log(r);
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");
       })
@@ -86,10 +86,11 @@ export class CompanyCreateComponent {
               label: 'Company Name',
               appearance: 'outline',
               floatLabel: 'always',
-              hideRequiredMarker: true,
+              required:true,
+              minLength: 3
             },
             validation: {
-              messages: { required: " " }
+              messages: { required: "Need to add Company Name " }
             }
           },
           

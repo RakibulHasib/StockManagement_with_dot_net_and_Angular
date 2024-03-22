@@ -44,7 +44,7 @@ public class ProductService
                                     CompanyId = product.CompanyId,
                                     IsActive = product.IsActive,
                                     Sequence = product.Sequence,
-                                    CurrentStock = (ps.Eja + ps.RestockQuantity) - ps.SalesQuantity,
+                                    //CurrentStock = (ps.Eja + ps.RestockQuantity) - ps.SalesQuantity,
                                     PreviousStock = ps.Eja
                                 };
 

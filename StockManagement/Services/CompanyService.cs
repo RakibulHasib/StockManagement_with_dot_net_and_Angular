@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using StockManagement.Contexts;
 using StockManagement.DTO;
 using StockManagement.Entities;
+using StockManagement.Model;
 using StockManagement.Repository;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace StockManagement.Services;
 
@@ -47,21 +49,31 @@ public class CompanyService
         return companies;
 
     }
-    public async Task<int> InsertCompany(CompaniesDTO companies)
+    public async Task<ApiResponse<int>> InsertCompany(CompaniesDTO companies)
     {
-        Company company = new Company
+       
+        try
         {
-            CompanyName = companies.CompanyName,
-            IsDeleted = 0,
-            Picture = companies.Picture ?? "",
-            
+            if (string.IsNullOrEmpty(companies.CompanyName))
+            {
+                return new ApiResponse<int>() { Success = false, Message = "You have to put Company Name " };
+            }
+            Company company = new Company
+            {
+                CompanyName = companies.CompanyName,
+                IsDeleted = 0,
+                Picture = companies.Picture ?? "",
+            };
+            await _unitOfWork.Company.AddAsync(company);
+            await _unitOfWork.SaveChangesAsync();
 
-        };
-        await _unitOfWork.Company.AddAsync(company);
+            return new ApiResponse<int> { Success = true ,Data=company.CompanyId};
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<int> { Success = false,Message = ex.Message };
+        }
 
-         await _unitOfWork.SaveChangesAsync();
-
-        return company.CompanyId;
     }
 
     public async Task<int> UpdateCompany(CompaniesDTO companies)

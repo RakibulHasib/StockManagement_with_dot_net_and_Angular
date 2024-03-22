@@ -51,7 +51,7 @@
     <mat-toolbar color="primary">
       <mat-toolbar-row>
         <ng-template [ngIf]="!authService.isAuthenticated()">
-          <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" disabled>
+          <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" disabled="true">
             <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
           </button>
           <span>{{ appTitle }}</span>
@@ -61,7 +61,6 @@
             <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
           </button>
           <span>{{ appTitle }}</span>
-
         </ng-template>
 
         <span class="example-spacer"></span>
