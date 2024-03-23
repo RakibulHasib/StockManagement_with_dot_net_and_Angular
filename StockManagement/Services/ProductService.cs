@@ -21,34 +21,20 @@ public class ProductService
 
     public async Task<IEnumerable<GetProductData>> GetProducCompanyWise(int CompanyId)
     {
-        var products = await _unitOfWork.Product.Queryable
-            .Where(product => product.CompanyId == CompanyId)
-            .ToListAsync();
+        var products = await (from product in _unitOfWork.Product.Queryable
+                              where product.CompanyId == CompanyId
+                              select new GetProductData
+                              {
+                                  ProductId = product.ProductId,
+                                  ProductName = product.ProductName,
+                                  Description = product.Description,
+                                  Price = product.Price,
+                                  CompanyId = product.CompanyId,
+                                  IsActive = product.IsActive,
+                                  Sequence = product.Sequence
+                              }).ToListAsync();
 
-        var lastStockPerProduct = await _unitOfWork.StockDetail.Queryable
-            .Where(a => a.CompanyId == CompanyId)
-            .GroupBy(stock => stock.ProductId)
-            .Select(group => group.OrderByDescending(stock => stock.CreationTime).FirstOrDefault())
-            .ToListAsync();
-
-        var productsWithStock = from product in products
-                                join stock in lastStockPerProduct
-                                on product.ProductId equals stock.ProductId into productStock
-                                from ps in productStock.DefaultIfEmpty()
-                                select new GetProductData
-                                {
-                                    ProductId = product.ProductId,
-                                    ProductName = product.ProductName,
-                                    Description = product.Description,
-                                    Price = product.Price,
-                                    CompanyId = product.CompanyId,
-                                    IsActive = product.IsActive,
-                                    Sequence = product.Sequence,
-                                    //CurrentStock = (ps.Eja + ps.RestockQuantity) - ps.SalesQuantity,
-                                    PreviousStock = ps.Eja
-                                };
-
-        return productsWithStock.ToList();
+        return products.ToList();
     }
 
 

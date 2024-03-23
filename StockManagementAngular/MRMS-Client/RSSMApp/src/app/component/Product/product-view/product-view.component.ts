@@ -47,7 +47,7 @@ export class ProductViewComponent implements OnInit {
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  columnList: string[] = ["productName", "price", "currentStock", "previousStock", "sequence", "description","IsActive", "actions"];
+  columnList: string[] = ["productName", "price", "sequence", "description","IsActive", "actions"];
   startDate: string = '';
   endDate: string = '';
 

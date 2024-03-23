@@ -22,3 +22,26 @@
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
+.modal-body {
+  border-top: 2px solid gray;
+  padding: 0 0 !important;   
+}
+
+.component-val-container {
+  height: calc(98vh - 125px);
+  overflow: auto;
+}
+
+.component-val-item {
+  padding: 30px;
+}
+
+button {
+  outline: none;
+  border: none;
+  background: none;
+  padding: 0px 10px;
+  font-size: 24px;
+}
+

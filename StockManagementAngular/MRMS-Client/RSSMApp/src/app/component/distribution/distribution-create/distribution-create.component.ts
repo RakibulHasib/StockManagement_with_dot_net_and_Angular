@@ -101,7 +101,7 @@ export class DistributionCreateComponent implements OnInit {
             type: 'select',
             key: 'concernPersonId',
             templateOptions: {
-              label: 'Concern Person',
+              label: 'ডিস্ট্রিভিউটর',
               options: this.concernPersonSvc.getConcernPerson(),
               valueProp:'concernPersonId',
               labelProp:'concernPersonName'
@@ -139,7 +139,7 @@ export class DistributionCreateComponent implements OnInit {
               type: 'select',
               key: 'productId',
               templateOptions: {
-                label: 'Product Name',
+                label: 'পণ্যের নাম',
                 options: 
                 
                 // of(this.productData).pipe(
@@ -187,7 +187,7 @@ export class DistributionCreateComponent implements OnInit {
               type: 'input',
               key: 'price',
               props: {
-                label: 'Price',
+                label: 'মূল্য',
                 floatLabel: 'always',
                 appearance: 'outline',
                 hideRequiredMarker: true,
@@ -215,7 +215,7 @@ export class DistributionCreateComponent implements OnInit {
               type: 'input',
               key: 'receiveQuantity',
               props: {
-                label: 'ReceiveQuantity',
+                label: 'গ্রহণ',
                 floatLabel: 'always',
                 appearance: 'outline',
                 hideRequiredMarker: true
@@ -234,7 +234,7 @@ export class DistributionCreateComponent implements OnInit {
               type: 'input',
               key: 'returnQuantity',
               props: {
-                label: 'RemainingQuantity',
+                label: 'অবশিষ্ট',
                 floatLabel: 'always',
                 appearance: 'outline',
                 hideRequiredMarker: true,
@@ -263,7 +263,7 @@ export class DistributionCreateComponent implements OnInit {
               type: 'input',
               key: 'totalQuantity',
               props: {
-                label: 'TotalQuantity',
+                label: 'মোট',
                 floatLabel: 'always',
                 appearance: 'outline',
                 hideRequiredMarker: true,
@@ -296,7 +296,7 @@ export class DistributionCreateComponent implements OnInit {
               type: 'input',
               key: 'salesQuantity',
               props: {
-                label: 'SalesQuantity',
+                label: 'বিক্রি',
                 floatLabel: 'always',
                 appearance: 'outline',
                 hideRequiredMarker: true,
@@ -311,7 +311,7 @@ export class DistributionCreateComponent implements OnInit {
               type: 'input',
               key: 'totalSalesPrice',
               props: {
-                label: 'TotalSalesPrice',
+                label: 'মোট বিক্রিত মূল্য',
                 floatLabel: 'always',
                 appearance: 'outline',
                 readonly: true,
