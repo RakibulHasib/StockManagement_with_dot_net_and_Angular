@@ -7,5 +7,5 @@ import { FieldArrayType } from '@ngx-formly/core';
   styleUrls: ['./distribution-config.component.css']
 })
 export class DistributionConfigComponent extends FieldArrayType {
-
+  
 }

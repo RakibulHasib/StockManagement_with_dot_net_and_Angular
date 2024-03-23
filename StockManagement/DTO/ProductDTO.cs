@@ -23,6 +23,4 @@ public class GetProductData
     public decimal? Price { get; set; }
     public int? Sequence { get; set; }
     public int IsDeleted { get; set; }
-    public int? CurrentStock { get; set; }
-    public int? PreviousStock { get; set; }
 }

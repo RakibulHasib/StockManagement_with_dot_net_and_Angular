@@ -54,16 +54,6 @@
           <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.price}} </mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="currentStock">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>বর্তমান স্টক</mat-header-cell>
-          <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.currentStock}} </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="previousStock">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>আগের স্টক</mat-header-cell>
-          <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.previousStock}} </mat-cell>
-        </ng-container>
-
         <ng-container matColumnDef="description">
           <mat-header-cell *matHeaderCellDef mat-sort-header>বিস্তারিত</mat-header-cell>
           <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.description}} </mat-cell>

@@ -21,51 +21,6 @@ namespace StockManagement.Controllers
             _unitofwork = unitofwork;
         }
 
-        //[HttpGet("GetCompanySalesPriceWeekly")]
-        //public async Task<ActionResult<CompanySalesPriceWeeklyDTO>> GetCompanySalesPriceWeekly()
-        //{
-        //    DateTime endDate = DateTime.Now.Date;
-        //    DateTime startDate = endDate.AddDays(-30);
-
-        //    var companyIds = new List<int> { 1, 2, 3, 4, 5 };
-
-        //    var companyData = new Dictionary<int, (int SalesQuantity, decimal Price)>();
-
-        //    foreach (var companyId in companyIds)
-        //    {
-        //        var salesData = await _unitofwork.Stock.Queryable
-        //            .Where(a => a.CompanyId == companyId && a.CreationTime.Date >= startDate && a.CreationTime.Date <= endDate)
-        //            .GroupBy(a => a.CompanyId)
-        //            .Select(g => new
-        //            {
-        //                SalesQuantity = g.Sum(a => a.TotalSalesQuantity),
-        //                Price = g.Sum(a => a.TotalPrice)
-        //            })
-        //            .FirstOrDefaultAsync();
-
-        //        if (salesData != null)
-        //        {
-        //            companyData[companyId] = (salesData.SalesQuantity, salesData.Price);
-        //        }
-        //    }
-
-        //    var data = new CompanySalesPriceWeeklyDTO
-        //    {
-        //        SavoySalesQ = companyData.GetValueOrDefault(1).SalesQuantity,
-        //        SavoySalesP = companyData.GetValueOrDefault(1).Price,
-        //        ZanZeeSalesQ = companyData.GetValueOrDefault(2).SalesQuantity,
-        //        ZanZeeSalesP = companyData.GetValueOrDefault(2).Price,
-        //        LovelloSalesQ = companyData.GetValueOrDefault(3).SalesQuantity,
-        //        LovelloSalesP = companyData.GetValueOrDefault(3).Price,
-        //        KaziFarmSalesQ = companyData.GetValueOrDefault(4).SalesQuantity,
-        //        KaziFarmSalesP = companyData.GetValueOrDefault(4).Price,
-        //        IglooSalesQ = companyData.GetValueOrDefault(5).SalesQuantity,
-        //        IglooSalesP = companyData.GetValueOrDefault(5).Price
-        //    };
-
-        //    return data;
-        //}
-
         [HttpGet("GetCompanySalesPriceWeekly")]
         public async Task<ActionResult<List<CompanySalesPriceWeeklyDTO>>> GetCompanySalesPriceWeekly()
         {
@@ -93,6 +48,35 @@ namespace StockManagement.Controllers
                 }).ToListAsync();
 
             return salesData;
+        }
+
+        [HttpGet("GetProducStock/{companyId}")]
+        public async Task<IEnumerable<ProductStockDTO>> GetProducStock(int CompanyId)
+        {
+            var products = await _unitofwork.Product.Queryable
+                .Where(product => product.CompanyId == CompanyId)
+                .ToListAsync();
+
+            var lastStockPerProduct = await _unitofwork.StockDetail.Queryable
+                .Where(a => a.CompanyId == CompanyId)
+                .GroupBy(stock => stock.ProductId)
+                .Select(group => group.OrderByDescending(stock => stock.CreationTime).FirstOrDefault())
+                .ToListAsync();
+
+            var productsWithStock = from product in products
+                                    join stock in lastStockPerProduct
+                                    on product.ProductId equals stock.ProductId into productStock
+                                    from ps in productStock.DefaultIfEmpty()
+                                    select new ProductStockDTO
+                                    {
+                                        ProductId = product.ProductId,
+                                        ProductName = product.ProductName,
+                                        Price = product.Price,
+                                        CurrentStock = ((ps?.Eja ?? 0) + (ps?.RestockQuantity ?? 0)) - ps?.SalesQuantity ?? 0,
+                                        PreviousStock = ps?.Eja ?? 0
+                                    };
+
+            return productsWithStock.ToList();
         }
 
     }
