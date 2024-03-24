@@ -59,7 +59,7 @@ export class DistributionViewComponent {
 
   ngOnInit() {
     this.selectedConcernPerson = this.stateService.getPreviousState(1)?.selectedConcernPerson || 1;
-    this.distibutionId=this.stateService.getPreviousState(1)?.distibutionId||1;
+    this.distibutionId=this.stateService.getPreviousState(1)?.distibutionId || 1;
 
     const today = new Date();
     this.endDate = this.formatDate(today);
@@ -77,7 +77,6 @@ export class DistributionViewComponent {
 
       this.fetchData();
       this.fetchConcernPersonData();
-      console.log("DATA",this.selectedConcernPerson);
   }
 
   fetchConcernPersonData(){
@@ -96,9 +95,9 @@ export class DistributionViewComponent {
     this.stateUpdate();
     this.route.navigate(['/sales-create', this.selectedConcernPerson]);
   }
-  navigateToViewistribution() {
+  navigateToViewistribution(distibutionId: number) {
     this.stateUpdate();
-    this.route.navigate(['/sales-report', this.distibutionId ]);
+    this.route.navigate(['/sales-report', distibutionId ]);
   }
   stateUpdate():void{
     this.stateService.updateState({ selectedConcernPerson: this.selectedConcernPerson});
@@ -123,7 +122,6 @@ export class DistributionViewComponent {
         .subscribe(data => {
           this.dailyDistributeData = data;
           this.dataSource.data = this.dailyDistributeData;
-          console.log(this.dataSource);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         }, err => {
