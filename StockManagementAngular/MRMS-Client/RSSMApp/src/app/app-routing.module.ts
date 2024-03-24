@@ -20,7 +20,6 @@ import { ConcernCreateComponent } from './component/concernPerson/concern-create
 import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
 import { DistributionEditComponent } from './component/distribution/distribution-edit/distribution-edit.component';
 import { Company } from './models/companyenum/company';
-import { CompanyListComponent } from './component/Company/company-list/company-list.component';
 
 
 
@@ -44,7 +43,6 @@ const routes: Routes = [
   { path: 'companycreate', component: CompanyCreateComponent, canActivate: [AuthGuard] },
   { path: 'concernpersonview', component: ConcernViewComponent, canActivate: [AuthGuard] },
   { path: 'concernpersoncreate', component: ConcernCreateComponent, canActivate: [AuthGuard] },
-  {path: 'companylist',component:CompanyListComponent,canActivate:[AuthGuard]}
 
 ];
 

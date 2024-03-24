@@ -47,7 +47,6 @@ import { ConcernViewComponent } from './component/concernPerson/concern-view/con
 import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
 import { DistributionEditComponent } from './component/distribution/distribution-edit/distribution-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CompanyListComponent } from './component/Company/company-list/company-list.component';
 
 
 
@@ -82,8 +81,7 @@ import { CompanyListComponent } from './component/Company/company-list/company-l
     ConcernUpdateComponent,
     ConcernViewComponent,
     StockEditComponent,
-    DistributionEditComponent,
-    CompanyListComponent
+    DistributionEditComponent
   ],
   imports: [
     BrowserModule,
