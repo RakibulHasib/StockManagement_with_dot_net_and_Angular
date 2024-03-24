@@ -34,11 +34,11 @@ public class CompanyService
         return companies;
     }
 
-    public async Task<CompaniesDTO> GetCompanyByID(int CompanyId)
+    public async Task<Company> GetCompanyByID(int CompanyId)
     {
 
         var companies = await _unitOfWork.Company.Queryable
-                                .Select(query => new CompaniesDTO
+                                .Select(query => new Company
                                 {
                                     CompanyId = query.CompanyId,
                                     CompanyName = query.CompanyName,

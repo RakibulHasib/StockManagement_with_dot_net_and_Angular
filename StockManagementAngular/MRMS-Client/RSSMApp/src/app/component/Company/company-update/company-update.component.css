@@ -1,0 +1,55 @@
+.mat-elevation-z3{
+    width: 500px;
+    
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+              0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  
+  }
+  .header {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center
+     }
+     .CompanyEntryForm .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix .mat-mdc-floating-label {
+         font-size: 1.2em;
+         left: auto;
+         right: auto;
+         font-weight: 500;
+     }
+     
+     .CompanyEntryForm .mdc-text-field {
+         padding: 0 10px;
+     }
+     
+     .CompanyEntryForm .mdc-text-field--filled .mdc-floating-label--float-above {
+         transform: translateY(-106%) scale(0.75);
+         left: auto;
+         right: auto;
+         width: 50%;
+     } 
+     
+     .custom-formly-form .formly-field {
+         max-width: 200px;
+         margin-left: 50px;
+       }
+       ::ng-deep .custom-button {
+          background-color: white;
+          color: red;
+        }
+        
+        ::ng-deep .custom-button:hover {
+          background-color: #e0e0e0;
+          color: #ff0000;
+        }
+              
+       /* .mat-card-actions-right {
+          display: flex;
+          justify-content: flex-end;
+        }
+        
+        .mat-card-actions-right .mat-button-wrapper {
+          justify-content: flex-end;
+        } */
+        
+       
