@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
 using StockManagement.Entities;
 using StockManagement.Features.CompanyFeatures;
@@ -8,7 +9,9 @@ using StockManagement.Services;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StockManagement.Controllers;
-
+[Route("api/[controller]")]
+[ApiController]
+[Authorize]
 public class CompanyController : BaseController<CompanyController>
 {
     private readonly CompanyService _companyService;

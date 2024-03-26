@@ -1,4 +1,6 @@
-﻿namespace StockManagement.Features.CompanyFeatures;
+﻿using System.Net;
+
+namespace StockManagement.Features.CompanyFeatures;
 
 public class InsertNewCompanyCommand:IRequest<ApiResponse>
 {
@@ -31,12 +33,22 @@ public class InsertNewCompanyCommand:IRequest<ApiResponse>
                 await _unitOfWork.Company.AddAsync(company);
 
                 await _unitOfWork.SaveChangesAsync();
-                return new ApiResponse<int> { Success = true ,Data=company.CompanyId};
+                return new ApiResponse<int>
+                {
+                    Status = Status.Success,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Data = company.CompanyId
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                return new ApiResponse { Success = true,Message = "Internal Server Error "};
+                return new ApiResponse()
+                {
+                    Message = ex.Message,
+                    Status = Status.Failed,
+                    StatusCode = (int)HttpStatusCode.InternalServerError
+                };
             } 
 
         }

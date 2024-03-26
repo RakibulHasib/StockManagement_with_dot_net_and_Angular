@@ -7,6 +7,19 @@ public class ApiResponse<T> : ApiResponse
 
 public class ApiResponse
 {
-    public bool Success { get; set; }
     public string? Message { get; set; }
+    public Status? Status { get; set; }
+    public int? StatusCode { get; set; }
+
+}
+
+public enum Status
+{
+    Approved = 1,
+    Unapproved,
+    Success,
+    Failed,
+    Unauthorized
+
+
 }

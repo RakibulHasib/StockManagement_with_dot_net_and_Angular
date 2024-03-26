@@ -13,8 +13,7 @@ import { ProductViewComponent } from './component/Product/product-view/product-v
 import { ProductCreateComponent } from './component/Product/product-create/product-create.component';
 import { DistributionViewComponent } from './component/distribution/distribution-view/distribution-view.component';
 import { DistributionReportComponent } from './component/distribution/distribution-report/distribution-report.component';
-import { CompanyViewComponent } from './component/Company/company-view/company-view.component';
-import { CompanyCreateComponent } from './component/Company/company-create/company-create.component';
+import { CompanyViewComponent } from './component/Company/company-view/company-view.component'
 import { ConcernViewComponent } from './component/concernPerson/concern-view/concern-view.component';
 import { ConcernCreateComponent } from './component/concernPerson/concern-create/concern-create.component';
 import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
@@ -25,7 +24,7 @@ import { Company } from './models/companyenum/company';
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
-  { path: 'home', component: HomeComponent },
+  { path: 'home', component: HomeComponent,canActivate: [AuthGuard] },
   { path: 'signUp', component: RegisterComponent },
   { path: 'signin', component: SignInComponent },
   { path: 'FileContainer', component: FileContainerComponent, canActivate: [AuthGuard] },
@@ -40,7 +39,6 @@ const routes: Routes = [
   { path: 'productView', component: ProductViewComponent, canActivate: [AuthGuard] },
   { path: 'productAdd/:id', component: ProductCreateComponent, canActivate: [AuthGuard] },
   { path: 'companyview', component: CompanyViewComponent, canActivate: [AuthGuard] },
-  { path: 'companycreate', component: CompanyCreateComponent, canActivate: [AuthGuard] },
   { path: 'concernpersonview', component: ConcernViewComponent, canActivate: [AuthGuard] },
   { path: 'concernpersoncreate', component: ConcernCreateComponent, canActivate: [AuthGuard] },
 

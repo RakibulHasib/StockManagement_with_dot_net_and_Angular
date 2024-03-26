@@ -1,4 +1,6 @@
-﻿using StockManagement.Services;
+﻿using StockManagement.Entities;
+using StockManagement.Services;
+using System.Net;
 
 namespace StockManagement.Features.CompanyFeatures;
 
@@ -32,12 +34,22 @@ public class DeleteCompanyCommand :IRequest<ApiResponse>
                 _unitOfWork.Company.Update(company);
 
                 await _unitOfWork.SaveChangesAsync();
-                return new ApiResponse<int> { Success = true, Data = company.CompanyId };
+                return new ApiResponse<int>
+                {
+                    Status = Status.Success,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Data = company.CompanyId
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                return new ApiResponse { Success = true, Message = "Internal Server Error " };
+                return new ApiResponse
+                {
+                    Message= ex.Message,
+                    Status = Status.Success,
+                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                };
             }
         }
     }

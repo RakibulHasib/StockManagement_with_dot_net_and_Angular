@@ -33,10 +33,8 @@ export class SignInComponent {
 
     this.cd.detectChanges();
 
-
     if (this.loginForm.valid) {
       console.log(this.loginForm.value);
-
 
       this.auth.login(this.loginForm.value).subscribe({
         next: (res) => {

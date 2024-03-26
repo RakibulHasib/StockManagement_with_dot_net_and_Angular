@@ -26,8 +26,6 @@ import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { ProductRepeatComponent } from './component/shared/product-repeat/product-repeat.component';
 import { CompanyViewComponent } from './component/Company/company-view/company-view.component';
-import { CompanyCreateComponent } from './component/Company/company-create/company-create.component';
-import { CompanyUpdateComponent } from './component/Company/company-update/company-update.component';
 import { ProductViewComponent } from './component/Product/product-view/product-view.component';
 import { ProductCreateComponent } from './component/Product/product-create/product-create.component';
 import { ProductUpdateComponent } from './component/Product/product-update/product-update.component';
@@ -64,8 +62,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ProductItemComponent,
     ProductRepeatComponent,
     CompanyViewComponent,
-    CompanyCreateComponent,
-    CompanyUpdateComponent,
     ProductViewComponent,
     ProductCreateComponent,
     ProductUpdateComponent,

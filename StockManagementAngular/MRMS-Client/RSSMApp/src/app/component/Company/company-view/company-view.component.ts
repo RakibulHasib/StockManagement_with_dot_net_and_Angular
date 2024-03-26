@@ -8,10 +8,8 @@ import { Company } from 'src/app/models/company/company';
 import { CompanyService } from 'src/app/service/Company/company.service';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { StateService } from 'src/app/services/Shared/state.service';
-import { CompanyCreateComponent } from '../company-create/company-create.component';
-import { CompanyUpdateComponent } from '../company-update/company-update.component';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { Subscription } from 'rxjs';
@@ -34,8 +32,6 @@ export class CompanyViewComponent   {
   companyForm:FormGroup = new FormGroup({});
   companyData:Company = new Company;
 
-  createOrUpdateCompany : any;
-
   model = {
     companyData: this.companyData
   }
@@ -51,14 +47,16 @@ export class CompanyViewComponent   {
   (
     private companyDataSvc: CompanyService,
     private _notifitions:NotificationService,
-    private _dialog: MatDialog,
     private _modal: NgbModal,
-    private activatedRoute: ActivatedRoute,
     private router: Router
 
   ){}
   
   ngOnInit(){
+    this.getItems();
+  }
+
+  getItems(){
     this.companyDataSvc.getCompany()
     .subscribe(data=>{
       this.companiesData=data;
@@ -67,32 +65,25 @@ export class CompanyViewComponent   {
       this.dataSource.sort=this.sort;
     },err=>{
       this._notifitions.message("Failed to load data", "DISMISS");
-    })
-    
-  
+    });
   }
-
-  
-
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-
-
   openCompanyDeleteDialog(companyId:number){
     const companyToDelete = this.companiesData.find(x => x.companyId == companyId);
-    const dialogRef = this._dialog.open(ConfirmDialogComponent, {
-      data: companyToDelete
-    });
+    // const dialogRef = this._dialog.open(ConfirmDialogComponent, {
+    //   data: companyToDelete
+    // });
   
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    // dialogRef.afterClosed().subscribe(result => {
+    //   if (result) {
         
-      }
-    });
+    //   }
+    // });
   }
  
   handleFormSubmit(formData: Company): void {
@@ -101,11 +92,7 @@ export class CompanyViewComponent   {
 
   onCreate(template: TemplateRef<any>) {
     this.generateFormFields();
-    this.createOrUpdateCompany= {
-      companyName: null
-    };
     this.modalRef = this._modal.open(template);
-    console.log("companyData in create:", this.companyData);
   }
 
 
@@ -118,10 +105,11 @@ export class CompanyViewComponent   {
     this.subscription.add(this.companyDataSvc.insert(this.companyData)
       .subscribe(r => {
         this._notifitions.message("Data saved successfully!!!", "DISMISS");
-        this._modal.dismissAll();
+        this.form.reset();
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
         this.router.onSameUrlNavigation = 'reload';
-        this.form.reset();
+        this.router.navigate(['/companyview']);
+        this._modal.dismissAll();
       }, err => {
         this._notifitions.message("Failed to save data!!!", "DISMISS");
       }))
@@ -139,7 +127,7 @@ export class CompanyViewComponent   {
       if (companyIndex !== -1) {
         this.companiesData[companyIndex] = r;
       }
-      this._notifitions.message("Data update successfully!!!", "DISMISS");
+       this._notifitions.message("Data update successfully!!!", "DISMISS");
        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
        this.router.onSameUrlNavigation = 'reload';
        this.router.navigate(['/companyview']);
@@ -155,13 +143,13 @@ export class CompanyViewComponent   {
     this.model.companyData=this.companyData;
     this.generateFormFields();
     this.modalRef = this._modal.open(template);
-    console.log("companyData in onEdit:", this.companyData); 
   }
 
-  closeModal() {
-    this.modalRef.close(); 
-    this.companyData = new Company
+  closeModal(modalRef: NgbActiveModal) {
     this.form.reset(); 
+    modalRef.dismiss();
+    this.model.companyData = new Company
+    
   }
 
 

@@ -49,14 +49,18 @@ public class CompanyService
         return companies;
 
     }
-    public async Task<ApiResponse<int>> InsertCompany(CompaniesDTO companies)
+    public async Task<ApiResponse> InsertCompany(CompaniesDTO companies)
     {
        
         try
         {
             if (string.IsNullOrEmpty(companies.CompanyName))
             {
-                return new ApiResponse<int>() { Success = false, Message = "You have to put Company Name " };
+                return new ApiResponse() 
+                { 
+                    Status = Status.Failed,
+                    Message = "You have to put Company Name " 
+                };
             }
             Company company = new Company
             {
@@ -67,11 +71,18 @@ public class CompanyService
             await _unitOfWork.Company.AddAsync(company);
             await _unitOfWork.SaveChangesAsync();
 
-            return new ApiResponse<int> { Success = true ,Data=company.CompanyId};
+            return new ApiResponse<int> 
+            { 
+                Status = Status.Failed ,
+                Data=company.CompanyId};
         }
         catch (Exception ex)
         {
-            return new ApiResponse<int> { Success = false,Message = ex.Message };
+            return new ApiResponse()
+            {
+                Status = Status.Failed,
+                Message = "You have to put Company Name "
+            };
         }
 
     }

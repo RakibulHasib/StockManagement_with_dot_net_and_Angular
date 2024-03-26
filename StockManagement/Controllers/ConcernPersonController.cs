@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
 using StockManagement.Helpers;
@@ -8,6 +9,7 @@ namespace StockManagement.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class ConcernPersonController : ControllerBase
 {
     private readonly ConcernPersonService _concernPersonService;

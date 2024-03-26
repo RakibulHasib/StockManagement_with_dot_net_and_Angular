@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { throwError } from 'rxjs';
 import { AuthenticationService } from '../../../services/Authentication/authentication.service';
 import { NotificationService } from '../../../services/Shared/notification.service';
+import { UserService } from 'src/app/services/User/User.service';
 
 @Component({
   selector: 'app-register',
@@ -20,7 +21,7 @@ export class RegisterComponent {
     //role: new FormControl('')
   });
   constructor(
-    private auth: AuthenticationService,
+    private userService: UserService,
     private formbuilder: FormBuilder,
     private router: Router,
     private cd: ChangeDetectorRef,
@@ -32,7 +33,7 @@ export class RegisterComponent {
   onSubmit() {
     if (this.signupForm.valid) {
       console.log(this.signupForm.value);
-      this.auth.signup(this.signupForm.value).subscribe({
+      this.userService.signup(this.signupForm.value).subscribe({
         next: (response => {
           this.notifyService.message(`Successfully logged in as ${this.signupForm.value.email}`, 'DISMISS');
           this.signupForm.reset();

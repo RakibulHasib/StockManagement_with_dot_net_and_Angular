@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace StockManagement.Migrations
 {
-    public partial class ICE : Migration
+    public partial class IceCreamDBScript : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,8 @@ namespace StockManagement.Migrations
                 name: "Company",
                 columns: table => new
                 {
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Picture = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     IsDeleted = table.Column<int>(type: "int", nullable: false)
@@ -21,6 +22,20 @@ namespace StockManagement.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Company", x => x.CompanyId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConcernPerson",
+                columns: table => new
+                {
+                    ConcernPersonId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ConcernPersonName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConcernPerson", x => x.ConcernPersonId);
                 });
 
             migrationBuilder.CreateTable(
@@ -61,37 +76,13 @@ namespace StockManagement.Migrations
                     TotalReturn = table.Column<int>(type: "int", nullable: false),
                     TotalSales = table.Column<int>(type: "int", nullable: false),
                     GrandTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ConcernPerson = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+                    ConcernPersonId = table.Column<int>(type: "int", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
                     IsDeleted = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SalesDistribute", x => x.SalesDistributeID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Stock",
-                columns: table => new
-                {
-                    StockID = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
-                    TotalEja = table.Column<int>(type: "int", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TotalNewProduct = table.Column<int>(type: "int", nullable: false),
-                    GrandTotal = table.Column<int>(type: "int", nullable: false),
-                    TotalSalesQuantity = table.Column<int>(type: "int", nullable: false),
-                    GrandTotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TotalDumping = table.Column<int>(type: "int", nullable: false),
-                    TotalReceive = table.Column<int>(type: "int", nullable: false),
-                    TotalRemaining = table.Column<int>(type: "int", nullable: false),
-                    CreationTime = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    IsDeleted = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Stock", x => x.StockID);
                 });
 
             migrationBuilder.CreateTable(
@@ -105,7 +96,9 @@ namespace StockManagement.Migrations
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RoleId = table.Column<int>(type: "int", nullable: false)
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<int>(type: "int", nullable: false),
+                    UserStatus = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -131,6 +124,34 @@ namespace StockManagement.Migrations
                     table.PrimaryKey("PK_products", x => x.ProductId);
                     table.ForeignKey(
                         name: "FK_products_Company_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Company",
+                        principalColumn: "CompanyId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Stock",
+                columns: table => new
+                {
+                    StockID = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    TotalEja = table.Column<int>(type: "int", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalNewProduct = table.Column<int>(type: "int", nullable: false),
+                    GrandTotal = table.Column<int>(type: "int", nullable: false),
+                    TotalSalesQuantity = table.Column<int>(type: "int", nullable: false),
+                    GrandTotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
+                    IsDeleted = table.Column<int>(type: "int", nullable: false),
+                    DamageAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValueSql: "((0.00))"),
+                    SRCommission = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValueSql: "((0.00))")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stock", x => x.StockID);
+                    table.ForeignKey(
+                        name: "FK_Stock_Company_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Company",
                         principalColumn: "CompanyId");
@@ -175,11 +196,9 @@ namespace StockManagement.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalQuantity = table.Column<int>(type: "int", nullable: true),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Dumping = table.Column<int>(type: "int", nullable: true),
-                    Receive = table.Column<int>(type: "int", nullable: true),
-                    Remaining = table.Column<int>(type: "int", nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    IsDeleted = table.Column<int>(type: "int", nullable: false)
+                    IsDeleted = table.Column<int>(type: "int", nullable: false),
+                    DamageQuantity = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -207,6 +226,11 @@ namespace StockManagement.Migrations
                 column: "SalesDistributeID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Stock_CompanyId",
+                table: "Stock",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StockDetails_ProductId",
                 table: "StockDetails",
                 column: "ProductId");
@@ -219,6 +243,9 @@ namespace StockManagement.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ConcernPerson");
+
             migrationBuilder.DropTable(
                 name: "RoleAssagin");
 

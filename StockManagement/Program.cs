@@ -1,12 +1,6 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using StockManagement.Behaviour;
-using StockManagement.Contexts;
-using StockManagement.Model;
-using StockManagement.Repository;
 using StockManagement.Services;
 using System.Reflection;
 using System.Text;
@@ -54,6 +48,9 @@ builder.Services.AddScoped<SalesDistributeService>();
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<ConcernPersonService>();
 builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+builder.Services.AddScoped<IAuthenticateService, AuthenticateService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddTransient<PasswordHashingService>();
 
 
 builder.Services.AddDbContext<StockDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
