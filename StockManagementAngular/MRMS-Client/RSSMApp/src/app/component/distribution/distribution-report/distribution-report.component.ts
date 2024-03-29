@@ -38,19 +38,15 @@ export class DistributionReportComponent {
 
   ngOnInit() {
     let salesDistributeID: number = this.activatedRoute.snapshot.params['id'];
-    console.log(salesDistributeID);
     this.fetchReportData(salesDistributeID);
   }
   
 
   fetchReportData(salesDistributeID: number) {
-    console.log(salesDistributeID);
     if (salesDistributeID) {
       this.reportDataSvc.getReportData(salesDistributeID)
         .subscribe(data => {
-          console.log(data);
           this.salesReportData = data;
-          console.log('Received data:', data);
         }, err => {
           this.notificationSvc.message("Failed to load data", "DISMISS");
         });
