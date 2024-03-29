@@ -45,6 +45,7 @@ import { ConcernViewComponent } from './component/concernPerson/concern-view/con
 import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
 import { DistributionEditComponent } from './component/distribution/distribution-edit/distribution-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 
@@ -56,7 +57,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HomeComponent,
     FileContainerComponent,
     SignInComponent,
-    RegisterComponent,
     StockViewComponent,
     StockCreateComponent,
     ProductItemComponent,
@@ -77,7 +77,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ConcernUpdateComponent,
     ConcernViewComponent,
     StockEditComponent,
-    DistributionEditComponent
+    DistributionEditComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -94,6 +95,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MatMenuModule,
     MatTabsModule,
     FormsModule,
+    MatToolbarModule,
     FormlyMatToggleModule,
     MatExpansionModule,
     FormlyModule.forRoot({

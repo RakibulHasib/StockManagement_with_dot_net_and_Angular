@@ -81,4 +81,10 @@
   .mat-card-title {
     margin: 0 auto;
   }
-  
+  .close {
+    outline: none;
+    border: none;
+    background: none;
+    padding: 0px 10px;
+    font-size: 24px;
+  }

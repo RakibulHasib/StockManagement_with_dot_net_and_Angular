@@ -11,7 +11,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace StockManagement.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class CompanyController : BaseController<CompanyController>
 {
     private readonly CompanyService _companyService;
