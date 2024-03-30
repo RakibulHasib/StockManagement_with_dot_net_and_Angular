@@ -1,9 +1,11 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { combineAll, map, Observable, shareReplay } from 'rxjs';
+import { Component, HostListener, ViewChild, ViewChildren } from '@angular/core';
+import { NavigationStart, Router } from '@angular/router';
+import { combineAll, filter, map, Observable, shareReplay } from 'rxjs';
 import { AuthenticationService } from '../../../services/Authentication/authentication.service';
 import { Company } from 'src/app/models/companyenum/company';
+import { MatDrawer, MatSidenav } from '@angular/material/sidenav';
+import { NavigationEvent } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-view-model';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -30,14 +32,74 @@ companies = {
       map(result => result.matches),
       shareReplay()
   );
-
-
+  @ViewChild('drawer', { static: false }) drawer!: MatDrawer;
+  
   constructor(
     private breakpointObserver: BreakpointObserver,
     public authService: AuthenticationService,
     private router: Router,
+    
 
   ) { }
+  // @HostListener('window:popstate', ['$event'])
+  // onPopState(event: PopStateEvent) {
+  //   this.drawer.close();
+  //   console.log("Url:", window.location.href);
+  //   const isSignInPage = window.location.href.includes('signin');
+  //   console.log(isSignInPage)
+  
+  //   if (isSignInPage) {
+  //     this.drawer.close();
+  //     this.authService.logout();
+  //     this.router.navigate(['']);
+  //     return; 
+  //   }
+  //   console.log(window.history.state?.navigationId )
+  //   console.log(event.state.navigationId)
+  //   const isForward =  event.state && event.state.navigationId > (window.history.state?.navigationId || 0);
+
+  //   console.log("forward",isForward)
+  // if (isForward && !this.isAuthenticated()) {
+  //   this.router.navigate(['signin']); // Redirect to sign-in if not authenticated
+  // }
+
+  // }
+
+  ngOnInit(): void {
+    this.router.events
+      .pipe(
+        filter((event: any) => event instanceof NavigationStart)
+      )
+      .subscribe((event: NavigationStart) => {
+
+        console.log("For address bar",event.navigationTrigger)
+        // Handle browser back and forward button clicks
+        if (event.navigationTrigger === 'popstate') {
+          if(event.url=="/signin"|| event.url=="/"){
+            this.drawer.close();
+            this.authService.logout();
+            console.log("auth",this.isAuthenticated())
+          } 
+          if(event.url=="/home"){
+            console.log("auth",this.isAuthenticated())
+            if(!this.isAuthenticated()){
+              this.router.navigateByUrl('/signin');
+            } 
+          }
+        }
+        // if(event.navigationTrigger==='imperative'){
+        //   if(!this.isAuthenticated()){
+        //     this.router.navigateByUrl('/signin');
+        //   } 
+        // }
+       
+        console.groupEnd();
+      })
+  }
+
+
+  
+
 
 
 
@@ -45,34 +107,11 @@ companies = {
     return this.authService.isAuthenticated();
   }
 
-  //logOut() {
-  //  this.authService.signOut().subscribe(
-  //    response => {
-  //      // Clear any user-specific data or perform additional tasks upon successful logout
-  //      console.log('User logged out successfully.');
-  //    },
-  //    error => {
-  //      // Handle any errors that occurred during the logout process
-  //      console.error('An error occurred while logging out:', error);
-  //    }
-  //  );
-
-  //logOut() {
-  //  this.authService.signOut().subscribe(
-  //    () => {
-  //      // Logout successful
-  //      // Perform any additional actions after logout (e.g., redirect)
-  //    },
-  //    (error) => {
-  //      // Handle error if logout fails
-  //    }
-  //  );
-  //}
-
-
   logOut() {
-    this.authService.logout();
-    this.router.navigate(['signin']);
+   this.authService.logout();
+   this.isAuthenticated();
+   this.router.navigate(['signin']);
+   this.drawer.close()
   }
 
 

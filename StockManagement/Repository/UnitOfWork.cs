@@ -19,6 +19,9 @@ namespace StockManagement.Repository
         public Repository<SalesDistributeDetail, Guid> SalesDistributeDetail { get; }
 
         public Repository<ConcernPerson, int> ConcernPerson { get; }
+        public Repository<User, int> Users { get; }
+        public Repository<RoleMaster, int> RoleMaster { get; }
+        public Repository<RoleAssagin, int> RoleAssagin { get; }
 
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -33,7 +36,7 @@ namespace StockManagement.Repository
 
         private bool disposed;
 
-        public UnitOfWork(StockDBContext context, Repository<Product, int> product, Repository<Company, int> company, Repository<Stock, long> stock, Repository<StockDetail, Guid> stockDetail, Repository<SalesDistribute, long> salesDistribute, Repository<SalesDistributeDetail, Guid> salesDistributeDetail, Repository<ConcernPerson, int> concernPerson)
+        public UnitOfWork(StockDBContext context, Repository<User, int> users, Repository<Product, int> product, Repository<Company, int> company, Repository<Stock, long> stock, Repository<StockDetail, Guid> stockDetail, Repository<SalesDistribute, long> salesDistribute, Repository<SalesDistributeDetail, Guid> salesDistributeDetail, Repository<ConcernPerson, int> concernPerson, Repository<RoleMaster, int> roleMaster, Repository<RoleAssagin, int> roleAssagin)
         {
             this.context = context;
             Product = product;
@@ -43,6 +46,9 @@ namespace StockManagement.Repository
             SalesDistribute = salesDistribute;
             SalesDistributeDetail = salesDistributeDetail;
             ConcernPerson = concernPerson;
+            Users = users;
+            RoleMaster = roleMaster;
+            RoleAssagin = roleAssagin;
         }
 
         public void Dispose()

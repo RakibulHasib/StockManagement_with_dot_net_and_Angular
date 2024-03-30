@@ -50,9 +50,6 @@ export class ProductCreateComponent {
     
   }
  
-  // getCompanyRoute(companyId: number): string {
-  //   return `/productView/${companyNames}`;
-  // }
 
   getCompanyRoute(companyId: any): string {
     return `/productView`;
@@ -81,15 +78,7 @@ export class ProductCreateComponent {
   }
 
   ngOnInit(): void {
-    // this.companyService.getCompany().subscribe(
-    //   data => {
-    //     this.companyData = data;
-    //     console.log("CompanyData",data);
-    //   },
-    //   error => {
-    //     console.error('Error fetching company data:', error);
-    //   }
-    // );
+   
     this.companyId =Number( this.activatedRoute.snapshot.params['id']);
     this.generateFormFields();
     
@@ -138,14 +127,7 @@ export class ProductCreateComponent {
             
             hooks: {
               onInit: (field: FormlyFieldConfig) => {
-                
-                // setTimeout(() => {
-                //   const companyIdFromRoute =this.companyId;
-                //   if (companyIdFromRoute) {
-                //     field.formControl?.setValue(+companyIdFromRoute);
-                //   }
-                // });
-
+              
                     field.formControl?.setValue(this.companyId);
                     
                 }
@@ -160,7 +142,7 @@ export class ProductCreateComponent {
               label: 'Product Name',
               appearance: 'outline',
               floatLabel: 'always',
-              hideRequiredMarker: true,
+              required: true
             },
             validation: {
               messages: { required: " " }
@@ -175,10 +157,9 @@ export class ProductCreateComponent {
               required: true,
               appearance: 'outline',
               floatLabel: 'always',
-              hideRequiredMarker: true,
             },
             validation: {
-              messages: { required: " " }
+              messages: { required: "Have to add price" }
             }
           },
           {
@@ -201,13 +182,9 @@ export class ProductCreateComponent {
             key: 'description',
             props: {
               label: 'Description',
-              required: true,
               appearance: 'outline',
               floatLabel: 'always',
               hideRequiredMarker: true,
-            },
-            validation: {
-              messages: { required: " " }
             }
           },
           {
@@ -229,10 +206,6 @@ export class ProductCreateComponent {
 
             },
           },
-
-
-
-
         ],
 
       }
@@ -246,145 +219,4 @@ export class ProductCreateComponent {
 
 
 
-// generateFormFields() {
-  //   this.activatedRoute.params.pipe(
-  //     switchMap((routeParams) => {
-  //       const companyIdFromRoute = routeParams['id'];
-  //       return this.companyService.getCompany().pipe(
-  //         switchMap((companies) => {
-  //           console.log('Companies from service:', companies)
-  //           console.log('CompanyId from route:', companyIdFromRoute);
-  //           this.fields = [
-  //             {
-  //               fieldGroupClassName: 'display-flex',
-  //               key: 'productData',
-  //               fieldGroup: [
-  //                 {
-  //                   className: 'flex-1',
-  //                   type: 'select',
-  //                   key: 'companyId',
-  //                   props: {
-  //                     label: 'Company Name',
-  //                     options: companies,
-  //                     valueProp: 'companyId',
-  //                     labelProp: 'companyName',
-  //                     appearance: 'outline'
-  //                   },
-  //                   expressionProperties: {
-  //                     'templateOptions.style': () => ({
-  //                       border: '2px solid #ff5722',
-  //                       borderRadius: '5px',
-  //                       padding: '5px 10px'
-  //                     })
-  //                   },
-  //                   validation: {
-  //                     messages: { required: ' ' }
-  //                   },
-  //                   hooks: {
-  //                     onInit: (field: FormlyFieldConfig) => {
-  //                       this.ngZone.run(() => {
-  //                         if (companyIdFromRoute) {
-  //                           const companyIdNumber = +companyIdFromRoute; // Ensure the correct type
-  //                           field.formControl?.setValue(companyIdNumber);
-  //                         } else if (companies.length > 0) {
-  //                           field.formControl?.setValue(companies[0].companyId);
-  //                         }
-  //                       });
-  //                       // console.log('CompanyId from route:', companyIdFromRoute);
-  //                       // if (companyIdFromRoute) {
-  //                       //   const companyIdNumber = +companyIdFromRoute;
-  //                       //   field.formControl?.setValue(companyIdFromRoute);
-  //                       //   console.log('Setting selected company:', companyIdNumber);
-  //                       // } else if (companies.length > 0) {
-  //                       //   field.formControl?.setValue(companies[0].companyId);
-  //                       //   console.log('Setting default company:', companies[0].companyId);
-  //                       // }
-  //                     }
-  //                   }
-  //                 },
-  //                 {
-  //                   className: 'flex-1',
-  //                   type: 'input',
-  //                   key: 'productName',
-  //                   props: {
-  //                     label: 'Product Name',
-  //                     appearance: 'outline',
-  //                     floatLabel: 'always',
-  //                     hideRequiredMarker: true,
-  //                   },
-  //                   validation: {
-  //                     messages: { required: " " }
-  //                   }
-  //                 },
-  //                 {
-  //                   className: 'flex-1',
-  //                   type: 'input',
-  //                   key: 'price',
-  //                   props: {
-  //                     label: 'Price',
-  //                     required: true,
-  //                     appearance: 'outline',
-  //                     floatLabel: 'always',
-  //                     hideRequiredMarker: true,
-  //                   },
-  //                   validation: {
-  //                     messages: { required: " " }
-  //                   }
-  //                 },
-  //                 {
-  //                   className: 'flex-1',
-  //                   type: 'input',
-  //                   key: 'sequence',
-  //                   props: {
-  //                     label: 'Sequence',
-  //                     appearance: 'outline',
-  //                     floatLabel: 'always',
-  //                     hideRequiredMarker: true,
-  //                   },
-  //                   validation: {
-  //                     messages: { required: " " }
-  //                   }
-  //                 },
-  //                 {
-  //                   className: 'flex-1',
-  //                   type: 'input',
-  //                   key: 'description',
-  //                   props: {
-  //                     label: 'Description',
-  //                     required: true,
-  //                     appearance: 'outline',
-  //                     floatLabel: 'always',
-  //                     hideRequiredMarker: true,
-  //                   },
-  //                   validation: {
-  //                     messages: { required: " " }
-  //                   }
-  //                 },
-  //                 {
-  //                   className: 'flex-1',
-  //                   type: 'toggle',
-  //                   defaultValue: true,
-  //                   key: 'IsActive',
-  //                   props: {
-  //                     label: 'IsActive',
-  //                     appearance: 'outline',
-  //                     floatLabel: 'always',
-  //                     hideRequiredMarker: true,
-  //                   },
-  //                   validation: {
-  //                     messages: { required: " " }
-  //                   },
-  //                   expressions: {
-  //                     'model.IsActive': 'model.IsActive ? 1 : 0'
-        
-  //                   },
-  //                 },
-  //               ]
-  //             }
-  //           ];
-  //           return [];
-  //         })
-  //       );
-  //     })
-  //   ).subscribe();
-  // }
+

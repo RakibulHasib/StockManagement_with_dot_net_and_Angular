@@ -1,12 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
+using StockManagement.Entities;
 using StockManagement.Features.CompanyFeatures;
 using StockManagement.Helpers;
+using StockManagement.Model;
 using StockManagement.Services;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StockManagement.Controllers;
-
+[Route("api/[controller]")]
+[ApiController]
+//[Authorize]
 public class CompanyController : BaseController<CompanyController>
 {
     private readonly CompanyService _companyService;
@@ -31,7 +36,7 @@ public class CompanyController : BaseController<CompanyController>
 
     [Transaction]
     [HttpPost("InsertNewCompany")]
-    public async Task<ActionResult<int>> InsertNewCompany(InsertNewCompanyCommand command)
+    public async Task<ActionResult<ApiResponse>> InsertNewCompany(InsertNewCompanyCommand command)
     {
         return  await _mediator.Send(command);
     }
@@ -39,17 +44,17 @@ public class CompanyController : BaseController<CompanyController>
 
     [Transaction]
     [HttpPut("UpdateCompany")]
-    public async Task<ActionResult<int>> UpdateCompany(CompaniesDTO companies)
+    public async Task<ActionResult<ApiResponse>> UpdateCompany(UpdateCompanyCommand command)
     {
-        return Ok(await _companyService.UpdateCompany(companies));
+        return await _mediator.Send(command);
     }
 
 
     [Transaction]
     [HttpPut("DeleteCompany/{companyId}")]
-    public async Task<ActionResult<int>> DeleteCompany(int companyId)
+    public async Task<ActionResult<ApiResponse>> DeleteCompany([FromRoute] int companyId)
     {
-        return Ok(await _companyService.DeleteCompany(companyId));
+      return  await _mediator.Send(new DeleteCompanyCommand() { CompanyId = companyId });
     }
 
 }

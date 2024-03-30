@@ -38,8 +38,8 @@ export class ProductService {
    update(data: Product): Observable<any> {
      return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/UpdateProduct`, data);
    }
-   delete(data: Product): Observable<any> {
-     return this.http.delete<any>(`${IceCreamApiUrl}/${endPoint}/DeleteProduct/${data.productId}`);
+   delete(productId:number ,data: any): Observable<any> {
+     return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/delete-product/${productId}`,data);
    }
 
 }

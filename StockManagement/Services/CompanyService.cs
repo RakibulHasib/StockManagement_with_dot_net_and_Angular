@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using StockManagement.Contexts;
 using StockManagement.DTO;
 using StockManagement.Entities;
+using StockManagement.Model;
 using StockManagement.Repository;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace StockManagement.Services;
 
@@ -32,11 +34,11 @@ public class CompanyService
         return companies;
     }
 
-    public async Task<CompaniesDTO> GetCompanyByID(int CompanyId)
+    public async Task<Company> GetCompanyByID(int CompanyId)
     {
 
         var companies = await _unitOfWork.Company.Queryable
-                                .Select(query => new CompaniesDTO
+                                .Select(query => new Company
                                 {
                                     CompanyId = query.CompanyId,
                                     CompanyName = query.CompanyName,
@@ -47,21 +49,42 @@ public class CompanyService
         return companies;
 
     }
-    public async Task<int> InsertCompany(CompaniesDTO companies)
+    public async Task<ApiResponse> InsertCompany(CompaniesDTO companies)
     {
-        Company company = new Company
+       
+        try
         {
-            CompanyName = companies.CompanyName,
-            IsDeleted = 0,
-            Picture = companies.Picture ?? "",
-            
+            if (string.IsNullOrEmpty(companies.CompanyName))
+            {
+                return new ApiResponse() 
+                { 
+                    Status = Status.Failed,
+                    Message = "You have to put Company Name " 
+                };
+            }
+            Company company = new Company
+            {
+                CompanyName = companies.CompanyName,
+                IsDeleted = 0,
+                Picture = companies.Picture ?? "",
+            };
+            await _unitOfWork.Company.AddAsync(company);
+            await _unitOfWork.SaveChangesAsync();
 
-        };
-        await _unitOfWork.Company.AddAsync(company);
+            return new ApiResponse<int> 
+            { 
+                Status = Status.Failed ,
+                Data=company.CompanyId};
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse()
+            {
+                Status = Status.Failed,
+                Message = "You have to put Company Name "
+            };
+        }
 
-         await _unitOfWork.SaveChangesAsync();
-
-        return company.CompanyId;
     }
 
     public async Task<int> UpdateCompany(CompaniesDTO companies)

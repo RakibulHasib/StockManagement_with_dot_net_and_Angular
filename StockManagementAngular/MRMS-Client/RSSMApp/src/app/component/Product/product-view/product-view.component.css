@@ -76,7 +76,13 @@
     margin-right: 10px;
   }*/
 
-
+  .close {
+    outline: none;
+    border: none;
+    background: none;
+    padding: 0px 10px;
+    font-size: 24px;
+  }
 
 .mat-card-title {
   margin: 0 auto;

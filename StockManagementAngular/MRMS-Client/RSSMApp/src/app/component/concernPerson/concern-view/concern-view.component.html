@@ -9,7 +9,7 @@
             <!-- <a mat-mini-fab class="btn btn-primary" [routerLink]="['/concernpersoncreate']">
                 <mat-icon>add_box</mat-icon>
               </a> -->
-              <button mat-mini-fab class="btn btn-primary" (click)="openConcernDialog()">
+              <button mat-mini-fab class="btn btn-primary" (click)="onCreate(createModal)">
                 <mat-icon>add_box</mat-icon>
               </button>
               
@@ -42,10 +42,8 @@
         <ng-container matColumnDef="actions" class="action" style="width: 80px;align-items:end;">
           <mat-header-cell *matHeaderCellDef mat-sort-header  class="action" >Action</mat-header-cell>
           <mat-cell *matCellDef="let element" class="action">
-  
-            <button mat-raised-button [routerLink]="['',element]" color="primary" class="icon-spacing">Edit</button>
-            <!-- <button mat-raised-button [routerLink]="['',element]" color="warn" class="icon-spacing">Delete</button> <mat-icon class="red-color">delete</mat-icon>-->
-            <button mat-raised-button (click)="confirmDelete(element.concernPersonId)"color="warn" class="icon-spacing" disabled="true">Delete</button>
+            <button mat-raised-button color="primary" class="icon-spacing" (click)="onEdit(updateModal,element)" >Edit</button>
+            <button mat-raised-button  color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.concernPersonId, element)" >Delete</button>
           </mat-cell>
         </ng-container>
   
@@ -57,4 +55,53 @@
   
     </mat-card-content>
   </mat-card>
+
+
+
+
+
+
+
+  <!-- Create Concern Person -->
+<ng-template #createModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> নতুন ব্যক্তি যোগ করুন </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="insert()">
+      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
+        <button type="submit" class="btn btn-outline-dark">Save</button>
+      </div>
+    </form>
+    
+  </div>
+</ng-template>
+
+
+
+
+<!-- Update Update Concern Person -->
+<ng-template #updateModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> ব্যক্তি আপডেট করুন</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(modal)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="update()">
+      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
+      
+      <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
+        <button type="submit" class="btn btn-outline-dark"(click)="modal.dismiss()">Update</button>
+      </div>
+    </form>
+    
+  </div>
+</ng-template>
+
   

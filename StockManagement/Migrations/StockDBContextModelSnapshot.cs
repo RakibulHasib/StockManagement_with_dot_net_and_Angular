@@ -25,7 +25,10 @@ namespace StockManagement.Migrations
             modelBuilder.Entity("StockManagement.Entities.Company", b =>
                 {
                     b.Property<int>("CompanyId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CompanyId"), 1L, 1);
 
                     b.Property<string>("CompanyName")
                         .HasColumnType("nvarchar(max)");
@@ -40,6 +43,25 @@ namespace StockManagement.Migrations
                     b.HasKey("CompanyId");
 
                     b.ToTable("Company", (string)null);
+                });
+
+            modelBuilder.Entity("StockManagement.Entities.ConcernPerson", b =>
+                {
+                    b.Property<int>("ConcernPersonId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConcernPersonId"), 1L, 1);
+
+                    b.Property<string>("ConcernPersonName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IsDeleted")
+                        .HasColumnType("int");
+
+                    b.HasKey("ConcernPersonId");
+
+                    b.ToTable("ConcernPerson", (string)null);
                 });
 
             modelBuilder.Entity("StockManagement.Entities.Product", b =>
@@ -126,10 +148,8 @@ namespace StockManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("SalesDistributeId"), 1L, 1);
 
-                    b.Property<string>("ConcernPerson")
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)");
+                    b.Property<int>("ConcernPersonId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreationTime")
                         .ValueGeneratedOnAdd()
@@ -219,6 +239,11 @@ namespace StockManagement.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
+                    b.Property<decimal>("DamageAmount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValueSql("((0.00))");
+
                     b.Property<int>("GrandTotal")
                         .HasColumnType("int");
 
@@ -228,8 +253,11 @@ namespace StockManagement.Migrations
                     b.Property<int>("IsDeleted")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalDumping")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Srcommission")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("SRCommission")
+                        .HasDefaultValueSql("((0.00))");
 
                     b.Property<int>("TotalEja")
                         .HasColumnType("int");
@@ -240,16 +268,12 @@ namespace StockManagement.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("TotalReceive")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalRemaining")
-                        .HasColumnType("int");
-
                     b.Property<int>("TotalSalesQuantity")
                         .HasColumnType("int");
 
                     b.HasKey("StockId");
+
+                    b.HasIndex("CompanyId");
 
                     b.ToTable("Stock", (string)null);
                 });
@@ -268,7 +292,7 @@ namespace StockManagement.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<int?>("Dumping")
+                    b.Property<int?>("DamageQuantity")
                         .HasColumnType("int");
 
                     b.Property<int?>("Eja")
@@ -281,12 +305,6 @@ namespace StockManagement.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Receive")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Remaining")
                         .HasColumnType("int");
 
                     b.Property<int?>("RestockQuantity")
@@ -327,6 +345,9 @@ namespace StockManagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("IsDeleted")
+                        .HasColumnType("int");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -345,9 +366,12 @@ namespace StockManagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserStatus")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("StockManagement.Entities.Product", b =>
@@ -368,6 +392,15 @@ namespace StockManagement.Migrations
                     b.Navigation("SalesDistribute");
                 });
 
+            modelBuilder.Entity("StockManagement.Entities.Stock", b =>
+                {
+                    b.HasOne("StockManagement.Entities.Company", "Company")
+                        .WithMany("Stocks")
+                        .HasForeignKey("CompanyId");
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("StockManagement.Entities.StockDetail", b =>
                 {
                     b.HasOne("StockManagement.Entities.Product", "Product")
@@ -386,6 +419,8 @@ namespace StockManagement.Migrations
             modelBuilder.Entity("StockManagement.Entities.Company", b =>
                 {
                     b.Navigation("Products");
+
+                    b.Navigation("Stocks");
                 });
 
             modelBuilder.Entity("StockManagement.Entities.Product", b =>

@@ -29,10 +29,10 @@ export class CompanyService {
   insert(data: Company): Observable<Company> {
    return this.http.post<Company>(`${IceCreamApiUrl}/${endPoint}/InsertNewCompany`, data);
   }
-  update(data: Company): Observable<any> {
+  update(data: any): Observable<any> {
    return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/UpdateCompany`, data);
   }
-  delete(data: Company): Observable<any> {
-   return this.http.delete<any>(`${IceCreamApiUrl}/${endPoint}/DeleteCompany/${data}`);
+  delete(companyId: number,data: any): Observable<any> {
+   return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/DeleteCompany/${companyId}`,data);
   }
 }

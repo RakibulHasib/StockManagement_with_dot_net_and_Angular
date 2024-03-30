@@ -22,7 +22,7 @@ public class ProductService
     public async Task<IEnumerable<GetProductData>> GetProducCompanyWise(int CompanyId)
     {
         var products = await (from product in _unitOfWork.Product.Queryable
-                              where product.CompanyId == CompanyId
+                              where product.CompanyId == CompanyId && product.IsDeleted == 0
                               select new GetProductData
                               {
                                   ProductId = product.ProductId,
