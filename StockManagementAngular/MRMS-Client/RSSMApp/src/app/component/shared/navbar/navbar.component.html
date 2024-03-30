@@ -16,7 +16,8 @@
         <mat-expansion-panel-header>
           Common
         </mat-expansion-panel-header>
-        <mat-nav-list>
+        <mat-nav-list> 
+          <a mat-list-item [routerLink]="['/userview']"><mat-icon>label_important</mat-icon>User</a>
           <a mat-list-item [routerLink]="['/companyview']"><mat-icon>label_important</mat-icon>Company</a>
           <a mat-list-item [routerLink]="['/productView']"><mat-icon>label_important</mat-icon>Products</a>
           <a mat-list-item [routerLink]="['/concernpersonview']"><mat-icon>label_important</mat-icon>Concern Person</a>

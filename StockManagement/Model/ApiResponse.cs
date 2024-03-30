@@ -15,11 +15,13 @@ public class ApiResponse
 
 public enum Status
 {
-    Approved = 1,
-    Unapproved,
-    Success,
+    Success = 1,
     Failed,
-    Unauthorized
-
-
+    Authorized,
+    Unapproved,
+    Unauthorized,
+    UserNameNotFound,
+    WrongPassword,
+    Inactive,
+    UserExist
 }

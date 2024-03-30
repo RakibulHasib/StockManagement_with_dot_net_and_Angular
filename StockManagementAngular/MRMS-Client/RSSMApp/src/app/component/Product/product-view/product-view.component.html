@@ -87,3 +87,48 @@
     </mat-card-content>
   </mat-card>
 
+
+
+  <!-- Create Product -->
+<ng-template #createModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> নতুন কোম্পানি যোগ করুন </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="insert()">
+      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
+        <button type="submit" class="btn btn-outline-dark">Save</button>
+      </div>
+    </form>
+    
+  </div>
+</ng-template>
+
+
+
+<!-- Update Product -->
+<ng-template #updateModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> কোম্পানি আপডেট করুন</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(modal)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="insert()">
+      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
+      <!-- <div class="f-w mb-1">
+        <button type="submit" class="btn btn-outline-dark" (click)="modal.dismiss()">Update</button>
+      </div> -->
+      <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
+        <button type="submit" class="btn btn-outline-dark"(click)="modal.dismiss()">Update</button>
+      </div>
+    </form>
+    
+  </div>
+</ng-template>
+

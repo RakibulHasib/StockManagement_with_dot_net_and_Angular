@@ -22,18 +22,37 @@ public class AuthenticateService : IAuthenticateService
     {
         //var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
         var user = await _unitOfWork.Users.Queryable.Where(u => u.UserName == userName && u.IsDeleted == 0).FirstOrDefaultAsync();
+        if (user == null)
+        {
+            return new ApiResponse
+            {
+                Status = Status.UserNameNotFound,
+                Message = "User not found",
+                StatusCode = (int)HttpStatusCode.Unauthorized,
+            };
+        }
+        if (user != null && user.UserStatus == UserStatus.Pending && user.IsDeleted == 0)
+        {
+            return new ApiResponse
+            {
+                Status = Status.Unapproved,
+                Message = "user not approved",
+                StatusCode = (int)HttpStatusCode.Forbidden
+            };
+
+        }
+
         if (!BCrypt.Net.BCrypt.Verify(password, user.Password))  //(!_hasher.VerifyHashedPassword(user.Password,password))//SHA512
         {
             return new ApiResponse()
             {
                 Message = "User password is invalid",
-                Status = Status.Unauthorized,
+                Status = Status.WrongPassword,
                 StatusCode = (int)HttpStatusCode.Unauthorized
 
             };
         }
-
-        if (user != null && user.UserStatus == UserStatus.Active)
+        else if (user != null && user.UserStatus == UserStatus.Active && user.UserName == userName)
         {
             var token = GenerateToken(user, _key);
             var user_credintial = new SignInResponseDTO()
@@ -47,20 +66,22 @@ public class AuthenticateService : IAuthenticateService
 
             return new ApiResponse<SignInResponseDTO>
             {
-                Status = Status.Approved,
+                Status = Status.Authorized,
                 Message = "",
                 StatusCode = (int)HttpStatusCode.OK,
                 Data = user_credintial
 
             };
+
         }
-        else if (user != null && user.UserStatus == UserStatus.Pending)
+        else if (user != null && user.UserStatus == UserStatus.Active && user.UserName != userName)
         {
-            return new ApiResponse
+            return new ApiResponse()
             {
-                Status = Status.Unapproved,
-                Message = "user not approved",
-                StatusCode = (int)HttpStatusCode.Forbidden
+                Message = "User Name is not matchd",
+                Status = Status.UserNameNotFound,
+                StatusCode = (int)HttpStatusCode.Unauthorized
+
             };
 
         }

@@ -27,7 +27,7 @@ public class UserService
                 return new ApiResponse()
                 {
                     Message = "User is alredy exits",
-                    Status = Status.Failed,
+                    Status = Status.UserExist,
                     StatusCode = (int)HttpStatusCode.Conflict,
                 };
             }

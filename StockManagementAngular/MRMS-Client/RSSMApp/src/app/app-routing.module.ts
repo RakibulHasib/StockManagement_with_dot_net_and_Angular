@@ -15,10 +15,10 @@ import { DistributionViewComponent } from './component/distribution/distribution
 import { DistributionReportComponent } from './component/distribution/distribution-report/distribution-report.component';
 import { CompanyViewComponent } from './component/Company/company-view/company-view.component'
 import { ConcernViewComponent } from './component/concernPerson/concern-view/concern-view.component';
-import { ConcernCreateComponent } from './component/concernPerson/concern-create/concern-create.component';
 import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
 import { DistributionEditComponent } from './component/distribution/distribution-edit/distribution-edit.component';
 import { Company } from './models/companyenum/company';
+import { UserviewComponent } from './component/User/userview/userview.component';
 
 
 
@@ -35,12 +35,12 @@ const routes: Routes = [
   { path: 'sales-create/:id', component: DistributionCreateComponent, canActivate: [AuthGuard] },
   { path: 'sales-view', component: DistributionViewComponent, canActivate: [AuthGuard] },
   { path: 'sales-edit/:id', component: DistributionEditComponent, canActivate: [AuthGuard] },
-  {path:'sales-report/:id', component:DistributionReportComponent,canActivate:[AuthGuard]},
+  { path:  'sales-report/:id', component:DistributionReportComponent,canActivate:[AuthGuard]},
   { path: 'productView', component: ProductViewComponent, canActivate: [AuthGuard] },
   { path: 'productAdd/:id', component: ProductCreateComponent, canActivate: [AuthGuard] },
   { path: 'companyview', component: CompanyViewComponent, canActivate: [AuthGuard] },
   { path: 'concernpersonview', component: ConcernViewComponent, canActivate: [AuthGuard] },
-  { path: 'concernpersoncreate', component: ConcernCreateComponent, canActivate: [AuthGuard] },
+  { path: 'userview',component:UserviewComponent,canActivate:[AuthGuard]}
 
 ];
 

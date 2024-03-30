@@ -13,6 +13,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-company-view',
@@ -64,7 +65,13 @@ export class CompanyViewComponent   {
       this.dataSource.paginator=this.paginator;
       this.dataSource.sort=this.sort;
     },err=>{
-      this._notifitions.message("Failed to load data", "DISMISS");
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to load data.',
+        timer: 2000 ,
+        showConfirmButton: false,
+      });
     });
   }
 
@@ -73,18 +80,7 @@ export class CompanyViewComponent   {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  openCompanyDeleteDialog(companyId:number){
-    const companyToDelete = this.companiesData.find(x => x.companyId == companyId);
-    // const dialogRef = this._dialog.open(ConfirmDialogComponent, {
-    //   data: companyToDelete
-    // });
   
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-        
-    //   }
-    // });
-  }
  
   handleFormSubmit(formData: Company): void {
     console.log('Form submitted in CompanyViewComponent with data:', formData.companyName);
@@ -99,25 +95,59 @@ export class CompanyViewComponent   {
   insert(): void {
     if (this.form.invalid) {
       console.log("invalid submission");
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to save data.',
+        timer: 2000 ,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+      });
       return;
     }
     
     this.subscription.add(this.companyDataSvc.insert(this.companyData)
       .subscribe(r => {
-        this._notifitions.message("Data saved successfully!!!", "DISMISS");
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Data saved successfully.',
+          timer: 2000 ,
+          showConfirmButton: false,
+          width: 400,
+          position: "top",
+        });
         this.form.reset();
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
         this.router.onSameUrlNavigation = 'reload';
         this.router.navigate(['/companyview']);
         this._modal.dismissAll();
       }, err => {
-        this._notifitions.message("Failed to save data!!!", "DISMISS");
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Failed to save data.',
+          timer: 2000 ,
+          showConfirmButton: false,
+          width: 400,
+          position: "top",
+        });
       }))
   }
 
   update(): void {
     if (this.form.invalid) {
       console.log("invalid submission");
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to update data.',
+        timer: 2000 ,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+      });
       return;
     }
    
@@ -127,13 +157,32 @@ export class CompanyViewComponent   {
       if (companyIndex !== -1) {
         this.companiesData[companyIndex] = r;
       }
-       this._notifitions.message("Data update successfully!!!", "DISMISS");
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Data update successfully.',
+        timer: 2000 ,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+        customClass: {
+          container: 'swal-top'
+        }
+      });
        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
        this.router.onSameUrlNavigation = 'reload';
        this.router.navigate(['/companyview']);
        this.form.reset();
     }, err => {
-      this._notifitions.message("Failed to save data!!!", "DISMISS");
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to update data.',
+        timer: 2000,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+      });
     }));
   }
 
@@ -148,7 +197,7 @@ export class CompanyViewComponent   {
   closeModal(modalRef: NgbActiveModal) {
     this.form.reset(); 
     modalRef.dismiss();
-    this.model.companyData = new Company
+    this.model.companyData = new Company;
     
   }
 
@@ -181,6 +230,51 @@ export class CompanyViewComponent   {
 
       }
     ]
+  }
+
+  showConfirmationAlert(companyId: number,data:any) {
+    Swal.fire({
+      title: 'আপনি কি নিশ্চিত?',
+     // text: " অনুগ্রহ করে নিশ্চিত করুন এই কোম্পানির আর প্রয়োজন নেই ",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      cancelButtonText:'বাতিল করুন',
+      confirmButtonText: 'হ্যাঁ, এটা ডিলিট করুন!',
+      focusCancel:true,
+      focusConfirm:false,
+      position:"top"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.subscription.add(this.companyDataSvc.delete(companyId,data).subscribe(r=>{
+          Swal.fire({
+            icon: 'success',
+            title: 'Deleted',
+            text: 'Your file has been deleted.',
+            timer: 2000,
+            showConfirmButton: false,
+            width: 400,
+            position: "top",
+          });
+          this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+          this.router.onSameUrlNavigation = 'reload';
+          this.router.navigate(['/companyview']);
+         
+        }));
+      }
+      if(result.isDismissed){
+        Swal.fire({
+          icon: 'warning',
+          title: 'Warn!',
+          text: 'Your data is safe :)',
+          timer: 2000,
+          showConfirmButton: false,
+          width: 400,
+          position: "top",
+        });
+      }
+    });
   }
 
   ngOnDestroy() {

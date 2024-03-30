@@ -32,7 +32,7 @@ export class CompanyService {
   update(data: any): Observable<any> {
    return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/UpdateCompany`, data);
   }
-  delete(companyId: number): Observable<any> {
-   return this.http.delete<any>(`${IceCreamApiUrl}/${endPoint}/DeleteCompany/${companyId}`);
+  delete(companyId: number,data: any): Observable<any> {
+   return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/DeleteCompany/${companyId}`,data);
   }
 }

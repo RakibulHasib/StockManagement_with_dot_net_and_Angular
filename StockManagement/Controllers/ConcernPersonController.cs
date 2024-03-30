@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
+using StockManagement.Features.CompanyFeatures;
+using StockManagement.Features.ConcernPersonFeatures;
 using StockManagement.Helpers;
 using StockManagement.Services;
 
@@ -9,8 +11,8 @@ namespace StockManagement.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
-public class ConcernPersonController : ControllerBase
+//[Authorize]
+public class ConcernPersonController : BaseController<ConcernPersonController>
 {
     private readonly ConcernPersonService _concernPersonService;
     public ConcernPersonController(ConcernPersonService concernPersonService)
@@ -25,7 +27,7 @@ public class ConcernPersonController : ControllerBase
     }
 
     [HttpGet("GetConcernPersonByID/{ConcernPersonId}")]
-    public async Task<ActionResult<ConcernPersonDTO>> GetConcernPersonByID(int ConcernPersonId)
+    public async Task<ActionResult<ConcernPerson>> GetConcernPersonByID(int ConcernPersonId)
     {
         return await _concernPersonService.GetConcernPersonByID(ConcernPersonId);
     }
@@ -46,10 +48,17 @@ public class ConcernPersonController : ControllerBase
     }
 
 
+    //[Transaction]
+    //[HttpPut("DeleteConcernPerson")]
+    //public async Task<ActionResult<int>> DeleteConcernPerson(int ConcernPersonId)
+    //{
+    //    return Ok(await _concernPersonService.DeleteConcernPerson(ConcernPersonId));
+    //}
+
     [Transaction]
-    [HttpPut("DeleteConcernPerson")]
-    public async Task<ActionResult<int>> DeleteConcernPerson(int ConcernPersonId)
+    [HttpPut("DeleteConcernPerson/{concernPersonId}")]
+    public async Task<ActionResult<ApiResponse>> DeleteConcernPerson([FromRoute] int concernPersonId)
     {
-        return Ok(await _concernPersonService.DeleteConcernPerson(ConcernPersonId));
+        return await _mediator.Send(new DeleteConcernPersonCommand() { ConcernPersonId = concernPersonId });
     }
 }

@@ -39,7 +39,7 @@
           <mat-cell *matCellDef="let element" class="action">
   
             <button mat-raised-button color="primary" class="icon-spacing" (click)="onEdit(updateModal,element)" >Edit</button>
-            <button mat-raised-button  color="warn" class="icon-spacing" (click)="openCompanyDeleteDialog(element.companyId)" >Delete</button>
+            <button mat-raised-button  color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.companyId,element)" >Delete</button>
   
           </mat-cell>
         </ng-container>
@@ -66,7 +66,7 @@
   <div class="modal-body">
     <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="insert()">
       <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
-      <div class="f-w mb-1">
+      <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
         <button type="submit" class="btn btn-outline-dark">Save</button>
       </div>
     </form>
@@ -87,8 +87,11 @@
   <div class="modal-body">
     <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="update()">
       <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
-      <div class="f-w mb-1">
+      <!-- <div class="f-w mb-1">
         <button type="submit" class="btn btn-outline-dark" (click)="modal.dismiss()">Update</button>
+      </div> -->
+      <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
+        <button type="submit" class="btn btn-outline-dark"(click)="modal.dismiss()">Update</button>
       </div>
     </form>
     

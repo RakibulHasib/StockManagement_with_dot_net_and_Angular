@@ -27,8 +27,8 @@ export class UserService {
   approval(userId: number,data:any): Observable<any> {
     return this.http.put<any>(`${UserUrl}/approval/${userId}`,data);
   }
-  delete(userId: number): Observable<any> {
-    return this.http.delete<any>(`${UserUrl}/delete/${userId}`);
+  delete(userId: number,data:any): Observable<any> {
+    return this.http.put<any>(`${UserUrl}/delete/${userId}`,data);
   }
   passwordReset(userId: number, oldPassword: string, newPassword: string, data:any): Observable<any> {
     return this.http.put<any>(`${UserUrl}/password-reset??userId=${userId}&oldPassword=${oldPassword}&newPassword=${newPassword}`,data);

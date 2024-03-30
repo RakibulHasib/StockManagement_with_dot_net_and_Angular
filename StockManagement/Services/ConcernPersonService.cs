@@ -30,11 +30,11 @@ public class ConcernPersonService
 
         return concernPeople;
     }
-    public async Task<ConcernPersonDTO> GetConcernPersonByID(int? ConcernPersonId)
+    public async Task<ConcernPerson> GetConcernPersonByID(int? ConcernPersonId)
     {
 
         var concernPeople = await _unitOfWork.ConcernPerson.Queryable
-                                .Select(query => new ConcernPersonDTO
+                                .Select(query => new ConcernPerson
                                 {
                                     ConcernPersonId = query.ConcernPersonId,
                                     ConcernPersonName = query.ConcernPersonName ?? "",

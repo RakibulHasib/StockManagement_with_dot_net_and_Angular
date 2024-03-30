@@ -5,6 +5,8 @@ import { throwError } from 'rxjs';
 import { AuthenticationService } from '../../../services/Authentication/authentication.service';
 import { NotificationService } from '../../../services/Shared/notification.service';
 import { UserService } from 'src/app/services/User/User.service';
+import Swal from 'sweetalert2';
+import { Status } from 'src/app/models/Enum/status.enum';
 
 @Component({
   selector: 'app-register',
@@ -35,18 +37,63 @@ export class RegisterComponent {
       console.log(this.signupForm.value);
       this.userService.signup(this.signupForm.value).subscribe({
         next: (response => {
-          this.notifyService.message(`Successfully logged in as ${this.signupForm.value.email}`, 'DISMISS');
-          this.signupForm.reset();
-          this.router.navigate(['signin']);
+          //debugger
+          if(response.status== Status.UserExist){
+            // this.signupForm.controls['username'].markAsTouched();
+            // this.signupForm.controls['username'].setErrors({ 'userExists': true }); 
+            Swal.fire({
+              icon: 'error',
+              title: 'User Name Exist!',
+              text: 'Please try different user name.',
+              timer: 4000,
+              showConfirmButton: false,
+              width: 400,
+              position: "top",
+            });
+            this.router.navigate(['signUp']);
+          }
+          else{
+            Swal.fire({
+              icon: 'success',
+              title: 'Sign Up!',
+              text: 'Thank you for register. Please wait for admin approval.',
+              timer: 4000 ,
+              showConfirmButton: false,
+              width: 400,
+              position: "top",
+              customClass: {
+                container: 'swal-top'
+              }
+            });
+            this.signupForm.reset();
+            this.router.navigate(['signin']);
+          }
+          
         }),
         error: err => {
-          this.notifyService.message('Failed to save data', 'DISMISS');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Error ',
+            timer: 2000,
+            showConfirmButton: false,
+            width: 400,
+            position: "top",
+          });
           throwError(() => err);
         }
       });
     }
     else {
-      this.notifyService.message('Failed to save data', 'DISMISS');
+      Swal.fire({
+        icon: 'error',
+        title: 'Server Error!',
+        text: 'Failed to save data. Try again after sometimes',
+        timer: 2000,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+      });
     }
 
   }
