@@ -78,7 +78,7 @@ public class AuthenticateService : IAuthenticateService
         {
             return new ApiResponse()
             {
-                Message = "User Name is not matchd",
+                Message = "User Name is not matched",
                 Status = Status.UserNameNotFound,
                 StatusCode = (int)HttpStatusCode.Unauthorized
 

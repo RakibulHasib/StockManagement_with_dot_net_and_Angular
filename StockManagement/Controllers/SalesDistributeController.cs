@@ -10,7 +10,7 @@ namespace StockManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class SalesDistributeController : ControllerBase
     {
         private readonly SalesDistributeService _salesDistributeService;
