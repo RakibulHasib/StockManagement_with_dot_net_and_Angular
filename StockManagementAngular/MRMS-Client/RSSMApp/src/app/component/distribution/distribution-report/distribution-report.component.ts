@@ -2,9 +2,29 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as custom_fonts  from 'src/assets/custom_fonts/custom_fonts';
 import { SalesReportModel } from 'src/app/models/sales/sales-report-model';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { SalesDistributionService } from 'src/app/services/sales/sales-distribution.service';
+
+(pdfMake as any).vfs = custom_fonts.pdfMake.vfs;
+
+(pdfMake as any).fonts = {
+        Roboto: {
+            normal: 'Roboto-Regular.ttf',
+            bold: 'Roboto-Medium.ttf',
+            italics: 'Roboto-Italic.ttf',
+            bolditalics: 'Roboto-MediumItalic.ttf'
+        },
+        Adorsholipi: {
+           normal: 'AdorshoLipi.ttf',
+           bold: 'AdorshoLipi.ttf'
+        },
+        Kalpurush: {
+          normal: 'Kalpurush.ttf',
+          bold: 'Kalpurush.ttf'
+        }
+     };
 
 @Component({
   selector: 'app-distribution-report',
@@ -57,8 +77,15 @@ export class DistributionReportComponent {
 
     public convetToPDF() {
         let docDefinition : any = {
-        pageMargins: [20, 20, 20, 20],
+        pageMargins: [40, 20, 40, 20],
         content: [
+          {
+            font: 'Adorsholipi',
+            text: 'বিসমিল্লাহির রাহ্‌মানির রাহীম',
+            bold: true,
+            fontSize: 10,
+            alignment: 'center',
+          },
           {
             text: 'Concern Person : '+this.salesReportData.concernPerson,
             bold: true,
@@ -72,29 +99,27 @@ export class DistributionReportComponent {
               {
                 width: 'auto',
                 table: {
-                body: [
-                    // ['Product', 'Price', 'Eja', 'Total', 'Sales', 'Amount', 'Dumping', 'Receiving', 'Remaining'],
-                    [
-                      { text: 'Product Name', bold: true }, // Make the heading text bold 
-                      { text: 'Price', bold: true },
-                      { text: 'Receive Quantity', bold: true },
-                      { text: 'Return Quantity', bold: true },
-                      { text: 'Sales Quantity', bold: true },
-                      { text: 'Total Sales Price', bold: true }
+                  widths: [ 70, 45, 85, 85, 85, 90],
+                  body: [
+                      // ['Product', 'Price', 'Eja', 'Total', 'Sales', 'Amount', 'Dumping', 'Receiving', 'Remaining'],
+                      [
+                        { text: 'পণ্যের নাম', bold: true, font: 'Adorsholipi', alignment: 'center' }, // Make the heading text bold 
+                        { text: 'মূল্য',  bold: true, font: 'Adorsholipi', alignment: 'center' },
+                        { text: 'গ্রহণের পরিমাণ',  bold: true, font: 'Adorsholipi', alignment: 'center' },
+                        { text: 'ফেরতের পরিমাণ',  bold: true, font: 'Adorsholipi', alignment: 'center' },
+                        { text: 'বিক্রয়ের পরিমাণ',  bold: true, font: 'Adorsholipi', alignment: 'center' },
+                        { text: 'মোট বিক্রয় মূল্য',  bold: true, font: 'Adorsholipi', alignment: 'center' }
+                      ],
+                      ...this.salesReportData.reportDetails!.map(x => [
+                        { text: x.productName, bold: true, font: 'Kalpurush', alignment: 'center' },
+                        x.price,
+                        x.receiveQuantity,
+                        x.returnQuantity,
+                        x.salesQuantity,
+                        x.totalSalesPrice
+                      ])
                     ],
-                    ...this.salesReportData.reportDetails!.map(x => [
-                      x.productName,
-                      x.price,
-                      x.receiveQuantity,
-                      x.returnQuantity,
-                      x.salesQuantity,
-                      x.totalSalesPrice
-                    ])
-                  ],
                   alignment: "center",
-                  // styles: {
-                  //   tableHeader: { bold: true }
-                  // }
                 }
               },
               { width: '*', text: '' }
