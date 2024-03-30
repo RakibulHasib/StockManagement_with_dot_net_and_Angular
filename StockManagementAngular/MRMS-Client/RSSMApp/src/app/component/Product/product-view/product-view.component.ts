@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Product } from '../../../models/Product/product';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,10 +9,13 @@ import { NotificationService } from '../../../services/Shared/notification.servi
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
-import { FormsModule } from '@angular/forms';
+import { FormGroup, FormsModule } from '@angular/forms';
 import { CompanyService } from '../../../service/Company/company.service';
 import { Company } from '../../../models/company/company';
 import { StateService } from 'src/app/services/Shared/state.service';
+import Swal from 'sweetalert2';
+import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-product-view',
@@ -28,17 +31,27 @@ export class ProductViewComponent implements OnInit {
   
   selectedCompanyId: number= 1;
 
-  // onDropdownSelectionChange(selectedValue: any) {
-  //   console.log(selectedValue);
-  //   this.fetchData(selectedValue);
-  // }
-
-
   onDropdownSelectionChange(companyId: any) {
     this.selectedCompanyId = companyId;
     this.fetchData();
   }
 
+
+  currentDate: Date = new Date();
+  companyNames!:string;
+  
+  producForm: FormGroup = new FormGroup({});
+  products: Product = new Product;
+
+  companyData: Company[] = [];
+
+  model = {
+    productUnit: this.products
+  }
+  form = new FormGroup({});
+  options: FormlyFormOptions = {};
+
+  fields: FormlyFieldConfig[] = [];
 
 
   productData: Product[] = [];
@@ -50,6 +63,8 @@ export class ProductViewComponent implements OnInit {
   columnList: string[] = ["productName", "price", "sequence", "description","IsActive", "actions"];
   startDate: string = '';
   endDate: string = '';
+  modalRef: any;
+  private subscription: Subscription = new Subscription(); 
 
   constructor(
     private productDataSvc: ProductService,
@@ -59,6 +74,7 @@ export class ProductViewComponent implements OnInit {
     private companyService: CompanyService,
     private stateService: StateService,
     private router: Router,
+    private _modal: NgbModal,
   
   ){}
 
@@ -138,5 +154,238 @@ export class ProductViewComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  showConfirmationAlert(productId: number,data:any) {
+    Swal.fire({
+      title: 'আপনি কি নিশ্চিত?',
+     text: " আপনি কি পণ্য নিষ্ক্রিয় করতে চান? ",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      cancelButtonText:'বাতিল করুন',
+      confirmButtonText: 'হ্যাঁ, নিষ্ক্রিয় করুন!',
+      focusCancel:true,
+      focusConfirm:false,
+      position:"top"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.subscription.add(this.productDataSvc.delete(productId,data).subscribe(r=>{
+          Swal.fire({
+            icon: 'success',
+            title: 'Deleted',
+            text: 'পণ্যটি নিষ্ক্রিয় করা হল',
+            timer: 2000,
+            showConfirmButton: false,
+            width: 400,
+            position: "top",
+          });
+          this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+          this.router.onSameUrlNavigation = 'reload';
+          this.router.navigate(['/productView']);
+         
+        }));
+      }
+      if(result.isDismissed){
+        Swal.fire({
+          icon: 'warning',
+          title: 'Warn!',
+          text: 'পণ্য নিষ্ক্রিয় করার অনুমোদন টি বাদ দেয়া হল',
+          timer: 2000,
+          showConfirmButton: false,
+          width: 400,
+          position: "top",
+        });
+      }
+    });
+  }
+
+
+   update(): void {
+    if (this.form.invalid) {
+      console.log("invalid submission");
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to update data.',
+        timer: 2000 ,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+      });
+      return;
+    }
+   
+    this.subscription.add(this.productDataSvc.update(this.products)
+    .subscribe(r => {
+      const productIndex = this.productData.findIndex(c => c.productId === r.productId);
+      if (productIndex !== -1) {
+        this.productData[productIndex] = r;
+      }
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Data update successfully.',
+        timer: 2000 ,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+        customClass: {
+          container: 'swal-top'
+        }
+      });
+       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+       this.router.onSameUrlNavigation = 'reload';
+       this.router.navigate(['/productview']);
+       this.form.reset();
+    }, () => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to update data.',
+        timer: 2000,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+      });
+    }));
+  }
+
+
+  onEdit(template: TemplateRef<any>, item: Product) {
+    this.products = Object.assign({}, item);
+    this.model.productUnit=this.products;
+    this.generateFormFields();
+    this.modalRef = this._modal.open(template);
+  }
+
+  closeModal(modalRef: NgbActiveModal) {
+    this.form.reset(); 
+    modalRef.dismiss();
+    this.model.productUnit = new Company;
+    
+  }
+  generateFormFields() {
+    this.fields = [
+      {
+
+        fieldGroupClassName: 'display-flex',
+        key: 'productData',
+        fieldGroup: [
+
+          {
+            className: 'flex-1',
+            type: 'select',
+            key: 'companyId',
+            
+            props: {
+              label: 'Company Name',
+              options: this.companyService.getCompany(),
+
+              valueProp: 'companyId',
+              labelProp: 'companyName',
+              appearance: 'outline',
+            
+              
+            },
+            expressionProperties: {
+              'templateOptions.style': () => ({
+                border: '2px solid #ff5722', 
+                borderRadius: '5px', 
+                padding: '5px 10px' 
+              })
+            },
+            validation: {
+              messages: { required: " " }
+            },
+            
+            hooks: {
+              onInit: (field: FormlyFieldConfig) => {
+              
+                    field.formControl?.setValue(this.companyId);
+                    
+                }
+              
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'productName',
+            props: {
+              label: 'Product Name',
+              appearance: 'outline',
+              floatLabel: 'always',
+              required: true
+            },
+            validation: {
+              messages: { required: " " }
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'price',
+            props: {
+              label: 'Price',
+              required: true,
+              appearance: 'outline',
+              floatLabel: 'always',
+            },
+            validation: {
+              messages: { required: "Have to add price" }
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'sequence',
+            props: {
+              label: 'Sequence',
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages: { required: " " }
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'input',
+            key: 'description',
+            props: {
+              label: 'Description',
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            }
+          },
+          {
+            className: 'flex-1',
+            type: 'toggle',
+            defaultValue: true,
+            key: 'IsActive',
+            props: {
+              label: 'IsActive',
+              appearance: 'outline',
+              floatLabel: 'always',
+              hideRequiredMarker: true,
+            },
+            validation: {
+              messages: { required: " " }
+            },
+            expressions: {
+              'model.IsActive': 'model.IsActive ? 1 : 0'
+
+            },
+          },
+        ],
+
+      }
+    ]
+    
+    
   }
 }

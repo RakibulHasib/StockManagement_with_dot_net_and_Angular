@@ -9,7 +9,6 @@ import { LogUrl } from '../../models/shared/app-constants';
   providedIn: 'root'
 })
 export class AuthenticationService {
-
   constructor(
     private http: HttpClient
   ) { }
@@ -20,24 +19,16 @@ export class AuthenticationService {
   getById(id: number): Observable<Register > {
     return this.http.get<Register>(`${LogUrl}/Agents/${id}`);
   }
+
   signIn(data: any): Observable<Register> {
     return this.http.post<Register>(`${LogUrl}/signIn`, data);
   }
-  //signOut(): Observable<any> {
-  //  return this.http.post<any>(`${LogUrl}/logout`, null);
-  //}
-
-  //signOut(): Observable<any> {
-  //  return this.http.post<any>(`${LogUrl}/logout`, {});
-  //}
+ 
 
   logout() {
     localStorage.removeItem('token');
   }
-  signup(user: any) {
-    return this.http.post<any>(`${LogUrl}/Register`, user);
-  }
-
+ 
   login(data: any) {
     return this.http.post<any>(`${LogUrl}/signIn`, data);
   }
@@ -63,5 +54,6 @@ export class AuthenticationService {
   isAuthenticated(): boolean {
     return this.getToken() !== null;
   }
+ 
 
 }

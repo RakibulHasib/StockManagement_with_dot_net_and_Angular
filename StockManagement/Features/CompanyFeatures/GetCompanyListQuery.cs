@@ -1,7 +1,4 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using StockManagement.DTO;
-using StockManagement.Repository;
+﻿
 
 namespace StockManagement.Features.CompanyFeatures;
 

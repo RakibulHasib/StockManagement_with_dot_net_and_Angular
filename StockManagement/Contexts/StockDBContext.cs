@@ -52,6 +52,13 @@ namespace StockManagement.Contexts
                 entity.ToTable("ConcernPerson");
             });
 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("Users");
+                entity.Property(e=>e.UserId).ValueGeneratedOnAdd().UseIdentityColumn();
+                entity.HasKey(e => e.UserId);
+            });
+
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.ToTable("products");

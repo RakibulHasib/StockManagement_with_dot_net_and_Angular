@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
 using StockManagement.Entities;
 using StockManagement.Features.StockFeatures;
@@ -7,6 +8,9 @@ using StockManagement.Services;
 
 namespace StockManagement.Controllers;
 
+[Route("api/[controller]")]
+[ApiController]
+[Authorize]
 public class StockController : BaseController<StockController>
 {
     private readonly StockService _stockService;

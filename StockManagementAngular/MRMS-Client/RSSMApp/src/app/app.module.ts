@@ -26,8 +26,6 @@ import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { ProductRepeatComponent } from './component/shared/product-repeat/product-repeat.component';
 import { CompanyViewComponent } from './component/Company/company-view/company-view.component';
-import { CompanyCreateComponent } from './component/Company/company-create/company-create.component';
-import { CompanyUpdateComponent } from './component/Company/company-update/company-update.component';
 import { ProductViewComponent } from './component/Product/product-view/product-view.component';
 import { ProductCreateComponent } from './component/Product/product-create/product-create.component';
 import { ProductUpdateComponent } from './component/Product/product-update/product-update.component';
@@ -41,12 +39,12 @@ import { DistributionReportComponent } from './component/distribution/distributi
 import { MatExpansionModule } from '@angular/material/expansion';
 import { DamageaddComponent } from './component/modal/damageadd/damageadd.component';
 import { CommisionaddComponent } from './component/modal/commisionadd/commisionadd.component';
-import { ConcernCreateComponent } from './component/concernPerson/concern-create/concern-create.component';
-import { ConcernUpdateComponent } from './component/concernPerson/concern-update/concern-update.component';
 import { ConcernViewComponent } from './component/concernPerson/concern-view/concern-view.component';
 import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
 import { DistributionEditComponent } from './component/distribution/distribution-edit/distribution-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { UserviewComponent } from './component/User/userview/userview.component';
 
 
 
@@ -58,14 +56,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HomeComponent,
     FileContainerComponent,
     SignInComponent,
-    RegisterComponent,
     StockViewComponent,
     StockCreateComponent,
     ProductItemComponent,
     ProductRepeatComponent,
     CompanyViewComponent,
-    CompanyCreateComponent,
-    CompanyUpdateComponent,
     ProductViewComponent,
     ProductCreateComponent,
     ProductUpdateComponent,
@@ -77,11 +72,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     DistributionReportComponent,
     DamageaddComponent,
     CommisionaddComponent,
-    ConcernCreateComponent,
-    ConcernUpdateComponent,
     ConcernViewComponent,
     StockEditComponent,
-    DistributionEditComponent
+    DistributionEditComponent,
+    RegisterComponent,
+    UserviewComponent
   ],
   imports: [
     BrowserModule,
@@ -98,6 +93,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MatMenuModule,
     MatTabsModule,
     FormsModule,
+    MatToolbarModule,
     FormlyMatToggleModule,
     MatExpansionModule,
     FormlyModule.forRoot({
