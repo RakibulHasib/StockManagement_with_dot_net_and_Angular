@@ -39,6 +39,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
   companyId!: number;
   paramsSubscription! : Subscription;
   companies: Company[] = [];
+  distributeStatus: boolean = false;
 
   dailyData: Dailydatadbmodel[] = [];
   dataSource: MatTableDataSource<Dailydatadbmodel> = new MatTableDataSource(this.dailyData);
@@ -87,6 +88,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
       // this.companyId = +Company[companyKey];
       this.fetchCompanyData();
       this.fetchData();
+      this.getDistributorStockCreateStatus();
     });
   }
 
@@ -152,6 +154,16 @@ export class StockViewComponent implements OnInit, OnDestroy {
     this.fetchData();
   }
 
+  getDistributorStockCreateStatus(){
+    this.dailyDataSvc.getDistributorStockCreateStatus().subscribe(
+      (res) => {
+        this.distributeStatus = res;
+      },
+      (err) => {
+        console.log(err);
+      }
+    )
+  }
 
   fetchData() {
     if (this.startDate && this.endDate) {

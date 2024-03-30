@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
+using StockManagement.Entities;
 using StockManagement.Helpers;
 using StockManagement.Services;
 
@@ -35,6 +36,19 @@ namespace StockManagement.Controllers
         public async Task<ActionResult<int>> InsertSalesDistributeData(SalesDistributeDataDto data)
         {
             return Ok(await _salesDistributeService.InsertSalesDistributeData(data.ConcernPersonID, data.salesDistribute));
+        }
+
+        [HttpGet("GetDistributorStatus")]
+        public async Task<ActionResult<List<DailyDistributorStatusDTO>>> GetDistributorStatus()
+        {
+            return Ok(await _salesDistributeService.GetDistributorStatus());
+        }
+
+        [Transaction]
+        [HttpPost("InsertSkipConcerPersonDistribution")]
+        public async Task<ActionResult<int>> InsertSkipConcerPersonDistribution(int ConcernPersonID)
+        {
+            return Ok(await _salesDistributeService.InsertSkipConcerPersonDistribution(ConcernPersonID));
         }
 
         [HttpGet("GetProduct")]

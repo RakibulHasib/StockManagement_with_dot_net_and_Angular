@@ -63,7 +63,6 @@ export class DistributionCreateComponent implements OnInit {
   }
 
   insert(): void {
-    console.log(this.model);
     if (this.form.invalid) {
       console.log("invalid submission");
       return;
@@ -71,7 +70,7 @@ export class DistributionCreateComponent implements OnInit {
     this.salesService.checkTodayConcernPersonDistribution(this.model.concernPersonId).toPromise().then(
       x => {
         if(x === true){
-          this.notificationSvc.message("This data update not possible", "DISMISS");
+          this.notificationSvc.message("এই ব্যাক্তির আজকের ডিস্ট্রিভিউসান নামানো হয়ে গেছে!!!", "DISMISS");
         }
         else{
           this.salesService.insert({
@@ -117,7 +116,7 @@ export class DistributionCreateComponent implements OnInit {
                   x => {
                     console.log(x)
                     if(x === true){
-                      this.notificationSvc.message("This person distribution already updated", "DISMISS");
+                      this.notificationSvc.message("এই ব্যাক্তির আজকের ডিস্ট্রিভিউসান নামানো হয়ে গেছে!!", "DISMISS");
                     }
                   }
                 );

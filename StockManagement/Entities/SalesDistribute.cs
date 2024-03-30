@@ -14,5 +14,6 @@ namespace StockManagement.Entities
         public int ConcernPersonId { get; set; }
         public DateTime CreationTime { get; set; }
         public int IsDeleted { get; set; }
+        public int Status { get; set; }
     }
 }

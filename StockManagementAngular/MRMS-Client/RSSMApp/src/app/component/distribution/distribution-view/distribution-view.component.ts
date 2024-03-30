@@ -13,6 +13,9 @@ import { ConcernPersonService } from 'src/app/services/concernPerson/concern-per
 import { SalesDistributionService } from 'src/app/services/sales/sales-distribution.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { throwError } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DailyDistributeStatus } from 'src/app/models/dailydistributeStatus/daily-distribute-status.model';
+import { DistributorStatus } from 'src/app/enums/distributor-status.enum';
 
 @Component({
   selector: 'app-distribution-view',
@@ -30,8 +33,10 @@ export class DistributionViewComponent {
   showExpandButton = false;
   companyId!: number;
   concernPerson: ConcernPerson[]=[];
+  dailyDistributeStatus: DailyDistributeStatus[] = []
   selectedConcernPerson: number=1;
   distibutionId : number = 0;
+  distributorStatus = DistributorStatus;
 
    onDropdownSelectionChange(selectedConcernPerson: number) {
     this.selectedConcernPerson=selectedConcernPerson;
@@ -54,7 +59,8 @@ export class DistributionViewComponent {
     private _dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
     private route:Router,
-    private stateService: StateService
+    private stateService: StateService,
+    private _modal: NgbModal
   ) { }
 
   ngOnInit() {
@@ -89,6 +95,32 @@ export class DistributionViewComponent {
         this._notificationSvc.message("Failed to load data", "DISMISS");
       });
     }
+  }
+
+  getDistributeStatus(){
+    this.salesService.getDistributeStatus().subscribe(
+      (res) => {
+        this.dailyDistributeStatus = res;
+      },
+      (err) => {
+        this._notificationSvc.message("Failed to load data", "DISMISS");
+      }
+    )
+  }
+
+  insertSkipConcerPersonDistribution(concernPersonId: number){
+    this.salesService.insertSkipConcerPersonDistribution(concernPersonId)
+      .subscribe(r => {
+        this.getDistributeStatus();
+        this.fetchData();
+      }, err => {
+        this._notificationSvc.message("Failed to save data!!!", "DISMISS");
+    });
+  }
+
+  openDistributeStatus(modalName: any){
+    this.getDistributeStatus();
+    const modalRef = this._modal.open(modalName);
   }
 
   navigateToAdddistribution() {

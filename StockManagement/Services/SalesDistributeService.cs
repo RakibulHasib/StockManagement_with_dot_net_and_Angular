@@ -15,6 +15,13 @@ namespace StockManagement.Services
             _unitOfWork = unitOfWork;
         }
 
+        enum DailyDistributeStatus
+        {
+            NotComplete = 0,
+            Complete,
+            Skip
+        }
+
         public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID, DateTime StartDate, DateTime EndDate)
         {
             var query = await (from sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0)
@@ -79,7 +86,8 @@ namespace StockManagement.Services
                 TotalSales = 0,
                 GrandTotal = 0,
                 ConcernPersonId = ConcernPersonID,
-                IsDeleted = 0
+                IsDeleted = 0,
+                Status = Convert.ToInt32(DailyDistributeStatus.Complete)
             };
             await _unitOfWork.SalesDistribute.AddAsync(master);
             await _unitOfWork.SaveChangesAsync();
@@ -114,7 +122,39 @@ namespace StockManagement.Services
             return result;
         }
 
-        public async Task<List<ProductDTO>> GetProduct()
+        public async Task<List<DailyDistributorStatusDTO>> GetDistributorStatus()
+        {
+            var data = await (from cp in _unitOfWork.ConcernPerson.Queryable.Where(a => a.IsDeleted == 0)
+                              let status = _unitOfWork.SalesDistribute.Queryable.Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ConcernPersonId == cp.ConcernPersonId && a.IsDeleted == 0).Select(a => a.Status).FirstOrDefault()
+                              select new DailyDistributorStatusDTO
+                            {
+                                ConcernPersonId = cp.ConcernPersonId,
+                                ConcernPersonName = cp.ConcernPersonName,
+                                Status = status != null ? status : Convert.ToInt32(DailyDistributeStatus.NotComplete)
+                              }).ToListAsync();
+            return data;
+        }
+
+        public async Task<int> InsertSkipConcerPersonDistribution(int ConcernPersonID)
+        {
+            int result = 0;
+            SalesDistribute master = new SalesDistribute
+            {
+                TotalPrice = 0,
+                TotalReceive = 0,
+                TotalReturn = 0,
+                TotalSales = 0,
+                GrandTotal = 0,
+                ConcernPersonId = ConcernPersonID,
+                IsDeleted = 0,
+                Status = Convert.ToInt32(DailyDistributeStatus.Skip)
+            };
+            await _unitOfWork.SalesDistribute.AddAsync(master);
+            await _unitOfWork.SaveChangesAsync();
+            return result;
+        }
+
+            public async Task<List<ProductDTO>> GetProduct()
         {
             var data = await _unitOfWork.Product.Queryable
                                        .Where(a => a.IsDeleted == 0 && a.IsActive == 1)

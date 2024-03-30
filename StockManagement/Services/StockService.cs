@@ -283,4 +283,22 @@ public class StockService
 
         return data != 0;
     }
+
+    public async Task<bool> GetDistributorStockCreateStatus()
+    {
+        var concernPersonIds = await _unitOfWork.ConcernPerson.Queryable
+            .Where(a => a.IsDeleted == 0)
+            .Select(a => a.ConcernPersonId)
+            .ToListAsync();
+
+        var distributeConcernPersonIds = await _unitOfWork.SalesDistribute.Queryable
+            .Where(a => a.CreationTime.Date == DateTime.Now.Date && a.IsDeleted == 0)
+            .Select(a => a.ConcernPersonId)
+            .ToListAsync();
+
+        bool allDistributed = distributeConcernPersonIds.All(id => concernPersonIds.Contains(id))
+            && distributeConcernPersonIds.Count == concernPersonIds.Count;
+
+        return allDistributed;
+    }
 }

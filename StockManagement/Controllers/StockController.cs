@@ -89,4 +89,10 @@ public class StockController : BaseController<StockController>
     {
         return await _stockService.CheckTodayStockforUpdate(StockID);
     }
+
+    [HttpGet("GetDistributorStockCreateStatus")]
+    public async Task<ActionResult<bool>> GetDistributorStockCreateStatus()
+    {
+        return await _stockService.GetDistributorStockCreateStatus();
+    }
 }

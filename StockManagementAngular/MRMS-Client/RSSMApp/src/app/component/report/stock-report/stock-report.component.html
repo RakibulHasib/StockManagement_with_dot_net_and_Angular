@@ -63,9 +63,9 @@
     </tr>
   </table>
 
-  <div style="display: flex; justify-content: space-between;">
-    <button mat-flat-button (click)="convetToPDF()">Convert</button>
-    <button mat-flat-button [routerLink]="['/stock-view']">Back to list</button>
+  <div style="display: flex; justify-content: space-between; padding: 5px;">
+    <button class="btn btn-secondary" [routerLink]="['/stock-view']">Back to list</button>
+    <button (click)="convetToPDF()" class="btn btn-primary">Print Report</button>
   </div>
 </body>
 </html>
