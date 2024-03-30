@@ -206,15 +206,15 @@ export class UserviewComponent implements OnInit {
       {
 
         fieldGroupClassName: 'display-flex',
-        key: 'companyData',
+        key: 'user-data',
         fieldGroup: [
 
           {
             className: 'flex-1',
             type: 'input',
-            key: 'companyName',
+            key: 'userName',
             props: {
-              label: 'কোম্পানি নাম',
+              label: ' নাম',
               appearance: 'outline',
               floatLabel: 'always',
               required:true,
@@ -276,7 +276,7 @@ export class UserviewComponent implements OnInit {
     });
   }
 
-  showConfirmationAlert(companyId: number,data:any) {
+  showConfirmationAlert(userId: number,data:any) {
     Swal.fire({
       title: 'আপনি কি নিশ্চিত?',
      text: " আপনি কি নিষ্ক্রিয় করতে চান? ",
@@ -291,11 +291,11 @@ export class UserviewComponent implements OnInit {
       position:"top"
     }).then((result) => {
       if (result.isConfirmed) {
-        this.subscription.add(this.userDataSvc.delete(companyId,data).subscribe(r=>{
+        this.subscription.add(this.userDataSvc.delete(userId,data).subscribe(r=>{
           Swal.fire({
             icon: 'success',
             title: 'Deleted',
-            text: 'নিষ্ক্রিয় করার অনুমোদন টি বাদ দেয়া হল',
+            text: 'নিষ্ক্রিয় করা হল',
             timer: 2000,
             showConfirmButton: false,
             width: 400,
@@ -311,7 +311,7 @@ export class UserviewComponent implements OnInit {
         Swal.fire({
           icon: 'warning',
           title: 'Warn!',
-          text: 'Your data is safe :)',
+          text: 'নিষ্ক্রিয় করার অনুমোদন টি বাদ দেয়া হল',
           timer: 2000,
           showConfirmButton: false,
           width: 400,

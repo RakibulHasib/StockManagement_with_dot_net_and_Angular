@@ -69,9 +69,8 @@
 
            
   
-            <button mat-raised-button [routerLink]="['',element]" color="primary" class="icon-spacing">Edit</button>
-            <!-- <button mat-raised-button [routerLink]="['',element]" color="warn" class="icon-spacing">Delete</button> <mat-icon class="red-color">delete</mat-icon>-->
-            <button mat-raised-button color="warn" class="icon-spacing" >Delete</button>
+            <button mat-raised-button [routerLink]="['',element]" color="primary" class="icon-spacing" (click)="onEdit(updateModal,element)">Edit</button>
+            <button mat-raised-button color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.productId,element)" >Delete</button>
           
 
 
@@ -113,21 +112,21 @@
 <!-- Update Company -->
 <ng-template #updateModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> কোম্পানি আপডেট করুন</h4>
-    <!-- <button type="button" class="close" aria-label="Close" (click)="closeModal(modal)">
+    <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> পণ্য আপডেট করুন</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(modal)">
       <span aria-hidden="true">&times;</span>
-    </button> -->
+    </button>
   </div>
   <div class="modal-body">
-    <!-- <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="update()">
+    <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="update()">
       <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
-      <!-- <div class="f-w mb-1">
+      <div class="f-w mb-1">
         <button type="submit" class="btn btn-outline-dark" (click)="modal.dismiss()">Update</button>
-      </div> -->
-      <!-- <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
+      </div> 
+       <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
         <button type="submit" class="btn btn-outline-dark"(click)="modal.dismiss()">Update</button>
       </div>
-    </form> --> -->
+    </form>
     
   </div>
 </ng-template>

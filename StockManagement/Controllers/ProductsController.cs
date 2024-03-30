@@ -51,7 +51,7 @@ public class ProductsController : ControllerBase
 
 
     [Transaction]
-    [HttpPut("DeleteProduct")]
+    [HttpPut("delete-product/{productId}")]
     public async Task<ActionResult<int>> DeleteProduct(int productId)
     {
         return Ok(await _productService.DeleteProduct(productId));
