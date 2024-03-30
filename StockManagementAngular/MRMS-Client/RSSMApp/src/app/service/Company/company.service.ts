@@ -19,8 +19,8 @@ export class CompanyService {
 
 
   //
-  getCompany(): Observable<Company[]> {
-    return this.http.get<Company[]>(`${IceCreamApiUrl}/${endPoint}/CompanyDashboard`);
+  getCompany(): Observable<any[]> {
+    return this.http.get<any[]>(`${IceCreamApiUrl}/${endPoint}/CompanyDashboard`);
   }
 
   getById(companyId: number): Observable<Company> {

@@ -67,8 +67,14 @@
         <span class="example-spacer"></span>
         <div>
           <ng-template [ngIf]="!authService.isAuthenticated()">
-            <button mat-raised-button color="danger" routerLink="/signin" routerLinkActive="active">LogIn</button>
-            <button mat-raised-button color="danger" routerLink="/signUp" routerLinkActive="active">Register</button>
+            <ng-container *ngIf="isRegisterPage()">
+              <button mat-raised-button color="danger" routerLink="/signin" routerLinkActive="active">LogIn</button>
+            </ng-container>
+            <ng-container *ngIf="isLoginPage()">
+              <button mat-raised-button color="danger" routerLink="/signUp" routerLinkActive="active">Register</button>
+            </ng-container>
+            
+            
           </ng-template>
         </div>
         <div>

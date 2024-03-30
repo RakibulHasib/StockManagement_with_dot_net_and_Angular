@@ -46,7 +46,7 @@ public class ProductsController : ControllerBase
     [HttpPut("UpdateProduct")]
     public async Task<ActionResult<int>> UpdateProduct(ProductDTO product)
     {
-        return Ok(await _productService.InsertProduct(product));
+        return Ok(await _productService.UpdateProduct(product));
     }
 
 
