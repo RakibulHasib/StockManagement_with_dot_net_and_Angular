@@ -234,7 +234,7 @@ export class UserviewComponent implements OnInit {
   showUserApprovalAlert(userId: number,data:any) {
     Swal.fire({
       title: 'আপনি কি নিশ্চিত?',
-      text: `আপনি কি একজন ব্যবহারকারী হিসাবে অনুমোদন করতে চান?`,
+      text: `আপনি কি অনুমোদন করতে চান?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',

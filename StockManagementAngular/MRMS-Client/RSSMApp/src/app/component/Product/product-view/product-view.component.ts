@@ -37,14 +37,12 @@ export class ProductViewComponent implements OnInit {
   }
 
 
+
   currentDate: Date = new Date();
   companyNames!:string;
   
   producForm: FormGroup = new FormGroup({});
   products: Product = new Product;
-
-  companyData: Company[] = [];
-
   model = {
     productUnit: this.products
   }
@@ -252,9 +250,40 @@ export class ProductViewComponent implements OnInit {
     }));
   }
 
+  onCreate(template: TemplateRef<any>) {
+    this.companies;
+    this.generateFormFields();
+    this.modalRef = this._modal.open(template);
+  }
+
+  insert(): void {
+    if (this.form.invalid) {
+      console.log("invalid submission");
+      return;
+    }
+    this.productDataSvc.insert(this.products)
+      .subscribe(r => {
+        this._notificationSvc.message("Data saved successfully!!!", "DISMISS");
+        //this.router.navigate(['/productView', { companyId: r.companyId }]);
+        const selectedCompanyId = this.model.productUnit.companyId;
+        // this.stateservice.updateState(this.productData.companyId);
+      
+      const routeWithCompanyId = `/productView`;
+      console.log("CompanyID",selectedCompanyId);
+      this.router.navigate([routeWithCompanyId]);
+
+        console.log(r);
+         
+      }, err => {
+        this._notificationSvc.message("Failed to save data!!!", "DISMISS");
+      })
+  }
+
 
   onEdit(template: TemplateRef<any>, item: Product) {
+    // this.companyData =  this.companyService.getCompany();
     this.products = Object.assign({}, item);
+    console.log("UpdateData",this.products)
     this.model.productUnit=this.products;
     this.generateFormFields();
     this.modalRef = this._modal.open(template);
@@ -267,13 +296,12 @@ export class ProductViewComponent implements OnInit {
     
   }
   generateFormFields() {
+    console.log("Dropdown",this.companies)
     this.fields = [
       {
-
         fieldGroupClassName: 'display-flex',
-        key: 'productData',
+        key: 'productUnit',
         fieldGroup: [
-
           {
             className: 'flex-1',
             type: 'select',
@@ -281,12 +309,10 @@ export class ProductViewComponent implements OnInit {
             
             props: {
               label: 'Company Name',
-              options: this.companyService.getCompany(),
-
+              options: this.companies,
               valueProp: 'companyId',
               labelProp: 'companyName',
               appearance: 'outline',
-            
               
             },
             expressionProperties: {
@@ -301,11 +327,12 @@ export class ProductViewComponent implements OnInit {
             },
             
             hooks: {
+              // onInit: (field: FormlyFieldConfig) => {
+              //       field.formControl?.setValue(this.companyId);      
+              //   }
               onInit: (field: FormlyFieldConfig) => {
-              
-                    field.formControl?.setValue(this.companyId);
-                    
-                }
+                this.model.productUnit.companyId = this.model.productUnit.companyId;
+              }
               
             }
           },

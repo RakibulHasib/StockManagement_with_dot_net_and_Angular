@@ -258,7 +258,7 @@ export class ConcernViewComponent {
           Swal.fire({
             icon: 'success',
             title: 'Deleted',
-            text: 'Your file has been deleted.',
+            text: 'আপনার তথ্য মুছে ফেলা হয়েছে.',
             timer: 2000,
             showConfirmButton: false,
             width: 400,
@@ -274,7 +274,7 @@ export class ConcernViewComponent {
         Swal.fire({
           icon: 'warning',
           title: 'Warn!',
-          text: 'Your data is safe :)',
+          text: 'আপনার ডেটা নিরাপদ',
           timer: 2000,
           showConfirmButton: false,
           width: 400,

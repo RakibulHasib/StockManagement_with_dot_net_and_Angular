@@ -98,9 +98,13 @@ companies = {
   }
 
 
-  
+  isRegisterPage(): boolean {
+    return this.router.url === '/signUp';
+  }
 
-
+  isLoginPage(){
+    return this.router.url === '/signin';
+  }
 
 
   isAuthenticated() {
