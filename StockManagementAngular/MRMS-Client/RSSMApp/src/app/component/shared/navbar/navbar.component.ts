@@ -102,9 +102,9 @@ companies = {
     return this.router.url === '/signUp';
   }
 
-  isLoginPage(){
-    return this.router.url === '/signin';
-  }
+  isLoginPage() {
+    return this.router.url === '/' || this.router.url === '/signin';
+}
 
 
   isAuthenticated() {

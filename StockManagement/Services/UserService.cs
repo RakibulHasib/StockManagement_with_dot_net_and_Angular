@@ -198,10 +198,9 @@ public class UserService
     {
         try
         {
-            var user_data = await _unitOfWork.Users.Queryable.ToListAsync();
+            var user_data = await _unitOfWork.Users.Queryable.Where(u=>u.IsDeleted == 0).ToListAsync();
             return new ApiResponse<List<User>>()
             {
-
                 Message = " ",
                 Status = Status.Success,
                 StatusCode = (int)HttpStatusCode.OK,
@@ -225,6 +224,7 @@ public class UserService
         {
             var user_data = await _unitOfWork.Users.Queryable.Where(u => u.UserId == userId).FirstOrDefaultAsync();
             user_data.UserStatus = UserStatus.Active;
+            user_data.IsDeleted = 0;
             _unitOfWork.Users.Update(user_data);
             await _unitOfWork.SaveChangesAsync();
 
