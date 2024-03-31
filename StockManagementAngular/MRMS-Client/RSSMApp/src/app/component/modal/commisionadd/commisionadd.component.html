@@ -1,0 +1,11 @@
+<div class="example-container">
+    <mat-form-field>
+      <input matInput [(ngModel)]="commission" placeholder="Commission amount">
+    </mat-form-field>
+    <div mat-dialog-actions style="display: flex;justify-content: center;">
+        <button [mat-dialog-close]="commission" cdkFocusInitial mat-raised-button color="warn" class="icon-spacing">Update</button>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button (click)="closeModal()">Cancel</button>
+    </div>
+</div>

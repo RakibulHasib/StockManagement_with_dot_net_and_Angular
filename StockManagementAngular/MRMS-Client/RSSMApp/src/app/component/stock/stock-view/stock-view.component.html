@@ -1,0 +1,107 @@
+<mat-card class="mat-elevation-z3">
+  <mat-card-header class="row">
+    <div class="d-flex justify-content-between">
+      <div>
+        <mat-card-title class="h5">প্রতিদিনের স্টকের হিসাব</mat-card-title>
+      </div>
+      <div [title]="distributeStatus == false ? 'ডিস্ট্রিভিউসান সম্পূর্ন হয় নি' : ''" class="d-flex align-items-center">
+        <a [disabled]="!distributeStatus" mat-mini-fab class="btn btn-primary" (click)="checkStockUpdate()">
+          <mat-icon>add_box</mat-icon>
+        </a>
+      </div>
+    </div>
+
+    <mat-card-content style="display: flex; flex-direction: column; align-items: center;">
+      <mat-form-field style="width: 60%;">
+        <mat-label>কোম্পানি বাছাই করুন</mat-label>
+        <mat-select (selectionChange)="onDropdownSelectionChange($event.value)" [value]="selectedCompany">
+          <mat-option *ngFor="let company of companies" [value]="company.companyId">
+            {{company.companyName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card-content>
+
+    <div class="col-5">
+      <mat-label for="startDate" class="form-label">Start Date</mat-label>
+      <input MatInput type="date" id="startDate" [(ngModel)]="startDate" class="form-control">
+    </div>
+
+    <div class="col-5">
+      <mat-label for="endDate" class="form-label">End Date</mat-label>
+      <input MatInput type="date" id="endDate" [(ngModel)]="endDate" class="form-control">
+    </div>
+
+    <div class="col-2" style="margin-top:20px">
+      <button (click)="fetchData()" class="btn btn-primary">Search</button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <!-- <div class="row mt-2">
+      <div class="col">
+        <mat-form-field appearance="fill" class="f-w mb-1">
+          <mat-label>Search by Name</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Search by Name" #input>
+        </mat-form-field>
+      </div>
+
+    </div> -->
+    <mat-table [dataSource]="dataSource" matSort style="text-align:center">
+
+      <ng-container matColumnDef="createdDate">
+        <mat-header-cell *matHeaderCellDef mat-sort-header >CreatedDate</mat-header-cell>
+        <mat-cell *matCellDef="let element" style="text-align:center">{{element.creationTime | date:'yyyy-MM-dd'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="totalSalesQuantity">
+        <mat-header-cell *matHeaderCellDef mat-sort-header >মোট বিক্রিত পণ্যে</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="centered-text">{{element.totalSalesQuantity}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="totalAmount">
+        <mat-header-cell *matHeaderCellDef mat-sort-header >মোট মূল্য</mat-header-cell>
+        <mat-cell *matCellDef="let element" [style.text-align]="'center'" >{{element.totalAmount}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions" class="action">
+        <mat-header-cell *matHeaderCellDef mat-sort-header  class="action" >Action</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="action">
+
+          <button mat-raised-button [routerLink]="['/stock-report',element.stockId]" (click)="stateUpdate()" class="icon-spacing">View</button>
+
+          <button mat-icon-button [matMenuTriggerFor]="stockmenu" aria-label="Example icon-button with a menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #stockmenu="matMenu">
+            <button mat-menu-item (click)="checkTodayStockUpdate(element.stockId)" disabled>
+              <mat-icon>dialpad</mat-icon>
+              <span>Edit</span>
+            </button>
+            <button mat-menu-item (click)="openDamageDialog(element.stockId)">
+              <mat-icon>dialpad</mat-icon>
+              <span>DamageAdd</span>
+            </button>
+            <button mat-menu-item (click)="openCommissionDialog(element.stockId)">
+              <mat-icon>dialpad</mat-icon>
+              <span>CommissionAdd</span>
+            </button>
+            <button mat-menu-item (click)="confirmDelete(element.stockId)">
+              <mat-icon>dialpad</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+
+
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="columnList" class="bold-header"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columnList;"></mat-row>
+
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20, 40]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+
+  </mat-card-content>
+</mat-card>

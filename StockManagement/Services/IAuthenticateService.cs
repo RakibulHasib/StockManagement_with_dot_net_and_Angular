@@ -1,9 +1,9 @@
-﻿using StockManagement.Model;
+﻿using StockManagement.Entities;
 
-namespace StockManagement.Services
+namespace StockManagement.Services;
+
+public interface IAuthenticateService
 {
-    public interface IAuthenticateService
-    {
-        User Authenticate(string username, string password);
-    }
+    Task<ApiResponse> AuthenticateUser(string username, string password);
+    ClaimResponseDTO? ValidateToken(string token);
 }

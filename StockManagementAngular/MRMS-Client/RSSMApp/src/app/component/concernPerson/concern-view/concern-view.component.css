@@ -1,0 +1,92 @@
+.f-w {
+    width: 100%;
+  }
+  
+  .mb-1 {
+    margin-bottom: 15px;
+  }
+  
+  .centered-text {
+    text-align: center;
+  }
+  
+  .icon-spacing {
+    margin-right: 2px;
+  }
+  /*.action-button {
+    margin-right: 5px; 
+  }*/
+  .action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .mat-header-cell {
+    text-align: center;
+  }
+  
+  .bold-header {
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .action {
+    display: flex;
+    align-items: center;
+  }
+  /**/
+  /*.expand-section {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+  }*/
+  
+  .expand-section button {
+    margin: 0 2px;
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 12px;
+    margin-right: 10px;
+  }
+  
+  
+  
+  .icon-spacing {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2px;
+  }
+  
+  .expand-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    background-color: #f9f9f9; /* Add a background color */
+    padding: 10px;
+    border-radius: 5px; /* Add rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  }
+  /*
+    .expand-section button {
+      margin-right: 10px;
+    }*/
+  
+  
+  
+  .mat-card-title {
+    margin: 0 auto;
+  }
+
+  .close {
+    outline: none;
+    border: none;
+    background: none;
+    padding: 0px 10px;
+    font-size: 24px;
+  }
+  

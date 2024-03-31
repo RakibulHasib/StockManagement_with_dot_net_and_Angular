@@ -1,39 +1,50 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './component/shared/navbar/navbar.component';
 import { HttpClient,HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NotificationService } from './services/Shared/notification.service';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatModule } from './module/shared/mat/mat.module';
-import { MatTabsModule } from '@angular/material/tabs'
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTabsModule } from '@angular/material/tabs';
+import {MatMenuModule} from '@angular/material/menu';
 import { ConfirmDialogComponent } from './component/shared/confirm-dialog/confirm-dialog.component';
 import { HomeComponent } from './component/home/home.component';
 import { AuthInterceptor } from './Shared/authconfig.interceptor';
 import { FileContainerComponent } from './component/shared/file-container/file-container.component';
 import { SignInComponent } from './component/Authentication/sign-in/sign-in.component';
 import { RegisterComponent } from './component/Authentication/register/register.component';
-import { SavoyViewComponent } from './component/savoy/savoy-view/savoy-view.component';
-import { SavoyCreateComponent } from './component/savoy/savoy-create/savoy-create.component';
+import { StockViewComponent } from './component/stock/stock-view/stock-view.component';
+import { StockCreateComponent } from './component/stock/stock-create/stock-create.component';
 import { ProductItemComponent } from './component/shared/product-item/product-item.component';
-import { IglooViewComponent } from './component/igloo/igloo-view/igloo-view.component';
-import { IglooCreateComponent } from './component/igloo/igloo-create/igloo-create.component';
-import { IglooEditComponent } from './component/igloo/igloo-edit/igloo-edit.component';
-import { ZanzeeViewComponent } from './component/zanzee/zanzee-view/zanzee-view.component';
-import { ZanzeeCreateComponent } from './component/zanzee/zanzee-create/zanzee-create.component';
-import { ZanzeeEditComponent } from './component/zanzee/zanzee-edit/zanzee-edit.component';
-import { LovelloEditComponent } from './component/lovello/lovello-edit/lovello-edit.component';
-import { LovelloViewComponent } from './component/lovello/lovello-view/lovello-view.component';
-import { LovelloCreateComponent } from './component/lovello/lovello-create/lovello-create.component';
-import { KazifarmViewComponent } from './component/kazifarm/kazifarm-view/kazifarm-view.component';
-import { KazifarmCreateComponent } from './component/kazifarm/kazifarm-create/kazifarm-create.component';
-import { KazifarmEditComponent } from './component/kazifarm/kazifarm-edit/kazifarm-edit.component';
-import { SavoyReportComponent } from './component/report/savoy-report/savoy-report.component';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyMaterialModule } from '@ngx-formly/material';
+import { ProductRepeatComponent } from './component/shared/product-repeat/product-repeat.component';
+import { CompanyViewComponent } from './component/Company/company-view/company-view.component';
+import { ProductViewComponent } from './component/Product/product-view/product-view.component';
+import { ProductCreateComponent } from './component/Product/product-create/product-create.component';
+import { ProductUpdateComponent } from './component/Product/product-update/product-update.component';
+import { StockReportComponent } from './component/report/stock-report/stock-report.component';
+import { DistributionViewComponent } from './component/distribution/distribution-view/distribution-view.component';
+import { DistributionCreateComponent } from './component/distribution/distribution-create/distribution-create.component';
+import { DistributionConfigComponent } from './component/distribution/distribution-config/distribution-config.component';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+import { FormlyMatToggleModule } from '@ngx-formly/material/toggle';
+import { DistributionReportComponent } from './component/distribution/distribution-report/distribution-report.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { DamageaddComponent } from './component/modal/damageadd/damageadd.component';
+import { CommisionaddComponent } from './component/modal/commisionadd/commisionadd.component';
+import { ConcernViewComponent } from './component/concernPerson/concern-view/concern-view.component';
+import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
+import { DistributionEditComponent } from './component/distribution/distribution-edit/distribution-edit.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { UserviewComponent } from './component/User/userview/userview.component';
 
 
 
@@ -45,35 +56,57 @@ import { SavoyReportComponent } from './component/report/savoy-report/savoy-repo
     HomeComponent,
     FileContainerComponent,
     SignInComponent,
-    RegisterComponent,
-    SavoyViewComponent,
-    SavoyCreateComponent,
+    StockViewComponent,
+    StockCreateComponent,
     ProductItemComponent,
-    IglooViewComponent,
-    IglooCreateComponent,
-    IglooEditComponent,
-    ZanzeeViewComponent,
-    ZanzeeCreateComponent,
-    ZanzeeEditComponent,
-    LovelloEditComponent,
-    LovelloViewComponent,
-    LovelloCreateComponent,
-    KazifarmViewComponent,
-    KazifarmCreateComponent,
-    KazifarmEditComponent,
-    SavoyReportComponent
+    ProductRepeatComponent,
+    CompanyViewComponent,
+    ProductViewComponent,
+    ProductCreateComponent,
+    ProductUpdateComponent,
+    StockReportComponent,
+    ProductRepeatComponent,
+    DistributionViewComponent,
+    DistributionCreateComponent,
+    DistributionConfigComponent,
+    DistributionReportComponent,
+    DamageaddComponent,
+    CommisionaddComponent,
+    ConcernViewComponent,
+    StockEditComponent,
+    DistributionEditComponent,
+    RegisterComponent,
+    UserviewComponent
   ],
   imports: [
     BrowserModule,
+    NgbModule,
     AppRoutingModule,
+    CommonModule,
     BrowserAnimationsModule,
     HttpClientModule,
     DatePipe,
     ReactiveFormsModule,
     LayoutModule,
     MatModule,
+    MatDialogModule,
+    MatMenuModule,
     MatTabsModule,
-    FormsModule
+    FormsModule,
+    MatToolbarModule,
+    FormlyMatToggleModule,
+    MatExpansionModule,
+    FormlyModule.forRoot({
+      extras: { lazyRender: true, resetFieldOnHide: true },
+      validationMessages: [
+        { name: 'required', message: 'This field is required' },
+      ],
+      types: [
+        { name: 'product-repeat', component: ProductRepeatComponent },
+        { name: 'product-distribution', component: DistributionConfigComponent }
+      ],
+    }),
+    FormlyMaterialModule
   ],
   providers: [
     HttpClient,

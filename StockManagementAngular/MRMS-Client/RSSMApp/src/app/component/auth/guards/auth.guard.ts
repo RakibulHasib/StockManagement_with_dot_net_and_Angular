@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from '../../../services/Authentication/authentication.service';
 import { NotificationService } from '../../../services/Shared/notification.service';
@@ -8,12 +8,8 @@ import { NotificationService } from '../../../services/Shared/notification.servi
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
-  //canActivate(
-  //  route: ActivatedRouteSnapshot,
-  //  state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-  //  return true;
-  //}
+export class AuthGuard  {
+ 
   constructor(
     private auth: AuthenticationService,
     private router: Router,
@@ -22,15 +18,25 @@ export class AuthGuard implements CanActivate {
 
   ) { }
 
-  canActivate(): boolean {
-    if (this.auth.isLogedIn()) {
-      return true;
-    }
-    else {
-      this.notifyService.message('Need to Login', 'DISMISS')
-      this.router.navigate(['login'])
-      return false;
-    }
 
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | boolean | UrlTree {
+    if (!this.auth.isAuthenticated()) {
+      this.notifyService.message('Need to Login', 'DISMISS')
+      this.router.navigate(['signin']);
+      return false; // Prevent further processing
+    }
+    return true; // Allow navigation if authenticated
   }
+
+  // canActivate(): boolean {
+  //   if (this.auth.isLogedIn()) {
+  //     return true;
+  //   }
+  //   else {
+  //     this.notifyService.message('Need to Login', 'DISMISS')
+  //     this.router.navigate(['login'])
+  //     return false;
+  //   }
+
+  // }
 }

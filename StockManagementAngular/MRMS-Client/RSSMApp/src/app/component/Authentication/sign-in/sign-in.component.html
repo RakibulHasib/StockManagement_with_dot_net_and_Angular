@@ -1,19 +1,19 @@
 <div class="login">
   <div class="login-content">
-    <mat-toolbar class="login-toolbar" color="primary">MRMS</mat-toolbar>
+    <mat-toolbar class="login-toolbar" color="primary">RSSM</mat-toolbar>
     <mat-card>
       <form [formGroup]="loginForm" >
         <mat-form-field class="f-w">
           <mat-icon matPrefix>person_outline</mat-icon>
-          <input autofocus type="text" matInput placeholder="Username" formControlName="username">
+          <input autofocus type="text" matInput placeholder="Username" formControlName="username" required="true">
         </mat-form-field>
 
         <mat-form-field class="f-w">
           <mat-icon matPrefix>lock_outline</mat-icon>
-          <input type="password" autocomplete="false" matInput placeholder="Password" formControlName="password">
+          <input type="password" autocomplete="false" matInput placeholder="Password" formControlName="password" required="true">
         </mat-form-field>
 
-        <button (click)="onLogIn()" style="width:100%"  type="submit" [disabled]="loginForm.invalid" mat-raised-button color="primary" >LOGIN</button>
+        <button (click)="onLogIn()" style="width:100%"  type="submit"  mat-raised-button color="primary" >LOGIN</button>
       </form>
       <br>
       <!--<span> &nbsp;  &nbsp;If You don't have a account yet please <a routerLink='/registration'>REGISTER HERE</a></span>

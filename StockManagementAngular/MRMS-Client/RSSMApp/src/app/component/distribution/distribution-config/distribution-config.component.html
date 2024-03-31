@@ -1,0 +1,12 @@
+<div *ngFor="let field of field.fieldGroup; let i = index" class="row align-items-baseline">
+  <formly-field class="col-11" [field]="field" ></formly-field>
+  <div class="col-1 d-flex justify-content-between align-items-center" style="align-self: flex-start;">
+    <button class="btn btn-primary" type="button" (click)="add()">+</button>
+    <button *ngIf="i > 0" class="btn btn-danger" type="button" (click)="remove(i)">-</button>
+  </div>
+</div>
+
+
+
+
+

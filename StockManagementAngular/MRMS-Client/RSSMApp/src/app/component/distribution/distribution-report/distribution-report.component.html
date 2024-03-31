@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<style>
+  table, th, td {
+    border: 1px solid black;
+  }
+</style>
+<body>
+  <div class="row">
+      <div class="col-4">
+        <h3 style="padding-left:40px;padding-top:10px">রেজি নং-</h3>
+      </div>
+      <div class="col-4">
+        <h1 style="text-align:center;font-weight:1000">সংশ্লিষ্ট ব্যক্তি : {{salesReportData.concernPerson}}</h1>
+      </div>
+      <div class="col-4">
+        <h3 style="padding-top:10px;margin-left:250px">তারিখ : {{salesReportData.creationTime| date:'yyyy-MM-dd'}}</h3>
+      </div>
+  </div>
+
+  <table style="width:100%" id="contentToConvert" class="table table-primary">
+    <tr>
+      <th>ক্রঃনং</th>
+      <th>পণ্যের নাম</th>
+      <th>মূল্য</th>
+      <th>গ্রহণ</th>
+      <th>ফেরৎ</th>
+      <th>বিক্রি</th>
+      <th>মোট বিক্রিত মূল্য</th>
+    </tr>
+    <tr *ngFor="let element of salesReportData?.reportDetails; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ element.productName }}</td>
+      <td>{{ element.price }}</td>
+      <td>{{ element.receiveQuantity }}</td>
+      <td>{{ element.returnQuantity }}</td>
+      <td>{{ element.salesQuantity }}</td>
+      <td>{{ element.totalSalesPrice }}</td>
+    </tr>
+  </table>
+
+  <div class="btn">
+    <input type="button" class="btn btn-secondary" value="Back" [routerLink]="['/sales-view']" />
+    <input type="button" class="btn btn-primary" value="Print Report" (click)="convetToPDF()" />
+  </div>
+</body>
+</html>
+

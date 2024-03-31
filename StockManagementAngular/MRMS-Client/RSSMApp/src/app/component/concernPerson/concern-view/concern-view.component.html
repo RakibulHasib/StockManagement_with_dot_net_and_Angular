@@ -1,0 +1,107 @@
+<mat-card class="mat-elevation-z3">
+    <mat-card-header class="row">
+      <div class="d-flex justify-content-between">
+        <div>
+          <mat-card-title class="h5"> তালিকা</mat-card-title>
+        </div>
+        <div class="d-flex align-items-center">
+         
+            <!-- <a mat-mini-fab class="btn btn-primary" [routerLink]="['/concernpersoncreate']">
+                <mat-icon>add_box</mat-icon>
+              </a> -->
+              <button mat-mini-fab class="btn btn-primary" (click)="onCreate(createModal)">
+                <mat-icon>add_box</mat-icon>
+              </button>
+              
+        </div>
+       
+      </div>
+
+    </mat-card-header>
+  
+    <mat-card-content>
+  
+      <div class="row mt-2">
+        <div class="col">
+          <mat-form-field appearance="fill" class="f-w mb-1">
+            <mat-label>নাম অনুযায়ী অনুসন্ধান </mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="নাম অনুযায়ী অনুসন্ধান" #input>
+          </mat-form-field>
+          
+        </div>
+  
+      </div>
+      <mat-table [dataSource]="dataSource" matSort style="text-align:center">
+  
+  
+        <ng-container matColumnDef="concernpersonName">
+          <mat-header-cell *matHeaderCellDef mat-sort-header > নাম</mat-header-cell>
+          <mat-cell *matCellDef="let element" [style.text-align]="'center'" >{{element.concernPersonName}} </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="actions" class="action" style="width: 80px;align-items:end;">
+          <mat-header-cell *matHeaderCellDef mat-sort-header  class="action" >Action</mat-header-cell>
+          <mat-cell *matCellDef="let element" class="action">
+            <button mat-raised-button color="primary" class="icon-spacing" (click)="onEdit(updateModal,element)" >Edit</button>
+            <button mat-raised-button  color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.concernPersonId, element)" >Delete</button>
+          </mat-cell>
+        </ng-container>
+  
+        <mat-header-row *matHeaderRowDef="columnList" class="bold-header"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: columnList;"></mat-row>
+  
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20, 40]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+  
+    </mat-card-content>
+  </mat-card>
+
+
+
+
+
+
+
+  <!-- Create Concern Person -->
+<ng-template #createModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> নতুন ব্যক্তি যোগ করুন </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="insert()">
+      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
+        <button type="submit" class="btn btn-outline-dark">Save</button>
+      </div>
+    </form>
+    
+  </div>
+</ng-template>
+
+
+
+
+<!-- Update Update Concern Person -->
+<ng-template #updateModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> ব্যক্তি আপডেট করুন</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal(modal)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="update()">
+      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
+      
+      <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
+        <button type="submit" class="btn btn-outline-dark"(click)="modal.dismiss()">Update</button>
+      </div>
+    </form>
+    
+  </div>
+</ng-template>
+
+  

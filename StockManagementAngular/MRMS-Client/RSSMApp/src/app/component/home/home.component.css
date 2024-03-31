@@ -1,33 +1,47 @@
 .example-card {
-  width: 325px;
-  max-height:200px;
+  width: 219px;
   display:inline-block;
   padding:20px;
   margin:20px;
-}
-mat-card-content{
-    text-align:center;
-    padding:10px;
-    padding-top:15px;
-    font-size:3em;
-}
-#demand {
-  background-color: #4fffe63a;
+  text-align: center;
+  border-radius: 2rem;
+  box-shadow: 20rem;
+  border-width: 2px;
+  padding-right: -6px;
+  position: relative;
 }
 
-#trade {
-  background-color: #3bff9f7e; /* Yellow */
+   p {
+        font-weight: bold;
+        width: 140px;
+        font-size: 15px;
+        color: #333;
+        margin: 0;
+        padding: 10px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+.modal-body {
+  border-top: 2px solid gray;
+  padding: 0 0 !important;   
 }
 
-#agency {
-  background-color: #4caf5066; /* Green */
+.component-val-container {
+  height: calc(98vh - 125px);
+  overflow: auto;
 }
 
-#applicant {
-  background-color: #2196f373; /* Blue */
+.component-val-item {
+  padding: 30px;
 }
 
-#agent {
-  background-color: #9c27b066; /* Purple */
+button {
+  outline: none;
+  border: none;
+  background: none;
+  padding: 0px 10px;
+  font-size: 24px;
 }
 

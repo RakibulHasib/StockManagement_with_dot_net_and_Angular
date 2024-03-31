@@ -5,29 +5,42 @@ import { FileContainerComponent } from './component/shared/file-container/file-c
 import { RegisterComponent } from './component/Authentication/register/register.component';
 import { SignInComponent } from './component/Authentication/sign-in/sign-in.component';
 import { AuthGuard } from './component/auth/guards/auth.guard';
-import { SavoyViewComponent } from './component/savoy/savoy-view/savoy-view.component';
-import { SavoyCreateComponent } from './component/savoy/savoy-create/savoy-create.component';
-import { IglooViewComponent } from './component/igloo/igloo-view/igloo-view.component';
-import { LovelloViewComponent } from './component/lovello/lovello-view/lovello-view.component';
-import { ZanzeeViewComponent } from './component/zanzee/zanzee-view/zanzee-view.component';
-import { KazifarmViewComponent } from './component/kazifarm/kazifarm-view/kazifarm-view.component';
-import { SavoyReportComponent } from './component/report/savoy-report/savoy-report.component';
+import { StockViewComponent } from './component/stock/stock-view/stock-view.component';
+import { StockCreateComponent } from './component/stock/stock-create/stock-create.component';
+import { StockReportComponent } from './component/report/stock-report/stock-report.component';
+import { DistributionCreateComponent } from './component/distribution/distribution-create/distribution-create.component';
+import { ProductViewComponent } from './component/Product/product-view/product-view.component';
+import { ProductCreateComponent } from './component/Product/product-create/product-create.component';
+import { DistributionViewComponent } from './component/distribution/distribution-view/distribution-view.component';
+import { DistributionReportComponent } from './component/distribution/distribution-report/distribution-report.component';
+import { CompanyViewComponent } from './component/Company/company-view/company-view.component'
+import { ConcernViewComponent } from './component/concernPerson/concern-view/concern-view.component';
+import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
+import { DistributionEditComponent } from './component/distribution/distribution-edit/distribution-edit.component';
+import { Company } from './models/companyenum/company';
+import { UserviewComponent } from './component/User/userview/userview.component';
+
 
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
-  { path: 'home', component: HomeComponent },
+  { path: 'home', component: HomeComponent,canActivate: [AuthGuard] },
   { path: 'signUp', component: RegisterComponent },
   { path: 'signin', component: SignInComponent },
   { path: 'FileContainer', component: FileContainerComponent, canActivate: [AuthGuard] },
-  { path: 'savoy', component: SavoyViewComponent, canActivate: [AuthGuard] },
-  { path: 'savoy-create', component: SavoyCreateComponent, canActivate: [AuthGuard] },
-  { path: 'igloo', component: IglooViewComponent, canActivate: [AuthGuard] },
-  { path: 'lovello', component: LovelloViewComponent, canActivate: [AuthGuard] },
-  { path: 'zanzee', component: ZanzeeViewComponent, canActivate: [AuthGuard] },
-  { path: 'kazifarm', component: KazifarmViewComponent, canActivate: [AuthGuard] },
-  { path: 'savoy_report/:id', component: SavoyReportComponent, canActivate: [AuthGuard] }
-
+  { path: 'stock-view', component: StockViewComponent, canActivate: [AuthGuard] },
+  { path: 'stock-create/:id', component: StockCreateComponent, canActivate: [AuthGuard] },
+  { path: 'stock-edit/:id', component: StockEditComponent, canActivate: [AuthGuard] },
+  { path: 'stock-report/:id', component: StockReportComponent, canActivate: [AuthGuard] },
+  { path: 'sales-create/:id', component: DistributionCreateComponent, canActivate: [AuthGuard] },
+  { path: 'sales-view', component: DistributionViewComponent, canActivate: [AuthGuard] },
+  { path: 'sales-edit/:id', component: DistributionEditComponent, canActivate: [AuthGuard] },
+  { path:  'sales-report/:id', component:DistributionReportComponent,canActivate:[AuthGuard]},
+  { path: 'productView', component: ProductViewComponent, canActivate: [AuthGuard] },
+  { path: 'productAdd/:id', component: ProductCreateComponent, canActivate: [AuthGuard] },
+  { path: 'companyview', component: CompanyViewComponent, canActivate: [AuthGuard] },
+  { path: 'concernpersonview', component: ConcernViewComponent, canActivate: [AuthGuard] },
+  { path: 'userview',component:UserviewComponent,canActivate:[AuthGuard]}
 
 ];
 

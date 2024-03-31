@@ -11,11 +11,10 @@ export class NotificationService {
   ) { }
   message(message: string, actions: string) {
     let config: MatSnackBarConfig = {
-      duration: 3000,
-      panelClass: []
-      //duration: 3000,
-      //horizontalPosition: 'right',
-      //verticalPosition: 'top'
+      duration: 5000,
+      panelClass: [],
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
     }
     this.snackBar.open(message, actions, config);
   }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
-using StockManagement.Model;
+using StockManagement.Contexts;
+using StockManagement.Entities;
 
 namespace StockManagement.Repository
 {
@@ -11,35 +12,18 @@ namespace StockManagement.Repository
 
         public Repository<Company, int> Company { get; }
 
-        public Repository<SavoyIceCream, int> SavoyIceCream { get; }
-        public Repository<SavoyIceCreamMaster_tbl,int> SavoyIceCreamMaster_tbl { get; }
+        public Repository<Stock, long> Stock { get; }
+        public Repository<StockDetail, Guid> StockDetail { get; }
 
-        public Repository<ZaNZeeIceCream, int> ZaNZeeIceCream { get; }
-        public Repository<ZaNZeeIceCreamMaster_tbl,int> ZaNZeeIceCreamMaster_tbl { get; }
+        public Repository<SalesDistribute, long> SalesDistribute { get; }
+        public Repository<SalesDistributeDetail, Guid> SalesDistributeDetail { get; }
 
-        public Repository<LovelloIceCream, int> LovelloIceCream { get; }
-        public Repository<LovelloIceCreamMaster_tbl,int> LovelloIceCreamMaster_tbl { get; }
-        public Repository<IglooIceCream, int> IglooIceCream { get; }
-        public Repository<IglooIceCreamMaster_tbl, int> IglooIceCreamMaster_tbl { get; }
-        public Repository<KaziFarmFood, int> KaziFarmFood { get; }
-        public Repository<KaziFarmFoodMaster_tbl, int> KaziFarmFoodMaster_tbl { get; }
+        public Repository<ConcernPerson, int> ConcernPerson { get; }
+        public Repository<User, int> Users { get; }
+        public Repository<RoleMaster, int> RoleMaster { get; }
+        public Repository<RoleAssagin, int> RoleAssagin { get; }
 
-        public UnitOfWork(StockDBContext context, Repository<Product, int> product, Repository<Company, int> company, Repository<SavoyIceCream, int> savoyIceCream, Repository<ZaNZeeIceCream, int> zaNZeeIceCream, Repository<LovelloIceCream, int> lovelloIceCream, Repository<IglooIceCream, int> iglooIceCream, Repository<KaziFarmFood, int> kaziFarmFood, Repository<SavoyIceCreamMaster_tbl, int> savoyIceCreamMaster_tbl, Repository<ZaNZeeIceCreamMaster_tbl, int> zaNZeeIceCreamMaster_tbl, Repository<LovelloIceCreamMaster_tbl, int> lovelloIceCreamMaster_tbl, Repository<IglooIceCreamMaster_tbl, int> iglooIceCreamMaster_tbl, Repository<KaziFarmFoodMaster_tbl, int> kaziFarmFoodMaster_tbl)
-        {
-            this.context = context;
-            Product = product;
-            Company = company;
-            SavoyIceCream = savoyIceCream;
-            ZaNZeeIceCream = zaNZeeIceCream;
-            LovelloIceCream = lovelloIceCream;
-            IglooIceCream = iglooIceCream;
-            KaziFarmFood = kaziFarmFood;
-            SavoyIceCreamMaster_tbl = savoyIceCreamMaster_tbl;
-            ZaNZeeIceCreamMaster_tbl = zaNZeeIceCreamMaster_tbl;
-            LovelloIceCreamMaster_tbl = lovelloIceCreamMaster_tbl;
-            IglooIceCreamMaster_tbl = iglooIceCreamMaster_tbl;
-            KaziFarmFoodMaster_tbl = kaziFarmFoodMaster_tbl;
-        }
+
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return await context.SaveChangesAsync(cancellationToken);
@@ -51,6 +35,22 @@ namespace StockManagement.Repository
         }
 
         private bool disposed;
+
+        public UnitOfWork(StockDBContext context, Repository<User, int> users, Repository<Product, int> product, Repository<Company, int> company, Repository<Stock, long> stock, Repository<StockDetail, Guid> stockDetail, Repository<SalesDistribute, long> salesDistribute, Repository<SalesDistributeDetail, Guid> salesDistributeDetail, Repository<ConcernPerson, int> concernPerson, Repository<RoleMaster, int> roleMaster, Repository<RoleAssagin, int> roleAssagin)
+        {
+            this.context = context;
+            Product = product;
+            Company = company;
+            Stock = stock;
+            StockDetail = stockDetail;
+            SalesDistribute = salesDistribute;
+            SalesDistributeDetail = salesDistributeDetail;
+            ConcernPerson = concernPerson;
+            Users = users;
+            RoleMaster = roleMaster;
+            RoleAssagin = roleAssagin;
+        }
+
         public void Dispose()
         {
             Dispose(true);

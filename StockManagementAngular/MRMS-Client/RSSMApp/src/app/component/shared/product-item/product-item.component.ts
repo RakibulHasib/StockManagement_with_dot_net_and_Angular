@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Savoy } from 'src/app/models/Savoy/Savoy';
+import { Stock } from '../../../models/Stock/Stock';
 
 @Component({
   selector: 'app-product-item',
@@ -8,8 +8,8 @@ import { Savoy } from 'src/app/models/Savoy/Savoy';
 })
 export class ProductItemComponent {
 
-  @Input() productData: Savoy = new Savoy();
-  @Output() productDataChange = new EventEmitter<Savoy>();
+  @Input() productData: Stock = new Stock();
+  @Output() productDataChange = new EventEmitter<Stock>();
 
   updateProductData() {
     this.productDataChange.emit(this.productData);
@@ -27,10 +27,10 @@ export class ProductItemComponent {
     return price * quantity;
   }
 
-  getRemaining() : number{
-    const dumping = Number(this.productData.dumping || 0);
-    const receive = Number(this.productData.receive || 0);
-    return dumping - receive;
-  }
+  // getRemaining() : number{
+  //   const dumping = Number(this.productData.dumping || 0);
+  //   const receive = Number(this.productData.receive || 0);
+  //   return dumping - receive;
+  // }
 
 }
