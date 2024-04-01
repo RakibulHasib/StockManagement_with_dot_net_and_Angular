@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using StockManagement.Services;
 using System.Reflection;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 Microsoft.Extensions.Configuration.ConfigurationManager configuration = builder.Configuration;
@@ -113,5 +110,10 @@ app.UseCors(x =>
 });
 
 app.MapControllers();
+
+app.MapGet("/", async context =>
+{
+    await context.Response.WriteAsync($"RSSM - A Roshs Sweets Stock Management Api");
+});
 
 app.Run();
