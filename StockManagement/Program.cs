@@ -1,9 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using StockManagement.Middlewares;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-Microsoft.Extensions.Configuration.ConfigurationManager configuration = builder.Configuration;
+ConfigurationManager configuration = builder.Configuration;
+
+builder.Host.UseSerilog((_, config) =>
+{
+    config.ReadFrom.Configuration(builder.Configuration);
+});
 
 // Add services to the container.
 
@@ -101,6 +108,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseCors(x =>
 {
