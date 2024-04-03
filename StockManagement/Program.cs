@@ -113,9 +113,9 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseCors(x =>
 {
+    x.WithOrigins("roshsfoodsandsweets.com", "www.roshsfoodsandsweets.com", "https://www.roshsfoodsandsweets.com", "https://roshsfoodsandsweets.com");
     x.AllowAnyHeader();
     x.AllowAnyMethod();
-    x.AllowAnyOrigin();
 });
 
 app.MapControllers();
