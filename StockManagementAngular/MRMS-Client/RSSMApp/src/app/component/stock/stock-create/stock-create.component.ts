@@ -160,7 +160,7 @@ export class StockCreateComponent implements OnInit {
             },
             expressions: {
               'model.total': 'parseInt(model.eja) + (model.newProduct ? parseInt(model.newProduct) : 0)',
-            }
+            },
           },
           {
             className: 'flex-1 width-115',
