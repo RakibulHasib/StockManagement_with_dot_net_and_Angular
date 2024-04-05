@@ -185,7 +185,7 @@ export class StockReportComponent implements OnInit {
                       x.totalAmount
                     ]),
                     [
-                      { colSpan:6, text: 'Total Price : ', bold: true, fontSize: 10, alignment: 'right' },
+                      { colSpan:6, text: 'মোট মূল্যঃ ', font: 'Adorsholipi', bold: true, fontSize: 10, alignment: 'right' },
                       {},
                       {},
                       {},
@@ -194,7 +194,7 @@ export class StockReportComponent implements OnInit {
                       { text: this.stockReportData.totalPrice, bold: true, fontSize: 10, alignment: 'left' },
                     ],
                     [
-                      { colSpan:6, text: '(-) Damage Price : ', bold: true, fontSize: 10, alignment: 'right' },
+                      { colSpan:6, text: '(-) ড্যামেজ মূল্যঃ ', font: 'Adorsholipi', bold: true, fontSize: 10, alignment: 'right' },
                       {},
                       {},
                       {},
@@ -203,7 +203,7 @@ export class StockReportComponent implements OnInit {
                       { text: this.stockReportData.damageAmount, bold: true, fontSize: 10, alignment: 'left' },
                     ],
                     [
-                      { colSpan:6, text: 'Total Price : ', bold: true, fontSize: 10, alignment: 'right' },
+                      { colSpan:6, text: 'মোট মুল্যঃ ', font: 'Adorsholipi', bold: true, fontSize: 10, alignment: 'right' },
                       {},
                       {},
                       {},
@@ -212,7 +212,7 @@ export class StockReportComponent implements OnInit {
                       { text: this.stockReportData.afterDamagePrice, bold: true, fontSize: 10, alignment: 'left' },
                     ],
                     [
-                      { colSpan:6, text: '(-) S/R Commission : ', bold: true, fontSize: 10, alignment: 'right' },
+                      { colSpan:6, text: '(-) এস/আর কমিশনঃ ', font: 'Adorsholipi', bold: true, fontSize: 10, alignment: 'right' },
                       {},
                       {},
                       {},
@@ -221,7 +221,7 @@ export class StockReportComponent implements OnInit {
                       { text: this.stockReportData.srcommission, bold: true, fontSize: 10, alignment: 'left' },
                     ],
                     [
-                      { colSpan:6, text: 'Net Price : ', bold: true, fontSize: 10, alignment: 'right' },
+                      { colSpan:6, text: 'নিট মূল্যঃ ', font: 'Adorsholipi', bold: true, fontSize: 10, alignment: 'right' },
                       {},
                       {},
                       {},
@@ -285,7 +285,7 @@ export class StockReportComponent implements OnInit {
           color: '#253da1'
         }
       };
-      pdfMake.createPdf(docDefinition).open();
+      pdfMake.createPdf(docDefinition).print();
     };
     
 
