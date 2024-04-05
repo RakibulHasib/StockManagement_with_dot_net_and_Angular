@@ -257,7 +257,7 @@ namespace StockManagement.Services
         public async Task<bool> CheckTodayConcernPersonDistribution(int ConcernPersonId)
         {
             var data = await _unitOfWork.SalesDistribute.Queryable
-                .Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ConcernPersonId == ConcernPersonId)
+                .Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ConcernPersonId == ConcernPersonId && a.IsDeleted == 0)
                 .Select(a => a.ConcernPersonId)
                 .FirstOrDefaultAsync();
 
