@@ -304,6 +304,25 @@ export class DistributionCreateComponent implements OnInit {
               validation: {
                 messages: { required: "Sales quantity required" }
               },
+              hooks:{
+                onInit: (field: FormlyFieldConfig)=>{
+                  const salesQuantityControl = field.formControl;
+                  const totalQuantityControl = field.form?.get('totalQuantity');
+            
+                  if (salesQuantityControl && totalQuantityControl) {
+                    salesQuantityControl.valueChanges.subscribe({
+                      next: (value) => {
+                        const totalQuantity = totalQuantityControl.value;
+                        if (totalQuantity !== null && value !== null && totalQuantity < value) {
+                          salesQuantityControl.setErrors({ 'invalidQuantity': true });
+                        } else {
+                          salesQuantityControl.setErrors(null);
+                        }
+                      }
+                    });
+                  }
+                }
+              }
             },
             {
               className: 'totalSalesPrice flex-1 width-160',
