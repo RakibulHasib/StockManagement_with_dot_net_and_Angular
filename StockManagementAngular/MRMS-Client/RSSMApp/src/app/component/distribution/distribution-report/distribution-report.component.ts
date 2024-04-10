@@ -87,7 +87,8 @@ export class DistributionReportComponent {
             alignment: 'center',
           },
           {
-            text: 'Concern Person : '+this.salesReportData.concernPerson,
+            text: 'সংশ্লিষ্ট ব্যক্তিঃ ' + this.salesReportData.concernPerson,
+            font: 'Adorsholipi',
             bold: true,
             fontSize: 16, // Adjust the font size as needed
             alignment: 'center',
@@ -117,7 +118,15 @@ export class DistributionReportComponent {
                         x.returnQuantity,
                         x.salesQuantity,
                         x.totalSalesPrice
-                      ])
+                      ]),
+                      // [
+                      //   { colSpan:5, text: 'মোট মূল্যঃ ', font: 'Adorsholipi', bold: true, fontSize: 10, alignment: 'right' },
+                      //   {},
+                      //   {},
+                      //   {},
+                      //   {},
+                      //   { text: 'this.stockReportData.totalPrice', bold: true, fontSize: 10, alignment: 'left' },
+                      // ],
                     ],
                   alignment: "center",
                 }
@@ -127,6 +136,6 @@ export class DistributionReportComponent {
           }
         ]
       };
-      pdfMake.createPdf(docDefinition).open();
+      pdfMake.createPdf(docDefinition).print();
     };
 }
