@@ -142,6 +142,27 @@ export class StockCreateComponent implements OnInit {
             },
             validation: {
               messages:{required:" "}
+            },
+            hooks:{
+              onInit: (field: FormlyFieldConfig)=>{
+                const newProductControl = field.formControl;
+                const salesQuantityControl = field.form?.get('salesQuantity');
+                const ejaCoontrol = field.form?.get('eja');
+          
+                if (newProductControl && salesQuantityControl) {
+                  newProductControl.valueChanges.subscribe({
+                    next: (value) => {
+                      const totalQuantity = salesQuantityControl.value;
+                      const ejaQuatity = ejaCoontrol?.value;
+                      if (totalQuantity !== null && value !== null && totalQuantity > value + ejaQuatity) {
+                        newProductControl.setErrors({ 'invalidQuantity': true });
+                      } else {
+                        newProductControl.setErrors(null);
+                      }
+                    }
+                  });
+                }
+              }
             }
           },
           {
@@ -160,7 +181,7 @@ export class StockCreateComponent implements OnInit {
             },
             expressions: {
               'model.total': 'parseInt(model.eja) + (model.newProduct ? parseInt(model.newProduct) : 0)',
-            },
+            }
           },
           {
             className: 'flex-1 width-115',
