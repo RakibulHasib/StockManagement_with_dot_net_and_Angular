@@ -72,8 +72,7 @@ namespace StockManagement.Controllers
                                         ProductId = product.ProductId,
                                         ProductName = product.ProductName,
                                         Price = product.Price,
-                                        CurrentStock = ((ps?.Eja ?? 0) + (ps?.RestockQuantity ?? 0)) - ps?.SalesQuantity ?? 0,
-                                        PreviousStock = ps?.Eja ?? 0
+                                        CurrentStock = ps?.Eja ?? 0
                                     };
 
             return productsWithStock.ToList();
