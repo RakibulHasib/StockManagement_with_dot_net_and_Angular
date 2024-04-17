@@ -40,7 +40,8 @@ const routes: Routes = [
   { path: 'productAdd/:id', component: ProductCreateComponent, canActivate: [AuthGuard] },
   { path: 'companyview', component: CompanyViewComponent, canActivate: [AuthGuard] },
   { path: 'concernpersonview', component: ConcernViewComponent, canActivate: [AuthGuard] },
-  { path: 'userview',component:UserviewComponent,canActivate:[AuthGuard]}
+  { path: 'userview',component:UserviewComponent,canActivate:[AuthGuard]},
+  { path: '**', component: SignInComponent },
 
 ];
 

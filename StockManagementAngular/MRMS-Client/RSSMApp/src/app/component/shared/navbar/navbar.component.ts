@@ -71,9 +71,6 @@ companies = {
         filter((event: any) => event instanceof NavigationStart)
       )
       .subscribe((event: NavigationStart) => {
-
-        console.log("For address bar",event.navigationTrigger)
-        // Handle browser back and forward button clicks
         if (event.navigationTrigger === 'popstate') {
           if(event.url=="/signin"|| event.url=="/"){
             this.drawer.close();
