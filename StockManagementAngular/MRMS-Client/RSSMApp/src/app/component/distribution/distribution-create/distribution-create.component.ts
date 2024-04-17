@@ -134,7 +134,7 @@ export class DistributionCreateComponent implements OnInit {
           fieldGroupClassName: 'display-flex',
           fieldGroup: [
             {
-              className: 'product flex-1 width-160',
+              className: 'product flex-1 width-500',
               type: 'select',
               key: 'productId',
               templateOptions: {
@@ -182,7 +182,7 @@ export class DistributionCreateComponent implements OnInit {
               // }
             },
             {
-              className: 'price flex-1 width-160',
+              className: 'price flex-1 width-120',
               type: 'input',
               key: 'price',
               props: {
@@ -210,7 +210,7 @@ export class DistributionCreateComponent implements OnInit {
                 }
             },
             {
-              className: 'receiveQuantity flex-1 width-160',
+              className: 'receiveQuantity flex-1 width-120',
               type: 'input',
               key: 'receiveQuantity',
               props: {
@@ -229,7 +229,7 @@ export class DistributionCreateComponent implements OnInit {
               }
             },
             {
-              className: 'returnQuantity flex-1 width-160',
+              className: 'returnQuantity flex-1 width-120',
               type: 'input',
               key: 'returnQuantity',
               props: {
@@ -258,7 +258,7 @@ export class DistributionCreateComponent implements OnInit {
                 }
             },
             {
-              className: 'totalQuantity flex-1 width-160',
+              className: 'totalQuantity flex-1 width-140',
               type: 'input',
               key: 'totalQuantity',
               props: {
@@ -304,6 +304,25 @@ export class DistributionCreateComponent implements OnInit {
               validation: {
                 messages: { required: "Sales quantity required" }
               },
+              hooks:{
+                onInit: (field: FormlyFieldConfig)=>{
+                  const salesQuantityControl = field.formControl;
+                  const totalQuantityControl = field.form?.get('totalQuantity');
+            
+                  if (salesQuantityControl && totalQuantityControl) {
+                    salesQuantityControl.valueChanges.subscribe({
+                      next: (value) => {
+                        const totalQuantity = totalQuantityControl.value;
+                        if (totalQuantity !== null && value !== null && totalQuantity < value) {
+                          salesQuantityControl.setErrors({ 'invalidQuantity': true });
+                        } else {
+                          salesQuantityControl.setErrors(null);
+                        }
+                      }
+                    });
+                  }
+                }
+              }
             },
             {
               className: 'totalSalesPrice flex-1 width-160',

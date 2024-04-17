@@ -156,13 +156,13 @@ namespace StockManagement.Services
 
             public async Task<List<ProductDTO>> GetProduct()
         {
-            var data = await _unitOfWork.Product.Queryable
-                                       .Where(a => a.IsDeleted == 0 && a.IsActive == 1)
-                                       .Select(query => new ProductDTO
-                                       {
-                                           ProductId = query.ProductId,
-                                           ProductName = query.ProductName
-                                       }).ToListAsync();
+            var data = await (from p in _unitOfWork.Product.Queryable.Where(a => a.IsDeleted == 0)
+                              join c in _unitOfWork.Company.Queryable.Where(a => a.IsDeleted == 0) on p.CompanyId equals c.CompanyId
+                              select new ProductDTO
+                              {
+                                  ProductId = p.ProductId,
+                                  ProductName = p.ProductName + " (" + c.CompanyName + "),"
+                              }).ToListAsync();
             return data;
         }
 
@@ -257,7 +257,7 @@ namespace StockManagement.Services
         public async Task<bool> CheckTodayConcernPersonDistribution(int ConcernPersonId)
         {
             var data = await _unitOfWork.SalesDistribute.Queryable
-                .Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ConcernPersonId == ConcernPersonId)
+                .Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ConcernPersonId == ConcernPersonId && a.IsDeleted == 0)
                 .Select(a => a.ConcernPersonId)
                 .FirstOrDefaultAsync();
 
