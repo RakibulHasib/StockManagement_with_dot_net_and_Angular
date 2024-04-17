@@ -36,8 +36,6 @@ export class SignInComponent {
      this.cd.detectChanges();
 
     if (this.loginForm.valid) {
-      console.log("Data",this.loginForm.value);
-
       this.auth.login(this.loginForm.value).subscribe({
         next: (res) => {
           switch (res.status) {
@@ -53,10 +51,9 @@ export class SignInComponent {
                   container: 'swal-top'
                 }
               });
-              this.auth.storeToken(res.token);
+              this.auth.storeToken(res.data.token);
               this.loginForm.reset();
               this.router.navigate(['home']);
-              console.log("res", res);
               return;
             case Status.Unapproved:
               Swal.fire({
