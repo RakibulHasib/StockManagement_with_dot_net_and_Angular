@@ -6,6 +6,7 @@ import { AuthenticationService } from '../../../services/Authentication/authenti
 import { Company } from 'src/app/models/companyenum/company';
 import { MatDrawer, MatSidenav } from '@angular/material/sidenav';
 import { NavigationEvent } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-view-model';
+import { UserRole } from 'src/app/models/Enum/UserStatus.enum';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -33,13 +34,12 @@ companies = {
       shareReplay()
   );
   @ViewChild('drawer', { static: false }) drawer!: MatDrawer;
-  
+ 
+  role = UserRole;
   constructor(
     private breakpointObserver: BreakpointObserver,
     public authService: AuthenticationService,
-    private router: Router,
-    
-
+    private router: Router,  
   ) { }
   // @HostListener('window:popstate', ['$event'])
   // onPopState(event: PopStateEvent) {
@@ -75,22 +75,24 @@ companies = {
           if(event.url=="/signin"|| event.url=="/"){
             this.drawer.close();
             this.authService.logout();
-            console.log("auth",this.isAuthenticated())
           } 
           if(event.url=="/home"){
-            console.log("auth",this.isAuthenticated())
             if(!this.isAuthenticated()){
               this.router.navigateByUrl('/signin');
             } 
           }
         }
+  
         // if(event.navigationTrigger==='imperative'){
         //   if(!this.isAuthenticated()){
         //     this.router.navigateByUrl('/signin');
         //   } 
         // }
-       
-        console.groupEnd();
+      //  console.log("User_Details",this.authService.getCurrentUser()) ;
+
+        // console.groupEnd();
+        // this.userData = this.authService.getCurrentUser();
+        // console.log("user_data",this.userData);
       })
   }
 
@@ -108,6 +110,12 @@ companies = {
     return this.authService.isAuthenticated();
   }
 
+  isGlobalAdmin(): boolean {
+    const payload = this.authService.getCurrentUser();
+    return payload && parseInt(payload.role, 10) === this.role.global_admin;
+}
+
+
   logOut() {
    this.authService.logout();
    this.isAuthenticated();
@@ -115,6 +123,4 @@ companies = {
    this.drawer.close()
   }
 
-
-  
 }

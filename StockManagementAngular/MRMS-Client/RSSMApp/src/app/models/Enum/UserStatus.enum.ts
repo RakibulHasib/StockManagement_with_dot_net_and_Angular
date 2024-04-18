@@ -5,3 +5,8 @@ export enum UserStatus {
     Pending
 }
 
+export enum UserRole {
+    admin = 1,
+    global_admin = 101
+}
+

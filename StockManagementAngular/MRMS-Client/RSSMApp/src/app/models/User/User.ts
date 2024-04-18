@@ -13,4 +13,9 @@ export class User {
       public userStatus?: UserStatus
     ) { }
   }
+ export interface UserDetail {
+    name: string; 
+    role: number;
+  }
+  
 

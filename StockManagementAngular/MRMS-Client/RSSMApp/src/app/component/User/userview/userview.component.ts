@@ -59,7 +59,6 @@ export class UserviewComponent implements OnInit {
     this.userDataSvc.userList()
     .subscribe(x=>{
       this.user_data_list=x.data;
-      console.log("user_data",this.user_data_list);
       this.dataSource.data=this.user_data_list;
       this.dataSource.paginator=this.paginator;
       this.dataSource.sort=this.sort;
