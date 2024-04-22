@@ -34,7 +34,7 @@ export class DistributionViewComponent {
   companyId!: number;
   concernPerson: ConcernPerson[]=[];
   dailyDistributeStatus: DailyDistributeStatus[] = []
-  selectedConcernPerson: number=1;
+  selectedConcernPerson: number = 0;
   distibutionId : number = 0;
   distributorStatus = DistributorStatus;
 
@@ -64,8 +64,8 @@ export class DistributionViewComponent {
   ) { }
 
   ngOnInit() {
-    this.selectedConcernPerson = this.stateService.getPreviousState(1)?.selectedConcernPerson || 1;
-    this.distibutionId=this.stateService.getPreviousState(1)?.distibutionId || 1;
+    this.selectedConcernPerson = this.stateService.getPreviousState(1)?.selectedConcernPerson || 0;
+    this.distibutionId = this.stateService.getPreviousState(1)?.distibutionId || 1;
 
     const today = new Date();
     this.endDate = this.formatDate(today);
@@ -90,6 +90,8 @@ export class DistributionViewComponent {
       this.concernPersonSvc.getConcernPerson()
       .subscribe(data=>{
         this.concernPerson=data;
+        const allConcernPerson = new ConcernPerson(0, "সব ডিস্ট্রিভিউটর");
+        this.concernPerson.unshift(allConcernPerson);
       }, err => {
 
         this._notificationSvc.message("Failed to load data", "DISMISS");

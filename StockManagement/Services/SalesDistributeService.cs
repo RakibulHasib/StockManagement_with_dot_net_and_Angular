@@ -27,7 +27,7 @@ namespace StockManagement.Services
             var query = await (from sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0)
                                join cp in _unitOfWork.ConcernPerson.Queryable.Where(a => a.IsDeleted == 0) on sd.ConcernPersonId equals cp.ConcernPersonId
                                where sd.CreationTime.Date >= StartDate.Date && sd.CreationTime.Date <= EndDate.Date
-                                      && cp.ConcernPersonId == ConcernPersonID
+                                      && cp.ConcernPersonId == (ConcernPersonID == 0 ? cp.ConcernPersonId : ConcernPersonID)
                                select new DailyDistributeDataDTO
                                {
                                    SalesDistributeId = sd.SalesDistributeId,

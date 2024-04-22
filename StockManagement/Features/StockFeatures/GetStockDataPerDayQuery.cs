@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using StockManagement.DTO;
+using StockManagement.Entities;
 using StockManagement.Repository;
 
 namespace StockManagement.Features.StockFeatures
@@ -21,9 +22,9 @@ namespace StockManagement.Features.StockFeatures
             {
                 return await _unitOfWork.Stock.Queryable
                     .Where(x => x.CreationTime.Date >= request.StartDate.Date && x.CreationTime.Date <= request.EndDate.Date
-                            && x.CompanyId == request.companyId && x.IsDeleted == 0)
-                    .Select(query => new DailyDataDTO
-                    {
+                    && x.CompanyId == (request.companyId == 0 ? x.CompanyId : request.companyId) && x.IsDeleted == 0)
+                .Select(query => new DailyDataDTO
+                {
                         StockId = query.StockId,
                         CreationTime = query.CreationTime,
                         TotalSalesQuantity = query.TotalSalesQuantity,
