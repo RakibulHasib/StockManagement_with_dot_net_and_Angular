@@ -54,9 +54,10 @@ namespace StockManagement.Contexts
 
             modelBuilder.Entity<ConcernUserCompanyMapping>(entity =>
             {
-                entity.HasKey(e => new { e.ConcernPersonId, e.CompanyId });
-
                 entity.ToTable("ConcernUserCompanyMapping");
+
+                entity.HasIndex(e => new { e.ConcernPersonId, e.CompanyId }, "UniqueConcernUserCompany")
+                    .IsUnique();
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -76,9 +77,9 @@ namespace StockManagement.Contexts
 
             modelBuilder.Entity<ProductStockLog>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("ProductStockLog");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CreationTime)
                     .HasColumnType("datetime")

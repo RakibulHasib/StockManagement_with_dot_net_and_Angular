@@ -11,7 +11,7 @@ namespace StockManagement.Controllers
     public class ConcernCompanyMappingController : BaseController<CompanyController>
     {
         [HttpGet("GetConcernPersonCompanyMapping")]
-        public async Task<ActionResult<IEnumerable<ConcernCompanyMappingDto>>> GetConcernPersonCompanyMapping()
+        public async Task<ActionResult<IEnumerable<ConcernCompanyMappingDTO>>> GetConcernPersonCompanyMapping()
         {
             return await _mediator.Send(new GetConcernCompanyMappingQuery());
         }
