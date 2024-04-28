@@ -31,7 +31,7 @@ public class AuthenticateService : IAuthenticateService
                 StatusCode = (int)HttpStatusCode.Unauthorized,
             };
         }
-        if (user != null && user.UserStatus == UserStatus.Pending && user.IsDeleted == 0)
+        if (user != null && user.UserStatus == (int)UserStatus.Pending && user.IsDeleted == 0)
         {
             return new ApiResponse
             {
@@ -52,7 +52,7 @@ public class AuthenticateService : IAuthenticateService
 
             };
         }
-        else if (user != null && user.UserStatus == UserStatus.Active && user.UserName == userName)
+        else if (user != null && user.UserStatus == (int)UserStatus.Active && user.UserName == userName)
         {
             var token = GenerateToken(user, _key);
             var user_credintial = new SignInResponseDTO()
@@ -74,7 +74,7 @@ public class AuthenticateService : IAuthenticateService
             };
 
         }
-        else if (user != null && user.UserStatus == UserStatus.Active && user.UserName != userName)
+        else if (user != null && user.UserStatus == (int)UserStatus.Active && user.UserName != userName)
         {
             return new ApiResponse()
             {

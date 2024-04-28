@@ -15,5 +15,6 @@ namespace StockManagement.Entities
         public DateTime CreationTime { get; set; }
         public int IsDeleted { get; set; }
         public int Status { get; set; }
+        public int CompanyId { get; set; }
     }
 }

@@ -64,14 +64,6 @@ public class ProductsController : ControllerBase
     [HttpGet("{companyId}")]
     public async Task<ActionResult<IEnumerable<ProductDto>>> GetProduct(int companyId)
     {
-        //var company = await _unitOfWork.Company.Queryable
-        //    .AsNoTracking()
-        //    .Where(x => x.CompanyId == companyId)
-        //    .FirstOrDefaultAsync();
-
-        //if (company is null)
-        //    return NotFound();
-
         var products = await (from p in _unitOfWork.Product.Queryable
                               let salesQ = _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ProductId == p.ProductId && a.IsDeleted == 0).Sum(a => a.SalesQuantity)
                               where p.IsActive == 1 && p.CompanyId == companyId
@@ -85,18 +77,6 @@ public class ProductsController : ControllerBase
                                                                               .FirstOrDefault(),
                                   SalesQuantity = salesQ
                               }).ToListAsync();
-
-        //var products = await _unitOfWork.Product.Queryable
-        //                .Where(x => x.IsActive == 1 && x.CompanyId == companyId)
-        //                .Select(x => new ProductDto
-        //                {
-        //                    ProductId = x.ProductId,
-        //                    ProductName = x.ProductName,
-        //                    Price = x.Price ?? 0,
-        //                    Eja = x.StockDetails.OrderByDescending(x => x.CreationTime)
-        //                                            .Select(x => x.Eja ?? 0)
-        //                                            .FirstOrDefault()
-        //                }).ToListAsync();
 
         return products;
     }

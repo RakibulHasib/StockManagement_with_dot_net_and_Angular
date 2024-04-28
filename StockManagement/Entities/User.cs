@@ -1,5 +1,4 @@
-﻿using StockManagement.Enum;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace StockManagement.Entities
@@ -13,7 +12,7 @@ namespace StockManagement.Entities
         public string Password { get; set; } = null!;
         public string? Token { get; set; }
         public int RoleId { get; set; }
+        public int? UserStatus { get; set; }
         public int IsDeleted { get; set; }
-        public UserStatus? UserStatus { get; set; }
     }
 }

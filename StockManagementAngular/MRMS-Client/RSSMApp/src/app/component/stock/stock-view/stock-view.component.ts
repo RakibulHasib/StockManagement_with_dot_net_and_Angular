@@ -50,7 +50,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
   columnList: string[] = ["createdDate", "totalSalesQuantity", "totalAmount","actions"];
   startDate: string = '';
   endDate: string = '';
-  selectedCompany: number= 1;
+  selectedCompany: number= 0;
   stock: Stock[]=[];
 
   constructor(
@@ -68,7 +68,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    this.selectedCompany = this.stateService.getPreviousState(1)?.selectedCompany || 1;
+    this.selectedCompany = this.stateService.getPreviousState(1)?.selectedCompany || 0;
     this.startDate = this.stateService.getPreviousState(1)?.startDate || this.formatDate(thirtyDaysAgo);
 
     this.router.events.subscribe((event) => {
@@ -102,10 +102,11 @@ export class StockViewComponent implements OnInit, OnDestroy {
 
   fetchCompanyData(){
       this.companySvc.getCompany()
-      .subscribe(data=>{
+      .subscribe(data => {
         this.companies=data;
+        const allCompany = new Company(0, "সব কোম্পানি");
+        this.companies.unshift(allCompany);
       }, err => {
-
         this._notificationSvc.message("Failed to load data", "DISMISS");
       });
   }

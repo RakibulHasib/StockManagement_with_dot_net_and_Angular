@@ -19,7 +19,9 @@ namespace StockManagement.Contexts
 
         public virtual DbSet<Company> Companies { get; set; } = null!;
         public virtual DbSet<ConcernPerson> ConcernPeople { get; set; } = null!;
+        public virtual DbSet<ConcernUserCompanyMapping> ConcernUserCompanyMappings { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
+        public virtual DbSet<ProductStockLog> ProductStockLogs { get; set; } = null!;
         public virtual DbSet<RoleAssagin> RoleAssagins { get; set; } = null!;
         public virtual DbSet<RoleMaster> RoleMasters { get; set; } = null!;
         public virtual DbSet<SalesDistribute> SalesDistributes { get; set; } = null!;
@@ -50,11 +52,12 @@ namespace StockManagement.Contexts
                 entity.ToTable("ConcernPerson");
             });
 
-            modelBuilder.Entity<User>(entity =>
+            modelBuilder.Entity<ConcernUserCompanyMapping>(entity =>
             {
-                entity.ToTable("Users");
-                entity.Property(e=>e.UserId).ValueGeneratedOnAdd().UseIdentityColumn();
-                entity.HasKey(e => e.UserId);
+                entity.ToTable("ConcernUserCompanyMapping");
+
+                entity.HasIndex(e => new { e.ConcernPersonId, e.CompanyId }, "UniqueConcernUserCompany")
+                    .IsUnique();
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -70,6 +73,17 @@ namespace StockManagement.Contexts
                 entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.ProductName).HasMaxLength(200);
+            });
+
+            modelBuilder.Entity<ProductStockLog>(entity =>
+            {
+                entity.ToTable("ProductStockLog");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.CreationTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
             });
 
             modelBuilder.Entity<RoleAssagin>(entity =>

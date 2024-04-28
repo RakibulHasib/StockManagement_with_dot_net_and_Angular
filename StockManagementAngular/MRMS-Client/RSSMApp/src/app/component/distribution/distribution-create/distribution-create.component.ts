@@ -58,7 +58,7 @@ export class DistributionCreateComponent implements OnInit {
     // });
 
     this.generatedistributeFormFields();
-    this.model.concernPersonId =Number( this.activatedRoute.snapshot.params['id']);
+    // this.model.concernPersonId =Number( this.activatedRoute.snapshot.params['id']);
     
   }
 
@@ -73,19 +73,26 @@ export class DistributionCreateComponent implements OnInit {
           this.notificationSvc.message("এই ব্যাক্তির আজকের ডিস্ট্রিভিউসান নামানো হয়ে গেছে!!!", "DISMISS");
         }
         else{
-          this.salesService.insert({
-            concernPersonId:this.model.concernPersonId,
-              salesDistribute: this.model.formData
-          })
-            .subscribe(r => {
-              this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
-              this.stateService.updateState('concernPersonId');
-              //this.router.navigate(['/sales-view']);
-              const routeD = `/sales-view`;
-              this.router.navigate([routeD]);
-            }, err => {
-              this.notificationSvc.message("Failed to save data!!!", "DISMISS");
-          });
+          debugger
+          if(this.model.concernPersonId == 0){
+            this.notificationSvc.message("একটি ডিস্ট্রিভিউটর বাছাই করুন!!!", "DISMISS");
+          }
+          else{
+            this.salesService.insert({
+              concernPersonId:this.model.concernPersonId,
+                salesDistribute: this.model.formData
+            })
+              .subscribe(r => {
+                this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
+                this.stateService.updateState('concernPersonId');
+                //this.router.navigate(['/sales-view']);
+                const routeD = `/sales-view`;
+                this.router.navigate([routeD]);
+              }, err => {
+                this.notificationSvc.message("Failed to save data!!!", "DISMISS");
+            });
+          }
+          
         }
       }
     );

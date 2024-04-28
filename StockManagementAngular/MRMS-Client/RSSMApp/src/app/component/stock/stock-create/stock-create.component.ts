@@ -147,27 +147,6 @@ export class StockCreateComponent implements OnInit {
             expressions: {
               'model.newProduct': '0',
             }
-            // hooks:{
-            //   onInit: (field: FormlyFieldConfig)=>{
-            //     const newProductControl = field.formControl;
-            //     const salesQuantityControl = field.form?.get('salesQuantity');
-            //     const ejaCoontrol = field.form?.get('eja');
-          
-            //     if (newProductControl && salesQuantityControl) {
-            //       newProductControl.valueChanges.subscribe({
-            //         next: (value) => {
-            //           const totalQuantity = salesQuantityControl.value;
-            //           const ejaQuatity = ejaCoontrol?.value;
-            //           if (totalQuantity !== null && value !== null && totalQuantity > value + ejaQuatity) {
-            //             newProductControl.setErrors({ 'invalidQuantity': true });
-            //           } else {
-            //             newProductControl.setErrors(null);
-            //           }
-            //         }
-            //       });
-            //     }
-            //   }
-            // }
           },
           {
             className: 'flex-1 width-100',
@@ -185,6 +164,18 @@ export class StockCreateComponent implements OnInit {
             },
             expressions: {
               'model.total': 'parseInt(model.eja) + (model.newProduct ? parseInt(model.newProduct) : 0)',
+              'templateOptions.errorMessage': (field: FormlyFieldConfig) => {
+                const salesQuantity = field.form?.get('salesQuantity')?.value;
+                const totalQuantity = field.formControl?.value;
+
+                if (salesQuantity > totalQuantity) {
+                  field.formControl?.setErrors({ 'quantityExceeded': true });
+                  return '';
+                } else {
+                  field.formControl?.setErrors(null);
+                  return '';
+                }
+              }
             }
           },
           {

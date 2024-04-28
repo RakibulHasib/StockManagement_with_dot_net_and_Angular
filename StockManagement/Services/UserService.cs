@@ -40,7 +40,7 @@ public class UserService
                 LastName = user.LastName,
                 UserName = user.UserName,
                 Password = hashed_password,
-                UserStatus = UserStatus.Pending,
+                UserStatus = (int)UserStatus.Pending,
                 Token = " ",
                 RoleId = ROLE_ID,
                 IsDeleted = 0
@@ -71,7 +71,7 @@ public class UserService
 
     private async Task<bool> IsUsernameExistsAsync(string userName)
     {
-        var usernameExists = await _unitOfWork.Users.Queryable.Where(x => x.UserName == userName && x.UserStatus == UserStatus.Active).CountAsync();
+        var usernameExists = await _unitOfWork.Users.Queryable.Where(x => x.UserName == userName && x.UserStatus == (int)UserStatus.Active).CountAsync();
         return usernameExists > 0;
     }
 
@@ -173,7 +173,7 @@ public class UserService
     {
         try
         {
-            var user_data = await _unitOfWork.Users.Queryable.Where(u => u.UserStatus == UserStatus.Pending).ToListAsync();
+            var user_data = await _unitOfWork.Users.Queryable.Where(u => u.UserStatus == (int)UserStatus.Pending).ToListAsync();
             return new ApiResponse<List<User>>()
             {
 
@@ -223,7 +223,7 @@ public class UserService
         try
         {
             var user_data = await _unitOfWork.Users.Queryable.Where(u => u.UserId == userId).FirstOrDefaultAsync();
-            user_data.UserStatus = UserStatus.Active;
+            user_data.UserStatus = (int)UserStatus.Active;
             user_data.IsDeleted = 0;
             _unitOfWork.Users.Update(user_data);
             await _unitOfWork.SaveChangesAsync();
@@ -255,7 +255,7 @@ public class UserService
         try
         {
             var user_data = await _unitOfWork.Users.Queryable.Where(u => u.UserId == userId).FirstOrDefaultAsync();
-            user_data.UserStatus = UserStatus.Inactive;
+            user_data.UserStatus = (int)UserStatus.Inactive;
             user_data.IsDeleted = 1;
             _unitOfWork.Users.Update(user_data);
             await _unitOfWork.SaveChangesAsync();
