@@ -44,6 +44,8 @@
           <mat-cell *matCellDef="let element" class="action">
             <button mat-raised-button color="primary" class="icon-spacing" (click)="onEdit(updateModal,element)" >Edit</button>
             <button mat-raised-button  color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.concernPersonId, element)" >Delete</button>
+            <button mat-raised-button color="accent" class="icon-spacing" (click)="onAssignCompany(element)" >Concern Assign</button>
+            
           </mat-cell>
         </ng-container>
   
