@@ -44,17 +44,14 @@ namespace StockManagement.Controllers
 
         [Transaction]
         [HttpPost("InsertConcernPersonCompanyList")]
-        public async Task<ActionResult<int>> InsertConcernPersonCompanyList(List<ConcernCompanyDTO> concernCompanyDTO)
+        public async Task<ActionResult<int>> InsertConcernPersonCompanyList(ConcernCompanyDTO concernCompanyDTO)
         {
-            foreach (var item in concernCompanyDTO)
+            var concernCompany = new ConcernUserCompanyMapping
             {
-                var concernCompany = new ConcernUserCompanyMapping
-                {
-                    ConcernPersonId = item.ConcernPersonId,
-                    CompanyId = item.CompanyId,
-                };
-                await _unitOfWork.ConcernUserCompanyMapping.AddAsync(concernCompany);
-            }
+                ConcernPersonId = concernCompanyDTO.ConcernPersonId,
+                CompanyId = concernCompanyDTO.CompanyId
+            };
+            await _unitOfWork.ConcernUserCompanyMapping.AddAsync(concernCompany);
             return Ok(await _unitOfWork.SaveChangesAsync());
         }
 

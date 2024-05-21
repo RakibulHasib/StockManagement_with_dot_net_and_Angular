@@ -27,3 +27,7 @@
     padding: 0px 6px;
     font-size: 13px;
 }
+
+::ng-deep .cdk-overlay-container {
+  z-index: 10000 !important;
+}

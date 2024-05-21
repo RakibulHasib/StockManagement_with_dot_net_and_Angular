@@ -35,4 +35,12 @@ export class ConcernPersonService {
    getConcernCompanyMapping(concernPerosnId: any): Observable<ConcernPersonMapping[]> {
     return this.http.get<ConcernPersonMapping[]>(`${IceCreamApiUrl}/ConcernCompanyMapping/${concernPerosnId}`)
    }
+
+   insertConcernCompanyMapping(data: any): Observable<any> {
+    return this.http.post<ConcernPerson>(`${IceCreamApiUrl}/ConcernCompanyMapping/InsertConcernPersonCompanyList`, data);
+   }
+
+   deleteConcernCompanyMapping(id: number): Observable<any> {
+    return this.http.delete<any>(`${IceCreamApiUrl}/ConcernCompanyMapping/${id}`);
+   }
 }

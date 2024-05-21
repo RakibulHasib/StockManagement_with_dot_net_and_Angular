@@ -24,7 +24,7 @@
             <tr *ngFor="let item of concernPersonMapping; let i = index">
               <td>{{item.companyName}}</td>
               <td>
-                <button mat-raised-button  color="warn" class="icon-spacing">Delete</button>
+                <button mat-raised-button  color="warn" class="icon-spacing" (click)="confirmDelete(item.id)">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -45,15 +45,17 @@
 	</div>
   <div class="modal-body" style="height: 150px; padding: 10px;">
     <form #f="ngForm" novalidate>
-      <div class="form-group" style="margin: 10px 20px;">
-				<label>Company<span class="text-danger">*</span></label>
-				<select class="form-control" name="dataType" [(ngModel)]="companyIds"
-					#companyIds="ngModel" required>
-					<option [value]="null" disabled>Choose a company</option>
-					<!-- <option *ngFor="let item of dataTypesArray" [value]="item.key">{{item.value | titlecase}}
-					</option> -->
-				</select>
-			</div>
+      <div class="form-group" style="padding: 5px; margin: 20px 20px;">
+        <select class="form-select" name="companyId" [(ngModel)]="companyId" required>
+          <option [value]="null" disabled>Choose a company</option>
+          <option *ngFor="let item of companiesData" [value]="item.companyId">{{item.companyName| titlecase}}
+          </option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-sm" (click)="onCreateClose(modal)" [disabled]="f.invalid">Submit</button>
+      </div>
     </form>
   </div>
+  
 </ng-template>
