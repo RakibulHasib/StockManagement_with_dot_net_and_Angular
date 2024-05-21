@@ -1,0 +1,61 @@
+<div class="component-val">
+  <div class="modal-header">
+		<h4 class="modal-title">
+			ডিস্ট্রিভিউটরের নাম | <span style="font-size: 12px;">{{concernPersonData.concernPersonName}}</span>
+		</h4>
+		<button type="button" id="times_button" class="close pull-right" aria-label="Close" (click)="_activeModal.dismiss()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+  <div class="modal-body">
+    <div class="component-val-container">
+			<div class="component-val-item">
+        <div class="d-flex justify-content-end">
+          <button mat-raised-button color="primary" class="icon-spacing mb-2" (click)="onCreate(createModal)">Add More</button>
+        </div>
+        <table class="table table-bordered table-hover table-striped table-light">
+            <thead>
+              <tr>
+                <th>অনুমোদিত কোম্পানি</th>
+                <th>Action</th>
+              </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of concernPersonMapping; let i = index">
+              <td>{{item.companyName}}</td>
+              <td>
+                <button mat-raised-button  color="warn" class="icon-spacing" (click)="confirmDelete(item.id)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #createModal let-modal>
+  <div class="modal-header">
+		<h4 class="modal-title">
+			<span>Create</span>
+		</h4>
+		<button type="button" id="times_button" class="close pull-right" aria-label="Close" (click)="modal.dismiss()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+  <div class="modal-body" style="height: 150px; padding: 10px;">
+    <form #f="ngForm" novalidate>
+      <div class="form-group" style="padding: 5px; margin: 20px 20px;">
+        <select class="form-select" name="companyId" [(ngModel)]="companyId" required>
+          <option [value]="null" disabled>Choose a company</option>
+          <option *ngFor="let item of companiesData" [value]="item.companyId">{{item.companyName| titlecase}}
+          </option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-sm" (click)="onCreateClose(modal)" [disabled]="f.invalid">Submit</button>
+      </div>
+    </form>
+  </div>
+  
+</ng-template>

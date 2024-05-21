@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StockManagement.Features.CompanyFeatures;
 using StockManagement.Features.SalesDistributeFeatures;
+using StockManagement.Helpers;
+using StockManagement.Repository;
+using StockManagement.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,35 +13,65 @@ namespace StockManagement.Controllers
     [ApiController]
     public class ConcernCompanyMappingController : BaseController<CompanyController>
     {
+        private readonly UnitOfWork _unitOfWork;
+
+        public ConcernCompanyMappingController(UnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+
         [HttpGet("GetConcernPersonCompanyMapping")]
         public async Task<ActionResult<IEnumerable<ConcernCompanyMappingDTO>>> GetConcernPersonCompanyMapping()
         {
             return await _mediator.Send(new GetConcernCompanyMappingQuery());
         }
 
-        // GET api/<ConcernCompanyMappingController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{ConcernPersonId}")]
+        public async Task<ActionResult<IEnumerable<ConcernCompanyDTO>>> GetCompanyByConcernPerson(int ConcernPersonId)
         {
-            return "value";
+            var data = await _unitOfWork.ConcernUserCompanyMapping.Queryable
+                .Where(a => a.ConcernPersonId == ConcernPersonId)
+                .Select(query => new ConcernCompanyDTO
+                {
+                    Id = query.Id,
+                    ConcernPersonId = query.ConcernPersonId,
+                    CompanyId = query.CompanyId,
+                    CompanyName = query.Company.CompanyName
+
+                }).ToListAsync();
+            return data;
         }
 
-        // POST api/<ConcernCompanyMappingController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [Transaction]
+        [HttpPost("InsertConcernPersonCompanyList")]
+        public async Task<ActionResult<int>> InsertConcernPersonCompanyList(ConcernCompanyDTO concernCompanyDTO)
         {
+            var concernCompany = new ConcernUserCompanyMapping
+            {
+                ConcernPersonId = concernCompanyDTO.ConcernPersonId,
+                CompanyId = concernCompanyDTO.CompanyId
+            };
+            await _unitOfWork.ConcernUserCompanyMapping.AddAsync(concernCompany);
+            return Ok(await _unitOfWork.SaveChangesAsync());
         }
 
-        // PUT api/<ConcernCompanyMappingController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
-        // DELETE api/<ConcernCompanyMappingController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult<int>> Delete(int id)
         {
+            var data = await _unitOfWork.ConcernUserCompanyMapping.Queryable
+                .Where(a => a.Id == id).FirstOrDefaultAsync();
+            _unitOfWork.ConcernUserCompanyMapping.Delete(data);
+
+            return Ok(await _unitOfWork.SaveChangesAsync());
+        }
+
+
+        public sealed class ConcernCompanyDTO {
+            public int? Id { get; set; }
+            public int ConcernPersonId { get; set; }
+            public int CompanyId { get; set; }
+            public string? CompanyName { get; set;}
         }
     }
 }

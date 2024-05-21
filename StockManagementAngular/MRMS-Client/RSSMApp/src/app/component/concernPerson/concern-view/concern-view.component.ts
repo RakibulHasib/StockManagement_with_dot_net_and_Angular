@@ -13,6 +13,7 @@ import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import { CompanyAssignComponent } from './company-assign/company-assign.component';
 
 @Component({
   selector: 'app-concern-view',
@@ -282,6 +283,12 @@ export class ConcernViewComponent {
         });
       }
     });
+  }
+
+  onAssignCompany(element: ConcernPerson){
+    const modalRef = this._modal.open(CompanyAssignComponent);
+    modalRef.componentInstance.concernPersonData = element;
+
   }
 
   ngOnDestroy() {

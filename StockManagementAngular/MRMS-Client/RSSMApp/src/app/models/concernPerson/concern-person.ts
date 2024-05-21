@@ -5,3 +5,10 @@ export class ConcernPerson {
         public isDeleted?: number,
       ) { }
 }
+
+export interface ConcernPersonMapping{
+  id: number,
+  concernPersonId: number,
+  companyId: number,
+  companyName: string
+}

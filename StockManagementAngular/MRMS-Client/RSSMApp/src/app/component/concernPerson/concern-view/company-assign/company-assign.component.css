@@ -1,0 +1,33 @@
+.modal-body {
+    border-top: 2px solid gray;
+    padding: 0 0 !important;   
+  }
+  
+  .component-val-container {
+    height: calc(98vh - 125px);
+    overflow: auto;
+  }
+  
+  .component-val-item {
+    padding: 15px 30px;
+  }
+  
+  #times_button {
+    outline: none;
+    border: none;
+    background: none;
+    padding: 0px 10px;
+    font-size: 24px;
+  }
+
+  button[_ngcontent-ng-c679819820] {
+    outline: none;
+    border: none;
+    background: red;
+    padding: 0px 6px;
+    font-size: 13px;
+}
+
+::ng-deep .cdk-overlay-container {
+  z-index: 10000 !important;
+}
