@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using StockManagement.DTO;
-using StockManagement.Entities;
-using StockManagement.Repository;
-
-namespace StockManagement.Services
+﻿namespace StockManagement.Services
 {
     public class SalesDistributeService
     {
@@ -127,10 +121,10 @@ namespace StockManagement.Services
             var data = await (from cp in _unitOfWork.ConcernPerson.Queryable.Where(a => a.IsDeleted == 0)
                               let status = _unitOfWork.SalesDistribute.Queryable.Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ConcernPersonId == cp.ConcernPersonId && a.IsDeleted == 0).Select(a => a.Status).FirstOrDefault()
                               select new DailyDistributorStatusDTO
-                            {
-                                ConcernPersonId = cp.ConcernPersonId,
-                                ConcernPersonName = cp.ConcernPersonName,
-                                Status = status != null ? status : Convert.ToInt32(DailyDistributeStatus.NotComplete)
+                              {
+                                  ConcernPersonId = cp.ConcernPersonId,
+                                  ConcernPersonName = cp.ConcernPersonName,
+                                  Status = status != null ? status : Convert.ToInt32(DailyDistributeStatus.NotComplete)
                               }).ToListAsync();
             return data;
         }
@@ -154,7 +148,7 @@ namespace StockManagement.Services
             return result;
         }
 
-            public async Task<List<ProductDTO>> GetProduct()
+        public async Task<List<ProductDTO>> GetProduct()
         {
             var data = await (from p in _unitOfWork.Product.Queryable.Where(a => a.IsDeleted == 0)
                               join c in _unitOfWork.Company.Queryable.Where(a => a.IsDeleted == 0) on p.CompanyId equals c.CompanyId
@@ -165,6 +159,20 @@ namespace StockManagement.Services
                               }).ToListAsync();
             return data;
         }
+
+        public async Task<List<ProductDTO>> GetProductByCompanyId(int companyId)
+        {
+            var data = await _unitOfWork.Product.Queryable
+                .Where(x => x.IsDeleted == 0 && x.CompanyId == companyId)
+                .Select(x => new ProductDTO
+                {
+                    ProductId = x.ProductId,
+                    ProductName = x.ProductName
+                }).ToListAsync();
+
+            return data;
+        }
+
 
         public async Task<ProductPriceDTO> GetProductWisePrice(int ProductID)
         {

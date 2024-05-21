@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using StockManagement.DTO;
 using StockManagement.Helpers;
-using StockManagement.Repository;
-using StockManagement.Services;
 
 namespace StockManagement.Controllers;
 
@@ -55,11 +50,7 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<int>> DeleteProduct(int productId)
     {
         return Ok(await _productService.DeleteProduct(productId));
-
     }
-
-
-
 
     [HttpGet("{companyId}")]
     public async Task<ActionResult<IEnumerable<ProductDto>>> GetProduct(int companyId)

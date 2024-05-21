@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -21,6 +21,7 @@ import { DistributorStatus } from 'src/app/enums/distributor-status.enum';
   selector: 'app-distribution-view',
   templateUrl: './distribution-view.component.html',
   styleUrls: ['./distribution-view.component.css'],
+  encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('expandCollapse', [ // This defines an animation trigger named 'expandCollapse'
       state('collapsed', style({ height: '0px', display: 'none' })), // This is the 'collapsed' state configuration
