@@ -1,4 +1,4 @@
-﻿namespace StockManagement.Enum;
+﻿namespace StockManagement.Enums;
 
 public enum UserStatus
 {

@@ -26,6 +26,12 @@ namespace StockManagement.Controllers
             return await _userService.UpdateUser(user);
         }
 
+        [HttpPut("user-role-assign/{userId}")]
+        public async Task<ActionResult<ApiResponse>> UserRoleAssign(int userId, int roleId)
+        {
+            return await _userService.UserRoleAssign(userId,roleId);
+        }
+
         [HttpPut("approval/{userId}")]
         public async Task<ActionResult<ApiResponse>> Approval([FromRoute] int userId)
         {
@@ -55,7 +61,6 @@ namespace StockManagement.Controllers
         //public async Task<bool> AuthenticateUser(User user)
         //{
         //    var userToLogin = await _db.Users.FirstOrDefaultAsync(x => x.UserName == user.UserName && x.Password==user.Password);
-
         //    if (userToLogin!=null)
         //    {
         //        return true;
@@ -85,7 +90,6 @@ namespace StockManagement.Controllers
         {
             return await _userService.GetUserList();
         }
-
 
 
     }

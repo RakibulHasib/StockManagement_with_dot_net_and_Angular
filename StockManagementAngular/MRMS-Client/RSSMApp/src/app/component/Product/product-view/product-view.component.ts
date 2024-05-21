@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { Product } from '../../../models/Product/product';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -295,17 +295,46 @@ export class ProductViewComponent implements OnInit {
     this.model.productUnit = new Company;
     
   }
-  generateFormFields() {
-    console.log("Dropdown",this.companies)
+ async generateFormFields() {
     this.fields = [
       {
         fieldGroupClassName: 'display-flex',
         key: 'productUnit',
         fieldGroup: [
           {
+              // type: 'select',
+              // key: 'companyId',
+              // templateOptions: {
+              //   label: 'company',
+              //   appendTo: 'body',
+              //   required: true,
+              //   placeholder: 'Select company',
+              //   values:
+              //     (await this.companyService
+              //       .getCompany()
+              //       .pipe(
+              //         map((x) =>
+              //           x.map((y) => {
+              //             return {
+              //               value: y.companyId,
+              //               label: y.companyName,
+              //             };
+              //           })
+              //         )
+              //       )
+              //       .toPromise()) || [],
+              // },
+            
             className: 'flex-1',
             type: 'select',
             key: 'companyId',
+
+            // templateOptions: {
+            //   appendTo: 'body',
+            //   label: 'Company',
+            //   options: this.companies, 
+            //   required: true,
+            // },
             
             props: {
               label: 'Company Name',

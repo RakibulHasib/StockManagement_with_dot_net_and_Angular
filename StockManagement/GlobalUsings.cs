@@ -13,7 +13,7 @@ global using System.Security.Claims;
 global using System.Text;
 global using Microsoft.AspNetCore.Mvc;
 global using System.Net;
-global using StockManagement.Enum;
+global using StockManagement.Enums;
 global using Microsoft.AspNetCore.Authentication;
 global using Microsoft.AspNetCore.Mvc.Filters;
 global using StockManagement.Services;

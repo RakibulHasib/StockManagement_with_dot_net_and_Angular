@@ -21,7 +21,7 @@ public class CompanyController : BaseController<CompanyController>
         _companyService = companyService;
     }
 
-
+    [Authorize]
     [HttpGet("CompanyDashboard")]
     public async Task<ActionResult<IEnumerable<CompaniesDTO>>> CompanyDashboard()
     {

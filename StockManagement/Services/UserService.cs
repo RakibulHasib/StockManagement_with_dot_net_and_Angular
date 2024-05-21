@@ -320,8 +320,35 @@ public class UserService
 
     }
 
+    public async Task<ApiResponse> UserRoleAssign(int userId, int roleId)
+    {
+        try
+        {
+            var user_data = await _unitOfWork.Users.Queryable.Where(u => u.UserId == userId).FirstOrDefaultAsync();
 
+            user_data.RoleId = roleId;
 
+            _unitOfWork.Users.Update(user_data);
+            await _unitOfWork.SaveChangesAsync();
 
+            return new ApiResponse()
+            {
+                Message = " ",
+                Status = Status.Success,
+                StatusCode = (int)HttpStatusCode.OK,
+            };
+
+        }
+        catch (Exception ex)
+        {
+
+            return new ApiResponse()
+            {
+                Message = ex.Message,
+                Status = Status.Failed,
+                StatusCode = (int)HttpStatusCode.InternalServerError
+            };
+        }
+    }
 
 }

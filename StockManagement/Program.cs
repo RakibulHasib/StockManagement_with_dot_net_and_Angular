@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using StockManagement.Middlewares;
@@ -55,6 +56,7 @@ builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(Assemb
 builder.Services.AddScoped<IAuthenticateService, AuthenticateService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddTransient<PasswordHashingService>();
+builder.Services.AddScoped<AuthorizeAttribute>();
 
 
 builder.Services.AddDbContext<StockDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
