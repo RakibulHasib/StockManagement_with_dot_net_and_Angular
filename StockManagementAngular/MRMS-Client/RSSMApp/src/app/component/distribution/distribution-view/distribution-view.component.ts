@@ -1,12 +1,12 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DailyDistributionModel } from 'src/app/models/DailyDataModel/daily-distribution-model';
-import { ConcernPerson } from 'src/app/models/concernPerson/concern-person';
+import { ConcernPerson, ConcernPersonMapping } from 'src/app/models/concernPerson/concern-person';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { StateService } from 'src/app/services/Shared/state.service';
 import { ConcernPersonService } from 'src/app/services/concernPerson/concern-person.service';
@@ -21,6 +21,7 @@ import { DistributorStatus } from 'src/app/enums/distributor-status.enum';
   selector: 'app-distribution-view',
   templateUrl: './distribution-view.component.html',
   styleUrls: ['./distribution-view.component.css'],
+  encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('expandCollapse', [ // This defines an animation trigger named 'expandCollapse'
       state('collapsed', style({ height: '0px', display: 'none' })), // This is the 'collapsed' state configuration
@@ -33,15 +34,23 @@ export class DistributionViewComponent {
   showExpandButton = false;
   companyId!: number;
   concernPerson: ConcernPerson[]=[];
+  concernPersonMapping: ConcernPersonMapping[] = [];
   dailyDistributeStatus: DailyDistributeStatus[] = []
   selectedConcernPerson: number = 0;
+  selectedCompany: number = 0;
   distibutionId : number = 0;
   distributorStatus = DistributorStatus;
 
-   onDropdownSelectionChange(selectedConcernPerson: number) {
+   onConcernPersonDropdownSelectionChange(selectedConcernPerson: number) {
     this.selectedConcernPerson=selectedConcernPerson;
-    this.fetchData();
+    this.fetchDistributorData();
   }
+
+   onCompanyDropdownSelectionChange(selectedConcernPerson: number) {
+    this.selectedConcernPerson=selectedConcernPerson;
+    this.fetchDistributorData();
+  }
+
   dailyDistributeData: DailyDistributionModel[] = [];
   dataSource: MatTableDataSource<DailyDistributionModel> = new MatTableDataSource(this.dailyDistributeData);
 
@@ -81,7 +90,7 @@ export class DistributionViewComponent {
       }
     });
 
-      this.fetchData();
+      this.fetchDistributorData();
       this.fetchConcernPersonData();
   }
 
@@ -93,7 +102,6 @@ export class DistributionViewComponent {
         const allConcernPerson = new ConcernPerson(0, "সব ডিস্ট্রিভিউটর");
         this.concernPerson.unshift(allConcernPerson);
       }, err => {
-
         this._notificationSvc.message("Failed to load data", "DISMISS");
       });
     }
@@ -114,7 +122,7 @@ export class DistributionViewComponent {
     this.salesService.insertSkipConcerPersonDistribution(concernPersonId)
       .subscribe(r => {
         this.getDistributeStatus();
-        this.fetchData();
+        this.fetchDistributorData();
       }, err => {
         this._notificationSvc.message("Failed to save data!!!", "DISMISS");
     });
@@ -141,8 +149,6 @@ export class DistributionViewComponent {
     this.stateService.resetState();
   }
 
- 
-  
   formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -150,7 +156,7 @@ export class DistributionViewComponent {
     return `${year}-${month}-${day}`;
   }
 
-  fetchData() {
+  fetchDistributorData() {
     if (this.startDate && this.endDate) {
       this.salesService.getSalesDistributeDataPerDay(this.selectedConcernPerson,this.startDate, this.endDate)
         .subscribe(data => {
@@ -158,6 +164,9 @@ export class DistributionViewComponent {
           this.dataSource.data = this.dailyDistributeData;
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
+          
+          //fetch company data
+          this.fetchCompanyData(this.selectedConcernPerson);
         }, err => {
           this.dailyDistributeData = [];
           this._notificationSvc.message("Failed to load data", "DISMISS");
@@ -165,6 +174,16 @@ export class DistributionViewComponent {
     } else {
       this._notificationSvc.message("Please provide both Start Date and End Date", "DISMISS");
     }
+  }
+
+    fetchCompanyData(distributorId: number) {
+        this.concernPersonSvc.getConcernCompanyMapping(distributorId).subscribe(
+      (res) => {
+        this.concernPersonMapping = res;
+      },
+      (err) => {
+        this._notificationSvc.message("Failed to load Company Data", "DISMISS");
+      })
   }
 
   applyFilter(event: Event) {
