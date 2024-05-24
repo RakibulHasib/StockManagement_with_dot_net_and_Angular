@@ -52,7 +52,8 @@
 
       <ng-container matColumnDef="createdDate">
         <mat-header-cell *matHeaderCellDef mat-sort-header >CreatedDate</mat-header-cell>
-        <mat-cell *matCellDef="let element" style="text-align:center">{{element.creationTime | date:'yyyy-MM-dd'}}</mat-cell>
+        <mat-cell *matCellDef="let element" style="text-align: center;font-weight: 500;
+        font-size: 20px;">{{element.creationTime | date:'EEEE, MMMM d, y'}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalSalesQuantity">

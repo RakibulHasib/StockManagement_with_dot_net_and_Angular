@@ -147,17 +147,6 @@ export class DistributionCreateComponent implements OnInit {
               templateOptions: {
                 label: 'পণ্যের নাম',
                 options: 
-                
-                // of(this.productData).pipe(
-                //   map(
-                //     x=>x.filter(a=>!this.formData
-                //       .filter(a=>a!==undefined)
-                //       .map(a=>a.productId)
-                //       .includes(a.productId)
-                //       )
-                //   )
-                // ),
-                
                 this.salesService.getProduct().pipe(
                   map(
                     x => x.filter(a=>!this.formData

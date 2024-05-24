@@ -67,7 +67,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 90);
     this.selectedCompany = this.stateService.getPreviousState(1)?.selectedCompany || 0;
     this.startDate = this.stateService.getPreviousState(1)?.startDate || this.formatDate(thirtyDaysAgo);
 

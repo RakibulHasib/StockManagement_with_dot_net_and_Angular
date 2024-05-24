@@ -41,5 +41,7 @@ export class ProductService {
    delete(productId:number ,data: any): Observable<any> {
      return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/delete-product/${productId}`,data);
    }
-
+  updateStockLog(data: any): Observable<any>{
+    return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/UpdateProductStockLog`, data)
+  }
 }
