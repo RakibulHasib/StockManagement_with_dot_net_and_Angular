@@ -53,6 +53,12 @@ public class ProductsController : ControllerBase
     }
 
 
+    [Transaction]
+    [HttpPut("UpdateProductStockLog")]
+    public async Task<ActionResult<int>> UpdateProductStockLog(ProducStockLogDTO productStock)
+    {
+        return Ok(await _productService.UpdateProductStock(productStock));
+    }
 
 
     [HttpGet("{companyId}")]

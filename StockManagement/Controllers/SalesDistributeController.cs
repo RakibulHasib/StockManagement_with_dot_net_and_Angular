@@ -94,5 +94,7 @@ namespace StockManagement.Controllers
         {
             return Ok(await _salesDistributeService.DeleteDistribution(SalesDistributeId));
         }
+
+
     }
 }
