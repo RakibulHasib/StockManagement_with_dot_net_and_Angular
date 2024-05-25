@@ -57,6 +57,7 @@ builder.Services.AddScoped<IAuthenticateService, AuthenticateService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddTransient<PasswordHashingService>();
 builder.Services.AddScoped<AuthorizeAttribute>();
+//builder.Services.AddScoped<IAuthorizationFilter, AuthorizeAttribute>();
 
 
 builder.Services.AddDbContext<StockDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

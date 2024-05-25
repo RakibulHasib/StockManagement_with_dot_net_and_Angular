@@ -114,8 +114,14 @@ public class AuthenticateService : IAuthenticateService
         {
             Subject = new ClaimsIdentity(new[]
             {
-            new Claim(ClaimTypes.Name, user.UserId.ToString()),
-            new Claim(ClaimTypes.Role, user.RoleId.ToString())
+                new Claim("uid", user.UserId.ToString()),
+                new Claim("un", user.UserName),
+                new Claim("ufn", user.FirstName + " " + user.LastName),
+                new Claim("rid", user.RoleId.ToString())
+                //new Claim(ClaimTypes.Sid, user.UserId.ToString()),
+                //new Claim(ClaimTypes.Upn, user.UserName ),
+                //new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName ),
+                //new Claim(ClaimTypes.Role, user.RoleId.ToString())
         }),
             Expires = DateTime.UtcNow.AddHours(24),
             SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
@@ -151,8 +157,11 @@ public class AuthenticateService : IAuthenticateService
         try
         {
             var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out _);
-            var userIdClaim = claimsPrincipal.FindFirst(ClaimTypes.Name);
-            var rolIdClaim = claimsPrincipal.FindFirst(ClaimTypes.Role);
+            //var userIdClaim = claimsPrincipal.FindFirst(ClaimTypes.Sid);
+            //var rolIdClaim = claimsPrincipal.FindFirst(ClaimTypes.Role);
+
+            var userIdClaim = claimsPrincipal.FindFirst("uid");
+            var rolIdClaim = claimsPrincipal.FindFirst("rid");
 
             if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId) && rolIdClaim != null && int.TryParse(rolIdClaim.Value, out int roleId))
             {
@@ -206,8 +215,9 @@ public class AuthenticateService : IAuthenticateService
     }
 
 
-    public ClaimResponseDTO TokenReader(string token)
+    public  ClaimResponseDTO DecodeToken(string token)
     {
+
         if (token == null)
         {
             return null;
@@ -227,10 +237,9 @@ public class AuthenticateService : IAuthenticateService
         try
         {
             var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out _);
-            var userIdClaim = claimsPrincipal.FindFirst(ClaimTypes.Name);
-            var rolIdClaim = claimsPrincipal.FindFirst(ClaimTypes.Role);
-            var permissionClaim = claimsPrincipal.FindFirst(ClaimTypes.Dns);
-            var sessionIdClaim = claimsPrincipal.FindFirst(ClaimTypes.Dsa);
+
+            var userIdClaim = claimsPrincipal.FindFirst("uid");
+            var rolIdClaim = claimsPrincipal.FindFirst("rid");
 
             if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId) && rolIdClaim != null && int.TryParse(rolIdClaim.Value, out int roleId))
             {
@@ -238,10 +247,11 @@ public class AuthenticateService : IAuthenticateService
                 {
                     UserId = userId,
                     RoleId = roleId,
- 
                 };
                 return ClaimResponse;
             }
+
+
         }
         catch
         {
@@ -249,5 +259,52 @@ public class AuthenticateService : IAuthenticateService
         }
 
         return null;
+        
     }
+
+
+    //public ClaimResponseDTO TokenReader(string token)
+    //{
+    //    if (token == null)
+    //    {
+    //        return null;
+    //    }
+
+    //    var tokenHandler = new JwtSecurityTokenHandler();
+    //    var validationParameters = new TokenValidationParameters
+    //    {
+    //        ValidateIssuerSigningKey = true,
+    //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_key)),
+    //        ValidateIssuer = false,
+    //        ValidateAudience = false,
+    //        ClockSkew = TimeSpan.Zero,
+    //        ValidateLifetime = false
+    //    };
+
+    //    try
+    //    {
+    //        var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out _);
+    //        var userIdClaim = claimsPrincipal.FindFirst(ClaimTypes.Name);
+    //        var rolIdClaim = claimsPrincipal.FindFirst(ClaimTypes.Role);
+    //        var permissionClaim = claimsPrincipal.FindFirst(ClaimTypes.Dns);
+    //        var sessionIdClaim = claimsPrincipal.FindFirst(ClaimTypes.Dsa);
+
+    //        if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId) && rolIdClaim != null && int.TryParse(rolIdClaim.Value, out int roleId))
+    //        {
+    //            var ClaimResponse = new ClaimResponseDTO
+    //            {
+    //                UserId = userId,
+    //                RoleId = roleId,
+
+    //            };
+    //            return ClaimResponse;
+    //        }
+    //    }
+    //    catch
+    //    {
+    //        return null;
+    //    }
+
+    //    return null;
+    //}
 }

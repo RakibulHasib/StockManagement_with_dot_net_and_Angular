@@ -15,7 +15,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import {MatMenuModule} from '@angular/material/menu';
 import { ConfirmDialogComponent } from './component/shared/confirm-dialog/confirm-dialog.component';
 import { HomeComponent } from './component/home/home.component';
-import { AuthInterceptor } from './Shared/authconfig.interceptor';
 import { FileContainerComponent } from './component/shared/file-container/file-container.component';
 import { SignInComponent } from './component/Authentication/sign-in/sign-in.component';
 import { RegisterComponent } from './component/Authentication/register/register.component';
@@ -46,6 +45,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { UserviewComponent } from './component/User/userview/userview.component';
 import { CompanyAssignComponent } from './component/concernPerson/concern-view/company-assign/company-assign.component';
+import { AuthInterceptor } from './component/Interceptor/auth.interceptor';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 
 

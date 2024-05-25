@@ -7,9 +7,11 @@ import { Router } from '@angular/router';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { Subscription } from 'rxjs';
+import { UserInfo } from 'src/app/models/Authentication/UserInfo';
 import { UserStatus } from 'src/app/models/Enum/UserStatus.enum';
 import { User } from 'src/app/models/User/User';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
+import { UserRoleService } from 'src/app/services/Shared/user-role.service';
 import { UserService } from 'src/app/services/User/User.service';
 import Swal from 'sweetalert2';
 
@@ -25,7 +27,7 @@ export class UserviewComponent implements OnInit {
   @ViewChild(MatSort,{static:false}) sort!:MatSort;
   @ViewChild(MatPaginator,{static:false}) paginator!:MatPaginator;
   columnList: string[]=["userName","loginName","userStatus","permission","actions"]
-
+  userRole: UserInfo | null = null;
 
   currentDate: Date = new Date();
   user_from:FormGroup = new FormGroup({});
@@ -47,11 +49,14 @@ export class UserviewComponent implements OnInit {
     private userDataSvc: UserService,
     private _notifitions: NotificationService,
     private _modal: NgbModal,
-    private router: Router
+    private router: Router,
+    private _userRole: UserRoleService,
 
   ){}
   
   ngOnInit(){
+    this.userRole = this._userRole.getUserInfo();
+    console.log("Role",this.userRole)
     this.getItems();
   }
 

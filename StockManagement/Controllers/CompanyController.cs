@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StockManagement.DTO;
 using StockManagement.Entities;
@@ -10,8 +11,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StockManagement.Controllers;
 [Route("api/[controller]")]
-[ApiController]
-[Authorize]
+//[Authorize]
 public class CompanyController : BaseController<CompanyController>
 {
     private readonly CompanyService _companyService;
@@ -21,7 +21,7 @@ public class CompanyController : BaseController<CompanyController>
         _companyService = companyService;
     }
 
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("CompanyDashboard")]
     public async Task<ActionResult<IEnumerable<CompaniesDTO>>> CompanyDashboard()
     {

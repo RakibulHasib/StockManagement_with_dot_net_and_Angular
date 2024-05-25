@@ -8,14 +8,14 @@ namespace StockManagement.Controllers;
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
-    
+
     private readonly IAuthenticateService _authenticateService;
 
 
 
     public AuthenticationController(IAuthenticateService authenticateService)
     {
-       
+
         _authenticateService = authenticateService;
 
     }
@@ -61,6 +61,14 @@ public class AuthenticationController : ControllerBase
 
         return _authenticateService.ValidateToken(token);
     }
+
+    [HttpGet("DecodeToken/{token}")]
+    public  ClaimResponseDTO DecodeToken( string token)
+    {
+        return _authenticateService.DecodeToken(token);
+    }
+
+
 }
 
 
