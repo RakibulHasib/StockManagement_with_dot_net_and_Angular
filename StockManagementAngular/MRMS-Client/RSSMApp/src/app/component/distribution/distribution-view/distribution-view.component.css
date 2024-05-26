@@ -97,6 +97,14 @@
     font-size: 24px;
   }
 
+  .completeStyle{
+    color: green !important;
+  }
+
+  .unCompleteStyle{
+    color: red !important;
+  }
+
   
 
 

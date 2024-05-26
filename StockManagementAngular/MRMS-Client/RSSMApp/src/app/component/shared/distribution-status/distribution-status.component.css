@@ -1,0 +1,29 @@
+.modal-body {
+    border-top: 2px solid gray;
+    padding: 0 0 !important;   
+  }
+  
+  .component-val-container {
+    height: calc(98vh - 125px);
+    overflow: auto;
+  }
+  
+  .component-val-item {
+    padding: 30px;
+  }
+  
+  .close {
+    outline: none;
+    border: none;
+    background: none;
+    padding: 0px 10px;
+    font-size: 24px;
+  }
+
+  .completeStyle{
+    color: green !important;
+  }
+
+  .unCompleteStyle{
+    color: red !important;
+  }

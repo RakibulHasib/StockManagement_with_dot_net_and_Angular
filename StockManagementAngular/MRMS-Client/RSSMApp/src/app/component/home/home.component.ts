@@ -18,7 +18,7 @@ export class HomeComponent {
   currentCompanyId!: number;
   currentCompany: string = "";
   currenProduct: string = "";
-  newQuantity = null;
+  isButtonDisabled: boolean[] = [];
   constructor(
     private notificationSvc: NotificationService,
     private dashboardService: DashboardServiceService,
@@ -30,7 +30,6 @@ export class HomeComponent {
     this.dashboardService.getDashboardData()
      .subscribe(x => {
        this.dashboardModel = x;
-       console.log(x);
      }, err => {
        this.notificationSvc.message("Failed to load data!!!", "DISMISS");
      });
@@ -40,6 +39,7 @@ export class HomeComponent {
     this.dashboardService.getProductStock(companyId).subscribe(
       (res) => {
         this.productStocks = res;
+        this.isButtonDisabled = this.productStocks.map(() => true);
       },
       (err) => {
         this.notificationSvc.message("Failed to load data!!!", "DISMISS");
@@ -54,32 +54,24 @@ export class HomeComponent {
     this._modal.open(modalName, {size: 'lg'});
   }
 
-  openCreateModal(modalName: any, item: ProductStock){
-    this.currenProduct = item.productName;
-    const modalRef = this._modal.open(modalName);
+  checkValue(value: string, index: number): void {
+    this.isButtonDisabled[index] = value === '' || value === null;
+  }
 
-    modalRef.result.then(
-      res => {
-        const data = {
-          productId: item.productId,
-          newQuantity: Number(res)
-        }
-        this._productSvc.updateStockLog(data).subscribe(
-          (res) => {
-            this.notificationSvc.message("Successfully Updated!!!", "DISMISS");
-            this.getProductStock(this.currentCompanyId);
-            this.newQuantity = null;
-          },
-          (err) => {
-            this.notificationSvc.message("Failed to Update!!!", "DISMISS");
-          }
-        )
-      }
-    )
-    modalRef.dismissed.subscribe(
-      result => {
-        this.newQuantity = null;
+  updateStock(event: any, item: ProductStock){
+    const data = {
+      productId: item.productId,
+      newQuantity: event.value
+    }
+    this._productSvc.updateStockLog(data).subscribe(
+      (res) => {
+        this.notificationSvc.message("Successfully Updated!!!", "DISMISS");
+        this.getProductStock(this.currentCompanyId);
+      },
+      (err) => {
+        this.notificationSvc.message("Failed to Update!!!", "DISMISS");
       }
     )
   }
+  
 }

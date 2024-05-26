@@ -4,8 +4,11 @@
       <div>
         <mat-card-title class="h5">প্রতিদিনের স্টকের হিসাব</mat-card-title>
       </div>
-      <div [title]="distributeStatus == false ? 'ডিস্ট্রিভিউসান সম্পূর্ন হয় নি' : ''" class="d-flex align-items-center">
-        <a [disabled]="!distributeStatus" mat-mini-fab class="btn btn-primary" (click)="checkStockUpdate()">
+      <div title="Check Distribution'" class="d-flex align-items-center">
+        <div class="btn btn-primary" style="margin-right: 10px;"  (click)="openDistributeStatus()">
+          Distribute Status
+        </div>
+        <a mat-mini-fab class="btn btn-primary" (click)="checkStockUpdate()">
           <mat-icon>add_box</mat-icon>
         </a>
       </div>

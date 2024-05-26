@@ -76,8 +76,4 @@ export class StockService {
     const options={params:Qparams}
     return this.http.put<any>(`${IceCreamApiUrl}/${endPoint}/DeleteStock`,null,options);
   }
-
-  getDistributorStockCreateStatus():Observable<boolean>{
-    return this.http.get<boolean>(`${IceCreamApiUrl}/${endPoint}/GetDistributorStockCreateStatus`);
-  }
 }

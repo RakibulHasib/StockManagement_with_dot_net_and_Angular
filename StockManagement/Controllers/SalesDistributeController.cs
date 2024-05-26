@@ -10,7 +10,7 @@ namespace StockManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class SalesDistributeController : ControllerBase
     {
         private readonly SalesDistributeService _salesDistributeService;
@@ -40,16 +40,9 @@ namespace StockManagement.Controllers
         }
 
         [HttpGet("GetDistributorStatus")]
-        public async Task<ActionResult<List<DailyDistributorStatusDTO>>> GetDistributorStatus()
+        public async Task<ActionResult<List<DailyDistributorStatusDTO>>> GetDistributorStatus(DateTime date)
         {
-            return Ok(await _salesDistributeService.GetDistributorStatus());
-        }
-
-        [Transaction]
-        [HttpPost("InsertSkipConcerPersonDistribution")]
-        public async Task<ActionResult<int>> InsertSkipConcerPersonDistribution(int ConcernPersonID)
-        {
-            return Ok(await _salesDistributeService.InsertSkipConcerPersonDistribution(ConcernPersonID));
+            return Ok(await _salesDistributeService.GetDistributorStatus(date));
         }
 
         [HttpGet("GetProduct")]

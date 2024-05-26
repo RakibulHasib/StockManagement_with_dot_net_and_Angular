@@ -1,0 +1,35 @@
+
+<div class="modal-header" style="height: 50px;">
+  <h4 class="modal-title" id="modal-basic-title" style="font-weight: bold; margin-top: 20px;">ডিস্ট্রিভিউসান স্ট্যাটাস</h4>
+  <button type="button" class="close" aria-label="Close" (click)="_activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="component-val-container">
+    <div class="component-val-item">
+      <input MatInput type="date" id="startDate" [(ngModel)]="date" class="form-control" style="margin-bottom: 5px;" (change)="getDistributeStatus(date)" placeholder="Choose a date">
+      <table class="table table-bordered table-hover table-striped table-light">
+          <thead>
+            <tr>
+              <th>Distributor</th>
+              <th>Company</th>
+              <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let item of dailyDistributeStatus; let i = index">
+            <tr *ngFor="let x of item.statusDetail; let j = index">
+              <td *ngIf="j === 0" [attr.rowspan]="item.statusDetail?.length">
+                {{item.concernPersonName}}
+              </td>
+              <td>{{x.companyName}}</td>
+              <td [ngClass]="{'completeStyle': x.status == distributorStatus.Complete, 'unCompleteStyle': x.status == distributorStatus.NotComplete }">
+                {{x.status == distributorStatus.NotComplete ? 'Not Complete' : 'Complete'}}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

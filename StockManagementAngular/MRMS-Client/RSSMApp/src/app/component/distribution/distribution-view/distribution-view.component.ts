@@ -14,8 +14,7 @@ import { SalesDistributionService } from 'src/app/services/sales/sales-distribut
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { throwError } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DailyDistributeStatus } from 'src/app/models/dailydistributeStatus/daily-distribute-status.model';
-import { DistributorStatus } from 'src/app/enums/distributor-status.enum';
+import { DistributionStatusComponent } from '../../shared/distribution-status/distribution-status.component';
 
 @Component({
   selector: 'app-distribution-view',
@@ -35,11 +34,9 @@ export class DistributionViewComponent {
   companyId!: number;
   concernPerson: ConcernPerson[]=[];
   concernPersonMapping: ConcernPersonMapping[] = [];
-  dailyDistributeStatus: DailyDistributeStatus[] = []
   selectedConcernPerson: number = 0;
   selectedCompany: number = 0;
   distibutionId : number = 0;
-  distributorStatus = DistributorStatus;
 
    onConcernPersonDropdownSelectionChange(selectedConcernPerson: number) {
     this.selectedConcernPerson=selectedConcernPerson;
@@ -107,30 +104,8 @@ export class DistributionViewComponent {
     }
   }
 
-  getDistributeStatus(){
-    this.salesService.getDistributeStatus().subscribe(
-      (res) => {
-        this.dailyDistributeStatus = res;
-      },
-      (err) => {
-        this._notificationSvc.message("Failed to load data", "DISMISS");
-      }
-    )
-  }
-
-  insertSkipConcerPersonDistribution(concernPersonId: number){
-    this.salesService.insertSkipConcerPersonDistribution(concernPersonId)
-      .subscribe(r => {
-        this.getDistributeStatus();
-        this.fetchDistributorData();
-      }, err => {
-        this._notificationSvc.message("Failed to save data!!!", "DISMISS");
-    });
-  }
-
-  openDistributeStatus(modalName: any){
-    this.getDistributeStatus();
-    const modalRef = this._modal.open(modalName);
+  openDistributeStatus(){
+    this._modal.open(DistributionStatusComponent);
   }
 
   navigateToAdddistribution() {

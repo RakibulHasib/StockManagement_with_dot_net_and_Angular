@@ -46,6 +46,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { UserviewComponent } from './component/User/userview/userview.component';
 import { CompanyAssignComponent } from './component/concernPerson/concern-view/company-assign/company-assign.component';
+import { DistributionStatusComponent } from './component/shared/distribution-status/distribution-status.component';
 
 
 
@@ -78,7 +79,8 @@ import { CompanyAssignComponent } from './component/concernPerson/concern-view/c
     DistributionEditComponent,
     RegisterComponent,
     UserviewComponent,
-    CompanyAssignComponent
+    CompanyAssignComponent,
+    DistributionStatusComponent
   ],
   imports: [
     BrowserModule,

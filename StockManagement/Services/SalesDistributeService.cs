@@ -1,4 +1,6 @@
-﻿namespace StockManagement.Services
+﻿using StockManagement.Entities;
+
+namespace StockManagement.Services
 {
     public class SalesDistributeService
     {
@@ -12,8 +14,7 @@
         enum DailyDistributeStatus
         {
             NotComplete = 0,
-            Complete,
-            Skip
+            Complete
         }
 
         public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID, DateTime StartDate, DateTime EndDate)
@@ -116,36 +117,38 @@
             return result;
         }
 
-        public async Task<List<DailyDistributorStatusDTO>> GetDistributorStatus()
+        public async Task<List<DailyDistributorStatusDTO>> GetDistributorStatus(DateTime date)
         {
-            var data = await (from cp in _unitOfWork.ConcernPerson.Queryable.Where(a => a.IsDeleted == 0)
-                              let status = _unitOfWork.SalesDistribute.Queryable.Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ConcernPersonId == cp.ConcernPersonId && a.IsDeleted == 0).Select(a => a.Status).FirstOrDefault()
-                              select new DailyDistributorStatusDTO
-                              {
-                                  ConcernPersonId = cp.ConcernPersonId,
-                                  ConcernPersonName = cp.ConcernPersonName,
-                                  Status = status != null ? status : Convert.ToInt32(DailyDistributeStatus.NotComplete)
-                              }).ToListAsync();
-            return data;
-        }
+            var concernPersonsWithDetails =
+                await (from cp in _unitOfWork.ConcernPerson.Queryable
+                       where cp.IsDeleted == 0
+                       join cm in _unitOfWork.ConcernUserCompanyMapping.Queryable on cp.ConcernPersonId equals cm.ConcernPersonId
+                       join c in _unitOfWork.Company.Queryable on cm.CompanyId equals c.CompanyId
+            where c.IsDeleted == 0
+                       join sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.CreationTime.Date == date.Date) on new { cm.ConcernPersonId, cm.CompanyId } equals new { sd.ConcernPersonId, sd.CompanyId } into sdGroup
+                       from sd in sdGroup.DefaultIfEmpty()
+                       select new
+                       {
+                           cp.ConcernPersonId,
+                           cp.ConcernPersonName,
+                           c.CompanyName,
+                           Status = sd.Status == null ? 0 : sd.Status,
+                       }).ToListAsync();
 
-        public async Task<int> InsertSkipConcerPersonDistribution(int ConcernPersonID)
-        {
-            int result = 0;
-            SalesDistribute master = new SalesDistribute
-            {
-                TotalPrice = 0,
-                TotalReceive = 0,
-                TotalReturn = 0,
-                TotalSales = 0,
-                GrandTotal = 0,
-                ConcernPersonId = ConcernPersonID,
-                IsDeleted = 0,
-                Status = Convert.ToInt32(DailyDistributeStatus.Skip)
-            };
-            await _unitOfWork.SalesDistribute.AddAsync(master);
-            await _unitOfWork.SaveChangesAsync();
-            return result;
+            var groupedData =
+                concernPersonsWithDetails.GroupBy(x => new { x.ConcernPersonId, x.ConcernPersonName })
+                .Select(g => new DailyDistributorStatusDTO
+                {
+                    ConcernPersonId = g.Key.ConcernPersonId,
+                    ConcernPersonName = g.Key.ConcernPersonName,
+                    StatusDetail = g.Where(x => x.CompanyName != null).Select(x => new DistributorStatusDetail
+                    {
+                        CompanyName = x.CompanyName,
+                        Status = x?.Status ?? Convert.ToInt32(DailyDistributeStatus.NotComplete)
+                    }).ToList()
+                }).ToList();
+
+            return groupedData;
         }
 
         public async Task<List<ProductDTO>> GetProduct()

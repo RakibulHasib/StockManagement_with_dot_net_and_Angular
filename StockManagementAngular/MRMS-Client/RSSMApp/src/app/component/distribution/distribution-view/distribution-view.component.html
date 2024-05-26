@@ -5,7 +5,7 @@
           <mat-card-title class="h5" style="text-align: center;">ডিস্ট্রিভিউটরদের প্রতিদিনের বিক্রি</mat-card-title>
         </div>
         <div class="d-flex align-items-center">
-          <div class="btn btn-primary" style="margin-right: 10px;"  (click)="openDistributeStatus(distributeStatus)">
+          <div class="btn btn-primary" style="margin-right: 10px;"  (click)="openDistributeStatus()">
             Distribute Status
           </div>
           <a mat-mini-fab class="btn btn-primary"  (click)="navigateToAdddistribution()">
@@ -128,51 +128,4 @@
   
     </mat-card-content>
   </mat-card>
-
-
-  <ng-template #distributeStatus let-modal>
-    <div class="modal-header" style="height: 50px;">
-      <h4 class="modal-title" id="modal-basic-title" style="font-weight: bold; margin-top: 20px;">ডিস্ট্রিভিউসান স্ট্যাটাস</h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="component-val-container">
-        <div class="component-val-item">
-          <table class="table table-bordered table-hover table-striped table-light">
-              <thead>
-                <tr>
-                  <th>সংশ্লিষ্ট ব্যক্তি</th>
-                  <th>স্ট্যাটাস</th>
-                  <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of dailyDistributeStatus; let i = index">
-                <td>{{item.concernPersonName}}</td>
-                <!-- <td>
-                  <span class="badge badge-success" *ngIf="item.status === distributorStatus.Complete">Complete</span>
-                  <span class="badge badge-danger" *ngIf="item.status === distributorStatus.NotComplete">Not Complete</span>
-                  <span class="badge badge-warning" *ngIf="item.status === distributorStatus.Skip">Skipped</span>
-                </td> -->
-
-                <td style="font-size: 12px;">
-                  <span style="background-color: green; color: white; border-radius: 5px; padding: 1px 3px;" *ngIf="item.status === distributorStatus.Complete">Complete</span>
-                  <span style="background-color: red; color: white; border-radius: 5px; padding: 1px 3px;" *ngIf="item.status === distributorStatus.NotComplete">Not Complete</span>
-                  <span style="background-color: rgb(85, 85, 82); color: white; border-radius: 5px; padding: 1px 3px;" *ngIf="item.status === distributorStatus.Skip">Skipped</span>
-                </td>
-                <td style="display: flex; justify-content: center;">
-                  <button style="padding: 0px 7px; font-size: 15px;" *ngIf="item.status == distributorStatus.NotComplete" class="btn btn-primary"  (click)="insertSkipConcerPersonDistribution(item.concernPersonId)">
-                    Skip
-                  </button>
-                  <span *ngIf="item.status != distributorStatus.NotComplete">None</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </ng-template>
   
