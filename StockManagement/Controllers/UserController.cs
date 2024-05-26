@@ -1,10 +1,12 @@
-﻿using StockManagement.Services;
+﻿using StockManagement.Features.CompanyFeatures;
+using StockManagement.Features.UserFeatures;
+using StockManagement.Services;
 
 namespace StockManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : BaseController<UserController>
     {
 
         private readonly UserService _userService;
@@ -29,7 +31,7 @@ namespace StockManagement.Controllers
         [HttpPut("user-role-assign/{userId}")]
         public async Task<ActionResult<ApiResponse>> UserRoleAssign(int userId, int roleId)
         {
-            return await _userService.UserRoleAssign(userId,roleId);
+            return await _userService.UserRoleAssign(userId, roleId);
         }
 
         [HttpPut("approval/{userId}")]
@@ -44,9 +46,9 @@ namespace StockManagement.Controllers
         }
 
         [HttpPut("password-reset")]
-        public async Task<ActionResult<ApiResponse>> PasswordReset(int userId, string oldPassword, string newPassword)
+        public async Task<ActionResult<ApiResponse>> PasswordReset(int userId, string newPassword)
         {
-            return await _userService.ResetPassword(userId, oldPassword, newPassword);
+            return await _userService.ResetPassword(userId, newPassword);
         }
 
         [HttpPost("role-insert")]
@@ -91,6 +93,24 @@ namespace StockManagement.Controllers
             return await _userService.GetUserList();
         }
 
+        [HttpPost("insert-role")]
+        public async Task<ActionResult<ApiResponse>> InserRole(InsertRoleCommand command)
+        {
+            return await _mediator.Send(command);
+        }
+
+
+        [HttpPost("assign-role")]
+        public async Task<ActionResult<ApiResponse>> AssignRole(RoleAssignCommand command)
+        {
+            return await _mediator.Send(command);
+        }
+
+        [HttpGet("role-list")]
+        public async Task<ActionResult<IEnumerable<RoleMasterDTO>>> GetRoleList()
+        {
+            return await _mediator.Send(new GetRoleQuery());
+        }
 
     }
 }

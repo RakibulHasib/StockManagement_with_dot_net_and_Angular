@@ -45,11 +45,11 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header >ব্যবহারকারীর  অবস্থা</mat-header-cell>
         <mat-cell *matCellDef="let element" [style.text-align]="'center'" >{{getUserStatusName(element.userStatus)}}</mat-cell>
       </ng-container>
-      <ng-container matColumnDef="permission">
-        <mat-header-cell *matHeaderCellDef mat-sort-header >অনুমতি</mat-header-cell> 
+      <ng-container  matColumnDef="permission" >
+        <mat-header-cell  *matHeaderCellDef mat-sort-header >অনুমতি</mat-header-cell> 
         <mat-cell *matCellDef="let element" class="action">
-          <button mat-raised-button color="primary" class="icon-spacing" (click)="showUserApprovalAlert(element.userId,element)"  [disabled]="element.userStatus === 1" >Permission</button>
-          <button mat-raised-button color="accent" class="icon-spacing"  >Reset</button>
+          <button  mat-raised-button color="primary" class="icon-spacing" (click)="showUserApprovalAlert(element.userId,element)"  [disabled]="userRole.roleId !== role.global_admin">Permission</button>
+          <button mat-raised-button color="accent" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" >Reset</button>
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="actions" class="action" style="align-items:end;">
@@ -57,7 +57,7 @@
         <mat-cell *matCellDef="let element" class="action">
 
           <!-- <button mat-raised-button color="primary" class="icon-spacing"  >Edit</button> -->
-          <button mat-raised-button  color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.userId,element)" >Deactivate</button>
+          <button mat-raised-button  color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.userId,element)" [disabled]="userRole.roleId !== role.global_admin" >Deactivate</button>
 
         </mat-cell>
       </ng-container>

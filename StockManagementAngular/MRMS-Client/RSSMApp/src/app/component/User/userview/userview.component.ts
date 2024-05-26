@@ -8,8 +8,9 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { Subscription } from 'rxjs';
 import { UserInfo } from 'src/app/models/Authentication/UserInfo';
-import { UserStatus } from 'src/app/models/Enum/UserStatus.enum';
+import { UserRole, UserStatus } from 'src/app/models/Enum/UserStatus.enum';
 import { User } from 'src/app/models/User/User';
+import { AuthenticationService } from 'src/app/services/Authentication/authentication.service';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { UserRoleService } from 'src/app/services/Shared/user-role.service';
 import { UserService } from 'src/app/services/User/User.service';
@@ -22,16 +23,16 @@ import Swal from 'sweetalert2';
 })
 export class UserviewComponent implements OnInit {
 
-  user_data_list: User[]=[];
-  dataSource: MatTableDataSource<User>= new MatTableDataSource(this.user_data_list);
-  @ViewChild(MatSort,{static:false}) sort!:MatSort;
-  @ViewChild(MatPaginator,{static:false}) paginator!:MatPaginator;
-  columnList: string[]=["userName","loginName","userStatus","permission","actions"]
-  userRole: UserInfo | null = null;
+  user_data_list: User[] = [];
+  dataSource: MatTableDataSource<User> = new MatTableDataSource(this.user_data_list);
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  columnList: string[] = ["userName", "loginName", "userStatus", "permission", "actions"]
+  userRole!: UserInfo;
 
   currentDate: Date = new Date();
-  user_from:FormGroup = new FormGroup({});
-  user_data:User = new User;
+  user_from: FormGroup = new FormGroup({});
+  user_data: User = new User;
 
   model = {
     userData: this.user_data
@@ -40,42 +41,47 @@ export class UserviewComponent implements OnInit {
   options: FormlyFormOptions = {};
 
   fields: FormlyFieldConfig[] = [];
+  role = UserRole;
 
   modalRef: any;
-  private subscription: Subscription = new Subscription(); 
+  private subscription: Subscription = new Subscription();
 
   constructor
-  (
-    private userDataSvc: UserService,
-    private _notifitions: NotificationService,
-    private _modal: NgbModal,
-    private router: Router,
-    private _userRole: UserRoleService,
+    (
+      private userDataSvc: UserService,
+      private _notifitions: NotificationService,
+      private _modal: NgbModal,
+      private router: Router,
+      private _userRole: UserRoleService,
+      private authService: AuthenticationService
 
-  ){}
-  
-  ngOnInit(){
-    this.userRole = this._userRole.getUserInfo();
-    console.log("Role",this.userRole)
+    ) { }
+
+  ngOnInit() {
+    this.getUserRole();
+    this.updateColumnList();
+    // debugger
+    // this.userRole = this._userRole.getUserInfo();
+    //console.log("Role", this.userRole)
     this.getItems();
   }
 
-  getItems(){
+  getItems() {
     this.userDataSvc.userList()
-    .subscribe(x=>{
-      this.user_data_list=x.data;
-      this.dataSource.data=this.user_data_list;
-      this.dataSource.paginator=this.paginator;
-      this.dataSource.sort=this.sort;
-    },err=>{
-      Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Failed to load data.',
-        timer: 2000 ,
-        showConfirmButton: false,
+      .subscribe(x => {
+        this.user_data_list = x.data;
+        this.dataSource.data = this.user_data_list;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }, err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Failed to load data.',
+          timer: 2000,
+          showConfirmButton: false,
+        });
       });
-    });
   }
 
   applyFilter(event: Event) {
@@ -83,8 +89,8 @@ export class UserviewComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  
- 
+
+
   handleFormSubmit(formData: User): void {
     console.log('Form submitted in CompanyViewComponent with data:', formData.userName);
   }
@@ -109,7 +115,7 @@ export class UserviewComponent implements OnInit {
   //     });
   //     return;
   //   }
-    
+
   //   this.subscription.add(this.companyDataSvc.insert(this.companyData)
   //     .subscribe(r => {
   //       Swal.fire({
@@ -153,7 +159,7 @@ export class UserviewComponent implements OnInit {
   //     });
   //     return;
   //   }
-   
+
   //   this.subscription.add(this.companyDataSvc.update(this.companyData)
   //   .subscribe(r => {
   //     const companyIndex = this.companiesData.findIndex(c => c.companyId === r.companyId);
@@ -201,7 +207,7 @@ export class UserviewComponent implements OnInit {
   //   this.form.reset(); 
   //   modalRef.dismiss();
   //   this.model.companyData = new Company;
-    
+
   // }
 
 
@@ -221,21 +227,21 @@ export class UserviewComponent implements OnInit {
               label: ' নাম',
               appearance: 'outline',
               floatLabel: 'always',
-              required:true,
+              required: true,
               minLength: 3
             },
             validation: {
               messages: { required: "Need to add Company Name " }
             }
           },
-          
+
         ],
 
       }
     ]
   }
 
-  showUserApprovalAlert(userId: number,data:any) {
+  showUserApprovalAlert(userId: number, data: any) {
     Swal.fire({
       title: 'আপনি কি নিশ্চিত?',
       text: `আপনি কি অনুমোদন করতে চান?`,
@@ -243,14 +249,14 @@ export class UserviewComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      cancelButtonText:'বাতিল করুন',
+      cancelButtonText: 'বাতিল করুন',
       confirmButtonText: 'হ্যাঁ, অনুমোদন করুন!',
-      focusCancel:true,
-      focusConfirm:false,
-      position:"top"
+      focusCancel: true,
+      focusConfirm: false,
+      position: "top"
     }).then((result) => {
       if (result.isConfirmed) {
-        this.subscription.add(this.userDataSvc.approval(userId,data).subscribe(r=>{
+        this.subscription.add(this.userDataSvc.approval(userId, data).subscribe(r => {
           Swal.fire({
             icon: 'success',
             title: 'Approved',
@@ -263,10 +269,10 @@ export class UserviewComponent implements OnInit {
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
           this.router.navigate(['/userview']);
-         
+
         }));
       }
-      if(result.isDismissed){
+      if (result.isDismissed) {
         Swal.fire({
           icon: 'warning',
           title: 'Warn!',
@@ -280,22 +286,22 @@ export class UserviewComponent implements OnInit {
     });
   }
 
-  showConfirmationAlert(userId: number,data:any) {
+  showConfirmationAlert(userId: number, data: any) {
     Swal.fire({
       title: 'আপনি কি নিশ্চিত?',
-     text: " আপনি কি নিষ্ক্রিয় করতে চান? ",
+      text: " আপনি কি নিষ্ক্রিয় করতে চান? ",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      cancelButtonText:'বাতিল করুন',
+      cancelButtonText: 'বাতিল করুন',
       confirmButtonText: 'হ্যাঁ, নিষ্ক্রিয় করুন!',
-      focusCancel:true,
-      focusConfirm:false,
-      position:"top"
+      focusCancel: true,
+      focusConfirm: false,
+      position: "top"
     }).then((result) => {
       if (result.isConfirmed) {
-        this.subscription.add(this.userDataSvc.delete(userId,data).subscribe(r=>{
+        this.subscription.add(this.userDataSvc.delete(userId, data).subscribe(r => {
           Swal.fire({
             icon: 'success',
             title: 'Deleted',
@@ -308,10 +314,10 @@ export class UserviewComponent implements OnInit {
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
           this.router.navigate(['/userview']);
-         
+
         }));
       }
-      if(result.isDismissed){
+      if (result.isDismissed) {
         Swal.fire({
           icon: 'warning',
           title: 'Warn!',
@@ -340,7 +346,29 @@ export class UserviewComponent implements OnInit {
     }
   }
 
+  getUserRole() {
+    this.authService.getCurrentUser().subscribe(
+      res => {
+        debugger
+        this.userRole = res;
+        console.log("RoleData", this.userRole)
+      },
+      error => {
+        console.error('Error occurred while fetching user info:', error);
+      }
+    );
+
+  }
+  updateColumnList() {
+    if (this.userRole?.roleId !== this.role.global_admin) { 
+      this.columnList = ['userName', 'loginName', 'userStatus', 'permission', 'actions'];
+    } else {
+      this.columnList = ['userName', 'loginName', 'userStatus'];
+    }
+  }
+
+
   ngOnDestroy() {
-    this.subscription.unsubscribe(); 
+    this.subscription.unsubscribe();
   }
 }

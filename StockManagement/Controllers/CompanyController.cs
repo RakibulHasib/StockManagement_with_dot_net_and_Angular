@@ -21,7 +21,6 @@ public class CompanyController : BaseController<CompanyController>
         _companyService = companyService;
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("CompanyDashboard")]
     public async Task<ActionResult<IEnumerable<CompaniesDTO>>> CompanyDashboard()
     {

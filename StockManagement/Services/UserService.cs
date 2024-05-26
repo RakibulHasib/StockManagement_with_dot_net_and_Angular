@@ -281,7 +281,7 @@ public class UserService
         }
     }
 
-    public async Task<ApiResponse> ResetPassword(int userId, string oldPassword, string newPassword)
+    public async Task<ApiResponse> ResetPassword(int userId, string newPassword)
     {
         //string hashed_password = _hasher.HashPassword(oldPassword);SHA512
 
@@ -299,15 +299,15 @@ public class UserService
 
         }
 
-        if (!BCrypt.Net.BCrypt.Verify(oldPassword, user_data.Password)) // (!_hasher.VerifyHashedPassword(user_data.Password, oldPassword))// SHA512
-        {
-            return new ApiResponse()
-            {
-                Message = "User current password is not valid",
-                Status = Status.Failed,
-                StatusCode = (int)HttpStatusCode.BadRequest,
-            };
-        }
+        //if (!BCrypt.Net.BCrypt.Verify(oldPassword, user_data.Password)) // (!_hasher.VerifyHashedPassword(user_data.Password, oldPassword))// SHA512
+        //{
+        //    return new ApiResponse()
+        //    {
+        //        Message = "User current password is not valid",
+        //        Status = Status.Failed,
+        //        StatusCode = (int)HttpStatusCode.BadRequest,
+        //    };
+        //}
         user_data.Password = hashed_password;
         _unitOfWork.Users.Update(user_data);
         await _unitOfWork.SaveChangesAsync();
