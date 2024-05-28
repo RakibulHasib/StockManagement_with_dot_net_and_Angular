@@ -296,5 +296,20 @@ namespace StockManagement.Services
             return result;
         }
 
+        public async Task<List<ProductInfoByConcernPersonDTO>> GetProductInfoByConcernPerson(int concernPersonId, int companyId)
+        {
+            var data = await _unitOfWork.Product.Queryable
+                .Where(x => x.CompanyId == companyId
+                            && x.IsDeleted == 0)
+                .Select(x => new ProductInfoByConcernPersonDTO
+                {
+                    ProductId = x.ProductId,
+                    ProductName = x.ProductName,
+                    Price = x.Price
+                }).ToListAsync();
+
+            return data;
+        }
+
     }
 }

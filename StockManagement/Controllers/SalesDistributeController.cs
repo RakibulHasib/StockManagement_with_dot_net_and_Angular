@@ -88,6 +88,11 @@ namespace StockManagement.Controllers
             return Ok(await _salesDistributeService.DeleteDistribution(SalesDistributeId));
         }
 
+        [HttpGet("GetProductInfoByConcernPerson/{concernPersonId}/{companyId}")]
+        public async Task<ActionResult<List<ProductInfoByConcernPersonDTO>>> GetProductInfoByConcernPerson(int concernPersonId, int companyId)
+        {
+            return Ok(await _salesDistributeService.GetProductInfoByConcernPerson(concernPersonId, companyId));
+        }
 
     }
 }
