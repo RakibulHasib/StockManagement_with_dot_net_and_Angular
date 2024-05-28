@@ -75,11 +75,11 @@ export class DistributionCreateComponent implements OnInit {
     .subscribe(data => {
         this.formData = data.map(x => ({
           productId: x.productId,
+          productName: x.productName,
           price: x.price,
           stock: x.stock,
           remaining: x.remaining,
         }));
-        console.log(this.formData)
     }, err => {
       this.notificationSvc.message("Failed to load product data", "DISMISS");
     })
@@ -150,17 +150,12 @@ export class DistributionCreateComponent implements OnInit {
           fieldGroup: [
             {
               className: 'product flex-1 width-500',
-              type: 'select',
-              key: 'productId',
-              templateOptions: {
+              type: 'input',
+              key: 'productName',
+              props: {
                 label: 'পণ্যের নাম',
-                options: [],
-                valueProp:'productId',
-                labelProp:'productName'
-              },
-              validation: {
-                messages: { required: " " }
-              },
+                readonly: true
+              }
             },
             {
               className: 'price flex-1 width-120',
@@ -178,7 +173,19 @@ export class DistributionCreateComponent implements OnInit {
               }
             },
             {
-              className: 'receiveQuantity flex-1 width-120',
+              className: 'price flex-1 width-80',
+              type: 'input',
+              key: 'stock',
+              props: {
+                label: 'স্টক',
+                floatLabel: 'always',
+                appearance: 'outline',
+                hideRequiredMarker: true,
+                readonly: true
+              }
+            },
+            {
+              className: 'receiveQuantity flex-1 width-100',
               type: 'input',
               key: 'receiveQuantity',
               props: {
@@ -193,13 +200,20 @@ export class DistributionCreateComponent implements OnInit {
               hooks:{
                 onInit:(field:FormlyFieldConfig)=>{
                   field.formControl?.setValue(0);
+                  field.formControl?.valueChanges.subscribe(value =>{
+                    const stock = field.form?.get('stock')?.value;
+                    if (value > stock){
+                      this.notificationSvc.message("আপনি স্টক অতিক্রম করেছেন!", "DISMISS");
+                      field.formControl?.setErrors({ 'stock': true });
+                    }
+                  })
                 }
               }
             },
             {
-              className: 'returnQuantity flex-1 width-120',
+              className: 'returnQuantity flex-1 width-80',
               type: 'input',
-              key: 'returnQuantity',
+              key: 'remaining',
               props: {
                 label: 'অবশিষ্ট',
                 floatLabel: 'always',
@@ -225,7 +239,7 @@ export class DistributionCreateComponent implements OnInit {
               }
             },
             {
-              className: 'totalQuantity flex-1 width-140',
+              className: 'totalQuantity flex-1 width-100',
               type: 'input',
               key: 'totalQuantity',
               props: {
@@ -258,7 +272,7 @@ export class DistributionCreateComponent implements OnInit {
               }
             },
             {
-              className: 'salesQuantity flex-1 width-160',
+              className: 'salesQuantity flex-1 width-100',
               type: 'input',
               key: 'salesQuantity',
               props: {
@@ -269,7 +283,7 @@ export class DistributionCreateComponent implements OnInit {
                 required:true
               },
               validation: {
-                messages: { required: "Sales quantity required" }
+                messages: { required: " " }
               },
               hooks:{
                 onInit: (field: FormlyFieldConfig)=>{
