@@ -1,4 +1,5 @@
-﻿using StockManagement.Entities;
+﻿using Microsoft.CodeAnalysis;
+using StockManagement.Entities;
 
 namespace StockManagement.Services
 {
@@ -305,8 +306,32 @@ namespace StockManagement.Services
                 {
                     ProductId = x.ProductId,
                     ProductName = x.ProductName,
-                    Price = x.Price
+                    Price = x.Price,
+                    Stock = x.Quantity
                 }).ToListAsync();
+
+            if (data.Any())
+            {
+                var productIds = data.Select(x => x.ProductId).ToList();
+
+                var lastSalesproductData = await (from sales in _unitOfWork.SalesDistribute.Queryable.Where(a => a.ConcernPersonId == concernPersonId && a.IsDeleted == 0)
+                                                  join details in _unitOfWork.SalesDistributeDetail.Queryable.Where(x => x.IsDeleted == 0) on sales.SalesDistributeId equals details.SalesDistributeId
+                                                  where sales.ConcernPersonId == concernPersonId && productIds.Contains(details.ProductId)
+                                            orderby sales.CreationTime descending
+                                            select new
+                                            {
+                                                details.ProductId,
+                                                details.ReturnQuantity
+                                            }).ToListAsync();
+
+                if (lastSalesproductData.Any())
+                {
+                    foreach (var item in data)
+                    {
+                        item.Remaining = lastSalesproductData.FirstOrDefault(x => x.ProductId == item.ProductId)?.ReturnQuantity ?? 0;
+                    }
+                }
+            }
 
             return data;
         }

@@ -3,6 +3,8 @@ export class SalesDistribution {
     public sl?: number,
     public productId?: number,
     public price?: number,
+    public stock?: number,
+    public remaining?: number,
     public receiveQuantity?: number,
     public returnQuantity?: number,
     public totalQuantity?: number,

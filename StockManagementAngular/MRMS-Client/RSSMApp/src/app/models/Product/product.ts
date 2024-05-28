@@ -10,3 +10,11 @@ export class Product {
     public companyId?: number
   ) { }
 }
+
+export interface DistributeProductInfo{
+    productId: number,
+    productName: string,
+    price: number,
+    stock: number,
+    remaining: number,
+}

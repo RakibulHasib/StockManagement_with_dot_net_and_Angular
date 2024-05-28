@@ -70,10 +70,16 @@ export class DistributionCreateComponent implements OnInit {
   }
 
   onCompanyDropdownSelectionChange(selectedCompany: number) {
-    this.salesService.getProductByCompanyId(selectedCompany)
+
+    this.salesService.GetProductInfoByConcernPerson(this.selectedConcernPerson, selectedCompany)
     .subscribe(data => {
-      console.log(data);
-      // this.formData = data.map(x => )
+        this.formData = data.map(x => ({
+          productId: x.productId,
+          price: x.price,
+          stock: x.stock,
+          remaining: x.remaining,
+        }));
+        console.log(this.formData)
     }, err => {
       this.notificationSvc.message("Failed to load product data", "DISMISS");
     })
