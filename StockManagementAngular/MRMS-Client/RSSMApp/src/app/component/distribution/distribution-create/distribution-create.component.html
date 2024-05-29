@@ -19,7 +19,7 @@
       <mat-form-field style="width: 50%; padding:5px">
         <mat-label>সংশ্লিষ্ট কোম্পানি বাছাই করুন</mat-label>
         <mat-select [disabled]="concernPersonMapping.length == 0" [(ngModel)]="selectedCompany" 
-        (selectionChange)="onCompanyDropdownSelectionChange($event.value)" [value]="selectedCompany">
+        (selectionChange)="onCompanyDropdownSelectionChange()" [value]="selectedCompany">
           <mat-option *ngFor="let company of concernPersonMapping" [value]="company.companyId">
             {{company.companyName}}
           </mat-option>

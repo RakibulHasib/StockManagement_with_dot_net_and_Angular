@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using StockManagement.DTO;
-using StockManagement.Entities;
-using StockManagement.Helpers;
-using StockManagement.Services;
+﻿using StockManagement.Helpers;
 
 namespace StockManagement.Controllers
 {
@@ -21,7 +15,7 @@ namespace StockManagement.Controllers
         }
 
         [HttpGet("GetSalesDistributeDataPerDay")]
-        public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID,DateTime StartDate, DateTime EndDate)
+        public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID, DateTime StartDate, DateTime EndDate)
         {
             return await _salesDistributeService.GetSalesDistributeDataPerDay(ConcernPersonID, StartDate, EndDate);
         }

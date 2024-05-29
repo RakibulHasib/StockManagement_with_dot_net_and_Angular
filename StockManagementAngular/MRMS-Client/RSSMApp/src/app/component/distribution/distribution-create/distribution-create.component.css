@@ -40,6 +40,20 @@
   --mdc-filled-text-field-focus-active-indicator-height: 0;
 }
 
+::ng-deep .receiveQuantity .mdc-text-field--outlined,
+::ng-deep .salesQuantity .mdc-text-field--outlined{
+  --mdc-outlined-text-field-outline-width: 2px;
+  --mdc-outlined-text-field-outline-color: #3f51b5;
+}
+
+::ng-deep .mdc-hide-focus-outline .mdc-text-field--outlined,
+::ng-deep .mdc-hide-focus-outline .mat-mdc-form-field{
+  --mdc-outlined-text-field-focus-outline-width: 1px;
+  --mdc-outlined-text-field-focus-outline-color: rgba(0, 0, 0, 0.38);
+  --mdc-filled-text-field-hover-active-indicator-color: rgba(0, 0, 0, 0.38);
+  --mdc-outlined-text-field-hover-outline-color: rgba(0, 0, 0, 0.38);;
+}
+
 :host ::ng-deep .flex-1 {
   margin: 0px 3px;
 }

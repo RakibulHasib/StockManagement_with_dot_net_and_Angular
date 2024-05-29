@@ -1,10 +1,4 @@
 {
-  "overrides": [
-    {
-      "files": ["src/app/**/*.html"],
-      "options": {
-        "parser": "angular"
-      }
-    }
-  ]
+  "tabWidth": 2,
+  "useTabs": false
 }
