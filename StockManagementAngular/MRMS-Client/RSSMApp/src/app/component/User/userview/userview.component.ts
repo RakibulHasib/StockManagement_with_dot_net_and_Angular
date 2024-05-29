@@ -42,7 +42,7 @@ export class UserviewComponent implements OnInit {
 
   fields: FormlyFieldConfig[] = [];
   role = UserRole;
-
+  paswordBox = '';
   modalRef: any;
   private subscription: Subscription = new Subscription();
 
@@ -96,6 +96,21 @@ export class UserviewComponent implements OnInit {
   }
 
   onCreate(template: TemplateRef<any>) {
+    this.generateFormFields();
+    this.modalRef = this._modal.open(template);
+  }
+
+  // onReset(modalRef: any) {
+  //   const ModalRef = this._modal.open(modalRef, {
+  //     centered: true
+  //   })
+  //   ModalRef.dismissed.subscribe(
+  //     result => {
+  //     }
+  //   )
+  // }
+
+  onReset(template: TemplateRef<any>) {
     this.generateFormFields();
     this.modalRef = this._modal.open(template);
   }
@@ -214,7 +229,6 @@ export class UserviewComponent implements OnInit {
   generateFormFields() {
     this.fields = [
       {
-
         fieldGroupClassName: 'display-flex',
         key: 'user-data',
         fieldGroup: [
@@ -222,16 +236,16 @@ export class UserviewComponent implements OnInit {
           {
             className: 'flex-1',
             type: 'input',
-            key: 'userName',
+            key: 'password',
             props: {
-              label: ' নাম',
+              label: 'পাসওয়ার্ড',
               appearance: 'outline',
               floatLabel: 'always',
               required: true,
               minLength: 3
             },
             validation: {
-              messages: { required: "Need to add Company Name " }
+              messages: { required: "Need to add password" }
             }
           },
 
