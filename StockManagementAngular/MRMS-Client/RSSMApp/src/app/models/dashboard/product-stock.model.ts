@@ -2,5 +2,6 @@ export interface ProductStock{
     productId: number,
     productName: string,
     price: number,
-    currentStock?: number
+    currentStock?: number,
+    previousStock?: number
 }

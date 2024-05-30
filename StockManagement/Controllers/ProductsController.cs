@@ -1,16 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using StockManagement.DTO;
 using StockManagement.Helpers;
-using StockManagement.Repository;
-using StockManagement.Services;
 
 namespace StockManagement.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class ProductsController : ControllerBase
 {
     private readonly UnitOfWork _unitOfWork;
@@ -55,10 +50,15 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<int>> DeleteProduct(int productId)
     {
         return Ok(await _productService.DeleteProduct(productId));
-
     }
 
 
+    [Transaction]
+    [HttpPut("UpdateProductStockLog")]
+    public async Task<ActionResult<int>> UpdateProductStockLog(ProducStockLogDTO productStock)
+    {
+        return Ok(await _productService.UpdateProductStock(productStock));
+    }
 
 
     [HttpGet("{companyId}")]
@@ -72,9 +72,10 @@ public class ProductsController : ControllerBase
                                   ProductId = p.ProductId,
                                   ProductName = p.ProductName,
                                   Price = p.Price ?? 0,
-                                  Eja = p.StockDetails.Where(a => a.IsDeleted == 0).OrderByDescending(x => x.CreationTime)
-                                                                              .Select(x => x.Eja ?? 0)
-                                                                              .FirstOrDefault(),
+                                  Eja = p.StockDetails.Where(a => a.IsDeleted == 0)
+                                                      .OrderByDescending(x => x.CreationTime)
+                                                      .Select(x => x.Eja ?? 0)
+                                                      .FirstOrDefault(),
                                   SalesQuantity = salesQ
                               }).ToListAsync();
 

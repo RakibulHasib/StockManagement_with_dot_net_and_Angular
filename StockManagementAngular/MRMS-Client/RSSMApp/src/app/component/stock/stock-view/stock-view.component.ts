@@ -18,6 +18,8 @@ import { CompanyService } from 'src/app/service/Company/company.service';
 import { Company } from 'src/app/models/company/company';
 import { StateService } from 'src/app/services/Shared/state.service';
 import { Stock } from 'src/app/models/Stock/Stock';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DistributionStatusComponent } from '../../shared/distribution-status/distribution-status.component';
 
 
 
@@ -39,7 +41,6 @@ export class StockViewComponent implements OnInit, OnDestroy {
   companyId!: number;
   paramsSubscription! : Subscription;
   companies: Company[] = [];
-  distributeStatus: boolean = false;
 
   dailyData: Dailydatadbmodel[] = [];
   dataSource: MatTableDataSource<Dailydatadbmodel> = new MatTableDataSource(this.dailyData);
@@ -59,15 +60,15 @@ export class StockViewComponent implements OnInit, OnDestroy {
     private _notificationSvc: NotificationService,
     private _dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
-    private dialogRef : MatDialog,
     private stateService: StateService,
     private router: Router,
+    private _modal: NgbModal
   ) { }
 
 
   ngOnInit() {
     const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 90);
     this.selectedCompany = this.stateService.getPreviousState(1)?.selectedCompany || 0;
     this.startDate = this.stateService.getPreviousState(1)?.startDate || this.formatDate(thirtyDaysAgo);
 
@@ -88,7 +89,6 @@ export class StockViewComponent implements OnInit, OnDestroy {
       // this.companyId = +Company[companyKey];
       this.fetchCompanyData();
       this.fetchData();
-      this.getDistributorStockCreateStatus();
     });
   }
 
@@ -155,17 +155,6 @@ export class StockViewComponent implements OnInit, OnDestroy {
     this.fetchData();
   }
 
-  getDistributorStockCreateStatus(){
-    this.dailyDataSvc.getDistributorStockCreateStatus().subscribe(
-      (res) => {
-        this.distributeStatus = res;
-      },
-      (err) => {
-        console.log(err);
-      }
-    )
-  }
-
   fetchData() {
     if (this.startDate && this.endDate) {
       this.dailyDataSvc.getDashboardDataPerDay(this.selectedCompany, this.startDate, this.endDate)
@@ -191,7 +180,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
 
   
   openDamageDialog(stockId: any){
-    const dialogRef = this.dialogRef.open(DamageaddComponent,{
+    const dialogRef = this._dialog.open(DamageaddComponent,{
       enterAnimationDuration: '400ms',
       data:{
         stockId:stockId
@@ -213,7 +202,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
       }
     }
     openCommissionDialog(stockId: any){
-      const dialogRef = this.dialogRef.open(CommisionaddComponent,{
+      const dialogRef = this._dialog.open(CommisionaddComponent,{
         enterAnimationDuration: '400ms',
         data:{
           stockId:stockId
@@ -255,6 +244,10 @@ export class StockViewComponent implements OnInit, OnDestroy {
               })
           }
         })
+    }
+
+    openDistributeStatus(){
+      this._modal.open(DistributionStatusComponent);
     }
 
   }

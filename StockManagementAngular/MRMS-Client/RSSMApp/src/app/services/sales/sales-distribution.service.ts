@@ -32,11 +32,14 @@ export class SalesDistributionService {
   getRemaining(productID: number,concernPersonID:number): Observable<number> {
     return this.http.get<number>(`${IceCreamApiUrl}/${endPoint}/GetProductWiseRemaining?ProductID=${productID}&ConcernPersonID=${concernPersonID}`);
   }
-  getDistributeStatus(): Observable<DailyDistributeStatus[]> {
-    return this.http.get<DailyDistributeStatus[]>(`${IceCreamApiUrl}/${endPoint}/GetDistributorStatus`);
+  getDistributeStatus(date: string): Observable<DailyDistributeStatus[]> {
+    return this.http.get<DailyDistributeStatus[]>(`${IceCreamApiUrl}/${endPoint}/GetDistributorStatus?date=${date}`);
   }
   getProduct(): Observable<Product[]> {
     return this.http.get<Product[]>(`${IceCreamApiUrl}/${endPoint}/GetProduct`);
+  }
+  getProductByCompanyId(companyId: number): Observable<Product[]> {
+    return this.http.get<Product[]>(`${IceCreamApiUrl}/${endPoint}/GetProduct/${companyId}`);
   }
   insert(data: {concernPersonId: number, salesDistribute: SalesDistribution[]}): Observable<any> {
     return this.http.post<SalesDistribution[]>(`${IceCreamApiUrl}/${endPoint}/InsertSalesDistributeData`, data);

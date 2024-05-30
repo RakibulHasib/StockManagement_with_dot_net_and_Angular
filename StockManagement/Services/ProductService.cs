@@ -112,4 +112,33 @@ public class ProductService
 
         return result;
     }
+
+    public async Task<int> UpdateProductStock(ProducStockLogDTO productStock)
+    {
+        int result = 0;
+        var productData = await _unitOfWork.Product.Queryable
+            .Where(a => a.ProductId == productStock.ProductId)
+            .FirstOrDefaultAsync();
+
+        var prevStock = await _unitOfWork.ProductStockLog.Queryable
+            .Where(a => a.ProductId == productStock.ProductId)
+            .OrderByDescending(a => a.CreationTime)
+            .Select(a => a.NewQuantity)
+            .FirstOrDefaultAsync();
+
+        productData.Quantity += productStock.NewQuantity;
+        _unitOfWork.Product.Update(productData);
+
+        var stockLog = new ProductStockLog
+        {
+            Id = Guid.NewGuid(),
+            ProductId = productStock.ProductId,
+            NewQuantity = (prevStock == null ? 0 : prevStock) + productStock.NewQuantity,
+            PreviousQuantity = prevStock == null ? 0 : prevStock
+        };
+        await _unitOfWork.ProductStockLog.AddAsync(stockLog);
+        await _unitOfWork.SaveChangesAsync();
+
+        return result;
+    }
 }

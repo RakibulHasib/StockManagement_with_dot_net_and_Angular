@@ -2,7 +2,7 @@
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { Observable, map, of, startWith, switchMap, tap } from 'rxjs';
+import { Observable, filter, map, of, startWith, switchMap, tap } from 'rxjs';
 import { Product } from '../../../models/Product/product';
 import { SalesDistribution } from '../../../models/sales/sales-distribution';
 import { SalesDistributionService } from '../../../services/sales/sales-distribution.service';
@@ -17,17 +17,16 @@ import { StateService } from 'src/app/services/Shared/state.service';
   styleUrls: ['./distribution-create.component.css']
 })
 export class DistributionCreateComponent implements OnInit {
-  
-
 
   currentDate: Date = new Date();
   distributeForm: FormGroup = new FormGroup({});
   formData: SalesDistribution[] = [{}];
-  productData: Product[] = [];
-  
+  productData: Product[] = [];  
+  templateOptions: any = {};
   form = new FormGroup({});
   model = {
-    concernPersonId:0,
+    concernPersonId: 0,
+    companyId: 0,
     formData: this.formData
   }
   options: FormlyFormOptions = {};
@@ -100,10 +99,10 @@ export class DistributionCreateComponent implements OnInit {
   generatedistributeFormFields() {
     this.fields = [
       {
-        fieldGroupClassName: 'display-flex',
+        fieldGroupClassName: 'd-flex align-items-center',
           fieldGroup: [
           {
-            className: 'concernPerson width-50-percent',
+            className: 'concernPerson width-50-percent p-2',
             type: 'select',
             key: 'concernPersonId',
             templateOptions: {
@@ -112,30 +111,55 @@ export class DistributionCreateComponent implements OnInit {
               valueProp:'concernPersonId',
               labelProp:'concernPersonName'
             },
-        validation: {
-          messages: { required: " " }
-        },
-        hooks:{
-          onInit:(field:FormlyFieldConfig)=>{
-            field.form?.get('concernPersonId')//
-              ?.valueChanges.subscribe(value =>{
-                this.salesService.checkTodayConcernPersonDistribution(value).toPromise().then(
-                  x => {
-                    console.log(x)
-                    if(x === true){
-                      this.notificationSvc.message("এই ব্যাক্তির আজকের ডিস্ট্রিভিউসান নামানো হয়ে গেছে!!", "DISMISS");
-                    }
-                  }
-                );
-            })
-
-          }
-        }
+            validation:{
+              messages: {
+                required: " "
+              }
+            },
+            hooks:{
+              onInit:(field:FormlyFieldConfig)=>{
+                field.form?.get('concernPersonId')
+                  ?.valueChanges.subscribe(value =>{
+                    this.salesService.checkTodayConcernPersonDistribution(value).toPromise().then(
+                      x => {
+                        if(x === true){
+                          this.notificationSvc.message("এই ব্যাক্তির আজকের ডিস্ট্রিভিউসান নামানো হয়ে গেছে!!", "DISMISS");
+                        }
+                      }
+                    );
+                })
+              }
+            }
+          },
+          {
+            className: 'width-50-percent p-2',
+            type: 'select',
+            key: 'companyId',
+            templateOptions: {
+              label: 'কোম্পানি',
+              options: [],
+              valueProp:'companyId',
+              labelProp:'companyName'
+            },
+            hooks:{
+              onInit:(field: FormlyFieldConfig) => {
+                field?.form?.get('concernPersonId')!
+                  .valueChanges.subscribe(value =>{
+                    this.concernPersonSvc.getConcernCompanyMapping(value).subscribe(x => {
+                      if (field.props?.options){
+                            field.props.options = x;
+                      }
+                    });
+                }
+              )
+              }
+            }
           }
         ],  
       },
       {
         key: 'formData',
+        className: 'width-50-percent',
         type: 'product-distribution',
         fieldArray: {
           fieldGroupClassName: 'display-flex',
@@ -146,33 +170,28 @@ export class DistributionCreateComponent implements OnInit {
               key: 'productId',
               templateOptions: {
                 label: 'পণ্যের নাম',
-                options: 
-                
-                // of(this.productData).pipe(
-                //   map(
-                //     x=>x.filter(a=>!this.formData
-                //       .filter(a=>a!==undefined)
-                //       .map(a=>a.productId)
-                //       .includes(a.productId)
-                //       )
-                //   )
-                // ),
-                
-                this.salesService.getProduct().pipe(
-                  map(
-                    x => x.filter(a=>!this.formData
-                          .filter(a => a !== undefined)
-                          .map(a=>a.productId)
-                        .includes(a.productId))       
-                  )
-
-                ),
+                options: [],
                 valueProp:'productId',
                 labelProp:'productName'
               },
-
               validation: {
                 messages: { required: " " }
+              },
+              hooks: {
+                onInit:(field:FormlyFieldConfig) => {
+                  this.productData = [];
+                  this.form.get('companyId')
+                    ?.valueChanges.subscribe(value => {
+                        const selectedProducts = this.formData.filter(a => a !== undefined).map(x => x.productId) as number[];
+                        this.salesService.getProductByCompanyId(value).subscribe(x => {
+                          x.filter(x => !selectedProducts.includes(x.productId!));
+                          
+                          if (field.props?.options){
+                              field.props.options = x;
+                          }
+                        });
+                  })
+                }
               },
               // hooks:{
               //   onChanges:(field:FormlyFieldConfig)=>{
@@ -213,7 +232,7 @@ export class DistributionCreateComponent implements OnInit {
                           this.notificationSvc.message("Failed to load price", "DISMISS");
                         })
                       })
-                }
+                  }
                 }
             },
             {

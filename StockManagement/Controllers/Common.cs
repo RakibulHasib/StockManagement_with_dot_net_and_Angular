@@ -57,25 +57,29 @@ namespace StockManagement.Controllers
                 .Where(product => product.CompanyId == CompanyId)
                 .ToListAsync();
 
-            var lastStockPerProduct = await _unitofwork.StockDetail.Queryable
-                .Where(a => a.CompanyId == CompanyId)
-                .GroupBy(stock => stock.ProductId)
-                .Select(group => group.OrderByDescending(stock => stock.CreationTime).FirstOrDefault())
+            var productIds = products.Select(a => a.ProductId).ToList();
+
+            var lastStockPerProduct = await _unitofwork.ProductStockLog.Queryable
+                .Where(a => productIds.Contains(a.ProductId))
+                .GroupBy(a => a.ProductId)
+                .Select(d => d.OrderByDescending(g => g.CreationTime).FirstOrDefault())
                 .ToListAsync();
 
-            var productsWithStock = from product in products
-                                    join stock in lastStockPerProduct
-                                    on product.ProductId equals stock.ProductId into productStock
-                                    from ps in productStock.DefaultIfEmpty()
-                                    select new ProductStockDTO
-                                    {
-                                        ProductId = product.ProductId,
-                                        ProductName = product.ProductName,
-                                        Price = product.Price,
-                                        CurrentStock = ps?.Eja ?? 0
-                                    };
+            var stockList = from p in products
+                            join ls in lastStockPerProduct on p.ProductId equals ls.ProductId
+                            into newStock
+                            from ls in newStock.DefaultIfEmpty()
 
-            return productsWithStock.ToList();
+                            select new ProductStockDTO
+                            {
+                                ProductId = p.ProductId,
+                                ProductName = p.ProductName,
+                                Price = p.Price,
+                                CurrentStock = ls?.NewQuantity ?? 0,
+                                PreviousStock = ls?.PreviousQuantity ?? 0
+                            };
+
+            return stockList.ToList();
         }
 
     }

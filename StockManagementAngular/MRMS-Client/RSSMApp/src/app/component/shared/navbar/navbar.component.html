@@ -10,11 +10,11 @@
 
     <mat-nav-list>
       <mat-list-item [routerLink]="['/home']">
-        <mat-icon>dashboard</mat-icon><span>Dashboard</span>
+        <span style="display: flex; align-items: center; gap: 4px;"><mat-icon>dashboard</mat-icon>Dashboard</span>
       </mat-list-item>
       <mat-expansion-panel [class.mat-elevation-z0]="true">
-        <mat-expansion-panel-header>
-          Common
+        <mat-expansion-panel-header style="margin-left: -8px;">
+          <span style="display: flex; align-items: center; gap: 4px;"><mat-icon>dns</mat-icon>Common</span>
         </mat-expansion-panel-header>
         <mat-nav-list> 
           <a mat-list-item  *ngIf="userInfo != null && (userInfo.roleId === role.global_admin || userInfo.roleId === role.admin)" [routerLink]="['/userview']"><mat-icon>label_important</mat-icon>User</a>
@@ -25,26 +25,12 @@
 
         </mat-nav-list>
       </mat-expansion-panel>
-      <mat-expansion-panel [class.mat-elevation-z0]="true">
-        <mat-expansion-panel-header>
-          StockDeatils
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/stock-view']"><mat-icon>label_important</mat-icon>Stock</a>
-          <!-- <a mat-list-item [routerLink]="['/stock', companies.Lovello]"><mat-icon>label_important</mat-icon>Lovello</a>
-          <a mat-list-item [routerLink]="['/stock', companies.Igloo]"><mat-icon>label_important</mat-icon>Igloo</a>
-          <a mat-list-item [routerLink]="['/stock', companies.ZaNZee]"><mat-icon>label_important</mat-icon>ZaNZee</a>
-          <a mat-list-item [routerLink]="['/stock', companies.KaziFarmFood]"><mat-icon>label_important</mat-icon>KaziFarmFood</a> -->
-        </mat-nav-list>
-      </mat-expansion-panel>
-      <mat-expansion-panel [class.mat-elevation-z0]="true">
-        <mat-expansion-panel-header>
-          SalesDistribution
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/sales-view']"><mat-icon>label_important</mat-icon>Distribution</a>
-        </mat-nav-list>
-      </mat-expansion-panel>
+      <mat-list-item [routerLink]="['/sales-view']">
+        <span style="display: flex; align-items: center; gap: 4px;"><mat-icon>transfer_within_a_station</mat-icon>Distribution</span>
+      </mat-list-item>
+      <mat-list-item [routerLink]="['/stock-view']">
+        <span style="display: flex; align-items: center; gap: 4px;"><mat-icon>store</mat-icon>Stock</span>
+      </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
   
