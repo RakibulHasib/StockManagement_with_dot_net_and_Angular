@@ -5,8 +5,9 @@
   </mat-card-header>
 
   <mat-card-content>
-    
-      <mat-form-field style="width: 50%; padding:5px">
+
+    <div style="display: flex; justify-content: center; align-items: center;">
+      <mat-form-field style="width: 30%; padding:5px">
         <mat-label>সংশ্লিষ্ট ব্যক্তি বাছাই করুন</mat-label>
         <mat-select [(ngModel)]="selectedConcernPerson"
           (selectionChange)="onConcernPersonDropdownSelectionChange($event.value)" [value]="selectedConcernPerson">
@@ -16,16 +17,26 @@
         </mat-select>
       </mat-form-field>
       
-      <mat-form-field style="width: 50%; padding:5px">
+      <mat-form-field style="width: 30%; padding:5px">
         <mat-label>সংশ্লিষ্ট কোম্পানি বাছাই করুন</mat-label>
-        <mat-select [disabled]="concernPersonMapping.length == 0" [(ngModel)]="selectedCompany" 
-        (selectionChange)="onCompanyDropdownSelectionChange()" [value]="selectedCompany">
+        <mat-select [disabled]="concernPersonMapping.length == 0" [(ngModel)]="selectedCompany"
+          (selectionChange)="onCompanyDropdownSelectionChange()" [value]="selectedCompany">
           <mat-option *ngFor="let company of concernPersonMapping" [value]="company.companyId">
             {{company.companyName}}
           </mat-option>
         </mat-select>
       </mat-form-field>
-
+      
+      <mat-form-field style="width: 30%; padding:5px" class="example-full-width">
+        <mat-label>Distribution date</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="distributionDateFormCtrl">
+        <mat-datepicker-toggle matIconSuffix [for]="picker">
+          <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    
     <form *ngIf="formData.length > 0" [formGroup]="form" class="productEntryForm" (ngSubmit)="insert()">
       <formly-form [model]="formData" [fields]="fields" [options]="options" [form]="form"></formly-form>
       <div class="f-w d-flex justify-content-end">

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { Product } from '../../../models/Product/product';
@@ -11,7 +11,7 @@ import { StateService } from 'src/app/services/Shared/state.service';
 import { ConcernPerson, ConcernPersonMapping } from 'src/app/models/concernPerson/concern-person';
 import { CompanyService } from 'src/app/service/Company/company.service';
 import { Company } from 'src/app/models/company/company';
-import { delay, startWith } from 'rxjs';
+import { Subscription, delay, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-distribution-create',
@@ -25,6 +25,9 @@ export class DistributionCreateComponent implements OnInit {
   selectedConcernPerson: number = 0;
   selectedCompany: number = 0;
   currentDate: Date = new Date();
+  distributionDateFormCtrl = new FormControl(
+    new Date('2020-11-06T01:30:00.000Z')
+  );
   distributeForm: FormGroup = new FormGroup({});
   formData: SalesDistribution[] = [];
   productData: Product[] = [];
@@ -48,8 +51,24 @@ export class DistributionCreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.fetchConcernPersonData();
-    // this.generatedistributeFormFields();
+    this.activatedRoute.queryParams.subscribe((params) => {
+      debugger;
+      const concernPersonId: number = +params['concernPerson'] || 0;
+      const companyId: number = +params['company'] || 0;
+
+      if (concernPersonId && concernPersonId > 0) {
+        this.fetchConcernPersonData();
+        this.selectedConcernPerson = concernPersonId;
+        this.fetchCompanyDataByConcernPerson(concernPersonId);
+
+        if (companyId && companyId > 0) {
+          this.selectedCompany = companyId;
+          this.loadProductData();
+        }
+      } else {
+        this.fetchConcernPersonData();
+      }
+    });
   }
 
   ngAfterContentChecked(): void {
@@ -57,11 +76,15 @@ export class DistributionCreateComponent implements OnInit {
   }
 
   onConcernPersonDropdownSelectionChange(selectedConcernPerson: number) {
+    this.formData = [];
     this.selectedConcernPerson = selectedConcernPerson;
     this.fetchCompanyDataByConcernPerson(selectedConcernPerson);
   }
 
-  onCompanyDropdownSelectionChange() {
+  onCompanyDropdownSelectionChange(): void {
+    this.loadProductData();
+  }
+  loadProductData() {
     this.generatedistributeFormFields();
     this.salesService
       .GetProductInfoByConcernPerson(
