@@ -42,7 +42,13 @@ export class UserService {
   userList(): Observable<any> {
     return this.http.get<any>(`${UserUrl}/get-user-list`);
   }
- 
+  roleAssign(data: any) {
+    return this.http.post<any>(`${UserUrl}/assign-role`, data);
+  }
+
+  roleList(): Observable<any> {
+    return this.http.get<any>(`${UserUrl}/role-list`);
+  }
 
 }
 

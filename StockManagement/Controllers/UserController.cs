@@ -107,7 +107,7 @@ namespace StockManagement.Controllers
         }
 
         [HttpGet("role-list")]
-        public async Task<ActionResult<IEnumerable<RoleMasterDTO>>> GetRoleList()
+        public async Task<ActionResult<List<RoleMasterDTO>>> GetRoleList()
         {
             return await _mediator.Send(new GetRoleQuery());
         }

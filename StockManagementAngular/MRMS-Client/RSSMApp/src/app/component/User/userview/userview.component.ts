@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, map, Subscription } from 'rxjs';
 import { UserInfo } from 'src/app/models/Authentication/UserInfo';
 import { UserRole, UserStatus } from 'src/app/models/Enum/UserStatus.enum';
 import { User } from 'src/app/models/User/User';
@@ -27,7 +27,7 @@ export class UserviewComponent implements OnInit {
   dataSource: MatTableDataSource<User> = new MatTableDataSource(this.user_data_list);
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  columnList: string[] = ["userName", "loginName", "userStatus", "permission", "actions"]
+  columnList: string[] = ["userName", "loginName", "userStatus", "actions"]
   userRole!: UserInfo;
 
   currentDate: Date = new Date();
@@ -100,131 +100,10 @@ export class UserviewComponent implements OnInit {
     this.modalRef = this._modal.open(template);
   }
 
-  // onReset(modalRef: any) {
-  //   const ModalRef = this._modal.open(modalRef, {
-  //     centered: true
-  //   })
-  //   ModalRef.dismissed.subscribe(
-  //     result => {
-  //     }
-  //   )
-  // }
-
   onReset(template: TemplateRef<any>) {
     this.generateFormFields();
     this.modalRef = this._modal.open(template);
   }
-
-
-  // insert(): void {
-  //   if (this.form.invalid) {
-  //     console.log("invalid submission");
-  //     Swal.fire({
-  //       icon: 'error',
-  //       title: 'Error!',
-  //       text: 'Failed to save data.',
-  //       timer: 2000 ,
-  //       showConfirmButton: false,
-  //       width: 400,
-  //       position: "top",
-  //     });
-  //     return;
-  //   }
-
-  //   this.subscription.add(this.companyDataSvc.insert(this.companyData)
-  //     .subscribe(r => {
-  //       Swal.fire({
-  //         icon: 'success',
-  //         title: 'Success!',
-  //         text: 'Data saved successfully.',
-  //         timer: 2000 ,
-  //         showConfirmButton: false,
-  //         width: 400,
-  //         position: "top",
-  //       });
-  //       this.form.reset();
-  //       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-  //       this.router.onSameUrlNavigation = 'reload';
-  //       this.router.navigate(['/companyview']);
-  //       this._modal.dismissAll();
-  //     }, err => {
-  //       Swal.fire({
-  //         icon: 'error',
-  //         title: 'Error!',
-  //         text: 'Failed to save data.',
-  //         timer: 2000 ,
-  //         showConfirmButton: false,
-  //         width: 400,
-  //         position: "top",
-  //       });
-  //     }))
-  // }
-
-  // update(): void {
-  //   if (this.form.invalid) {
-  //     console.log("invalid submission");
-  //     Swal.fire({
-  //       icon: 'error',
-  //       title: 'Error!',
-  //       text: 'Failed to update data.',
-  //       timer: 2000 ,
-  //       showConfirmButton: false,
-  //       width: 400,
-  //       position: "top",
-  //     });
-  //     return;
-  //   }
-
-  //   this.subscription.add(this.companyDataSvc.update(this.companyData)
-  //   .subscribe(r => {
-  //     const companyIndex = this.companiesData.findIndex(c => c.companyId === r.companyId);
-  //     if (companyIndex !== -1) {
-  //       this.companiesData[companyIndex] = r;
-  //     }
-  //     Swal.fire({
-  //       icon: 'success',
-  //       title: 'Success!',
-  //       text: 'Data update successfully.',
-  //       timer: 2000 ,
-  //       showConfirmButton: false,
-  //       width: 400,
-  //       position: "top",
-  //       customClass: {
-  //         container: 'swal-top'
-  //       }
-  //     });
-  //      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-  //      this.router.onSameUrlNavigation = 'reload';
-  //      this.router.navigate(['/companyview']);
-  //      this.form.reset();
-  //   }, () => {
-  //     Swal.fire({
-  //       icon: 'error',
-  //       title: 'Error!',
-  //       text: 'Failed to update data.',
-  //       timer: 2000,
-  //       showConfirmButton: false,
-  //       width: 400,
-  //       position: "top",
-  //     });
-  //   }));
-  // }
-
-
-  // onEdit(template: TemplateRef<any>, item: Company) {
-  //   this.companyData = Object.assign({}, item);
-  //   this.model.companyData=this.companyData;
-  //   this.generateFormFields();
-  //   this.modalRef = this._modal.open(template);
-  // }
-
-  // closeModal(modalRef: NgbActiveModal) {
-  //   this.form.reset(); 
-  //   modalRef.dismiss();
-  //   this.model.companyData = new Company;
-
-  // }
-
 
   generateFormFields() {
     this.fields = [
@@ -248,12 +127,96 @@ export class UserviewComponent implements OnInit {
               messages: { required: "Need to add password" }
             }
           },
-
         ],
-
       }
     ]
   }
+
+
+  onRoleAsign(template: TemplateRef<any>) {
+    this.generateRoleFormFields();
+    this.modalRef = this._modal.open(template);
+  }
+
+  async generateRoleFormFields() {
+    const roleList = await this.userDataSvc.roleList().toPromise();
+    const data = roleList.map((r: { roleId: number; roleName: string }) => ({
+      label: r.roleName,
+      value: r.roleId,
+    
+    }));
+    console.log("Role",this.options)
+    debugger
+    this.fields = [{
+      key: 'roleId',
+      type: 'select',
+      props: {
+        label: 'Role',
+        valueProp: 'roleId',
+        labelProp: 'roleName',
+        options: data,
+        
+        appearance: 'outline',
+        
+      }
+    }];
+  }
+
+  // async generateRoleFormFields() {
+  //   try {
+  //     const roleList = await this.userDataSvc.roleList().toPromise();
+  //     console.log(roleList)
+  
+  //     this.fields = [
+  //       {
+  //         key: 'roleData',
+  //         type: 'select', 
+  //         props: {
+  //           label: 'Role',
+  //           options: roleList,
+  //           appearance: 'outline',     
+  //         },
+  //       },
+  //     ];
+  //   } catch (error) {
+  //     console.error('Error fetching role list:', error);
+  //     // Handle error gracefully
+  //   }
+  // }
+  
+  
+
+//  async generateRoleFormFields() {
+//   var data = await this.userDataSvc.roleList().toPromise();
+//   debugger
+//     this.fields = [
+//       {
+//         fieldGroupClassName: 'display-flex',
+//         key: 'roleData',
+//         fieldGroup: [
+
+//           {
+//             className: 'flex-1',
+//             type: 'select',
+//             key: 'roleId',  
+//             props: {
+//               label: 'Role',
+//               options: data,
+//               valueProp: 'roleId',
+//               labelProp: 'roleName',
+//               appearance: 'outline'  
+//             },
+           
+//           }
+          
+          
+//         ],
+
+//       }
+//     ]
+    
+    
+//   }
 
   showUserApprovalAlert(userId: number, data: any) {
     Swal.fire({
@@ -363,9 +326,8 @@ export class UserviewComponent implements OnInit {
   getUserRole() {
     this.authService.getCurrentUser().subscribe(
       res => {
-        debugger
+      
         this.userRole = res;
-        console.log("RoleData", this.userRole)
       },
       error => {
         console.error('Error occurred while fetching user info:', error);
@@ -375,7 +337,7 @@ export class UserviewComponent implements OnInit {
   }
   updateColumnList() {
     if (this.userRole?.roleId !== this.role.global_admin) { 
-      this.columnList = ['userName', 'loginName', 'userStatus', 'permission', 'actions'];
+      this.columnList = ['userName', 'loginName', 'userStatus', 'actions'];
     } else {
       this.columnList = ['userName', 'loginName', 'userStatus'];
     }
