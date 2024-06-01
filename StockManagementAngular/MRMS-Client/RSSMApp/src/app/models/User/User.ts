@@ -13,6 +13,18 @@ export class User {
       public userStatus?: UserStatus
     ) { }
   }
+
+  export class UserDto {
+    constructor(
+      public userId?: number,
+      public firstName?: string,
+      public lastName?: string,
+      public userName?: string,
+      public roleName?: string,
+      public roleId?: number,
+      public userStatus?: UserStatus
+    ) { }
+  }
  export interface UserDetail {
     name: string; 
     role: number;

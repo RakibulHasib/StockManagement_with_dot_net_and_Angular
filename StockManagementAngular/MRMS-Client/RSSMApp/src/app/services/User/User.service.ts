@@ -30,8 +30,8 @@ export class UserService {
   delete(userId: number,data:any): Observable<any> {
     return this.http.put<any>(`${UserUrl}/delete/${userId}`,data);
   }
-  passwordReset(userId: number, oldPassword: string, newPassword: string, data:any): Observable<any> {
-    return this.http.put<any>(`${UserUrl}/password-reset??userId=${userId}&oldPassword=${oldPassword}&newPassword=${newPassword}`,data);
+  passwordReset(data: any): Observable<any> {
+    return this.http.put<any>(`${UserUrl}/password-reset`, data);
   }
   roleInsert(role: any) {
     return this.http.post<any>(`${UserUrl}/role-insert`, role);

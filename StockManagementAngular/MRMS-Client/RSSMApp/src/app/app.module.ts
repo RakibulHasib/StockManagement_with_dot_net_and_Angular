@@ -48,6 +48,7 @@ import { CompanyAssignComponent } from './component/concernPerson/concern-view/c
 import { DistributionStatusComponent } from './component/shared/distribution-status/distribution-status.component';
 import { AuthInterceptor } from './component/Interceptor/auth.interceptor';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 
 
@@ -101,6 +102,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
     MatToolbarModule,
     FormlyMatToggleModule,
     MatExpansionModule,
+    MatGridListModule,
     FormlyModule.forRoot({
       extras: { lazyRender: true, resetFieldOnHide: true },
       validationMessages: [

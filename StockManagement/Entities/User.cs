@@ -18,5 +18,5 @@ namespace StockManagement.Entities
         public int IsDeleted { get; set; }
     }
 
-    
+
 }

@@ -21,6 +21,20 @@ namespace StockManagement.Features.UserFeatures
 
                 try
                 {
+                    var user_data = await _unitOfWork.Users.FindAsync(request.UserID);
+                    if (user_data == null) 
+                    {
+                        return new ApiResponse()
+                        {
+                            Message = "User not Found",
+                            Status = Status.Failed,
+                            StatusCode = (int)HttpStatusCode.NotFound
+                        };
+                    }
+                    user_data.RoleId = request.RoleId;
+
+                     _unitOfWork.Users.Update(user_data);
+
                     RoleAssagin roleAssagin = new RoleAssagin
                     {
                         RoleId = request.RoleId,

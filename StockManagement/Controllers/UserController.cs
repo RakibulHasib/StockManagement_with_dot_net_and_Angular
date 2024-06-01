@@ -46,9 +46,9 @@ namespace StockManagement.Controllers
         }
 
         [HttpPut("password-reset")]
-        public async Task<ActionResult<ApiResponse>> PasswordReset(int userId, string newPassword)
+        public async Task<ActionResult<ApiResponse>> PasswordReset(PasswordDto dto)
         {
-            return await _userService.ResetPassword(userId, newPassword);
+            return await _userService.ResetPassword(dto.UserId, dto.Password);
         }
 
         [HttpPost("role-insert")]

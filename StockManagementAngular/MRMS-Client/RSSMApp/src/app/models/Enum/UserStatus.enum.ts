@@ -6,7 +6,9 @@ export enum UserStatus {
 }
 
 export enum UserRole {
-    admin = 1,
-    global_admin = 101
+    global_admin = 1,
+    admin = 2,
+    manager = 3,
+    sales_man = 4
 }
 

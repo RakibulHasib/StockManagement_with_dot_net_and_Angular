@@ -95,3 +95,7 @@
     width: 100%; /* Adjust width as needed */
     z-index: 9999; /* Ensure the alert is on top of other elements */
 }
+ 
+.mat-column-userName,.mat-column-loginName,.mat-column-userStatus,.mat-column-roleName {
+  max-width: 15%;
+}

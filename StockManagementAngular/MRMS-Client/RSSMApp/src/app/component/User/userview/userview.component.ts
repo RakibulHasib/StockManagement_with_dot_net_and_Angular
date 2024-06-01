@@ -7,9 +7,9 @@ import { Router } from '@angular/router';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { firstValueFrom, map, Subscription } from 'rxjs';
-import { UserInfo } from 'src/app/models/Authentication/UserInfo';
+import { PasswordDto, RoleDto, UserInfo } from 'src/app/models/Authentication/UserInfo';
 import { UserRole, UserStatus } from 'src/app/models/Enum/UserStatus.enum';
-import { User } from 'src/app/models/User/User';
+import { User, UserDto } from 'src/app/models/User/User';
 import { AuthenticationService } from 'src/app/services/Authentication/authentication.service';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { UserRoleService } from 'src/app/services/Shared/user-role.service';
@@ -23,26 +23,36 @@ import Swal from 'sweetalert2';
 })
 export class UserviewComponent implements OnInit {
 
-  user_data_list: User[] = [];
+  user_data_list: UserDto[] = [];
   dataSource: MatTableDataSource<User> = new MatTableDataSource(this.user_data_list);
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  columnList: string[] = ["userName", "loginName", "userStatus", "actions"]
+  columnList: string[] = ["userName", "loginName", "userStatus","roleName", "actions"]
   userRole!: UserInfo;
+
+  roleData : RoleDto[] =[]
 
   currentDate: Date = new Date();
   user_from: FormGroup = new FormGroup({});
-  user_data: User = new User;
+
+  passwordData : PasswordDto = {
+    password : ""
+  };
 
   model = {
-    userData: this.user_data
+    passwordData: this.passwordData
   }
+
+
+  roleAssignModel = { roleId: 0, userId: 0 };
+
+  userId = 0;
+
   form = new FormGroup({});
   options: FormlyFormOptions = {};
 
   fields: FormlyFieldConfig[] = [];
   role = UserRole;
-  paswordBox = '';
   modalRef: any;
   private subscription: Subscription = new Subscription();
 
@@ -60,9 +70,6 @@ export class UserviewComponent implements OnInit {
   ngOnInit() {
     this.getUserRole();
     this.updateColumnList();
-    // debugger
-    // this.userRole = this._userRole.getUserInfo();
-    //console.log("Role", this.userRole)
     this.getItems();
   }
 
@@ -89,27 +96,68 @@ export class UserviewComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-
-
-  handleFormSubmit(formData: User): void {
-    console.log('Form submitted in CompanyViewComponent with data:', formData.userName);
-  }
-
-  onCreate(template: TemplateRef<any>) {
+  onReset(template: TemplateRef<any>, userId: number) {
+    this.userId = userId;
     this.generateFormFields();
     this.modalRef = this._modal.open(template);
   }
 
-  onReset(template: TemplateRef<any>) {
-    this.generateFormFields();
-    this.modalRef = this._modal.open(template);
+  onPasswordReset(): void {
+
+     const data = {
+      userId: this.userId,
+      password: this.passwordData.password
+     }
+    
+    if (this.form.invalid) {
+      console.log("invalid submission");
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to save data.',
+        timer: 2000 ,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+      });
+      return;
+    }
+    
+    this.subscription.add(this.userDataSvc.passwordReset(data)
+
+      .subscribe(r => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Data saved successfully.',
+          timer: 2000 ,
+          showConfirmButton: false,
+          width: 400,
+          position: "top",
+        });
+        this.form.reset();
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigate(['/userview']);
+        this._modal.dismissAll();
+      }, err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Failed to save data.',
+          timer: 2000 ,
+          showConfirmButton: false,
+          width: 400,
+          position: "top",
+        });
+      }))
   }
 
   generateFormFields() {
     this.fields = [
       {
         fieldGroupClassName: 'display-flex',
-        key: 'user-data',
+        key: 'passwordData',
         fieldGroup: [
 
           {
@@ -133,90 +181,45 @@ export class UserviewComponent implements OnInit {
   }
 
 
-  onRoleAsign(template: TemplateRef<any>) {
-    this.generateRoleFormFields();
+  getRole(){
+    this.userDataSvc.roleList()
+    .subscribe(res => {
+      this.roleData = res
+    },
+    err => {
+      console.log(err);
+    });
+  }
+
+  onRoleAsign(template: TemplateRef<any>, userId: number) {
+    this.getRole();
+    this.roleAssignModel.userId = userId;
     this.modalRef = this._modal.open(template);
   }
 
-  async generateRoleFormFields() {
-    const roleList = await this.userDataSvc.roleList().toPromise();
-    const data = roleList.map((r: { roleId: number; roleName: string }) => ({
-      label: r.roleName,
-      value: r.roleId,
-    
-    }));
-    console.log("Role",this.options)
-    debugger
-    this.fields = [{
-      key: 'roleId',
-      type: 'select',
-      props: {
-        label: 'Role',
-        valueProp: 'roleId',
-        labelProp: 'roleName',
-        options: data,
-        
-        appearance: 'outline',
-        
+  onRoleAssignClose(modalRef: NgbActiveModal){
+    const data = {
+      roleId : this.roleAssignModel.roleId,
+      userId: this.roleAssignModel.userId
+    }
+    this.userDataSvc.roleAssign(data).subscribe(
+      (res) => {
+        this._notifitions.message("Successfully saved data", "DISMISS");
+        modalRef.dismiss();
+        this.roleAssignModel = {
+          roleId: 0,
+          userId: 0
+        };
+        this.getItems();
+      },
+      (err) => {
+        this._notifitions.message("Failed to save!!!", "DISMISS");
       }
-    }];
+    );
   }
 
-  // async generateRoleFormFields() {
-  //   try {
-  //     const roleList = await this.userDataSvc.roleList().toPromise();
-  //     console.log(roleList)
-  
-  //     this.fields = [
-  //       {
-  //         key: 'roleData',
-  //         type: 'select', 
-  //         props: {
-  //           label: 'Role',
-  //           options: roleList,
-  //           appearance: 'outline',     
-  //         },
-  //       },
-  //     ];
-  //   } catch (error) {
-  //     console.error('Error fetching role list:', error);
-  //     // Handle error gracefully
-  //   }
-  // }
-  
-  
 
-//  async generateRoleFormFields() {
-//   var data = await this.userDataSvc.roleList().toPromise();
-//   debugger
-//     this.fields = [
-//       {
-//         fieldGroupClassName: 'display-flex',
-//         key: 'roleData',
-//         fieldGroup: [
-
-//           {
-//             className: 'flex-1',
-//             type: 'select',
-//             key: 'roleId',  
-//             props: {
-//               label: 'Role',
-//               options: data,
-//               valueProp: 'roleId',
-//               labelProp: 'roleName',
-//               appearance: 'outline'  
-//             },
-           
-//           }
-          
-          
-//         ],
-
-//       }
-//     ]
-    
-    
-//   }
+ 
 
   showUserApprovalAlert(userId: number, data: any) {
     Swal.fire({
@@ -337,9 +340,9 @@ export class UserviewComponent implements OnInit {
   }
   updateColumnList() {
     if (this.userRole?.roleId !== this.role.global_admin) { 
-      this.columnList = ['userName', 'loginName', 'userStatus', 'actions'];
+      this.columnList = ["userName", "loginName", "userStatus","roleName","actions"];
     } else {
-      this.columnList = ['userName', 'loginName', 'userStatus'];
+      this.columnList = ["userName", "loginName", "userStatus","roleName"];
     }
   }
 

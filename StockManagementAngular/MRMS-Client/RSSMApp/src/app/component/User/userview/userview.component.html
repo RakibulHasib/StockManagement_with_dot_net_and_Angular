@@ -28,6 +28,36 @@
 
     </div>
     <mat-table [dataSource]="dataSource" matSort style="text-align:center">
+
+      <ng-container matColumnDef="userName" style="width: 15%;">  <mat-header-cell *matHeaderCellDef mat-sort-header>ব্যবহারকারী নাম</mat-header-cell>
+        <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.firstName}} {{element.lastName}}</mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="loginName" style="width: 15%;">  <mat-header-cell *matHeaderCellDef mat-sort-header>লগইন নাম</mat-header-cell>
+        <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.userName}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="roleName" style="width: 15%;">  <mat-header-cell *matHeaderCellDef mat-sort-header>রোল </mat-header-cell>
+        <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.roleName}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="userStatus" style="width: 15%;">  <mat-header-cell *matHeaderCellDef mat-sort-header>অবস্থা</mat-header-cell>
+        <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{getUserStatusName(element.userStatus)}}</mat-cell>
+      </ng-container> 
+    
+      <ng-container matColumnDef="actions" class="action" style="width: 55%;">  <mat-header-cell *matHeaderCellDef mat-sort-header class="action">...</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="action">
+          <button mat-raised-button color="primary" class="icon-spacing" (click)="showUserApprovalAlert(element.userId,element)" [disabled]="userRole.roleId !== role.global_admin">Permission</button>
+          <button mat-raised-button color="accent" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onRoleAsign(roleAssignModal, element.userId)">Role</button>
+          <button mat-raised-button color="accent" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onReset(passwordReset, element.userId)">Reset</button>
+          <button mat-raised-button color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.userId,element)" [disabled]="userRole.roleId !== role.global_admin">Deactivate</button>
+        </mat-cell>
+      </ng-container>
+    
+      <mat-header-row *matHeaderRowDef="columnList" class="bold-header"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columnList;"></mat-row>
+    
+    </mat-table>
+    
+    <!-- <mat-table [dataSource]="dataSource" matSort style="text-align:center">
   
       <ng-container matColumnDef="userName" style="width:20px;" >
         <mat-header-cell *matHeaderCellDef mat-sort-header >ব্যবহারকারী নাম</mat-header-cell>
@@ -46,15 +76,15 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header  class="action" >...</mat-header-cell>
         <mat-cell *matCellDef="let element" class="action">
           <button  mat-raised-button color="primary" class="icon-spacing" (click)="showUserApprovalAlert(element.userId,element)"  [disabled]="userRole.roleId !== role.global_admin">Permission</button>
-          <button mat-raised-button color="accent" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onReset(passwordReset)"  >Reset</button>
-          <button mat-raised-button color="accent" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onRoleAsign(roleAssignModal)"  >Role Assign</button>
+          <button mat-raised-button color="accent" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onReset(passwordReset, element.userId)"  >Reset</button>
+          <button mat-raised-button color="accent" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onRoleAsign(roleAssignModal, element.userId)"  >Role Assign</button>
           <button mat-raised-button  color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.userId,element)" [disabled]="userRole.roleId !== role.global_admin" >Deactivate</button>
         </mat-cell>
       </ng-container>
       <mat-header-row *matHeaderRowDef="columnList" class="bold-header"></mat-header-row>
       <mat-row *matRowDef="let row; columns: columnList;"></mat-row>
 
-    </mat-table>
+    </mat-table> -->
     <mat-paginator [pageSizeOptions]="[5, 10, 20, 40]" [pageSize]="5" showFirstLastButtons></mat-paginator>
 
   </mat-card-content>
@@ -68,7 +98,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="form" class="CompanyEntryForm" >
+    <form [formGroup]="form" class="PasswordResetFrom" (ngSubmit)="onPasswordReset()" >
       <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
       <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
         <button type="submit" class="btn btn-outline-warning">Reset</button>
@@ -78,7 +108,36 @@
   </div>
 </ng-template>
 
-<ng-template #roleAssignModal let-modal>
+
+
+
+ <ng-template #roleAssignModal let-modal>
+  <div class="modal-header">
+		<h4 class="modal-title">
+			<span>Role Assign</span>
+		</h4>
+		<button type="button" id="times_button" class="close pull-right" aria-label="Close" (click)="modal.dismiss()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+  <div class="modal-body" style="height: 150px; padding: 10px;">
+    <form #f="ngForm" novalidate>
+      <div class="form-group" style="padding: 5px; margin: 20px 20px;">
+        <select class="form-select" name="roleId" [(ngModel)]="roleAssignModel.roleId" required>
+          <option [value] = 0 disabled>Choose a role</option>
+          <option *ngFor="let item of roleData" [value]="item.roleId">{{item.roleName| titlecase}} 
+          </option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success btn-sm" (click)="onRoleAssignClose(modal)" [disabled]="f.invalid">Submit</button>
+      </div>
+    </form>
+  </div>
+
+</ng-template> 
+
+<!-- <ng-template #roleAssignModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> পাসওয়ার্ড রিসেট করুন </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -94,6 +153,6 @@
     </form>
     
   </div>
-</ng-template>
+</ng-template> -->
 
 

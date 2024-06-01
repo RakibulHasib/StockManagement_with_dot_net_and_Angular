@@ -71,11 +71,13 @@ export class NavbarComponent {
 
   ngOnInit(): void {
 
+    debugger
     this.router.events
       .pipe(
         filter((event: any) => event instanceof NavigationStart)
       )
       .subscribe((event: NavigationStart) => {
+        debugger
         this.getUserRole();
         if (event.navigationTrigger === 'popstate') {
           if (event.url == "/signin" || event.url == "/") {

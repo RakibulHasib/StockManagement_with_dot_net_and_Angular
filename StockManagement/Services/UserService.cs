@@ -198,8 +198,23 @@ public class UserService
     {
         try
         {
-            var user_data = await _unitOfWork.Users.Queryable.Where(u=>u.IsDeleted == 0).ToListAsync();
-            return new ApiResponse<List<User>>()
+            //var user_data = await _unitOfWork.Users.Queryable.Where(u => u.IsDeleted == 0).ToListAsync();
+            var user_data = await _unitOfWork.Users.Queryable
+                        .Join(_unitOfWork.RoleMaster.Queryable,
+                              u => u.RoleId,
+                              rm => rm.RoleId,
+                              (u, rm) => new UserInfoDTO
+                              {
+                                  UserId = u.UserId,
+                                  UserName = u.UserName,
+                                  UserStatus = u.UserStatus ?? 0,
+                                  FirstName = u.FirstName,
+                                  LastName = u.LastName,
+                                  RoleId = u.RoleId,
+                                  RoleName = rm.RoleName
+                              }).ToListAsync();
+
+            return new ApiResponse<List<UserInfoDTO>>()
             {
                 Message = " ",
                 Status = Status.Success,
@@ -222,6 +237,7 @@ public class UserService
     {
         try
         {
+
             var user_data = await _unitOfWork.Users.Queryable.Where(u => u.UserId == userId).FirstOrDefaultAsync();
             user_data.UserStatus = (int)UserStatus.Active;
             user_data.IsDeleted = 0;
@@ -285,7 +301,10 @@ public class UserService
     {
         //string hashed_password = _hasher.HashPassword(oldPassword);SHA512
 
-        var hashed_password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        string password = newPassword.Trim();
+
+        var hashed_password = BCrypt.Net.BCrypt.HashPassword(password);
+
 
         var user_data = await _unitOfWork.Users.Queryable.Where(u => u.UserId == userId && u.IsDeleted == 0).FirstOrDefaultAsync();
         if (user_data is null)
