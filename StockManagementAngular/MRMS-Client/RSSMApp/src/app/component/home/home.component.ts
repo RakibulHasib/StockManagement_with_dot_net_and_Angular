@@ -19,6 +19,7 @@ export class HomeComponent {
   currentCompany: string = "";
   currenProduct: string = "";
   isButtonDisabled: boolean[] = [];
+  inputValues: any[] = [];
   constructor(
     private notificationSvc: NotificationService,
     private dashboardService: DashboardServiceService,
@@ -39,7 +40,10 @@ export class HomeComponent {
     this.dashboardService.getProductStock(companyId).subscribe(
       (res) => {
         this.productStocks = res;
-        this.isButtonDisabled = this.productStocks.map(() => true);
+        if(this.inputValues.length == 0){
+          this.isButtonDisabled = this.productStocks.map(() => true);
+        }
+        
       },
       (err) => {
         this.notificationSvc.message("Failed to load data!!!", "DISMISS");
@@ -51,22 +55,29 @@ export class HomeComponent {
     this.currentCompany = companyName;
     this.currentCompanyId = companyId;
     this.getProductStock(companyId);
-    this._modal.open(modalName, {size: 'lg'});
+    const modalRef = this._modal.open(modalName, {size: 'lg'});
+    modalRef.dismissed.subscribe(
+      result => {
+        this.inputValues = [];
+      }
+    )
   }
 
-  checkValue(value: string, index: number): void {
+  checkValue(value: any, index: number): void {
     this.isButtonDisabled[index] = value === '' || value === null;
   }
 
-  updateStock(event: any, item: ProductStock){
+  updateStock(newStock: number, item: ProductStock, i: any){
     const data = {
       productId: item.productId,
-      newQuantity: event.value
+      newQuantity: newStock
     }
     this._productSvc.updateStockLog(data).subscribe(
       (res) => {
         this.notificationSvc.message("Successfully Updated!!!", "DISMISS");
         this.getProductStock(this.currentCompanyId);
+        this.inputValues[i] = null;
+        this.isButtonDisabled[i] = true;
       },
       (err) => {
         this.notificationSvc.message("Failed to Update!!!", "DISMISS");

@@ -44,10 +44,10 @@
               <td>{{item?.currentStock}}</td>
               <td>{{item?.previousStock}}</td>
               <td class="d-flex justify-content-center gap-2">
-                <input class="w-50" name="quantity_{{i}}" type="number" #valueRef value="null" placeholder="Enter new stock..."
-                 required (input)="checkValue(valueRef.value, i)"/>
+                <input class="w-50" name="quantity_{{i}}" type="number" [(ngModel)]="inputValues[i]" placeholder="Enter new stock..."
+                 required (input)="checkValue(inputValues[i], i)"/>
                 <button mat-raised-button color="primary" class="icon-spacing" style="font-size: 11px !important;" 
-                (click)="updateStock(valueRef ,item)" [disabled]="isButtonDisabled[i]">Update</button>
+                (click)="updateStock(inputValues[i], item, i)" [disabled]="isButtonDisabled[i]">Update</button>
               </td>
             </tr>
           </tbody>

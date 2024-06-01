@@ -62,7 +62,7 @@ public class StockService
         return data;
     }
 
-    public async Task<ActionResult<int>> InsertStockData(int companyId, List<StockDTO> savoyIceCreamVM)
+    public async Task<ActionResult<int>> InsertStockData(int companyId, DateTime createdDate, List<StockDTO> savoyIceCreamVM)
     {
         int result = 0;
         Stock master = new Stock
@@ -74,14 +74,15 @@ public class StockService
             GrandTotal = 0,
             TotalSalesQuantity = 0,
             GrandTotalAmount = 0,
-            IsDeleted = 0
+            IsDeleted = 0,
+            CreationTime = createdDate
         };
         await _unitOfWork.Stock.AddAsync(master);
         await _unitOfWork.SaveChangesAsync();
 
         foreach (var item in savoyIceCreamVM)
         {
-            var total = (item.Eja ?? 0) + (item.NewProduct);
+            var total = item.Total;
             var stockDetails = new StockDetail
             {
                 StockDetailsId = Guid.NewGuid(),
@@ -90,10 +91,10 @@ public class StockService
                 ProductId = item.ProductId,
                 Price = item.Price,
                 RestockQuantity = item.NewProduct,
-                TotalQuantity = total,
+                TotalQuantity = item.Total,
                 Eja = total - (item.SalesQuantity ?? 0),
                 SalesQuantity = item.SalesQuantity,
-                TotalAmount = (item.SalesQuantity) * (item.Price),
+                TotalAmount = item.TotalAmount,
                 DamageQuantity = item.DamageQuantity ?? 0,
                 IsDeleted = 0
             };

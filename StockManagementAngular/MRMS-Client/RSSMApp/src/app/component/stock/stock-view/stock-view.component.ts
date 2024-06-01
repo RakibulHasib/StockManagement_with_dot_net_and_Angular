@@ -52,6 +52,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
   startDate: string = '';
   endDate: string = '';
   selectedCompany: number= 0;
+  selectedCompanyName? = '';
   stock: Stock[]=[];
 
   constructor(
@@ -114,7 +115,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
       this.dailyDataSvc.checkStockUpdate(this.selectedCompany).toPromise().then(
         x => {
           if(x === true){
-            this._notificationSvc.message("Today stock is already updated", "DISMISS");
+            this._notificationSvc.message(this.selectedCompanyName + " Today stock is already updated", "DISMISS");
           }
           else{
             this.stateUpdate();
@@ -152,6 +153,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
 
   onDropdownSelectionChange(selectedCompany: number) {
     this.selectedCompany=selectedCompany;
+    this.selectedCompanyName = this.companies.find(x => x.companyId == selectedCompany)?.companyName;
     this.fetchData();
   }
 

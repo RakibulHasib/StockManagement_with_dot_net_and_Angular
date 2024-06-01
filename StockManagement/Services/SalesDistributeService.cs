@@ -14,8 +14,9 @@ namespace StockManagement.Services
 
         enum DailyDistributeStatus
         {
-            NotComplete = 0,
-            Complete
+            NotCreated = 0,
+            Created,
+            StockComplete
         }
 
         public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID, DateTime StartDate, DateTime EndDate)
@@ -83,7 +84,7 @@ namespace StockManagement.Services
                 GrandTotal = 0,
                 ConcernPersonId = ConcernPersonID,
                 IsDeleted = 0,
-                Status = Convert.ToInt32(DailyDistributeStatus.Complete)
+                Status = Convert.ToInt32(DailyDistributeStatus.Created)
             };
             await _unitOfWork.SalesDistribute.AddAsync(master);
             await _unitOfWork.SaveChangesAsync();
@@ -145,7 +146,7 @@ namespace StockManagement.Services
                     StatusDetail = g.Where(x => x.CompanyName != null).Select(x => new DistributorStatusDetail
                     {
                         CompanyName = x.CompanyName,
-                        Status = x?.Status ?? Convert.ToInt32(DailyDistributeStatus.NotComplete)
+                        Status = x?.Status ?? Convert.ToInt32(DailyDistributeStatus.NotCreated)
                     }).ToList()
                 }).ToList();
 

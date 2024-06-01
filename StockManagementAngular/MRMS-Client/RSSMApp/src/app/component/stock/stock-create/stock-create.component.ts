@@ -14,23 +14,27 @@ import { Company } from 'src/app/models/companyenum/company';
   styleUrls: ['./stock-create.component.css']
 })
 export class StockCreateComponent implements OnInit {
-
   currentDate: Date = new Date();
   companyId! : number;
   savoyForm: FormGroup = new FormGroup({});
   savoyData: Stock[] = [];
-
-
-
   form = new FormGroup({});
   options: FormlyFormOptions = {};
-
   fields: FormlyFieldConfig[] = [];
 
-  
-  submit(){
-    console.log("submitted");
-  }
+  previousDay? =  null;
+  dateControl = new FormControl(new Date());
+  createDateFilter = (days: number) => {
+    return (d: Date | null): boolean => {
+      const today = new Date();
+      const dateToCheck = d || today;
+      const daysAgo = new Date(today);
+      daysAgo.setDate(today.getDate() - days);
+      return dateToCheck >= daysAgo && dateToCheck <= today;
+    };
+  }; 
+  dateFilter = this.createDateFilter(5);
+
   constructor(
     private notificationSvc: NotificationService,
     private productService: ProductService,
@@ -41,9 +45,25 @@ export class StockCreateComponent implements OnInit {
   {
     this.companyId = this.activatedRoute.snapshot.params['id'];
   }
-  getCompanyRoute(companyId: any): string {
-    return `/stock/${Company[companyId]}`;
+
+  ngOnInit(): void {
+    this.companyId = this.activatedRoute.snapshot.params['id'];
+    this.productService.getProductsWithEja(this.companyId)
+      .subscribe(r => {
+        this.savoyData = r.map(x => ({
+          productId: x.productId,
+          productName: x.productName,
+          price: x.price,
+          eja: x.eja,
+          newProduct: (x.newProduct ?? 0) - (x.eja ?? 0),
+          salesQuantity: x.salesQuantity
+        }));
+        this.generateFormFields();
+      }, err => {
+        this.notificationSvc.message("Failed to load Company", "DISMISS");
+      })
   }
+
   insert(): void {
     if (this.form.invalid) {
       console.log("invalid submission");
@@ -53,30 +73,11 @@ export class StockCreateComponent implements OnInit {
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
         this.router.navigate(['/stock-view']);
-        console.log(r);
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");
       })
   }
 
-  ngOnInit(): void {
-    this.companyId = this.activatedRoute.snapshot.params['id'];
-    this.productService.getProductsWithEja(this.companyId)
-      .subscribe(r => {
-        this.savoyData = r;
-        this.generateFormFields();
-      }, err => {
-        this.notificationSvc.message("Failed to load Company", "DISMISS");
-      })
-  }
-
-  updateProduct(updatedProduct: Stock, index: number) {
-    this.savoyData[index] = updatedProduct;
-  }
-
-  trackByProduct(index: number, product: Stock): any {
-    return product.productId;
-  }
 
     generateFormFields() {
     this.fields = [
@@ -105,7 +106,7 @@ export class StockCreateComponent implements OnInit {
             key: 'price',
             props: {
               label: 'Price',
-              required: true,
+              readonly: true,
               appearance: 'outline',
               floatLabel: 'always',
               hideRequiredMarker: true,
@@ -135,7 +136,7 @@ export class StockCreateComponent implements OnInit {
             key: 'newProduct',
             props: {
               label: 'New Product',
-              required: true,
+              readonly: true,
               
               appearance: 'outline',
               floatLabel: 'always',
@@ -143,9 +144,6 @@ export class StockCreateComponent implements OnInit {
             },
             validation: {
               messages:{required:" "}
-            },
-            expressions: {
-              'model.newProduct': '0',
             }
           },
           {
@@ -184,7 +182,7 @@ export class StockCreateComponent implements OnInit {
             key: 'salesQuantity',
             props: {
               label: 'Sales Quantity',
-              required: true,
+              readonly: true,
               appearance: 'outline',
               floatLabel: 'always',
               hideRequiredMarker: true,
