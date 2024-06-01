@@ -47,8 +47,8 @@ import { UserviewComponent } from './component/User/userview/userview.component'
 import { CompanyAssignComponent } from './component/concernPerson/concern-view/company-assign/company-assign.component';
 import { DistributionStatusComponent } from './component/shared/distribution-status/distribution-status.component';
 import { AuthInterceptor } from './component/Interceptor/auth.interceptor';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 
 
@@ -102,7 +102,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatToolbarModule,
     FormlyMatToggleModule,
     MatExpansionModule,
-    MatGridListModule,
+    MatTooltipModule,
     FormlyModule.forRoot({
       extras: { lazyRender: true, resetFieldOnHide: true },
       validationMessages: [

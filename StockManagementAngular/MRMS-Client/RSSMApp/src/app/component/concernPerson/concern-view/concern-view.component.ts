@@ -106,7 +106,6 @@ export class ConcernViewComponent {
       return;
     }
     this.model.concernpersonData = new ConcernPerson;
-    console.log("BeforeConsentPersonData",this.concernpersonData);
     this.subscription.add(this.concernPersonDataSvc.insert(this.concernpersonData)
     .subscribe(r => {
       Swal.fire({
@@ -122,8 +121,6 @@ export class ConcernViewComponent {
       this.router.onSameUrlNavigation = 'reload';
       this.router.navigate(['/concernpersonview']);
       this._modal.dismissAll();
-      console.log("InsertData",r);
-      console.log("ConsentPersonData",this.concernpersonData);
     }, err => {
       Swal.fire({
         icon: 'error',

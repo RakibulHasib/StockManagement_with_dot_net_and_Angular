@@ -16,19 +16,18 @@ import { StateService } from 'src/app/services/Shared/state.service';
 import Swal from 'sweetalert2';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-product-view',
   templateUrl: './product-view.component.html',
-  styleUrls: ['./product-view.component.css']
+  styleUrls: ['./product-view.component.css'],
 })
 export class ProductViewComponent implements OnInit {
-
 
   companyId!: number;
   paramsSubscription!: Subscription;
   companies: Company[]=[];
-  
   selectedCompanyId: number= 1;
 
   onDropdownSelectionChange(companyId: any) {
@@ -36,16 +35,14 @@ export class ProductViewComponent implements OnInit {
     this.fetchData();
   }
 
-
-
   currentDate: Date = new Date();
   companyNames!:string;
   
-  producForm: FormGroup = new FormGroup({});
   products: Product = new Product;
   model = {
     productUnit: this.products
   }
+ 
   form = new FormGroup({});
   options: FormlyFormOptions = {};
 
@@ -94,7 +91,7 @@ export class ProductViewComponent implements OnInit {
     });
 
      this.fetchCompanyData();
-      this.fetchData();
+     this.fetchData();
 
   }
   
@@ -139,7 +136,7 @@ export class ProductViewComponent implements OnInit {
           this.dataSource.data = this.productData;
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
-          console.log(this.productData);
+          console.log("DataSource",this.dataSource.data);
         }, err => {
           this.productData = [];
           this._notificationSvc.message("Failed to load data", "DISMISS");
@@ -233,10 +230,20 @@ export class ProductViewComponent implements OnInit {
           container: 'swal-top'
         }
       });
-       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-       this.router.onSameUrlNavigation = 'reload';
-       this.router.navigate(['/productview']);
-       this.form.reset();
+      
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.onSameUrlNavigation = 'reload';
+      this.router.navigate(['/productView']);
+      this.resetModal();
+      this.form.reset();
+      // this.producForm.reset();
+      // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      // this.router.onSameUrlNavigation = 'reload';
+      // this._modal.dismissAll();
+      // this.fetchData();
+      // this.form.reset();
+      // this.products = new Product();
+      // console.log("Products",this.products)
     }, () => {
       Swal.fire({
         icon: 'error',
@@ -251,6 +258,8 @@ export class ProductViewComponent implements OnInit {
   }
 
   onCreate(template: TemplateRef<any>) {
+   // this.products = new Product();
+    // this.resetModal();
     this.companies;
     this.generateFormFields();
     this.modalRef = this._modal.open(template);
@@ -259,31 +268,61 @@ export class ProductViewComponent implements OnInit {
   insert(): void {
     if (this.form.invalid) {
       console.log("invalid submission");
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to update data.',
+        timer: 2000 ,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+      });
       return;
     }
-    this.productDataSvc.insert(this.products)
-      .subscribe(r => {
-        this._notificationSvc.message("Data saved successfully!!!", "DISMISS");
-        //this.router.navigate(['/productView', { companyId: r.companyId }]);
-        const selectedCompanyId = this.model.productUnit.companyId;
-        // this.stateservice.updateState(this.productData.companyId);
-      
-      const routeWithCompanyId = `/productView`;
-      console.log("CompanyID",selectedCompanyId);
-      this.router.navigate([routeWithCompanyId]);
+    debugger
+    this.subscription.add(this.productDataSvc.insert(this.products)
+    .subscribe(r => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Data update successfully.',
+        timer: 2000 ,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+        customClass: {
+          container: 'swal-top'
+        }
+      }); 
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.onSameUrlNavigation = 'reload';
+      this.router.navigate(['/productView']);
+      this.form.reset();
+      this._modal.dismissAll();
 
-        console.log(r);
-         
-      }, err => {
-        this._notificationSvc.message("Failed to save data!!!", "DISMISS");
-      })
+      //  this.form.reset();
+      // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      // this.router.onSameUrlNavigation = 'reload';
+      // this._modal.dismissAll();
+      // this.fetchData();
+      // this.resetModal();
+    }, () => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to update data.',
+        timer: 2000,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+      });
+    }));
+   
   }
 
 
   onEdit(template: TemplateRef<any>, item: Product) {
-    // this.companyData =  this.companyService.getCompany();
     this.products = Object.assign({}, item);
-    console.log("UpdateData",this.products)
     this.model.productUnit=this.products;
     this.generateFormFields();
     this.modalRef = this._modal.open(template);
@@ -292,7 +331,7 @@ export class ProductViewComponent implements OnInit {
   closeModal(modalRef: NgbActiveModal) {
     this.form.reset(); 
     modalRef.dismiss();
-    this.model.productUnit = new Company;
+    this.resetModal();
     
   }
  async generateFormFields() {
@@ -302,39 +341,10 @@ export class ProductViewComponent implements OnInit {
         key: 'productUnit',
         fieldGroup: [
           {
-              // type: 'select',
-              // key: 'companyId',
-              // templateOptions: {
-              //   label: 'company',
-              //   appendTo: 'body',
-              //   required: true,
-              //   placeholder: 'Select company',
-              //   values:
-              //     (await this.companyService
-              //       .getCompany()
-              //       .pipe(
-              //         map((x) =>
-              //           x.map((y) => {
-              //             return {
-              //               value: y.companyId,
-              //               label: y.companyName,
-              //             };
-              //           })
-              //         )
-              //       )
-              //       .toPromise()) || [],
-              // },
             
             className: 'flex-1',
             type: 'select',
             key: 'companyId',
-
-            // templateOptions: {
-            //   appendTo: 'body',
-            //   label: 'Company',
-            //   options: this.companies, 
-            //   required: true,
-            // },
             
             props: {
               label: 'Company Name',
@@ -356,9 +366,7 @@ export class ProductViewComponent implements OnInit {
             },
             
             hooks: {
-              // onInit: (field: FormlyFieldConfig) => {
-              //       field.formControl?.setValue(this.companyId);      
-              //   }
+             
               onInit: (field: FormlyFieldConfig) => {
                 this.model.productUnit.companyId = this.model.productUnit.companyId;
               }
@@ -443,5 +451,11 @@ export class ProductViewComponent implements OnInit {
     ]
     
     
+  }
+  
+
+  resetModal() {
+    this.products = new Product();
+    this.model.productUnit = new Product;
   }
 }

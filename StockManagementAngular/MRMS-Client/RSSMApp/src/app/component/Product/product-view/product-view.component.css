@@ -87,3 +87,41 @@
 .mat-card-title {
   margin: 0 auto;
 }
+
+::ng-deep .cdk-overlay-container {
+  z-index: 10000 !important;
+}
+
+/* .active {
+  background-color: green;
+  color: white;
+  text-align: center;
+}
+
+.inactive {
+  background-color: red;
+  color: white;
+  text-align: center;
+} */
+
+.active-bg {
+  background-color: green;
+  color: white; 
+  text-align: center;
+  padding: 4px;
+  border-radius: 7px;
+}
+
+.inactive-bg {
+  background-color: red;
+  color: white;
+  text-align: center;
+  padding: 4px;
+  border-radius: 7px;
+}
+
+
+
+
+
+

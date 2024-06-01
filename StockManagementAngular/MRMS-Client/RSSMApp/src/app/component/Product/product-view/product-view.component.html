@@ -7,7 +7,10 @@
         </div>
       </div>
       <div class="d-flex align-items-center">
-        <a mat-mini-fab class="btn btn-primary" (click)="navigateToAddProduct()">
+        <!-- <a mat-mini-fab class="btn btn-primary" (click)="navigateToAddProduct()">
+          <mat-icon>add_box</mat-icon>
+        </a> -->
+        <a mat-mini-fab class="btn btn-primary" (click)="onCreate(createModal)">
           <mat-icon>add_box</mat-icon>
         </a>
       </div>
@@ -60,15 +63,17 @@
         </ng-container>
         <ng-container matColumnDef="IsActive">
           <mat-header-cell *matHeaderCellDef mat-sort-header>ইজএকটিব</mat-header-cell>
-          <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.IsActive}} </mat-cell>
+          <mat-cell *matCellDef="let element">
+            <span
+              [ngClass]="{ 'active-bg': element.isActive === 1, 'inactive-bg': element.isActive === 0 }">
+              {{ element.isActive === 1 ? 'Active' : 'Inactive' }}
+            </span>
+          </mat-cell>
         </ng-container>
-
         <ng-container matColumnDef="actions" class="action">
           <mat-header-cell *matHeaderCellDef mat-sort-header class="action">একসান</mat-header-cell>
           <mat-cell *matCellDef="let element" class="action">
 
-           
-  
             <button mat-raised-button [routerLink]="['',element]" color="primary" class="icon-spacing" (click)="onEdit(updateModal,element)">Edit</button>
             <button mat-raised-button color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.productId,element)" >Delete</button>
           
@@ -86,16 +91,16 @@
 
 
 
-  <!-- Create Company -->
+  <!-- Create Product -->
 <ng-template #createModal let-modal style="height: 500px;">
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> নতুন কোম্পানি যোগ করুন </h4>
+    <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> পণ্য যোগ করুন </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="insert()">
+    <form [formGroup]="form" class="ProductEntryForm" (ngSubmit)="insert()">
       <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
       <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
         <button type="submit" class="btn btn-outline-dark">Save</button>
@@ -108,14 +113,14 @@
 
 
 <!-- Update Company -->
-<ng-template #updateModal let-modal>
+<ng-template  #updateModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> পণ্য আপডেট করুন</h4>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(modal)">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body" style="height: 500px; overflow-y: auto;">
+  <div class="modal-body">
     <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="update()">
       <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
        <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
