@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using StockManagement.Entities;
 
 namespace StockManagement.Services
@@ -333,9 +334,24 @@ namespace StockManagement.Services
                     }
                 }
             }
-
             return data;
         }
 
+        public async Task<SalesDistributeAvailabityDto?> GetAvailableDistributeForConcernPerson(int concernPersonId, int companyId)
+        {
+            var data = await _unitOfWork.SalesDistribute.Queryable
+                .Where(x => x.ConcernPersonId == concernPersonId && x.CompanyId == companyId && x.IsDeleted == 0)
+                .Select(x => new LastSalesDistributeInfoDto
+                {
+                    LastDistributeStatus = x.Status,
+                    LastDistributeDay = x.CreationTime,
+                }).FirstOrDefaultAsync();
+
+            return new SalesDistributeAvailabityDto
+            {
+                Today = DateTime.Now,
+                LastDistribute = data
+            };
+        }
     }
 }

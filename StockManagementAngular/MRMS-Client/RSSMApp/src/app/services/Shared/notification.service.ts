@@ -9,9 +9,9 @@ export class NotificationService {
   constructor(
     private snackBar: MatSnackBar
   ) { }
-  message(message: string, actions: string) {
+  message(message: string, actions: string, duration: number | null = null) {
     let config: MatSnackBarConfig = {
-      duration: 5000,
+      duration: duration ?? 5000,
       panelClass: [],
       horizontalPosition: 'end',
       verticalPosition: 'top',

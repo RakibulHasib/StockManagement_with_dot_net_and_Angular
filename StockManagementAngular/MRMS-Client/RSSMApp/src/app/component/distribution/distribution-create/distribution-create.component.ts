@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
@@ -9,9 +9,7 @@ import { NotificationService } from '../../../services/Shared/notification.servi
 import { ConcernPersonService } from 'src/app/services/concernPerson/concern-person.service';
 import { StateService } from 'src/app/services/Shared/state.service';
 import { ConcernPerson, ConcernPersonMapping } from 'src/app/models/concernPerson/concern-person';
-import { CompanyService } from 'src/app/service/Company/company.service';
 import { Company } from 'src/app/models/company/company';
-import { Subscription, delay, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-distribution-create',
@@ -28,13 +26,16 @@ export class DistributionCreateComponent implements OnInit {
   distributionDateFormCtrl = new FormControl(
     new Date('2020-11-06T01:30:00.000Z')
   );
-  distributeForm: FormGroup = new FormGroup({});
+  distributeDate: Date | null = null;
   formData: SalesDistribution[] = [];
   productData: Product[] = [];
   templateOptions: any = {};
   form = new FormGroup({});
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[] = [];
+
+  minDate: Date | null = null;
+  maxDate: Date | null = null;
 
   submit() {
     console.log('submitted');
@@ -52,7 +53,6 @@ export class DistributionCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
-      debugger;
       const concernPersonId: number = +params['concernPerson'] || 0;
       const companyId: number = +params['company'] || 0;
 
@@ -63,7 +63,7 @@ export class DistributionCreateComponent implements OnInit {
 
         if (companyId && companyId > 0) {
           this.selectedCompany = companyId;
-          this.loadProductData();
+          this.loadDistributeAvailability();
         }
       } else {
         this.fetchConcernPersonData();
@@ -75,15 +75,65 @@ export class DistributionCreateComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
+  resetDistributionDate():void {
+    this.minDate = null;
+    this.maxDate = null;
+    this.distributeDate = null;
+  }
+
   onConcernPersonDropdownSelectionChange(selectedConcernPerson: number) {
-    this.formData = [];
+    this.resetDistributionDate();
+
     this.selectedConcernPerson = selectedConcernPerson;
     this.fetchCompanyDataByConcernPerson(selectedConcernPerson);
   }
 
   onCompanyDropdownSelectionChange(): void {
-    this.loadProductData();
+    this.formData = [];
+    this.resetDistributionDate();
+
+    this.loadDistributeAvailability();
   }
+
+  loadDistributeAvailability(): void {
+    this.salesService
+      .GetDistributeAvailabilty(
+        this.selectedConcernPerson,
+        this.selectedCompany
+      )
+      .subscribe(
+        (data) => {
+          if (data) {
+            this.maxDate = new Date(data.today);
+            if (data?.lastDistribute) {
+              if (data?.lastDistribute?.lastDistributeStatus === 1) {
+                this.notificationSvc.message(
+                  'Please complete stock before make a distribution',
+                  'DISMISS',
+                  10000
+                );
+              } else if (data?.lastDistribute?.lastDistributeStatus === 2) {
+                this.minDate = new Date(
+                  data?.lastDistribute?.lastDistributeDay
+                );
+                this.loadProductData();
+              }
+            }else{
+              this.maxDate = new Date(data.today);
+              this.minDate = new Date(data.today);
+              this.loadProductData();
+            }
+          }
+        },
+        (err) => {
+          this.notificationSvc.message(
+            'Failed to fetch availbility',
+            'DISMISS'
+          );
+        }
+      );
+  }
+
   loadProductData() {
     this.generatedistributeFormFields();
     this.salesService
@@ -100,6 +150,9 @@ export class DistributionCreateComponent implements OnInit {
             stock: x.stock,
             remaining: x.remaining,
           }));
+
+          if (this.formData.length === 0)
+            this.resetDistributionDate();
         },
         (err) => {
           this.notificationSvc.message(

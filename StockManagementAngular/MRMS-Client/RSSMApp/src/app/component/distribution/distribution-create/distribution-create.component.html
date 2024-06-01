@@ -29,12 +29,16 @@
       
       <mat-form-field style="width: 30%; padding:5px" class="example-full-width">
         <mat-label>Distribution date</mat-label>
-        <input matInput [matDatepicker]="picker" [formControl]="distributionDateFormCtrl">
+        <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate" [(ngModel)]="distributeDate" [disabled] ="minDate === null || maxDate === null">
         <mat-datepicker-toggle matIconSuffix [for]="picker">
           <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
         </mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
+    </div>
+
+    <div *ngIf="formData.length === 0" class="d-flex justify-content-center align-items-center alert m-4" style="min-height:250px">
+        <p class="h4 text-muted">No Data Found !</p>
     </div>
     
     <form *ngIf="formData.length > 0" [formGroup]="form" class="productEntryForm" (ngSubmit)="insert()">

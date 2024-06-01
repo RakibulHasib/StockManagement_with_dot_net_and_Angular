@@ -8,3 +8,13 @@ export interface DailyDistributeStatus{
     concernPersonName: string,
     statusDetail?: StatusDetail[]
 }
+
+export interface SalesDistributeAvailabityDto {
+    today: string,
+    lastDistribute?: LastSalesDistributeInfoDto
+}
+
+export interface LastSalesDistributeInfoDto {
+    lastDistributeStatus: number;
+    lastDistributeDay: string
+}

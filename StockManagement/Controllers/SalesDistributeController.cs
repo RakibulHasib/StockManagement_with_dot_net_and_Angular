@@ -87,6 +87,12 @@ namespace StockManagement.Controllers
         {
             return Ok(await _salesDistributeService.GetProductInfoByConcernPerson(concernPersonId, companyId));
         }
+        
+        [HttpGet("GetAvailableDistribute/{concernPersonId}/{companyId}")]
+        public async Task<ActionResult<SalesDistributeAvailabityDto>> GetAvailableDistributeForConcernPerson(int concernPersonId, int companyId)
+        {
+            return Ok(await _salesDistributeService.GetAvailableDistributeForConcernPerson(concernPersonId, companyId));
+        }
 
     }
 }
