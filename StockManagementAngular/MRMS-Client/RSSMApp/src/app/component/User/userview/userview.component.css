@@ -99,3 +99,6 @@
 .mat-column-userName,.mat-column-loginName,.mat-column-userStatus,.mat-column-roleName {
   max-width: 15%;
 }
+::ng-deep .cdk-overlay-container {
+  z-index: 10000 !important;
+}

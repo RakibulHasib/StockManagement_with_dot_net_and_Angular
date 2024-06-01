@@ -39,12 +39,20 @@ export class UserviewComponent implements OnInit {
     password : ""
   };
 
+
+  roleInfo: UserInfo = {
+      roleId:0,
+      userId : 0
+  }
+
   model = {
     passwordData: this.passwordData
   }
 
 
-  roleAssignModel = { roleId: 0, userId: 0 };
+  roleAssignModel = {
+    roleInfo: this.roleInfo
+  };
 
   userId = 0;
 
@@ -192,30 +200,121 @@ export class UserviewComponent implements OnInit {
   }
 
   onRoleAsign(template: TemplateRef<any>, userId: number) {
-    this.getRole();
-    this.roleAssignModel.userId = userId;
+    //this.getRole();
+    this.roleAssignModel.roleInfo.userId = userId;
+    this.generateRoleFormFields();
     this.modalRef = this._modal.open(template);
   }
 
-  onRoleAssignClose(modalRef: NgbActiveModal){
+  onRoleAssign(): void {
+
     const data = {
-      roleId : this.roleAssignModel.roleId,
-      userId: this.roleAssignModel.userId
+      roleId : this.roleAssignModel.roleInfo.userId,
+      userId: this.roleAssignModel.roleInfo.roleId
     }
-    this.userDataSvc.roleAssign(data).subscribe(
-      (res) => {
-        this._notifitions.message("Successfully saved data", "DISMISS");
-        modalRef.dismiss();
-        this.roleAssignModel = {
-          roleId: 0,
-          userId: 0
-        };
-        this.getItems();
-      },
-      (err) => {
-        this._notifitions.message("Failed to save!!!", "DISMISS");
+   
+   if (this.form.invalid) {
+     console.log("invalid submission");
+     Swal.fire({
+       icon: 'error',
+       title: 'Error!',
+       text: 'Failed to save data.',
+       timer: 2000 ,
+       showConfirmButton: false,
+       width: 400,
+       position: "top",
+     });
+     return;
+   }
+   this.subscription.add(this.userDataSvc.roleAssign(data)
+
+     .subscribe(r => {
+       Swal.fire({
+         icon: 'success',
+         title: 'Success!',
+         text: 'Data saved successfully.',
+         timer: 2000 ,
+         showConfirmButton: false,
+         width: 400,
+         position: "top",
+       });
+       this.form.reset();
+       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+       this.router.onSameUrlNavigation = 'reload';
+       this.router.navigate(['/userview']);
+       this._modal.dismissAll();
+     }, err => {
+       Swal.fire({
+         icon: 'error',
+         title: 'Error!',
+         text: 'Failed to save data.',
+         timer: 2000 ,
+         showConfirmButton: false,
+         width: 400,
+         position: "top",
+       });
+     }))
+ }
+
+  // onRoleAssignClose(modalRef: NgbActiveModal){
+  //   const data = {
+  //     roleId : this.roleAssignModel.roleId,
+  //     userId: this.roleAssignModel.userId
+  //   }
+  //   debugger
+  //   this.userDataSvc.roleAssign(data).subscribe(
+  //     (res) => {
+  //       this._notifitions.message("Successfully saved data", "DISMISS");
+  //       modalRef.dismiss();
+  //       this.roleAssignModel = {
+  //         roleId: 0,
+  //         userId: 0
+  //       };
+  //       this.getItems();
+  //     },
+  //     (err) => {
+  //       this._notifitions.message("Failed to save!!!", "DISMISS");
+  //     }
+  //   );
+  // }
+
+ async generateRoleFormFields() {
+    const roleList = await this.userDataSvc.roleList().toPromise();
+    this.fields = [
+      {fieldGroupClassName: 'display-flex',
+      key: 'roleInfo',
+      fieldGroup: [
+        {
+          
+          className: 'flex-1',
+          type: 'select',
+          key: 'roleId',
+          
+          props: {
+            label: 'Role Name',
+            options: roleList,
+            valueProp: 'roleId',
+            labelProp: 'roleName',
+            appearance: 'outline',
+            
+          },
+          expressionProperties: {
+            'templateOptions.style': () => ({
+              border: '2px solid #ff5722', 
+              borderRadius: '5px', 
+              padding: '5px 10px' 
+            })
+          },
+          validation: {
+            messages: { required: " " }
+          },
+        
+        }
+          
+        ],
+
       }
-    );
+    ]
   }
 
 
