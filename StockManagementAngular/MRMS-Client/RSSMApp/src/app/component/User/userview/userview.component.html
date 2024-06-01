@@ -81,6 +81,8 @@
 </ng-template>
 
 
+
+
  <ng-template #roleAssignModal let-modal>
   <div class="modal-header">
 		<h4 class="modal-title">
@@ -95,7 +97,7 @@
       <form [formGroup]="form" class="RoleAssignForm" (ngSubmit)="onRoleAssign()"  >
         <formly-form [model]="roleAssignModel" [fields]="fields" [options]="options" [form]="form" ></formly-form>
         <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
-          <button type="submit" class="btn btn-outline-dark"(click)="modal.dismiss()">Submit</button>
+          <button type="submit" class="btn btn-outline-dark"(click)="modal.dismiss()">Assign</button>
         </div>
       </form>
     <!-- <form #f="ngForm" novalidate>

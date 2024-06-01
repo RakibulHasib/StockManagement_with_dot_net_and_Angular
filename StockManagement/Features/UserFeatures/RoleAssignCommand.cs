@@ -1,4 +1,5 @@
-﻿using StockManagement.Features.CompanyFeatures;
+﻿using StockManagement.Entities;
+using StockManagement.Features.CompanyFeatures;
 
 namespace StockManagement.Features.UserFeatures
 {
@@ -33,22 +34,33 @@ namespace StockManagement.Features.UserFeatures
                     }
                     user_data.RoleId = request.RoleId;
 
-                     _unitOfWork.Users.Update(user_data);
+                    _unitOfWork.Users.Update(user_data);
 
-                    RoleAssagin roleAssagin = new RoleAssagin
+                    var role_assign = await _unitOfWork.RoleAssagin.FindAsync(request.UserID);
+
+                    if(role_assign != null)
                     {
-                        RoleId = request.RoleId,
-                        UserId = request.UserID
+                        role_assign.RoleId = request.RoleId;
+                         _unitOfWork.RoleAssagin.Update(role_assign);
+                    }
+                    else
+                    {
+                        RoleAssagin roleAssagin = new RoleAssagin
+                        {
+                            RoleId = request.RoleId,
+                            UserId = request.UserID
 
-                    };
-                    await _unitOfWork.RoleAssagin.AddAsync(roleAssagin);
+                        };
+                        await _unitOfWork.RoleAssagin.AddAsync(roleAssagin);
+
+                    }
 
                     await _unitOfWork.SaveChangesAsync();
-                    return new ApiResponse<int>
+                    return new ApiResponse
                     {
                         Status = Status.Success,
                         StatusCode = (int)HttpStatusCode.OK,
-                        Data = roleAssagin.RoleAssaginId
+                       
                     };
                 }
                 catch (Exception ex)

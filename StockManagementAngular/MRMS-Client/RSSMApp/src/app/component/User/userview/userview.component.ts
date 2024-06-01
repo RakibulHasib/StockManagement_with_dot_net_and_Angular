@@ -209,8 +209,8 @@ export class UserviewComponent implements OnInit {
   onRoleAssign(): void {
 
     const data = {
-      roleId : this.roleAssignModel.roleInfo.userId,
-      userId: this.roleAssignModel.roleInfo.roleId
+      roleId : this.roleAssignModel.roleInfo.roleId,
+      userId: this.roleAssignModel.roleInfo.userId
     }
    
    if (this.form.invalid) {
