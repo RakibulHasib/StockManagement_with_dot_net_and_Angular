@@ -205,7 +205,6 @@ export class CompanyViewComponent   {
   generateFormFields() {
     this.fields = [
       {
-
         fieldGroupClassName: 'display-flex',
         key: 'companyData',
         fieldGroup: [
