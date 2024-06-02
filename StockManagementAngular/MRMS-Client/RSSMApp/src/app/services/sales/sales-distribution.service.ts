@@ -49,7 +49,7 @@ export class SalesDistributionService {
     return this.http.get<SalesDistributeAvailabityDto>(`${IceCreamApiUrl}/${endPoint}/GetAvailableDistribute/${concernPersonId}/${companyId}`);
   }
   
-  insert(data: {concernPersonId: number, salesDistribute: SalesDistribution[]}): Observable<any> {
+  insert(data: {concernPersonId: number, companyId: number, distributionTime: string, salesDistribute: SalesDistribution[]}): Observable<any> {
     return this.http.post<SalesDistribution[]>(`${IceCreamApiUrl}/${endPoint}/InsertSalesDistributeData`, data);
   }
   insertSkipConcerPersonDistribution(concernPersonId: number, data?: null): Observable<any> {

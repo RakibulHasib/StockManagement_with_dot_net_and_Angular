@@ -10,6 +10,7 @@ import { ConcernPersonService } from 'src/app/services/concernPerson/concern-per
 import { StateService } from 'src/app/services/Shared/state.service';
 import { ConcernPerson, ConcernPersonMapping } from 'src/app/models/concernPerson/concern-person';
 import { Company } from 'src/app/models/company/company';
+import { DateFormat } from 'src/app/Shared/date-fromat.model';
 
 @Component({
   selector: 'app-distribution-create',
@@ -22,11 +23,9 @@ export class DistributionCreateComponent implements OnInit {
   concernPersonMapping: ConcernPersonMapping[] = [];
   selectedConcernPerson: number = 0;
   selectedCompany: number = 0;
-  currentDate: Date = new Date();
-  distributionDateFormCtrl = new FormControl(
-    new Date('2020-11-06T01:30:00.000Z')
-  );
-  distributeDate: Date | null = null;
+  currentDate: Date = new Date();  
+  dateControl = new FormControl();
+
   formData: SalesDistribution[] = [];
   productData: Product[] = [];
   templateOptions: any = {};
@@ -74,7 +73,7 @@ export class DistributionCreateComponent implements OnInit {
   resetDistributionDate():void {
     this.minDate = null;
     this.maxDate = null;
-    this.distributeDate = null;
+    this.dateControl = new FormControl();
   }
 
   onConcernPersonDropdownSelectionChange(selectedConcernPerson: number) {
@@ -193,41 +192,43 @@ export class DistributionCreateComponent implements OnInit {
       console.log('invalid submission');
       return;
     }
-    if (this.distributeDate === null){
+    if (this.dateControl.value === null){
       this.notificationSvc.message('Please select distribute date', 'DISMISS');
       return;
     }
 
     const data = this.formData.filter(x => x.receiveQuantity !== 0 || x.salesQuantity !== 0);
+
     console.log(data);
     if (data.length === 0){
       this.notificationSvc.message('Please fill-up receive or sell quantity', 'DISMISS');
       return;
     }
+      const formatDate = new DateFormat();
+      const distrbuteDate = formatDate.formatDateWithTime(this.dateControl.value);
       this.salesService
-      .insert({
-        concernPersonId: this.selectedConcernPerson,
-        salesDistribute: this.formData,
-      })
-      .subscribe(
-        (r) => {
-          this.notificationSvc.message(
-            'Data saved successfully!!!',
-            'DISMISS'
-          );
+        .insert({
+          concernPersonId: this.selectedConcernPerson,
+          distributionTime: distrbuteDate,
+          companyId: this.selectedCompany,
+          salesDistribute: data,
+        })
+        .subscribe(
+          (r) => {
+            this.notificationSvc.message(
+              'Data saved successfully!!!',
+              'DISMISS'
+            );
 
-          this.notificationSvc.message(
-            'Successfully distributed.',
-            'DISMISS'
-          );
-        },
-        (err) => {
-          this.notificationSvc.message(
-            'Failed to save data!!!',
-            'DISMISS'
-          );
-        }
-      );
+            this.notificationSvc.message(
+              'Successfully distributed.',
+              'DISMISS'
+            );
+          },
+          (err) => {
+            this.notificationSvc.message('Failed to save data!!!', 'DISMISS');
+          }
+        );
   }
 
   generatedistributeFormFields() {
