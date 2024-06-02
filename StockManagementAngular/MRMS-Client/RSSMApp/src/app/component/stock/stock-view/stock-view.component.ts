@@ -85,9 +85,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
     });
 
     const today = new Date();
-    
     this.endDate = formateDate.formatDate(today);
-
     this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
       this.fetchCompanyData();
       this.fetchData();
@@ -147,7 +145,6 @@ export class StockViewComponent implements OnInit, OnDestroy {
         .subscribe(data => {
           this.dailyData = data;
           this.dataSource.data = this.dailyData;
-          console.log(this.dataSource);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         }, err => {

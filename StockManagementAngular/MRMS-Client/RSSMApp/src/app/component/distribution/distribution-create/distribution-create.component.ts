@@ -36,10 +36,6 @@ export class DistributionCreateComponent implements OnInit {
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[] = [];
 
-  submit() {
-    console.log('submitted');
-  }
-
   constructor(
     private notificationSvc: NotificationService,
     private salesService: SalesDistributionService,

@@ -78,7 +78,7 @@ export class StockCreateComponent implements OnInit {
 
   insert(): void {
     if (this.form.invalid) {
-      console.log("invalid submission");
+      this.notificationSvc.message("invalid submission!!!", "DISMISS");
       return;
     }
     const formatDate = new DateFormat();
