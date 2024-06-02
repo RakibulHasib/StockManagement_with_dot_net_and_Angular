@@ -341,6 +341,7 @@ namespace StockManagement.Services
         {
             var data = await _unitOfWork.SalesDistribute.Queryable
                 .Where(x => x.ConcernPersonId == concernPersonId && x.CompanyId == companyId && x.IsDeleted == 0)
+                .OrderByDescending(x => x.CreationTime)
                 .Select(x => new LastSalesDistributeInfoDto
                 {
                     LastDistributeStatus = x.Status,

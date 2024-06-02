@@ -108,7 +108,7 @@ export class DistributionCreateComponent implements OnInit {
             if (data?.lastDistribute) {
               if (data?.lastDistribute?.lastDistributeStatus === 1) {
                 this.notificationSvc.message(
-                  'Please complete stock before make a distribution',
+                  'Please create stock before make a distribution',
                   'DISMISS',
                   10000
                 );
@@ -149,6 +149,8 @@ export class DistributionCreateComponent implements OnInit {
             price: x.price,
             stock: x.stock,
             remaining: x.remaining,
+            receiveQuantity: 0,
+            salesQuantity: 0
           }));
 
           if (this.formData.length === 0)
@@ -195,50 +197,43 @@ export class DistributionCreateComponent implements OnInit {
       console.log('invalid submission');
       return;
     }
-    this.salesService
-      .checkTodayConcernPersonDistribution(this.selectedConcernPerson)
-      .toPromise()
-      .then((x) => {
-        if (x === true) {
+    if (this.distributeDate === null){
+      this.notificationSvc.message('Please select distribute date', 'DISMISS');
+      return;
+    }
+
+    const data = this.formData.filter(x => x.receiveQuantity !== 0 || x.salesQuantity !== 0);
+    console.log(data);
+    if (data.length === 0){
+      this.notificationSvc.message('Please fill-up receive or sell quantity', 'DISMISS');
+      return;
+    }
+      this.salesService
+      .insert({
+        concernPersonId: this.selectedConcernPerson,
+        salesDistribute: this.formData,
+      })
+      .subscribe(
+        (r) => {
           this.notificationSvc.message(
-            'এই ব্যাক্তির আজকের ডিস্ট্রিভিউসান নামানো হয়ে গেছে!!!',
+            'Data saved successfully!!!',
             'DISMISS'
           );
-        } else {
-          debugger;
-          if (this.selectedConcernPerson == 0) {
-            this.notificationSvc.message(
-              'একটি ডিস্ট্রিভিউটর বাছাই করুন!!!',
-              'DISMISS'
-            );
-          } else {
-            this.salesService
-              .insert({
-                concernPersonId: this.selectedConcernPerson,
-                salesDistribute: this.formData,
-              })
-              .subscribe(
-                (r) => {
-                  this.notificationSvc.message(
-                    'Data saved successfully!!!',
-                    'DISMISS'
-                  );
-                  this.stateService.updateState('concernPersonId');
-                  //this.router.navigate(['/sales-view']);
-                  const routeD = `/sales-view`;
-                  this.router.navigate([routeD]);
-                },
-                (err) => {
-                  this.notificationSvc.message(
-                    'Failed to save data!!!',
-                    'DISMISS'
-                  );
-                }
-              );
-          }
+
+          this.notificationSvc.message(
+            'Successfully distributed.',
+            'DISMISS'
+          );
+        },
+        (err) => {
+          this.notificationSvc.message(
+            'Failed to save data!!!',
+            'DISMISS'
+          );
         }
-      });
+      );
   }
+
   generatedistributeFormFields() {
     this.fields = [
       {
@@ -287,6 +282,7 @@ export class DistributionCreateComponent implements OnInit {
               type: 'input',
               key: 'receiveQuantity',
               props: {
+                type: 'number',
                 label: 'গ্রহণ',
                 floatLabel: 'always',
                 appearance: 'outline',
@@ -353,6 +349,7 @@ export class DistributionCreateComponent implements OnInit {
               type: 'input',
               key: 'salesQuantity',
               props: {
+                type: 'number',
                 label: 'বিক্রি',
                 floatLabel: 'always',
                 appearance: 'outline',
