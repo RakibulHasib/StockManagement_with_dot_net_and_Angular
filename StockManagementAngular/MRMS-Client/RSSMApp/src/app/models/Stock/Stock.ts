@@ -12,6 +12,7 @@ export class Stock {
         public newProduct?: number,
         public total?: number,
         public salesQuantity?: number,
+        public receiveQuantity?: number,
         public totalAmount?: number,
         public damageQuantity?: number,
         public createdDate?: Date,

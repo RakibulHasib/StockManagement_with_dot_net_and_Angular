@@ -96,7 +96,8 @@ public class StockService
                 SalesQuantity = item.SalesQuantity,
                 TotalAmount = item.TotalAmount,
                 DamageQuantity = item.DamageQuantity ?? 0,
-                IsDeleted = 0
+                IsDeleted = 0,
+                CreationTime = createdDate
             };
             await _unitOfWork.StockDetail.AddAsync(stockDetails);
         }
@@ -111,6 +112,17 @@ public class StockService
 
         _unitOfWork.Stock.Update(master);
         result = await _unitOfWork.SaveChangesAsync();
+
+        var distributeData = await _unitOfWork.SalesDistribute.Queryable
+            .Where(a => a.CompanyId == companyId && a.IsDeleted == 0 && a.Status == 1)
+            .ToListAsync();
+
+        foreach (var item in distributeData)
+        {
+            item.Status = 2;
+            _unitOfWork.SalesDistribute.Update(item);
+        }
+        await _unitOfWork.SaveChangesAsync();
         return result;
     }
 
@@ -265,14 +277,30 @@ public class StockService
         return stock;
     }
 
-    public async Task<bool> CheckTodayStock(int CompanyID)
+    public async Task<int> CheckCreatableStock(int CompanyID)
     {
-        var data = await _unitOfWork.Stock.Queryable
-            .Where(a => a.CreationTime.Date == DateTime.Now.Date && a.CompanyId == CompanyID)
-            .Select(a => a.StockId)
-            .FirstOrDefaultAsync();
+        int result = 0;
+        var isdistributeDataExist = await _unitOfWork.SalesDistribute.Queryable
+            .Where(a => a.CompanyId == CompanyID && a.IsDeleted == 0 && a.Status == 1)
+            .ToListAsync();
 
-        return data != 0;
+        if(isdistributeDataExist.Count > 0)
+        {
+            var lastStockData = await _unitOfWork.Stock.Queryable
+                .Where(a => a.CompanyId == CompanyID && a.IsDeleted == 0)
+                .OrderByDescending(a => a.CreationTime)
+                .FirstOrDefaultAsync();
+
+            if (lastStockData != null)
+            {
+                result = (DateTime.Now.Date - lastStockData.CreationTime.Date).Days;
+                if (result == 0)
+                {
+                    result = 1;
+                }
+            }
+        }
+        return result;
     }
 
     public async Task<bool> CheckTodayStockforUpdate(int StockID)

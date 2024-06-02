@@ -1,5 +1,5 @@
 export enum DistributorStatus{
-    NotComplete = 0,
-    Complete,
-    Skip
+    Not_Created = 0,
+    Created,
+    Complete
 }

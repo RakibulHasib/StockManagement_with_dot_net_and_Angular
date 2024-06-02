@@ -7,6 +7,7 @@ import { ProductService } from 'src/app/services/Product/product.service';
 import { StockService } from 'src/app/services/Stock/stock.service';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { Company } from 'src/app/models/companyenum/company';
+import { DateFormat } from 'src/app/Shared/date-fromat.model';
 
 @Component({
   selector: 'app-stock-create',
@@ -24,17 +25,8 @@ export class StockCreateComponent implements OnInit {
 
   previousDay? =  null;
   dateControl = new FormControl(new Date());
-  createDateFilter = (days: number) => {
-    return (d: Date | null): boolean => {
-      const today = new Date();
-      const dateToCheck = d || today;
-      const daysAgo = new Date(today);
-      daysAgo.setDate(today.getDate() - days);
-      return dateToCheck >= daysAgo && dateToCheck <= today;
-    };
-  }; 
-  dateFilter = this.createDateFilter(5);
-
+  dateFilter: any;
+  dateValidation = 0;
   constructor(
     private notificationSvc: NotificationService,
     private productService: ProductService,
@@ -55,21 +47,43 @@ export class StockCreateComponent implements OnInit {
           productName: x.productName,
           price: x.price,
           eja: x.eja,
-          newProduct: (x.newProduct ?? 0) - (x.eja ?? 0),
-          salesQuantity: x.salesQuantity
-        }));
-        this.generateFormFields();
-      }, err => {
-        this.notificationSvc.message("Failed to load Company", "DISMISS");
-      })
+          newProduct: (x.newProduct ?? 0) + (x.receiveQuantity ?? 0)  - (x.eja ?? 0),
+          salesQuantity: x.salesQuantity,
+          damageQuantity: 0
+        })
+      );
+      this.generateFormFields();
+    }, err => {
+      this.notificationSvc.message("Failed to load Company", "DISMISS");
+    })
+
+    this.savoyService.checkCreatableStock(this.companyId).subscribe(
+      (res) => {
+        this.dateValidation = res;
+        this.dateFilter = this.createDateFilter(res);
+      }
+    )
   }
+
+  createDateFilter = (days: number) => {
+    return (d: Date | null): boolean => {
+      const today = new Date();
+      const dateToCheck = d || today;
+      const daysAgo = new Date(today);
+      daysAgo.setDate(today.getDate() - days);
+      return dateToCheck >= daysAgo && dateToCheck <= today;
+    };
+  }; 
+
 
   insert(): void {
     if (this.form.invalid) {
       console.log("invalid submission");
       return;
     }
-    this.savoyService.insert(this.companyId, this.savoyData)
+    const formatDate = new DateFormat();
+    const date = formatDate.formatDateWithTime(this.dateControl.value);
+    this.savoyService.insert(this.companyId, date, this.savoyData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
         this.router.navigate(['/stock-view']);
