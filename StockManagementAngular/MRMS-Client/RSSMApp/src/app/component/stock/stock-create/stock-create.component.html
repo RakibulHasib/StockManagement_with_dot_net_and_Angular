@@ -20,7 +20,7 @@
     <form [formGroup]="form" class="productEntryForm" (ngSubmit)="insert()">
       <formly-form [model]="savoyData" [fields]="fields" [options]="options" [form]="form"></formly-form>
       <div class="f-w d-flex justify-content-end">
-        <button type="submit" mat-raised-button color="primary">Save</button>
+        <button type="submit" mat-raised-button color="primary" [disabled]="dateValidation == 0">Save</button>
       </div>
     </form>
 

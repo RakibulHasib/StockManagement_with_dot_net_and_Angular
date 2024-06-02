@@ -85,7 +85,7 @@ namespace StockManagement.Services
                 GrandTotal = 0,
                 ConcernPersonId = ConcernPersonID,
                 IsDeleted = 0,
-                Status = Convert.ToInt32(DailyDistributeStatus.Created)
+                Status = (int)DailyDistributeStatus.Created
             };
             await _unitOfWork.SalesDistribute.AddAsync(master);
             await _unitOfWork.SaveChangesAsync();

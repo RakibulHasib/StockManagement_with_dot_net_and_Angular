@@ -36,9 +36,6 @@ export class CompanyAssignComponent implements OnInit {
     this._cpService.getConcernCompanyMapping(this.concernPersonData.concernPersonId).subscribe(
       (res) => {
         this.concernPersonMapping = res;
-      },
-      (err) => {
-        console.log(err)
       }
     )
   }
@@ -48,9 +45,6 @@ export class CompanyAssignComponent implements OnInit {
     .subscribe(res => {
       const assignIds = this.concernPersonMapping.map(x => x.companyId);
       this.companiesData = res.filter(x => !assignIds.includes(x.companyId))
-    },
-    err => {
-      console.log(err);
     });
   }
 

@@ -24,8 +24,8 @@
                 {{item.concernPersonName}}
               </td>
               <td>{{x.companyName}}</td>
-              <td [ngClass]="{'completeStyle': x.status == distributorStatus.Complete, 'unCompleteStyle': x.status == distributorStatus.NotComplete }">
-                {{x.status == distributorStatus.NotComplete ? 'Not Complete' : 'Complete'}}</td>
+              <td [ngClass]="{'completeStyle': x.status == distributorStatus.Created, 'unCompleteStyle': x.status == distributorStatus.Not_Created, 'doneStyle': x.status == distributorStatus.Complete}">
+                {{x.status == distributorStatus.Not_Created ? 'Not Created' : (x.status == distributorStatus.Created ? 'Created' : 'Stock Complete')}}</td>
             </tr>
           </ng-container>
         </tbody>

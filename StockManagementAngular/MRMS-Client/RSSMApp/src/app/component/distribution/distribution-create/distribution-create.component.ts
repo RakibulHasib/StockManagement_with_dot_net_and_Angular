@@ -37,10 +37,6 @@ export class DistributionCreateComponent implements OnInit {
   minDate: Date | null = null;
   maxDate: Date | null = null;
 
-  submit() {
-    console.log('submitted');
-  }
-
   constructor(
     private notificationSvc: NotificationService,
     private salesService: SalesDistributionService,

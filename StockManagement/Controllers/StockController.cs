@@ -82,10 +82,10 @@ public class StockController : BaseController<StockController>
         return await _stockService.GetCommissionByID(StockId);
     }
 
-    [HttpGet("CheckTodayStock")]
-    public async Task<ActionResult<bool>> CheckTodayStock(int CompanyID)
+    [HttpGet("CheckCreatableStock")]
+    public async Task<ActionResult<int>> CheckCreatableStock(int CompanyID)
     {
-        return await _stockService.CheckTodayStock(CompanyID);
+        return await _stockService.CheckCreatableStock(CompanyID);
     }
 
     [HttpGet("CheckTodayStockforUpdate")]

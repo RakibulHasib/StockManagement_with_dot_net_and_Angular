@@ -20,6 +20,7 @@ import { StateService } from 'src/app/services/Shared/state.service';
 import { Stock } from 'src/app/models/Stock/Stock';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DistributionStatusComponent } from '../../shared/distribution-status/distribution-status.component';
+import { DateFormat } from 'src/app/Shared/date-fromat.model';
 
 
 
@@ -68,10 +69,11 @@ export class StockViewComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    const formateDate = new DateFormat();
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 90);
     this.selectedCompany = this.stateService.getPreviousState(1)?.selectedCompany || 0;
-    this.startDate = this.stateService.getPreviousState(1)?.startDate || this.formatDate(thirtyDaysAgo);
+    this.startDate = this.stateService.getPreviousState(1)?.startDate || formateDate.formatDate(thirtyDaysAgo);
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -83,11 +85,8 @@ export class StockViewComponent implements OnInit, OnDestroy {
     });
 
     const today = new Date();
-    this.endDate = this.formatDate(today);
-
+    this.endDate = formateDate.formatDate(today);
     this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
-      const companyKey = params['company'];
-      // this.companyId = +Company[companyKey];
       this.fetchCompanyData();
       this.fetchData();
     });
@@ -111,18 +110,9 @@ export class StockViewComponent implements OnInit, OnDestroy {
         this._notificationSvc.message("Failed to load data", "DISMISS");
       });
   }
-   checkStockUpdate(){
-      this.dailyDataSvc.checkStockUpdate(this.selectedCompany).toPromise().then(
-        x => {
-          if(x === true){
-            this._notificationSvc.message(this.selectedCompanyName + " Today stock is already updated", "DISMISS");
-          }
-          else{
-            this.stateUpdate();
-            this.router.navigate(['/stock-create', this.selectedCompany]);
-          }
-        }
-      );
+   navigateToCreate(){
+    this.stateUpdate();
+    this.router.navigate(['/stock-create', this.selectedCompany]);
   }
 
   checkTodayStockUpdate(stockId: number){
@@ -143,14 +133,6 @@ export class StockViewComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     this.paramsSubscription.unsubscribe();
   }
-  
-  formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
   onDropdownSelectionChange(selectedCompany: number) {
     this.selectedCompany=selectedCompany;
     this.selectedCompanyName = this.companies.find(x => x.companyId == selectedCompany)?.companyName;
@@ -163,7 +145,6 @@ export class StockViewComponent implements OnInit, OnDestroy {
         .subscribe(data => {
           this.dailyData = data;
           this.dataSource.data = this.dailyData;
-          console.log(this.dataSource);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         }, err => {

@@ -86,7 +86,8 @@ public class ProductsController : ControllerBase
                               select new
                               {
                                   sdd.ProductId,
-                                  sdd.SalesQuantity
+                                  sdd.SalesQuantity,
+                                  sdd.ReceiveQuantity
                               }).ToListAsync();
 
 
@@ -95,6 +96,7 @@ public class ProductsController : ControllerBase
                 foreach (var item in products)
                 {
                     item.SalesQuantity = distributeData?.Where(x => x.ProductId == item.ProductId).Sum(a => a.SalesQuantity) ?? 0;
+                    item.ReceiveQuantity = distributeData?.Where(x => x.ProductId == item.ProductId).Sum(a => a.ReceiveQuantity) ?? 0;
                 }
             }
         }
@@ -109,6 +111,7 @@ public class ProductsController : ControllerBase
         public int Eja { get; set; }
         public int NewProduct { get; set; }
         public int SalesQuantity { get; set; }
+        public int ReceiveQuantity { get; set; }
     }
 
 }
