@@ -109,6 +109,12 @@
   border-radius: 7px;
 }
 
+::ng-deep .modal {
+  height: 725px;
+  --bs-modal-margin: 1.75rem;
+  --bs-modal-box-shadow: 0 0.5rem 1rem rgba(var(--bs-body-color-rgb), 0.15);
+}
+
 
 
 

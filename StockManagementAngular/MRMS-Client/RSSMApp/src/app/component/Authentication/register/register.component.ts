@@ -37,7 +37,6 @@ export class RegisterComponent {
       console.log(this.signupForm.value);
       this.userService.signup(this.signupForm.value).subscribe({
         next: (response => {
-          //debugger
           if(response.status== Status.UserExist){
             // this.signupForm.controls['username'].markAsTouched();
             // this.signupForm.controls['username'].setErrors({ 'userExists': true }); 
