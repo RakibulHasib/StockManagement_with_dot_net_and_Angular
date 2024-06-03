@@ -10,7 +10,6 @@ export class DateFormat{
     }
     
     formatDateWithTime(date: Date | null): string {
-        debugger;
         if (!date) {
             return '';
         }

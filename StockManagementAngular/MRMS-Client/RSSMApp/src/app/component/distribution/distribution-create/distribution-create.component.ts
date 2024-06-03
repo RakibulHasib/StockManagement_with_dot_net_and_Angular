@@ -23,8 +23,8 @@ export class DistributionCreateComponent implements OnInit {
   concernPersonMapping: ConcernPersonMapping[] = [];
   selectedConcernPerson: number = 0;
   selectedCompany: number = 0;
-  currentDate: Date = new Date();  
-  dateControl = new FormControl();
+  currentDate: Date = new Date();
+  distrbuteDate: Date | null = null;
 
   formData: SalesDistribution[] = [];
   productData: Product[] = [];
@@ -70,13 +70,14 @@ export class DistributionCreateComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  resetDistributionDate():void {
+  resetDistributionDate(): void {
     this.minDate = null;
     this.maxDate = null;
-    this.dateControl = new FormControl();
+    this.distrbuteDate = null;
   }
 
   onConcernPersonDropdownSelectionChange(selectedConcernPerson: number) {
+    this.formData = [];
     this.resetDistributionDate();
 
     this.selectedConcernPerson = selectedConcernPerson;
@@ -113,7 +114,7 @@ export class DistributionCreateComponent implements OnInit {
                 );
                 this.loadProductData();
               }
-            }else{
+            } else {
               this.maxDate = new Date(data.today);
               this.minDate = new Date(data.today);
               this.loadProductData();
@@ -145,11 +146,10 @@ export class DistributionCreateComponent implements OnInit {
             stock: x.stock,
             remaining: x.remaining,
             receiveQuantity: 0,
-            salesQuantity: 0
+            salesQuantity: 0,
           }));
 
-          if (this.formData.length === 0)
-            this.resetDistributionDate();
+          if (this.formData.length === 0) this.resetDistributionDate();
         },
         (err) => {
           this.notificationSvc.message(
@@ -189,46 +189,57 @@ export class DistributionCreateComponent implements OnInit {
 
   insert(): void {
     if (this.form.invalid) {
-      console.log('invalid submission');
+      this.notificationSvc.message('Please fill up data before submit', 'DISMISS');
       return;
     }
-    if (this.dateControl.value === null){
+    if (this.distrbuteDate === null) {
       this.notificationSvc.message('Please select distribute date', 'DISMISS');
       return;
     }
 
-    const data = this.formData.filter(x => x.receiveQuantity !== 0 || x.salesQuantity !== 0);
+    this.distrbuteDate = new Date(
+      this.distrbuteDate.toDateString() + ' ' + new Date().toLocaleTimeString()
+    );
 
-    console.log(data);
-    if (data.length === 0){
-      this.notificationSvc.message('Please fill-up receive or sell quantity', 'DISMISS');
+    const formatDate = new DateFormat();
+    const distrbuteDate = formatDate.formatDateWithTime(
+      new Date(this.distrbuteDate)
+    );
+
+    this.formData = this.formData.map((x) => ({
+      ...x,
+      receiveQuantity: x.receiveQuantity = x.receiveQuantity ?? 0,
+      salesQuantity: x.salesQuantity = x.salesQuantity ?? 0,
+    }));
+
+    const data = this.formData.filter(
+      (x) => (x.receiveQuantity !== 0 || x.salesQuantity !== 0)
+    );
+
+    if (data.length === 0) {
+      this.notificationSvc.message(
+        'Please fill-up receive or sell quantity',
+        'DISMISS'
+      );
       return;
     }
-      const formatDate = new DateFormat();
-      const distrbuteDate = formatDate.formatDateWithTime(this.dateControl.value);
-      this.salesService
-        .insert({
-          concernPersonId: this.selectedConcernPerson,
-          distributionTime: distrbuteDate,
-          companyId: this.selectedCompany,
-          salesDistribute: data,
-        })
-        .subscribe(
-          (r) => {
-            this.notificationSvc.message(
-              'Data saved successfully!!!',
-              'DISMISS'
-            );
 
-            this.notificationSvc.message(
-              'Successfully distributed.',
-              'DISMISS'
-            );
-          },
-          (err) => {
-            this.notificationSvc.message('Failed to save data!!!', 'DISMISS');
-          }
-        );
+    this.salesService
+      .insert({
+        concernPersonId: this.selectedConcernPerson,
+        distributionTime: distrbuteDate,
+        companyId: this.selectedCompany,
+        salesDistribute: data,
+      })
+      .subscribe(
+        (r) => {
+          this.notificationSvc.message('Successfully distributed.', 'DISMISS');
+          this.onConcernPersonDropdownSelectionChange(this.selectedConcernPerson);
+        },
+        (err) => {
+          this.notificationSvc.message('Failed to save data!!!', 'DISMISS');
+        }
+      );
   }
 
   generatedistributeFormFields() {

@@ -29,7 +29,7 @@
       
       <mat-form-field style="width: 30%; padding:5px" class="example-full-width">
         <mat-label>Distribution date</mat-label>
-        <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate" [formControl]="dateControl" [disabled] =" minDate == null || maxDate == null">
+        <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate" [(ngModel)]="distrbuteDate" [disabled] =" minDate == null || maxDate == null">
         <mat-datepicker-toggle matIconSuffix [for]="picker">
           <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
         </mat-datepicker-toggle>
@@ -44,7 +44,7 @@
     <form *ngIf="formData.length > 0" [formGroup]="form" class="productEntryForm" (ngSubmit)="insert()">
       <formly-form [model]="formData" [fields]="fields" [options]="options" [form]="form"></formly-form>
       <div class="f-w d-flex justify-content-end">
-        <button type="submit" [disabled]="dateControl.value === null" mat-raised-button color="primary">Save</button>
+        <button type="submit" [disabled]="distrbuteDate === null" mat-raised-button color="primary">Save</button>
       </div>
     </form>
 
