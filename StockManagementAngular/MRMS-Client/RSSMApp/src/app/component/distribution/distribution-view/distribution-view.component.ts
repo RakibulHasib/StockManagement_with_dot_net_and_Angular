@@ -110,7 +110,16 @@ export class DistributionViewComponent {
 
   navigateToAdddistribution() {
     this.stateUpdate();
-    this.route.navigate(['/sales-create', this.selectedConcernPerson]);
+
+    let params = {}
+    if (this.selectedConcernPerson > 0)
+      params = { ...params, concernPerson : this.selectedConcernPerson};
+
+    if (this.selectedCompany)
+      params = { ...params, company: this.selectedCompany };
+
+    this.route.navigate(
+      ['/sales-create'], { queryParams: params } );
   }
   navigateToViewistribution(distibutionId: number) {
     this.stateUpdate();

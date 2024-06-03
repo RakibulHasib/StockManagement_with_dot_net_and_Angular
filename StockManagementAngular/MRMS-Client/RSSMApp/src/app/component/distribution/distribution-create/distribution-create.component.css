@@ -25,6 +25,35 @@
   font-weight: 500;
 }
 
+:host ::ng-deep .product .mat-mdc-form-field-focus-overlay {
+  display: none !important;
+  /* Remove outline on focus */
+}
+
+:host ::ng-deep .product .mdc-line-ripple::before,
+:host ::ng-deep .product.mdc-line-ripple::after {
+  display: none !important;
+  /* Remove outline on focus */
+}
+
+::ng-deep .product .mdc-text-field--filled {
+  --mdc-filled-text-field-focus-active-indicator-height: 0;
+}
+
+::ng-deep .receiveQuantity .mdc-text-field--outlined,
+::ng-deep .salesQuantity .mdc-text-field--outlined{
+  --mdc-outlined-text-field-outline-width: 2px;
+  --mdc-outlined-text-field-outline-color: #3f51b5;
+}
+
+::ng-deep .mdc-hide-focus-outline .mdc-text-field--outlined,
+::ng-deep .mdc-hide-focus-outline .mat-mdc-form-field{
+  --mdc-outlined-text-field-focus-outline-width: 1px;
+  --mdc-outlined-text-field-focus-outline-color: rgba(0, 0, 0, 0.38);
+  --mdc-filled-text-field-hover-active-indicator-color: rgba(0, 0, 0, 0.38);
+  --mdc-outlined-text-field-hover-outline-color: rgba(0, 0, 0, 0.38);;
+}
+
 :host ::ng-deep .flex-1 {
   margin: 0px 3px;
 }
@@ -104,12 +133,6 @@
   width: 50%;
 }
 
-/* .f-w{
-  text-align: end;
-  margin-right: 40px;
-  margin-top: -67px;
-} */
-
 .header{
   padding-bottom: 20px;
   margin-left: 500px;
@@ -123,49 +146,3 @@
   display: flex;
   justify-content: space-between;
 }
-
-/* 
-.f-w {
-    width: 100%;
-}
-
-.mb-1 {
-    margin-bottom: 15px;
-}
-.right-aligned {
-  margin-left: auto;
-}
-
-
-.child-product-item .mdc-text-field {
-    padding: 0 5px;
-}
-
-mat-form-field .mat-input-element {
-    padding: 0 5px;
-}
-
-.product-item-container{
-    margin-bottom: 12px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 5px 1px rgba(138, 138, 138, 0.5);
-    -webkit-box-shadow: 0px 0px 3px 1px rgba(138, 138, 138, 0.5);
-    -moz-box-shadow: 0px 0px 5px 1px rgba(138, 138, 138, 0.5);
-} */
- 
-/* .productEntryForm .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix .mat-mdc-floating-label {
-    font-size: 1.2em;
-    left: auto;
-    right: auto;
-    font-weight: 500;
-}
-
-.productEntryForm .mdc-text-field {
-    padding: 0 10px;
-}
-
-.productEntryForm .mdc-text-field--filled .mdc-floating-label--float-above {
-    transform: translateY(-106%) scale(0.75);
-    left: auto;
-    right: auto;
-}  */

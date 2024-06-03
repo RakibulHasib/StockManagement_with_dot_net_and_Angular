@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Product } from '../../models/Product/product';
+import { DistributeProductInfo, Product } from '../../models/Product/product';
 import { SalesDistribution } from '../../models/sales/sales-distribution';
 import { IceCreamApiUrl } from '../../models/shared/app-constants';
 import { DailyDistributionModel } from 'src/app/models/DailyDataModel/daily-distribution-model';
@@ -40,6 +40,9 @@ export class SalesDistributionService {
   }
   getProductByCompanyId(companyId: number): Observable<Product[]> {
     return this.http.get<Product[]>(`${IceCreamApiUrl}/${endPoint}/GetProduct/${companyId}`);
+  }
+  GetProductInfoByConcernPerson(concernPersonId: number, companyId: number): Observable<DistributeProductInfo[]> {
+    return this.http.get<DistributeProductInfo[]>(`${IceCreamApiUrl}/${endPoint}/GetProductInfoByConcernPerson/${concernPersonId}/${companyId}`);
   }
   insert(data: {concernPersonId: number, salesDistribute: SalesDistribution[]}): Observable<any> {
     return this.http.post<SalesDistribution[]>(`${IceCreamApiUrl}/${endPoint}/InsertSalesDistributeData`, data);

@@ -1,4 +1,5 @@
-﻿using StockManagement.Entities;
+﻿using Microsoft.CodeAnalysis;
+using StockManagement.Entities;
 
 namespace StockManagement.Services
 {
@@ -13,8 +14,9 @@ namespace StockManagement.Services
 
         enum DailyDistributeStatus
         {
-            NotComplete = 0,
-            Complete
+            NotCreated = 0,
+            Created,
+            StockComplete
         }
 
         public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID, DateTime StartDate, DateTime EndDate)
@@ -82,7 +84,7 @@ namespace StockManagement.Services
                 GrandTotal = 0,
                 ConcernPersonId = ConcernPersonID,
                 IsDeleted = 0,
-                Status = Convert.ToInt32(DailyDistributeStatus.Complete)
+                Status = (int)DailyDistributeStatus.Created
             };
             await _unitOfWork.SalesDistribute.AddAsync(master);
             await _unitOfWork.SaveChangesAsync();
@@ -144,7 +146,7 @@ namespace StockManagement.Services
                     StatusDetail = g.Where(x => x.CompanyName != null).Select(x => new DistributorStatusDetail
                     {
                         CompanyName = x.CompanyName,
-                        Status = x?.Status ?? Convert.ToInt32(DailyDistributeStatus.NotComplete)
+                        Status = x?.Status ?? Convert.ToInt32(DailyDistributeStatus.NotCreated)
                     }).ToList()
                 }).ToList();
 
@@ -294,6 +296,45 @@ namespace StockManagement.Services
                 result = await _unitOfWork.SaveChangesAsync();
             }
             return result;
+        }
+
+        public async Task<List<ProductInfoByConcernPersonDTO>> GetProductInfoByConcernPerson(int concernPersonId, int companyId)
+        {
+            var data = await _unitOfWork.Product.Queryable
+                .Where(x => x.CompanyId == companyId
+                            && x.IsDeleted == 0)
+                .Select(x => new ProductInfoByConcernPersonDTO
+                {
+                    ProductId = x.ProductId,
+                    ProductName = x.ProductName,
+                    Price = x.Price,
+                    Stock = x.Quantity
+                }).ToListAsync();
+
+            if (data.Any())
+            {
+                var productIds = data.Select(x => x.ProductId).ToList();
+
+                var lastSalesproductData = await (from sales in _unitOfWork.SalesDistribute.Queryable.Where(a => a.ConcernPersonId == concernPersonId && a.IsDeleted == 0)
+                                                  join details in _unitOfWork.SalesDistributeDetail.Queryable.Where(x => x.IsDeleted == 0) on sales.SalesDistributeId equals details.SalesDistributeId
+                                                  where sales.ConcernPersonId == concernPersonId && productIds.Contains(details.ProductId)
+                                            orderby sales.CreationTime descending
+                                            select new
+                                            {
+                                                details.ProductId,
+                                                details.ReturnQuantity
+                                            }).ToListAsync();
+
+                if (lastSalesproductData.Any())
+                {
+                    foreach (var item in data)
+                    {
+                        item.Remaining = lastSalesproductData.FirstOrDefault(x => x.ProductId == item.ProductId)?.ReturnQuantity ?? 0;
+                    }
+                }
+            }
+
+            return data;
         }
 
     }

@@ -33,7 +33,7 @@ export class StockEditComponent {
 
   updateStock(): void {
     if (this.form.invalid) {
-      console.log("invalid submission");
+      this.notificationSvc.message("invalid submission!!!", "DISMISS");
       return;
     }
     this.savoyService.updateStock(this.companyId, this.savoyData)

@@ -28,9 +28,9 @@ public class StockController : BaseController<StockController>
 
     [Transaction]
     [HttpPost("InsertStockData/{companyId}")]
-    public async Task<ActionResult<int>> InsertStockData([FromRoute] int companyId, List<StockDTO> savoyIceCreamVM)
+    public async Task<ActionResult<int>> InsertStockData([FromRoute] int companyId,DateTime createdDate, List<StockDTO> savoyIceCreamVM)
     {
-        return Ok(await _stockService.InsertStockData(companyId, savoyIceCreamVM));
+        return Ok(await _stockService.InsertStockData(companyId, createdDate, savoyIceCreamVM));
     }
 
     [Transaction]
@@ -82,10 +82,10 @@ public class StockController : BaseController<StockController>
         return await _stockService.GetCommissionByID(StockId);
     }
 
-    [HttpGet("CheckTodayStock")]
-    public async Task<ActionResult<bool>> CheckTodayStock(int CompanyID)
+    [HttpGet("CheckCreatableStock")]
+    public async Task<ActionResult<int>> CheckCreatableStock(int CompanyID)
     {
-        return await _stockService.CheckTodayStock(CompanyID);
+        return await _stockService.CheckCreatableStock(CompanyID);
     }
 
     [HttpGet("CheckTodayStockforUpdate")]

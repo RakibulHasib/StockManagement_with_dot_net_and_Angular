@@ -1,22 +1,26 @@
 <mat-card class="mat-elevation-z3">
-  <mat-card-header>
+  <mat-card-header class="header">
     <mat-card-title>প্রতিদিনের স্টক</mat-card-title>
-    <mat-card-subtitle class="right-aligned mb-2">{{ currentDate | date:'fullDate' }}  </mat-card-subtitle>
+    <mat-card-subtitle class="mb-2">{{ currentDate | date:'fullDate' }}  </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <!-- <form class="productEntryForm" (ngSubmit)="insert()">
-      <div class="product-item-container" *ngFor="let product of savoyData ; let i = index; trackBy: trackByProduct">
-        <app-product-item [productData]="product" (productDataChange)="updateProduct($event, i)" class="child-product-item">
-        </app-product-item>
-      </div>
-      <div class="f-w mb-1">
-        <button type="submit" mat-raised-button color="primary" [disabled]="!form.valid">Save</button>
-      </div>
-    </form> -->
+    <div style="display: flex; justify-content: center; align-items: center;">
+
+      <mat-form-field style="width: 30%; padding:5px" class="example-full-width">
+        <mat-label>Stock date</mat-label>
+        <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="picker" [formControl]="dateControl">
+        <mat-datepicker-toggle matIconSuffix [for]="picker">
+          <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      
+    </div>
+
     <form [formGroup]="form" class="productEntryForm" (ngSubmit)="insert()">
       <formly-form [model]="savoyData" [fields]="fields" [options]="options" [form]="form"></formly-form>
       <div class="f-w d-flex justify-content-end">
-        <button type="submit" mat-raised-button color="primary">Save</button>
+        <button type="submit" mat-raised-button color="primary" [disabled]="dateValidation == 0">Save</button>
       </div>
     </form>
 

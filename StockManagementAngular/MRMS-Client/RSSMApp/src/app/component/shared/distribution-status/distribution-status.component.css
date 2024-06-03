@@ -21,9 +21,14 @@
   }
 
   .completeStyle{
-    color: green !important;
+    color: rgb(0, 11, 128) !important;
   }
 
   .unCompleteStyle{
     color: red !important;
   }
+
+  .doneStyle{
+    color: green;
+  }
+  

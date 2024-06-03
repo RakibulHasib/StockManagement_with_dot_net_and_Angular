@@ -4,13 +4,15 @@
       <div>
         <mat-card-title class="h5">প্রতিদিনের স্টকের হিসাব</mat-card-title>
       </div>
-      <div title="Check Distribution'" class="d-flex align-items-center">
+      <div class="d-flex align-items-center">
         <div class="btn btn-primary" style="margin-right: 10px;"  (click)="openDistributeStatus()">
           Distribute Status
         </div>
-        <a mat-mini-fab class="btn btn-primary" (click)="checkStockUpdate()">
-          <mat-icon>add_box</mat-icon>
-        </a>
+        <div placement="top" [ngbTooltip]="selectedCompanyName">
+          <a [disabled]="selectedCompany == 0" mat-mini-fab class="btn btn-primary" (click)="navigateToCreate()">
+            <mat-icon>add_box</mat-icon>
+          </a>
+        </div>
       </div>
     </div>
 

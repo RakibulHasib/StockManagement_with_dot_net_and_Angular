@@ -64,21 +64,42 @@ public class ProductsController : ControllerBase
     [HttpGet("{companyId}")]
     public async Task<ActionResult<IEnumerable<ProductDto>>> GetProduct(int companyId)
     {
-        var products = await (from p in _unitOfWork.Product.Queryable
-                              let salesQ = _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ProductId == p.ProductId && a.IsDeleted == 0).Sum(a => a.SalesQuantity)
-                              where p.IsActive == 1 && p.CompanyId == companyId
-                              select new ProductDto
+        var products = await _unitOfWork.Product.Queryable
+                .Where(x => x.CompanyId == companyId && x.IsDeleted == 0 && x.IsActive == 1)
+                .Select(x => new ProductDto
+                {
+                    ProductId = x.ProductId,
+                    ProductName = x.ProductName,
+                    Price = x.Price,
+                    Eja = x.StockDetails.Where(a => a.IsDeleted == 0)
+                                        .OrderByDescending(x => x.CreationTime)
+                                        .Select(x => x.Eja ?? 0)
+                                        .FirstOrDefault(),
+                    NewProduct = x.Quantity
+                }).ToListAsync();
+
+        if (products.Any())
+        {
+            var distributeData = await (from sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0 && a.Status == 1)
+                              join sdd in _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.IsDeleted == 0) on sd.SalesDistributeId equals sdd.SalesDistributeId
+                              where sd.CompanyId == companyId
+                              select new
                               {
-                                  ProductId = p.ProductId,
-                                  ProductName = p.ProductName,
-                                  Price = p.Price ?? 0,
-                                  Eja = p.StockDetails.Where(a => a.IsDeleted == 0)
-                                                      .OrderByDescending(x => x.CreationTime)
-                                                      .Select(x => x.Eja ?? 0)
-                                                      .FirstOrDefault(),
-                                  SalesQuantity = salesQ
+                                  sdd.ProductId,
+                                  sdd.SalesQuantity,
+                                  sdd.ReceiveQuantity
                               }).ToListAsync();
 
+
+            if (distributeData.Any())
+            {
+                foreach (var item in products)
+                {
+                    item.SalesQuantity = distributeData?.Where(x => x.ProductId == item.ProductId).Sum(a => a.SalesQuantity) ?? 0;
+                    item.ReceiveQuantity = distributeData?.Where(x => x.ProductId == item.ProductId).Sum(a => a.ReceiveQuantity) ?? 0;
+                }
+            }
+        }
         return products;
     }
 
@@ -86,9 +107,11 @@ public class ProductsController : ControllerBase
     {
         public int ProductId { get; set; }
         public string? ProductName { get; set; }
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
         public int Eja { get; set; }
+        public int NewProduct { get; set; }
         public int SalesQuantity { get; set; }
+        public int ReceiveQuantity { get; set; }
     }
 
 }
