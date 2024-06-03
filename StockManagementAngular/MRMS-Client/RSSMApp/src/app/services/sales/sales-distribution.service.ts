@@ -6,7 +6,7 @@ import { SalesDistribution } from '../../models/sales/sales-distribution';
 import { IceCreamApiUrl } from '../../models/shared/app-constants';
 import { DailyDistributionModel } from 'src/app/models/DailyDataModel/daily-distribution-model';
 import { SalesReportModel } from 'src/app/models/sales/sales-report-model';
-import { DailyDistributeStatus } from 'src/app/models/dailydistributeStatus/daily-distribute-status.model';
+import { DailyDistributeStatus, SalesDistributeAvailabityDto } from 'src/app/models/dailydistributeStatus/daily-distribute-status.model';
 
 
   const endPoint: string = "SalesDistribute";
@@ -44,7 +44,12 @@ export class SalesDistributionService {
   GetProductInfoByConcernPerson(concernPersonId: number, companyId: number): Observable<DistributeProductInfo[]> {
     return this.http.get<DistributeProductInfo[]>(`${IceCreamApiUrl}/${endPoint}/GetProductInfoByConcernPerson/${concernPersonId}/${companyId}`);
   }
-  insert(data: {concernPersonId: number, salesDistribute: SalesDistribution[]}): Observable<any> {
+
+  GetDistributeAvailabilty(concernPersonId: number, companyId: number): Observable<SalesDistributeAvailabityDto> {
+    return this.http.get<SalesDistributeAvailabityDto>(`${IceCreamApiUrl}/${endPoint}/GetAvailableDistribute/${concernPersonId}/${companyId}`);
+  }
+  
+  insert(data: {concernPersonId: number, companyId: number, distributionTime: string, salesDistribute: SalesDistribution[]}): Observable<any> {
     return this.http.post<SalesDistribution[]>(`${IceCreamApiUrl}/${endPoint}/InsertSalesDistributeData`, data);
   }
   insertSkipConcerPersonDistribution(concernPersonId: number, data?: null): Observable<any> {

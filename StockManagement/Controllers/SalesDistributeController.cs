@@ -26,11 +26,10 @@ namespace StockManagement.Controllers
             return await _salesDistributeService.GetDistributeDataByID(SalesDistributeId);
         }
 
-        [Transaction]
         [HttpPost("InsertSalesDistributeData")]
         public async Task<ActionResult<int>> InsertSalesDistributeData(SalesDistributeDataDto data)
         {
-            return Ok(await _salesDistributeService.InsertSalesDistributeData(data.ConcernPersonID, data.salesDistribute));
+            return Ok(await _salesDistributeService.InsertSalesDistributeData(data.ConcernPersonID, data.CompanyId, data.DistributionTime, data.salesDistribute));
         }
 
         [HttpGet("GetDistributorStatus")]
@@ -86,6 +85,12 @@ namespace StockManagement.Controllers
         public async Task<ActionResult<List<ProductInfoByConcernPersonDTO>>> GetProductInfoByConcernPerson(int concernPersonId, int companyId)
         {
             return Ok(await _salesDistributeService.GetProductInfoByConcernPerson(concernPersonId, companyId));
+        }
+        
+        [HttpGet("GetAvailableDistribute/{concernPersonId}/{companyId}")]
+        public async Task<ActionResult<SalesDistributeAvailabityDto>> GetAvailableDistributeForConcernPerson(int concernPersonId, int companyId)
+        {
+            return Ok(await _salesDistributeService.GetAvailableDistributeForConcernPerson(concernPersonId, companyId));
         }
 
     }

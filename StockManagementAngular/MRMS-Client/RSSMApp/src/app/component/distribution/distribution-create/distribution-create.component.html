@@ -29,7 +29,7 @@
       
       <mat-form-field style="width: 30%; padding:5px" class="example-full-width">
         <mat-label>Distribution date</mat-label>
-        <input matInput [matDatepicker]="picker" [formControl]="distributionDateFormCtrl">
+        <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate" [(ngModel)]="distrbuteDate" [disabled] =" minDate == null || maxDate == null">
         <mat-datepicker-toggle matIconSuffix [for]="picker">
           <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
         </mat-datepicker-toggle>
@@ -37,12 +37,20 @@
       </mat-form-field>
     </div>
     
+    <div *ngIf="formData.length === 0" class="d-flex justify-content-center align-items-center alert m-4" style="min-height:250px">
+        <p class="h4 text-muted">No Data Found !</p>
+    </div>
+    
     <form *ngIf="formData.length > 0" [formGroup]="form" class="productEntryForm" (ngSubmit)="insert()">
       <formly-form [model]="formData" [fields]="fields" [options]="options" [form]="form"></formly-form>
       <div class="f-w d-flex justify-content-end">
-        <button type="submit" mat-raised-button color="primary">Save</button>
+        <button type="submit" [disabled]="distrbuteDate === null" mat-raised-button color="primary">Save</button>
       </div>
     </form>
 
   </mat-card-content>
+    <mat-card-actions>
+      <a mat-flat-button [routerLink]="['/sales-view']">Back to list</a>
+    </mat-card-actions>
+
 </mat-card>

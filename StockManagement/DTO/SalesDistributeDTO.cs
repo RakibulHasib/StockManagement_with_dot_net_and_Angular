@@ -5,6 +5,8 @@ namespace StockManagement.DTO
     public class SalesDistributeDataDto
     {
         public int ConcernPersonID { get; set; }
+        public int CompanyId { get; set; }
+        public DateTime DistributionTime { get; set; }
         public List<SalesDistributeDTO>? salesDistribute  { get; set; }
     }
     public class SalesDistributeDTO

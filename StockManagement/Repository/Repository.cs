@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StockManagement.Contexts;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 
 namespace StockManagement.Repository;
@@ -49,6 +47,11 @@ public class Repository<TEntity, TId> where TEntity : class
         await _table.AddAsync(entity);
     }
 
+    public async Task AddRawAsync(TEntity entity)
+    {
+        await _table.AddAsync(entity);
+    }
+
 
     public async Task AddRangeAsync(IEnumerable<TEntity> entities)
     {
@@ -63,6 +66,11 @@ public class Repository<TEntity, TId> where TEntity : class
                 }
             }
         }
+        await _table.AddRangeAsync(entities);
+    }
+
+    public async Task AddRangeRawAsync(IEnumerable<TEntity> entities)
+    {
         await _table.AddRangeAsync(entities);
     }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using StockManagement.Entities;
 
 namespace StockManagement.Services
@@ -72,51 +73,69 @@ namespace StockManagement.Services
             return master;
         }
 
-        public async Task<ActionResult<int>> InsertSalesDistributeData(int ConcernPersonID, List<SalesDistributeDTO> salesDistributeVM)
+        public async Task<ActionResult<int>> InsertSalesDistributeData(int ConcernPersonID, int companyId, DateTime distributionTime, List<SalesDistributeDTO> productDto)
         {
             int result = 0;
-            SalesDistribute master = new SalesDistribute
-            {
-                TotalPrice = 0,
-                TotalReceive = 0,
-                TotalReturn = 0,
-                TotalSales = 0,
-                GrandTotal = 0,
-                ConcernPersonId = ConcernPersonID,
-                IsDeleted = 0,
-                Status = (int)DailyDistributeStatus.Created
-            };
-            await _unitOfWork.SalesDistribute.AddAsync(master);
-            await _unitOfWork.SaveChangesAsync();
 
-            foreach (var item in salesDistributeVM)
+            List<SalesDistributeDetail> distributeDetails = new();
+
+            foreach (var item in productDto)
             {
                 var remaining = ((item.ReceiveQuantity ?? 0) + (item.ReturnQuantity ?? 0) - item.SalesQuantity ?? 0);
+
                 var Details = new SalesDistributeDetail
                 {
                     SalesDistributeDetailsId = Guid.NewGuid(),
-                    SalesDistributeId = master.SalesDistributeId,
                     ProductId = item.ProductId,
                     Price = item.Price,
                     ReceiveQuantity = item.ReceiveQuantity ?? 0,
                     ReturnQuantity = remaining,
                     SalesQuantity = item.SalesQuantity ?? 0,
                     TotalSalesPrice = item.TotalSalesPrice,
-                    IsDeleted = 0
+                    IsDeleted = 0,
+                    CreationTime = distributionTime
                 };
-                await _unitOfWork.SalesDistributeDetail.AddAsync(Details);
+                distributeDetails.Add(Details);
             }
-            await _unitOfWork.SaveChangesAsync();
 
-            master.TotalPrice = await _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.SalesDistributeId == master.SalesDistributeId).SumAsync(a => a.Price);
-            master.TotalReceive = await _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.SalesDistributeId == master.SalesDistributeId).SumAsync(a => a.ReceiveQuantity);
-            master.TotalReturn = await _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.SalesDistributeId == master.SalesDistributeId).SumAsync(a => a.ReturnQuantity);
-            master.TotalSales = await _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.SalesDistributeId == master.SalesDistributeId).SumAsync(a => a.SalesQuantity);
-            master.GrandTotal = await _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.SalesDistributeId == master.SalesDistributeId).SumAsync(a => a.TotalSalesPrice);
+            SalesDistribute salesDistrbute = new SalesDistribute
+            {
+                TotalPrice = distributeDetails.Sum(x => x.Price),
+                TotalReceive = distributeDetails.Sum(x => x.ReceiveQuantity),
+                TotalReturn = distributeDetails.Sum(x => x.ReturnQuantity),
+                TotalSales = distributeDetails.Sum(x => x.SalesQuantity),
+                GrandTotal = distributeDetails.Sum(x => x.TotalSalesPrice),
+                ConcernPersonId = ConcernPersonID,
+                CompanyId = companyId,
+                CreationTime = distributionTime,
+                IsDeleted = 0,
+                Status = (int)DailyDistributeStatus.Created
+            };
 
-            _unitOfWork.SalesDistribute.Update(master);
-            result = await _unitOfWork.SaveChangesAsync();
-            return result;
+            var transaction = await _unitOfWork.BeginTransactionAsync();
+
+            try
+            {
+                foreach (var product in distributeDetails)
+                {
+                    product.SalesDistribute = salesDistrbute;
+                }
+
+                await _unitOfWork.SalesDistribute.AddRawAsync(salesDistrbute);
+                await _unitOfWork.SalesDistributeDetail.AddRangeRawAsync(distributeDetails);
+
+                await _unitOfWork.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return result;
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+
+                throw new InvalidOperationException("Failed to insert");
+            }
         }
 
         public async Task<List<DailyDistributorStatusDTO>> GetDistributorStatus(DateTime date)
@@ -333,9 +352,25 @@ namespace StockManagement.Services
                     }
                 }
             }
-
             return data;
         }
 
+        public async Task<SalesDistributeAvailabityDto?> GetAvailableDistributeForConcernPerson(int concernPersonId, int companyId)
+        {
+            var data = await _unitOfWork.SalesDistribute.Queryable
+                .Where(x => x.ConcernPersonId == concernPersonId && x.CompanyId == companyId && x.IsDeleted == 0)
+                .OrderByDescending(x => x.CreationTime)
+                .Select(x => new LastSalesDistributeInfoDto
+                {
+                    LastDistributeStatus = x.Status,
+                    LastDistributeDay = x.CreationTime,
+                }).FirstOrDefaultAsync();
+
+            return new SalesDistributeAvailabityDto
+            {
+                Today = DateTime.Now,
+                LastDistribute = data
+            };
+        }
     }
 }

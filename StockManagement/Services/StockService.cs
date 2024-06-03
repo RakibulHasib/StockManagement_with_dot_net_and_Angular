@@ -77,7 +77,7 @@ public class StockService
             IsDeleted = 0,
             CreationTime = createdDate
         };
-        await _unitOfWork.Stock.AddAsync(master);
+        await _unitOfWork.Stock.AddRawAsync(master);
         await _unitOfWork.SaveChangesAsync();
 
         foreach (var item in savoyIceCreamVM)
@@ -99,7 +99,7 @@ public class StockService
                 IsDeleted = 0,
                 CreationTime = createdDate
             };
-            await _unitOfWork.StockDetail.AddAsync(stockDetails);
+            await _unitOfWork.StockDetail.AddRawAsync(stockDetails);
         }
         await _unitOfWork.SaveChangesAsync();
 

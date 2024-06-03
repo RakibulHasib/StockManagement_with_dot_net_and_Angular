@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
@@ -9,9 +9,8 @@ import { NotificationService } from '../../../services/Shared/notification.servi
 import { ConcernPersonService } from 'src/app/services/concernPerson/concern-person.service';
 import { StateService } from 'src/app/services/Shared/state.service';
 import { ConcernPerson, ConcernPersonMapping } from 'src/app/models/concernPerson/concern-person';
-import { CompanyService } from 'src/app/service/Company/company.service';
 import { Company } from 'src/app/models/company/company';
-import { Subscription, delay, startWith } from 'rxjs';
+import { DateFormat } from 'src/app/Shared/date-fromat.model';
 
 @Component({
   selector: 'app-distribution-create',
@@ -25,16 +24,17 @@ export class DistributionCreateComponent implements OnInit {
   selectedConcernPerson: number = 0;
   selectedCompany: number = 0;
   currentDate: Date = new Date();
-  distributionDateFormCtrl = new FormControl(
-    new Date('2020-11-06T01:30:00.000Z')
-  );
-  distributeForm: FormGroup = new FormGroup({});
+  distrbuteDate: Date | null = null;
+
   formData: SalesDistribution[] = [];
   productData: Product[] = [];
   templateOptions: any = {};
   form = new FormGroup({});
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[] = [];
+
+  minDate: Date | null = null;
+  maxDate: Date | null = null;
 
   constructor(
     private notificationSvc: NotificationService,
@@ -48,7 +48,6 @@ export class DistributionCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
-      debugger;
       const concernPersonId: number = +params['concernPerson'] || 0;
       const companyId: number = +params['company'] || 0;
 
@@ -59,7 +58,7 @@ export class DistributionCreateComponent implements OnInit {
 
         if (companyId && companyId > 0) {
           this.selectedCompany = companyId;
-          this.loadProductData();
+          this.loadDistributeAvailability();
         }
       } else {
         this.fetchConcernPersonData();
@@ -71,15 +70,66 @@ export class DistributionCreateComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
+  resetDistributionDate(): void {
+    this.minDate = null;
+    this.maxDate = null;
+    this.distrbuteDate = null;
+  }
+
   onConcernPersonDropdownSelectionChange(selectedConcernPerson: number) {
     this.formData = [];
+    this.resetDistributionDate();
+
     this.selectedConcernPerson = selectedConcernPerson;
     this.fetchCompanyDataByConcernPerson(selectedConcernPerson);
   }
 
   onCompanyDropdownSelectionChange(): void {
-    this.loadProductData();
+    this.formData = [];
+    this.resetDistributionDate();
+
+    this.loadDistributeAvailability();
   }
+
+  loadDistributeAvailability(): void {
+    this.salesService
+      .GetDistributeAvailabilty(
+        this.selectedConcernPerson,
+        this.selectedCompany
+      )
+      .subscribe(
+        (data) => {
+          if (data) {
+            this.maxDate = new Date(data.today);
+            if (data?.lastDistribute) {
+              if (data?.lastDistribute?.lastDistributeStatus === 1) {
+                this.notificationSvc.message(
+                  'Please create stock before make a distribution',
+                  'DISMISS',
+                  10000
+                );
+              } else if (data?.lastDistribute?.lastDistributeStatus === 2) {
+                this.minDate = new Date(
+                  data?.lastDistribute?.lastDistributeDay
+                );
+                this.loadProductData();
+              }
+            } else {
+              this.maxDate = new Date(data.today);
+              this.minDate = new Date(data.today);
+              this.loadProductData();
+            }
+          }
+        },
+        (err) => {
+          this.notificationSvc.message(
+            'Failed to fetch availbility',
+            'DISMISS'
+          );
+        }
+      );
+  }
+
   loadProductData() {
     this.generatedistributeFormFields();
     this.salesService
@@ -95,7 +145,11 @@ export class DistributionCreateComponent implements OnInit {
             price: x.price,
             stock: x.stock,
             remaining: x.remaining,
+            receiveQuantity: 0,
+            salesQuantity: 0,
           }));
+
+          if (this.formData.length === 0) this.resetDistributionDate();
         },
         (err) => {
           this.notificationSvc.message(
@@ -135,53 +189,59 @@ export class DistributionCreateComponent implements OnInit {
 
   insert(): void {
     if (this.form.invalid) {
-      console.log('invalid submission');
+      this.notificationSvc.message('Please fill up data before submit', 'DISMISS');
       return;
     }
+    if (this.distrbuteDate === null) {
+      this.notificationSvc.message('Please select distribute date', 'DISMISS');
+      return;
+    }
+
+    this.distrbuteDate = new Date(
+      this.distrbuteDate.toDateString() + ' ' + new Date().toLocaleTimeString()
+    );
+
+    const formatDate = new DateFormat();
+    const distrbuteDate = formatDate.formatDateWithTime(
+      new Date(this.distrbuteDate)
+    );
+
+    this.formData = this.formData.map((x) => ({
+      ...x,
+      receiveQuantity: x.receiveQuantity = x.receiveQuantity ?? 0,
+      salesQuantity: x.salesQuantity = x.salesQuantity ?? 0,
+    }));
+
+    const data = this.formData.filter(
+      (x) => (x.receiveQuantity !== 0 || x.salesQuantity !== 0)
+    );
+
+    if (data.length === 0) {
+      this.notificationSvc.message(
+        'Please fill-up receive or sell quantity',
+        'DISMISS'
+      );
+      return;
+    }
+
     this.salesService
-      .checkTodayConcernPersonDistribution(this.selectedConcernPerson)
-      .toPromise()
-      .then((x) => {
-        if (x === true) {
-          this.notificationSvc.message(
-            'এই ব্যাক্তির আজকের ডিস্ট্রিভিউসান নামানো হয়ে গেছে!!!',
-            'DISMISS'
-          );
-        } else {
-          debugger;
-          if (this.selectedConcernPerson == 0) {
-            this.notificationSvc.message(
-              'একটি ডিস্ট্রিভিউটর বাছাই করুন!!!',
-              'DISMISS'
-            );
-          } else {
-            this.salesService
-              .insert({
-                concernPersonId: this.selectedConcernPerson,
-                salesDistribute: this.formData,
-              })
-              .subscribe(
-                (r) => {
-                  this.notificationSvc.message(
-                    'Data saved successfully!!!',
-                    'DISMISS'
-                  );
-                  this.stateService.updateState('concernPersonId');
-                  //this.router.navigate(['/sales-view']);
-                  const routeD = `/sales-view`;
-                  this.router.navigate([routeD]);
-                },
-                (err) => {
-                  this.notificationSvc.message(
-                    'Failed to save data!!!',
-                    'DISMISS'
-                  );
-                }
-              );
-          }
+      .insert({
+        concernPersonId: this.selectedConcernPerson,
+        distributionTime: distrbuteDate,
+        companyId: this.selectedCompany,
+        salesDistribute: data,
+      })
+      .subscribe(
+        (r) => {
+          this.notificationSvc.message('Successfully distributed.', 'DISMISS');
+          this.onConcernPersonDropdownSelectionChange(this.selectedConcernPerson);
+        },
+        (err) => {
+          this.notificationSvc.message('Failed to save data!!!', 'DISMISS');
         }
-      });
+      );
   }
+
   generatedistributeFormFields() {
     this.fields = [
       {
@@ -230,6 +290,7 @@ export class DistributionCreateComponent implements OnInit {
               type: 'input',
               key: 'receiveQuantity',
               props: {
+                type: 'number',
                 label: 'গ্রহণ',
                 floatLabel: 'always',
                 appearance: 'outline',
@@ -296,6 +357,7 @@ export class DistributionCreateComponent implements OnInit {
               type: 'input',
               key: 'salesQuantity',
               props: {
+                type: 'number',
                 label: 'বিক্রি',
                 floatLabel: 'always',
                 appearance: 'outline',
