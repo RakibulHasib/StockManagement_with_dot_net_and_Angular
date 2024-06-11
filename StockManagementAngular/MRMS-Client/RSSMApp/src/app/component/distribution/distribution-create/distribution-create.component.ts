@@ -208,6 +208,7 @@ export class DistributionCreateComponent implements OnInit {
 
     this.formData = this.formData.map((x) => ({
       ...x,
+      returnQuantity: x.remaining = x.remaining ?? 0,
       receiveQuantity: x.receiveQuantity = x.receiveQuantity ?? 0,
       salesQuantity: x.salesQuantity = x.salesQuantity ?? 0,
     }));

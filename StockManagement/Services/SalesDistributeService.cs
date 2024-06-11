@@ -76,13 +76,13 @@ namespace StockManagement.Services
         public async Task<ActionResult<int>> InsertSalesDistributeData(int ConcernPersonID, int companyId, DateTime distributionTime, List<SalesDistributeDTO> productDto)
         {
             int result = 0;
-
             List<SalesDistributeDetail> distributeDetails = new();
+            List<Product> products = new();
+            List<ProductStockLog> stockLogs = new();
 
             foreach (var item in productDto)
             {
                 var remaining = ((item.ReceiveQuantity ?? 0) + (item.ReturnQuantity ?? 0) - item.SalesQuantity ?? 0);
-
                 var Details = new SalesDistributeDetail
                 {
                     SalesDistributeDetailsId = Guid.NewGuid(),
@@ -119,10 +119,37 @@ namespace StockManagement.Services
                 foreach (var product in distributeDetails)
                 {
                     product.SalesDistribute = salesDistrbute;
+
+                    var productData = await _unitOfWork.Product.Queryable
+                        .Where(a => a.ProductId == product.ProductId)
+                        .FirstOrDefaultAsync();
+
+                    if (productData != null)
+                    {
+                        productData.Quantity -= product?.ReceiveQuantity == null ? 0 : product.ReceiveQuantity;
+                        products.Add(productData);
+                    }
+
+                    var prevStock = await _unitOfWork.ProductStockLog.Queryable
+                        .Where(a => a.ProductId == product.ProductId)
+                        .OrderByDescending(a => a.CreationTime)
+                        .Select(a => a.NewQuantity)
+                        .FirstOrDefaultAsync();
+
+                    var stockLog = new ProductStockLog
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = product.ProductId,
+                        NewQuantity = (prevStock == null ? 0 : prevStock) - (product?.ReceiveQuantity == null ? 0 : product.ReceiveQuantity),
+                        PreviousQuantity = prevStock == null ? 0 : prevStock
+                    };
+                    stockLogs.Add(stockLog);
                 }
 
                 await _unitOfWork.SalesDistribute.AddRawAsync(salesDistrbute);
                 await _unitOfWork.SalesDistributeDetail.AddRangeRawAsync(distributeDetails);
+                _unitOfWork.Product.UpdateRangeAsync(products);
+                await _unitOfWork.ProductStockLog.AddRangeRawAsync(stockLogs);
 
                 await _unitOfWork.SaveChangesAsync();
 

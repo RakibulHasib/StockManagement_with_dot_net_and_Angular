@@ -298,6 +298,9 @@ public class StockService
                 {
                     result = 1;
                 }
+            } else
+            {
+                result = 1;
             }
         }
         return result;

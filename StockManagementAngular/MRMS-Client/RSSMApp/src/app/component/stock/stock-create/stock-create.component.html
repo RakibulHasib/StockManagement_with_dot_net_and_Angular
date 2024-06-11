@@ -1,7 +1,7 @@
 <mat-card class="mat-elevation-z3">
-  <mat-card-header class="header">
-    <mat-card-title>প্রতিদিনের স্টক</mat-card-title>
-    <mat-card-subtitle class="mb-2">{{ currentDate | date:'fullDate' }}  </mat-card-subtitle>
+  <mat-card-header class="d-flex justify-content-center align-items-center">
+    <mat-card-title>{{companyName}} এর স্টক</mat-card-title>
+    <mat-card-subtitle class="mb-2 text-center">{{ currentDate | date:'fullDate' }}  </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <div style="display: flex; justify-content: center; align-items: center;">

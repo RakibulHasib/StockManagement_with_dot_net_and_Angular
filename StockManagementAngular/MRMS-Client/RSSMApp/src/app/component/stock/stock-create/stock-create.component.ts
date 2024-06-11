@@ -8,6 +8,7 @@ import { StockService } from 'src/app/services/Stock/stock.service';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { Company } from 'src/app/models/companyenum/company';
 import { DateFormat } from 'src/app/Shared/date-fromat.model';
+import { CompanyService } from 'src/app/service/Company/company.service';
 
 @Component({
   selector: 'app-stock-create',
@@ -22,7 +23,7 @@ export class StockCreateComponent implements OnInit {
   form = new FormGroup({});
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[] = [];
-
+  companyName!: string;
   previousDay? =  null;
   dateControl = new FormControl(new Date());
   dateFilter: any;
@@ -32,7 +33,8 @@ export class StockCreateComponent implements OnInit {
     private productService: ProductService,
     private savoyService: StockService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private companySvc: CompanyService
   )
   {
     this.companyId = this.activatedRoute.snapshot.params['id'];
@@ -63,6 +65,15 @@ export class StockCreateComponent implements OnInit {
         this.dateFilter = this.createDateFilter(res);
       }
     )
+
+    this.fetchCompanyData();
+  }
+
+  fetchCompanyData(){
+    this.companySvc.getCompany()
+    .subscribe(data => {
+      this.companyName = data.find(x => x.companyId == this.companyId).companyName;
+    });
   }
 
   createDateFilter = (days: number) => {

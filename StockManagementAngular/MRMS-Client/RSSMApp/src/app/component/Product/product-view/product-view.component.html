@@ -99,14 +99,13 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" style="height: calc(90vh - 130px); overflow: auto;">
     <form [formGroup]="form" class="ProductEntryForm" (ngSubmit)="insert()">
       <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
-      <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
-        <button type="submit" class="btn btn-outline-dark">Save</button>
-      </div>
     </form>
-    
+  </div>
+  <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
+    <button type="submit" class="btn btn-outline-dark">Save</button>
   </div>
 </ng-template>
 
@@ -120,14 +119,13 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" style="height: calc(90vh - 130px); overflow: auto;">
     <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="update()">
       <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
-       <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
-        <button type="submit" class="btn btn-outline-dark"(click)="modal.dismiss()">Update</button>
-      </div>
     </form>
-    
+  </div>
+  <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
+    <button type="submit" class="btn btn-outline-dark"(click)="modal.dismiss()">Update</button>
   </div>
 </ng-template>
 
