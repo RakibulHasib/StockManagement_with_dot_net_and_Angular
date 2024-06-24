@@ -34,7 +34,7 @@ export class RegisterComponent {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      console.log(this.signupForm.value);
+     // console.log(this.signupForm.value);
       this.userService.signup(this.signupForm.value).subscribe({
         next: (response => {
           if(response.status== Status.UserExist){
