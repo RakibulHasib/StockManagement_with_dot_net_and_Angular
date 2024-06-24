@@ -40,7 +40,6 @@ export class StockEditComponent {
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
         this.router.navigate(['/stock-view']);
-        console.log(r);
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");
       })

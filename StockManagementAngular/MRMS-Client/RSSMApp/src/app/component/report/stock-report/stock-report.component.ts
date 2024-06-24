@@ -65,19 +65,15 @@ export class StockReportComponent implements OnInit {
 
   ngOnInit() {
     let stockID: number = this.activatedRoute.snapshot.params['id'];
-    console.log(stockID);
     this.fetchReportData(stockID);
   }
   
 
   fetchReportData(stockID: number) {
-    console.log(stockID);
     if (stockID) {
       this.reportDataSvc.getReportData(stockID)
         .subscribe(data => {
-          console.log(data);
           this.stockReportData = data;
-          console.log('Received data:', data);
         }, err => {
           this.notificationSvc.message("Failed to load data", "DISMISS");
         });

@@ -20,112 +20,111 @@
   <mat-card-content style="display: flex; flex-direction: column; align-items: center;">
     <mat-form-field style="width: 60%;">
       <mat-label>কোম্পানি বাছাই করুন</mat-label>
-      <mat-select [(ngModel)]="selectedCompanyId" (selectionChange)="onDropdownSelectionChange($event.value)"[value]="selectedCompanyId" >
+      <mat-select [(ngModel)]="selectedCompanyId" (selectionChange)="onDropdownSelectionChange($event.value)"
+        [value]="selectedCompanyId">
         <mat-option *ngFor="let company of companies" [value]="company.companyId">
           {{ company.companyName }}
         </mat-option>
-      </mat-select>    
+      </mat-select>
     </mat-form-field>
   </mat-card-content>
 
 
-    <mat-card-content>
+  <mat-card-content>
 
-      <div class="row mt-2">
-        <div class="col">
-          <mat-form-field appearance="fill" class="f-w mb-1">
-            <mat-label>পণ্যের নাম দিয়ে অনুসন্ধান করুন</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Search by Name" #input>
-          </mat-form-field>
-        </div>
-
+    <div class="row mt-2">
+      <div class="col">
+        <mat-form-field appearance="fill" class="f-w mb-1">
+          <mat-label>পণ্যের নাম দিয়ে অনুসন্ধান করুন</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Search by Name" #input>
+        </mat-form-field>
       </div>
-      <mat-table [dataSource]="dataSource" matSort style="text-align:center">
 
-        <ng-container matColumnDef="productName">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>পণ্যের নাম</mat-header-cell>
-          <mat-cell *matCellDef="let element" style="text-align:center">{{element.productName}}</mat-cell>
-        </ng-container>
+    </div>
+    <mat-table [dataSource]="dataSource" matSort style="text-align:center">
 
-        <ng-container matColumnDef="sequence">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>ক্রম</mat-header-cell>
-          <mat-cell *matCellDef="let element" class="centered-text">{{element.sequence}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="productName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>পণ্যের নাম</mat-header-cell>
+        <mat-cell *matCellDef="let element" style="text-align:center">{{element.productName}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="price">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>মূল্য</mat-header-cell>
-          <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.price}} </mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="sequence">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>ক্রম</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="centered-text">{{element.sequence}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="description">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>বিস্তারিত</mat-header-cell>
-          <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.description}} </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="IsActive">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>ইজএকটিব</mat-header-cell>
-          <mat-cell *matCellDef="let element">
-            <span
-              [ngClass]="{ 'active-bg': element.isActive === 1, 'inactive-bg': element.isActive === 0 }">
-              {{ element.isActive === 1 ? 'Active' : 'Inactive' }}
-            </span>
-          </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="actions" class="action">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="action">একসান</mat-header-cell>
-          <mat-cell *matCellDef="let element" class="action">
+      <ng-container matColumnDef="price">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>মূল্য</mat-header-cell>
+        <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.price}} </mat-cell>
+      </ng-container>
 
-            <button mat-raised-button [routerLink]="['',element]" color="primary" class="icon-spacing" (click)="onEdit(updateModal,element)">Edit</button>
-            <button mat-raised-button color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.productId,element)" >Delete</button>
-          
-          </mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="description">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>বিস্তারিত</mat-header-cell>
+        <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{element.description}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="IsActive">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>ইজএকটিব</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span [ngClass]="{ 'active-bg': element.isActive === 1, 'inactive-bg': element.isActive === 0 }">
+            {{ element.isActive === 1 ? 'Active' : 'Inactive' }}
+          </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="actions" class="action">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="action">একসান</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="action">
 
-        <mat-header-row *matHeaderRowDef="columnList" class="bold-header"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: columnList;"></mat-row>
+          <button mat-raised-button color="primary" class="icon-spacing"
+            (click)="onEdit(updateModal,element)">Edit</button>
+          <button mat-raised-button color="warn" class="icon-spacing"
+            (click)="showConfirmationAlert(element.productId,element)">Delete</button>
 
-      </mat-table>
-      <mat-paginator [pageSizeOptions]="[5, 10, 20, 40]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+        </mat-cell>
+      </ng-container>
 
-    </mat-card-content>
-  </mat-card>
+      <mat-header-row *matHeaderRowDef="columnList" class="bold-header"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columnList;"></mat-row>
+
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20, 40]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+
+  </mat-card-content>
+</mat-card>
 
 
 
-  <!-- Create Product -->
-<ng-template #createModal let-modal >
+<!-- Create Product -->
+<ng-template #createModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> পণ্য যোগ করুন </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body" style="height: calc(90vh - 130px); overflow: auto;">
-    <form [formGroup]="form" class="ProductEntryForm" (ngSubmit)="insert()">
-      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
-    </form>
-  </div>
-  <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
-    <button type="submit" class="btn btn-outline-dark">Save</button>
-  </div>
+  <form [formGroup]="form" class="ProductEntryForm" (ngSubmit)="insert()">
+    <div class="modal-body" style="height: calc(90vh - 130px); overflow: auto;">
+      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
+    </div>
+    <div class="modal-footer" style="display: flex; justify-content: flex-end;">
+      <button type="submit" class="btn btn-outline-dark">Save</button>
+    </div>
+  </form>
 </ng-template>
 
-
-
 <!-- Update Company -->
-<ng-template  #updateModal let-modal >
+<ng-template #updateModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> পণ্য আপডেট করুন</h4>
     <button type="button" class="close" aria-label="Close" (click)="closeModal(modal)">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body" style="height: calc(90vh - 130px); overflow: auto;">
-    <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="update()">
-      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form" ></formly-form>
-    </form>
-  </div>
-  <div class="modal-footer" style="display: flex; justify-content: flex-end;"> 
-    <button type="submit" class="btn btn-outline-dark"(click)="modal.dismiss()">Update</button>
-  </div>
+  <form [formGroup]="form" class="CompanyEntryForm" (ngSubmit)="update()">
+    <div class="modal-body" style="height: calc(90vh - 130px); overflow: auto;">
+      <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
+    </div>
+    <div class="modal-footer" style="display: flex; justify-content: flex-end;">
+      <button type="submit" class="btn btn-outline-dark" (click)="modal.dismiss()">Update</button>
+    </div>
+  </form>
 </ng-template>
-

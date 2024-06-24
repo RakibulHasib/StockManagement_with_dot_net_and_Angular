@@ -74,7 +74,6 @@ export class DistributionEditComponent {
               ?.valueChanges.subscribe(value =>{
                 this.salesService.checkTodayConcernPersonDistribution(value).toPromise().then(
                   x => {
-                    console.log(x)
                     if(x === true){
                       this.notificationSvc.message("This person distribution already updated", "DISMISS");
                     }

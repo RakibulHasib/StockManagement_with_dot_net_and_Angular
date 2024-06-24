@@ -261,7 +261,6 @@ export class UserviewComponent implements OnInit {
   //     roleId : this.roleAssignModel.roleId,
   //     userId: this.roleAssignModel.userId
   //   }
-  //   debugger
   //   this.userDataSvc.roleAssign(data).subscribe(
   //     (res) => {
   //       this._notifitions.message("Successfully saved data", "DISMISS");
