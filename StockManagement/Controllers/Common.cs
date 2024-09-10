@@ -54,7 +54,7 @@ namespace StockManagement.Controllers
         public async Task<IEnumerable<ProductStockDTO>> GetProducStock(int CompanyId)
         {
             var products = await _unitofwork.Product.Queryable
-                .Where(product => product.CompanyId == CompanyId)
+                .Where(product => product.CompanyId == CompanyId && product.IsDeleted == 0)
                 .ToListAsync();
 
             var productIds = products.Select(a => a.ProductId).ToList();
