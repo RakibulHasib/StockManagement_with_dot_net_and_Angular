@@ -10,5 +10,7 @@ namespace StockManagement.Entities
         public int NewQuantity { get; set; }
         public int PreviousQuantity { get; set; }
         public DateTime CreationTime { get; set; }
+        public int StockType { get; set; }
+        public int? ConcernPersonId { get; set; }
     }
 }

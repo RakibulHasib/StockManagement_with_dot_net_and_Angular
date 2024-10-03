@@ -13,6 +13,7 @@ namespace StockManagement.Entities
         public decimal? Price { get; set; }
         public int? Sequence { get; set; }
         public int IsDeleted { get; set; }
-        public int Quantity { get; set; }
+        public int StockQuantity { get; set; }
+        public int NewQuantity { get; set; }
     }
 }

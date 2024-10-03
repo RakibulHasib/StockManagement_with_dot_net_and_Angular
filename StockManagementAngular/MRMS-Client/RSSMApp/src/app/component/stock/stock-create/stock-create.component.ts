@@ -49,7 +49,8 @@ export class StockCreateComponent implements OnInit {
           productName: x.productName,
           price: x.price,
           eja: x.eja,
-          newProduct: (x.newProduct ?? 0) + (x.receiveQuantity ?? 0)  - (x.eja ?? 0),
+          newProduct: ((x.newProduct ?? 0) + (x.salesQuantity ?? 0) + (x.returnQuantity ?? 0)) > (x?.eja ?? 0) ?
+           ((x.newProduct ?? 0) + (x.salesQuantity ?? 0) + (x.returnQuantity ?? 0)) - (x?.eja ?? 0) :  0,     
           salesQuantity: x.salesQuantity,
           damageQuantity: 0
         })

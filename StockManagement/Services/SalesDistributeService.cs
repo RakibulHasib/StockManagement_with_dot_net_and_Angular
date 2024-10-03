@@ -126,7 +126,7 @@ namespace StockManagement.Services
 
                     if (productData != null)
                     {
-                        productData.Quantity -= product?.ReceiveQuantity == null ? 0 : product.ReceiveQuantity;
+                        productData.StockQuantity -= product?.ReceiveQuantity == null ? 0 : product.ReceiveQuantity;
                         products.Add(productData);
                     }
 
@@ -354,7 +354,7 @@ namespace StockManagement.Services
                     ProductId = x.ProductId,
                     ProductName = x.ProductName,
                     Price = x.Price,
-                    Stock = x.Quantity
+                    Stock = x.StockQuantity
                 }).ToListAsync();
 
             if (data.Any())
