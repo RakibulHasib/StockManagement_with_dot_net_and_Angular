@@ -82,7 +82,7 @@ namespace StockManagement.Services
 
             foreach (var item in productDto)
             {
-                var remaining = ((item.ReceiveQuantity ?? 0) + (item.ReturnQuantity ?? 0) - item.SalesQuantity ?? 0);
+                var remaining = (item.ReceiveQuantity ?? 0) - (item.SalesQuantity ?? 0);
                 var Details = new SalesDistributeDetail
                 {
                     SalesDistributeDetailsId = Guid.NewGuid(),
@@ -126,7 +126,7 @@ namespace StockManagement.Services
 
                     if (productData != null)
                     {
-                        productData.StockQuantity -= product?.ReceiveQuantity == null ? 0 : product.ReceiveQuantity;
+                        productData.StockQuantity -= product?.SalesQuantity == null ? 0 : product.SalesQuantity;
                         products.Add(productData);
                     }
 

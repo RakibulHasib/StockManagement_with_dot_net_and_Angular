@@ -15,5 +15,6 @@ namespace StockManagement.Entities
         public int IsDeleted { get; set; }
         public int StockQuantity { get; set; }
         public int NewQuantity { get; set; }
+        public Guid? LastStockLogId { get; set; }
     }
 }

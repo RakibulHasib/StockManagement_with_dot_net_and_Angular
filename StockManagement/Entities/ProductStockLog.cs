@@ -12,5 +12,6 @@ namespace StockManagement.Entities
         public DateTime CreationTime { get; set; }
         public int StockType { get; set; }
         public int? ConcernPersonId { get; set; }
+        public Guid LastStockLogId { get; set; }
     }
 }
