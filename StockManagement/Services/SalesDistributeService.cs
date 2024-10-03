@@ -20,6 +20,13 @@ namespace StockManagement.Services
             StockComplete
         }
 
+        enum StockType
+        {
+            StockIn = 0,
+            StockOut,
+            ReturnStockIn
+        }
+
         public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID, DateTime StartDate, DateTime EndDate)
         {
             var query = await (from sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0)
@@ -78,7 +85,6 @@ namespace StockManagement.Services
             int result = 0;
             List<SalesDistributeDetail> distributeDetails = new();
             List<Product> products = new();
-            List<ProductStockLog> stockLogs = new();
 
             foreach (var item in productDto)
             {
@@ -112,6 +118,16 @@ namespace StockManagement.Services
                 Status = (int)DailyDistributeStatus.Created
             };
 
+            var productIds = distributeDetails.Select(x => x.ProductId).ToList();
+
+            products = await _unitOfWork.Product.Queryable
+            .Where(a => productIds.Contains(a.ProductId))
+            .Select(x => new Product
+            {
+                ProductId = x.ProductId,
+                StockQuantity = x.StockQuantity
+            }).ToListAsync();
+
             var transaction = await _unitOfWork.BeginTransactionAsync();
 
             try
@@ -120,36 +136,51 @@ namespace StockManagement.Services
                 {
                     product.SalesDistribute = salesDistrbute;
 
-                    var productData = await _unitOfWork.Product.Queryable
-                        .Where(a => a.ProductId == product.ProductId)
-                        .FirstOrDefaultAsync();
+                    var productData = products.FirstOrDefault(x => x.ProductId == product.ProductId);
+                    var oldStock = productData.StockQuantity;
 
                     if (productData != null)
                     {
                         productData.StockQuantity -= product?.SalesQuantity == null ? 0 : product.SalesQuantity;
                         products.Add(productData);
                     }
-
-                    var prevStock = await _unitOfWork.ProductStockLog.Queryable
-                        .Where(a => a.ProductId == product.ProductId)
-                        .OrderByDescending(a => a.CreationTime)
-                        .Select(a => a.NewQuantity)
-                        .FirstOrDefaultAsync();
-
-                    var stockLog = new ProductStockLog
+                    if (product.SalesQuantity > 0)
                     {
-                        Id = Guid.NewGuid(),
-                        ProductId = product.ProductId,
-                        NewQuantity = (prevStock == null ? 0 : prevStock) - (product?.ReceiveQuantity == null ? 0 : product.ReceiveQuantity),
-                        PreviousQuantity = prevStock == null ? 0 : prevStock
-                    };
-                    stockLogs.Add(stockLog);
+                        var salesStockLog = new ProductStockLog
+                        {
+                            Id = Guid.NewGuid(),
+                            ProductId = product.ProductId,
+                            NewQuantity = oldStock - (product?.SalesQuantity == null ? 0 : product.SalesQuantity),
+                            PreviousQuantity = oldStock,
+                            StockType = (int)StockType.StockOut
+                        };
+                        await _unitOfWork.ProductStockLog.AddRawAsync(salesStockLog);
+                        await _unitOfWork.SaveChangesAsync();
+                        oldStock= salesStockLog.NewQuantity;
+                        productData.LastStockLogId = salesStockLog.Id;
+
+                    }
+                    if (product.ReturnQuantity > 0)
+                    {
+                        var returnStockLog = new ProductStockLog
+                        {
+                            Id = Guid.NewGuid(),
+                            ProductId = product.ProductId,
+                            NewQuantity = oldStock + (product?.ReturnQuantity == null ? 0 : product.ReturnQuantity),
+                            PreviousQuantity = oldStock,
+                            StockType = (int)StockType.ReturnStockIn,
+                            ConcernPersonId = salesDistrbute.ConcernPersonId
+                        };
+                        await _unitOfWork.ProductStockLog.AddRawAsync(returnStockLog);
+                        await _unitOfWork.SaveChangesAsync();
+                        productData.LastStockLogId = returnStockLog.Id;
+                    }
+
                 }
 
                 await _unitOfWork.SalesDistribute.AddRawAsync(salesDistrbute);
                 await _unitOfWork.SalesDistributeDetail.AddRangeRawAsync(distributeDetails);
                 _unitOfWork.Product.UpdateRangeAsync(products);
-                await _unitOfWork.ProductStockLog.AddRangeRawAsync(stockLogs);
 
                 await _unitOfWork.SaveChangesAsync();
 
