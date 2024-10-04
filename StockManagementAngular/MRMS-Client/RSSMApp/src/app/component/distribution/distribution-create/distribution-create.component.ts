@@ -133,8 +133,7 @@ export class DistributionCreateComponent implements OnInit {
   loadProductData() {
     this.generatedistributeFormFields();
     this.salesService
-      .GetProductInfoByConcernPerson(
-        this.selectedConcernPerson,
+      .GetProductInfoByCompany(
         this.selectedCompany
       )
       .subscribe(
@@ -144,7 +143,6 @@ export class DistributionCreateComponent implements OnInit {
             productName: x.productName,
             price: x.price,
             stock: x.stock,
-            remaining: x.remaining,
             receiveQuantity: 0,
             salesQuantity: 0,
           }));
@@ -315,19 +313,6 @@ export class DistributionCreateComponent implements OnInit {
                     field.formControl?.setErrors(null);
                   }
                 },
-              },
-            },
-            {
-              className:
-                'returnQuantity mdc-hide-focus-outline flex-1 width-80',
-              type: 'input',
-              key: 'remaining',
-              props: {
-                label: 'অবশিষ্ট',
-                floatLabel: 'always',
-                appearance: 'outline',
-                hideRequiredMarker: true,
-                readonly: true,
               },
             },
             {

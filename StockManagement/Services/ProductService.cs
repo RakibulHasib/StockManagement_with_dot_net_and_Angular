@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using StockManagement.Contexts;
-using StockManagement.DTO;
-using StockManagement.Entities;
-using StockManagement.Repository;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+﻿using static StockManagement.Services.SalesDistributeService;
 
 namespace StockManagement.Services;
 
@@ -119,26 +113,24 @@ public class ProductService
         var productData = await _unitOfWork.Product.Queryable
             .Where(a => a.ProductId == productStock.ProductId)
             .FirstOrDefaultAsync();
-
-        var prevStock = await _unitOfWork.ProductStockLog.Queryable
-            .Where(a => a.ProductId == productStock.ProductId)
-            .OrderByDescending(a => a.CreationTime)
-            .Select(a => a.NewQuantity)
-            .FirstOrDefaultAsync();
-
-        productData.StockQuantity += productStock.NewQuantity;
-        _unitOfWork.Product.Update(productData);
+        var oldStock = productData.StockQuantity;
 
         var stockLog = new ProductStockLog
         {
             Id = Guid.NewGuid(),
             ProductId = productStock.ProductId,
-            NewQuantity = (prevStock == null ? 0 : prevStock) + productStock.NewQuantity,
-            PreviousQuantity = prevStock == null ? 0 : prevStock
+            NewQuantity = oldStock + productStock.NewQuantity,
+            PreviousQuantity = oldStock == null ? 0 : oldStock,
+            StockType = (int)StockType.StockIn
         };
         await _unitOfWork.ProductStockLog.AddAsync(stockLog);
         await _unitOfWork.SaveChangesAsync();
 
+        productData.StockQuantity += productStock.NewQuantity;
+        productData.NewQuantity += productStock.NewQuantity;
+        productData.LastStockLogId = stockLog.Id;
+        _unitOfWork.Product.Update(productData);
+        await _unitOfWork.SaveChangesAsync();
         return result;
     }
 }

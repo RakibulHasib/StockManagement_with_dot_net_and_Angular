@@ -20,12 +20,6 @@ namespace StockManagement.Controllers
             return await _salesDistributeService.GetSalesDistributeDataPerDay(ConcernPersonID, StartDate, EndDate);
         }
 
-        [HttpGet("GetDistributeDataByID")]
-        public async Task<ActionResult<SalesDistributeDataDto>> GetDistributeDataByID(int SalesDistributeId)
-        {
-            return await _salesDistributeService.GetDistributeDataByID(SalesDistributeId);
-        }
-
         [HttpPost("InsertSalesDistributeData")]
         public async Task<ActionResult<int>> InsertSalesDistributeData(SalesDistributeDataDto data)
         {
@@ -44,10 +38,36 @@ namespace StockManagement.Controllers
             return Ok(await _salesDistributeService.GetProduct());
         }
 
-        [HttpGet("GetProduct/{companyId}")]
-        public async Task<ActionResult<List<ProductDTO>>> GetProduct(int companyId)
+        [HttpGet("GetSalesDistributeReport")]
+        public async Task<ActionResult<SalesDistributeReportDTO>> GetSalesDistributeReport(int SalesDistributeId)
         {
-            return Ok(await _salesDistributeService.GetProductByCompanyId(companyId));
+            return await _salesDistributeService.GetSalesDistributeReport(SalesDistributeId);
+        }
+
+        [Transaction]
+        [HttpPut("DeleteDistribution")]
+        public async Task<ActionResult<int>> DeleteDistribution(int SalesDistributeId)
+        {
+            return Ok(await _salesDistributeService.DeleteDistribution(SalesDistributeId));
+        }
+        
+        [HttpGet("GetAvailableDistribute/{concernPersonId}/{companyId}")]
+        public async Task<ActionResult<SalesDistributeAvailabityDto>> GetAvailableDistributeForConcernPerson(int concernPersonId, int companyId)
+        {
+            return Ok(await _salesDistributeService.GetAvailableDistributeForConcernPerson(concernPersonId, companyId));
+        }
+
+        //Edit Start
+        [HttpGet("GetDistributeDataByID")]
+        public async Task<ActionResult<SalesDistributeDataDto>> GetDistributeDataByID(int SalesDistributeId)
+        {
+            return await _salesDistributeService.GetDistributeDataByID(SalesDistributeId);
+        }
+
+        [HttpGet("GetProductInfoByCompany/{companyId}")]
+        public async Task<ActionResult<List<ProductInfoByConcernPersonDTO>>> GetProductInfoByCompany(int companyId)
+        {
+            return Ok(await _salesDistributeService.GetProductInfoByCompany(companyId));
         }
 
         [HttpGet("GetProductWisePrice")]
@@ -62,36 +82,18 @@ namespace StockManagement.Controllers
             return Ok(await _salesDistributeService.GetProductWiseRemaining(ProductID, ConcernPersonID));
         }
 
-        [HttpGet("GetSalesDistributeReport")]
-        public async Task<ActionResult<SalesDistributeReportDTO>> GetSalesDistributeReport(int SalesDistributeId)
-        {
-            return await _salesDistributeService.GetSalesDistributeReport(SalesDistributeId);
-        }
-
         [HttpGet("CheckTodayConcernPersonDistribution")]
         public async Task<ActionResult<bool>> CheckTodayConcernPersonDistribution(int ConcernPersonId)
         {
             return await _salesDistributeService.CheckTodayConcernPersonDistribution(ConcernPersonId);
         }
+        //Edit End
 
-        [Transaction]
-        [HttpPut("DeleteDistribution")]
-        public async Task<ActionResult<int>> DeleteDistribution(int SalesDistributeId)
+        //Not Used
+        [HttpGet("GetProduct/{companyId}")]
+        public async Task<ActionResult<List<ProductDTO>>> GetProduct(int companyId)
         {
-            return Ok(await _salesDistributeService.DeleteDistribution(SalesDistributeId));
+            return Ok(await _salesDistributeService.GetProductByCompanyId(companyId));
         }
-
-        [HttpGet("GetProductInfoByConcernPerson/{concernPersonId}/{companyId}")]
-        public async Task<ActionResult<List<ProductInfoByConcernPersonDTO>>> GetProductInfoByConcernPerson(int concernPersonId, int companyId)
-        {
-            return Ok(await _salesDistributeService.GetProductInfoByConcernPerson(concernPersonId, companyId));
-        }
-        
-        [HttpGet("GetAvailableDistribute/{concernPersonId}/{companyId}")]
-        public async Task<ActionResult<SalesDistributeAvailabityDto>> GetAvailableDistributeForConcernPerson(int concernPersonId, int companyId)
-        {
-            return Ok(await _salesDistributeService.GetAvailableDistributeForConcernPerson(concernPersonId, companyId));
-        }
-
     }
 }
