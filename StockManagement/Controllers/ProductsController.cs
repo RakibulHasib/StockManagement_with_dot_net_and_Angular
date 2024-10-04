@@ -75,7 +75,7 @@ public class ProductsController : ControllerBase
                                         .OrderByDescending(x => x.CreationTime)
                                         .Select(x => x.Eja ?? 0)
                                         .FirstOrDefault(),
-                    NewProduct = x.Quantity
+                    NewProduct = x.StockQuantity
                 }).ToListAsync();
 
         if (products.Any())
@@ -87,7 +87,8 @@ public class ProductsController : ControllerBase
                               {
                                   sdd.ProductId,
                                   sdd.SalesQuantity,
-                                  sdd.ReceiveQuantity
+                                  sdd.ReceiveQuantity,
+                                  sdd.ReturnQuantity
                               }).ToListAsync();
 
 
@@ -97,6 +98,7 @@ public class ProductsController : ControllerBase
                 {
                     item.SalesQuantity = distributeData?.Where(x => x.ProductId == item.ProductId).Sum(a => a.SalesQuantity) ?? 0;
                     item.ReceiveQuantity = distributeData?.Where(x => x.ProductId == item.ProductId).Sum(a => a.ReceiveQuantity) ?? 0;
+                    item.ReturnQuantity = distributeData?.Where(x => x.ProductId == item.ProductId).Sum(a => a.ReturnQuantity) ?? 0;
                 }
             }
         }
@@ -112,6 +114,7 @@ public class ProductsController : ControllerBase
         public int NewProduct { get; set; }
         public int SalesQuantity { get; set; }
         public int ReceiveQuantity { get; set; }
+        public int ReturnQuantity { get; set; }
     }
 
 }

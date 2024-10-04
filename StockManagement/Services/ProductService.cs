@@ -126,7 +126,7 @@ public class ProductService
             .Select(a => a.NewQuantity)
             .FirstOrDefaultAsync();
 
-        productData.Quantity += productStock.NewQuantity;
+        productData.StockQuantity += productStock.NewQuantity;
         _unitOfWork.Product.Update(productData);
 
         var stockLog = new ProductStockLog

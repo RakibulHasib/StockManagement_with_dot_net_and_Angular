@@ -21,11 +21,11 @@ builder.Services.AddControllers()
            option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize;
            option.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
        });
-var appSettingsSection = configuration.GetSection("AppSettings");
 
 //jwt
-var appSettings = appSettingsSection.Get<AppSettings>();
+var appSettings = configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
 var key = Encoding.ASCII.GetBytes(appSettings.key);
+
 builder.Services.AddAuthentication(au =>
 {
     au.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -43,7 +43,7 @@ builder.Services.AddAuthentication(au =>
     };
 });
 
-builder.Services.Configure<AppSettings>(appSettingsSection);
+builder.Services.Configure<AppSettings>(configuration.GetSection(nameof(AppSettings)));
 
 builder.Services.AddTransient(typeof(Repository<,>));
 builder.Services.AddScoped(typeof(UnitOfWork));
@@ -58,13 +58,10 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddTransient<PasswordHashingService>();
 builder.Services.AddScoped<AuthorizeAttribute>();
 //builder.Services.AddScoped<IAuthorizationFilter, AuthorizeAttribute>();
-
+builder.Services.AddCors();
 
 builder.Services.AddDbContext<StockDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllers();
-
-builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-builder.Services.AddSingleton<AppSettings>();
 //builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
 builder.Services.AddEndpointsApiExplorer();
@@ -102,6 +99,8 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -109,18 +108,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseMiddleware<ExceptionHandlerMiddleware>();
-
 app.UseCors(x =>
 {
     x.AllowAnyOrigin();
-    //x.WithOrigins("roshsfoodsandsweets.com", "www.roshsfoodsandsweets.com", "https://www.roshsfoodsandsweets.com", "https://roshsfoodsandsweets.com");
     x.AllowAnyHeader();
     x.AllowAnyMethod();
 });
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

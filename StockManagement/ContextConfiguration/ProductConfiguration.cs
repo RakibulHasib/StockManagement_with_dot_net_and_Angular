@@ -12,6 +12,11 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         .WithMany(x => x.Products)
         .IsRequired(false)
         .HasForeignKey(x => x.CompanyId);
+
+        builder.HasOne(x => x.LastStockLog)
+        .WithOne(x => x.StockProduct)
+        .IsRequired(false)
+        .HasForeignKey<Product>(x => x.LastStockLogId);
     }
 
 }

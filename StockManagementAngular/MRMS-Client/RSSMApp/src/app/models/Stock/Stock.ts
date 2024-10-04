@@ -13,6 +13,7 @@ export class Stock {
         public total?: number,
         public salesQuantity?: number,
         public receiveQuantity?: number,
+        public returnQuantity?: number,
         public totalAmount?: number,
         public damageQuantity?: number,
         public createdDate?: Date,

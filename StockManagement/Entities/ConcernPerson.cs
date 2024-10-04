@@ -8,5 +8,6 @@ namespace StockManagement.Entities
         public int ConcernPersonId { get; set; }
         public string ConcernPersonName { get; set; } = null!;
         public int IsDeleted { get; set; }
+        public Guid LastSalesDistributedId { get; set; }
     }
 }
