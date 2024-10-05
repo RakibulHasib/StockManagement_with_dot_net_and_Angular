@@ -1,6 +1,6 @@
 export interface UserInfo {
-    roleId: number,
-    userId: number
+    roleId?: number,
+    userId?: number
 }
 
 export interface RoleDto {

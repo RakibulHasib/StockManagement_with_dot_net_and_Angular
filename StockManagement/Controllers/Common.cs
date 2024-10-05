@@ -1,12 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using StockManagement.DTO;
-using StockManagement.Entities;
-using StockManagement.Repository;
-using StockManagement.Services;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+﻿using StockManagement.Attributes;
 
 namespace StockManagement.Controllers
 {
@@ -21,6 +13,7 @@ namespace StockManagement.Controllers
             _unitofwork = unitofwork;
         }
 
+        [JwtAuthorize]
         [HttpGet("GetCompanySalesPriceWeekly")]
         public async Task<ActionResult<List<CompanySalesPriceWeeklyDTO>>> GetCompanySalesPriceWeekly()
         {
@@ -50,6 +43,7 @@ namespace StockManagement.Controllers
             return salesData;
         }
 
+        [JwtAuthorize]
         [HttpGet("GetProducStock/{companyId}")]
         public async Task<IEnumerable<ProductStockDTO>> GetProducStock(int CompanyId)
         {

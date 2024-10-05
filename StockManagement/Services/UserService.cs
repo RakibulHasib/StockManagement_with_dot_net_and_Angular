@@ -8,7 +8,7 @@ public class UserService
 
     private readonly UnitOfWork _unitOfWork;
     private readonly PasswordHashingService _hasher;
-    private int ROLE_ID = 1;
+    private int ROLE_ID = 0;
     private string USER_STATUS = "Pending";
 
     public UserService(UnitOfWork unitOfWork, PasswordHashingService hasher)

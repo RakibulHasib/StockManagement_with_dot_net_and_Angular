@@ -1,6 +1,5 @@
-﻿using StockManagement.Features.CompanyFeatures;
+﻿using StockManagement.Attributes;
 using StockManagement.Features.UserFeatures;
-using StockManagement.Services;
 
 namespace StockManagement.Controllers
 {
@@ -22,35 +21,42 @@ namespace StockManagement.Controllers
         {
             return await _userService.UserRegister(user);
         }
+
+        [JwtAuthorize]
         [HttpPut("update-user")]
         public async Task<ActionResult<ApiResponse>> UpdateUser([FromBody] User user)
         {
             return await _userService.UpdateUser(user);
         }
 
+        [JwtAuthorize]
         [HttpPut("user-role-assign/{userId}")]
         public async Task<ActionResult<ApiResponse>> UserRoleAssign(int userId, int roleId)
         {
             return await _userService.UserRoleAssign(userId, roleId);
         }
 
+        [JwtAuthorize]
         [HttpPut("approval/{userId}")]
         public async Task<ActionResult<ApiResponse>> Approval([FromRoute] int userId)
         {
             return await _userService.UserApproved(userId);
         }
+        [JwtAuthorize]
         [HttpPut("delete/{userId}")]
         public async Task<ActionResult<ApiResponse>> UserDelete([FromRoute] int userId)
         {
             return await _userService.UserDelete(userId);
         }
 
+        [JwtAuthorize]
         [HttpPut("password-reset")]
         public async Task<ActionResult<ApiResponse>> PasswordReset(PasswordDto dto)
         {
             return await _userService.ResetPassword(dto.UserId, dto.Password);
         }
 
+        [JwtAuthorize]
         [HttpPost("role-insert")]
         public async Task<ActionResult<ApiResponse>> RoleInsert([FromBody] RoleMaster roleMaster)
         {
@@ -73,39 +79,42 @@ namespace StockManagement.Controllers
         //    }
         //}
 
-
+        [JwtAuthorize]
         [HttpGet("get-by-userId")]
         public async Task<ApiResponse> GetUserById(int userId)
         {
             return await _userService.GetUserById(userId);
         }
 
+        [JwtAuthorize]
         [HttpGet("get-unapproved-user-list")]
         public async Task<ApiResponse> GetUnapprovedUsers()
         {
             return await _userService.GetUnApprovedUserList();
         }
 
-
+        [JwtAuthorize]
         [HttpGet("get-user-list")]
         public async Task<ApiResponse> GetUserList()
         {
             return await _userService.GetUserList();
         }
 
+        [JwtAuthorize]
         [HttpPost("insert-role")]
         public async Task<ActionResult<ApiResponse>> InserRole(InsertRoleCommand command)
         {
             return await _mediator.Send(command);
         }
 
-
+        [JwtAuthorize]
         [HttpPost("assign-role")]
         public async Task<ActionResult<ApiResponse>> AssignRole(RoleAssignCommand command)
         {
             return await _mediator.Send(command);
         }
 
+        [JwtAuthorize]
         [HttpGet("role-list")]
         public async Task<ActionResult<List<RoleMasterDTO>>> GetRoleList()
         {

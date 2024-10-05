@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { UserInfo } from 'src/app/models/Authentication/UserInfo';
-
+import { UserInfo } from 'src/app/models/Authentication/userInfo';
 @Injectable({
   providedIn: 'root'
 })
+
 export class UserRoleService {
 
   private userInfoSubject: BehaviorSubject<UserInfo | null> = new BehaviorSubject<UserInfo | null>(null);
-
+  
   constructor() {}
 
   setUserInfo(userInfo: UserInfo) {

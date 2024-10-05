@@ -11,8 +11,6 @@ public class AuthenticationController : ControllerBase
 
     private readonly IAuthenticateService _authenticateService;
 
-
-
     public AuthenticationController(IAuthenticateService authenticateService)
     {
 
@@ -25,9 +23,6 @@ public class AuthenticationController : ControllerBase
     public async Task<ActionResult<ApiResponse>> SignIn([FromBody] UserDTO credentials)
     {
         return await _authenticateService.AuthenticateUser(credentials.UserName, credentials.Password);
-
-        // Authentication failed
-        //return Unauthorized();
     }
 
     //[HttpPost("logout")]
