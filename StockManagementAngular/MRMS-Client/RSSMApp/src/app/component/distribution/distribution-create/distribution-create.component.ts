@@ -1,16 +1,16 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { Product } from '../../../models/Product/product';
 import { SalesDistribution } from '../../../models/sales/sales-distribution';
 import { SalesDistributionService } from '../../../services/sales/sales-distribution.service';
 import { NotificationService } from '../../../services/Shared/notification.service';
 import { ConcernPersonService } from 'src/app/services/concernPerson/concern-person.service';
-import { StateService } from 'src/app/services/Shared/state.service';
 import { ConcernPerson, ConcernPersonMapping } from 'src/app/models/concernPerson/concern-person';
 import { Company } from 'src/app/models/company/company';
 import { DateFormat } from 'src/app/Shared/date-fromat.model';
+import { DailyDistributeStatus } from 'src/app/models/Enum/DailyDistributeStatus.enum';
 
 @Component({
   selector: 'app-distribution-create',
@@ -39,10 +39,8 @@ export class DistributionCreateComponent implements OnInit {
   constructor(
     private notificationSvc: NotificationService,
     private salesService: SalesDistributionService,
-    private router: Router,
     private activatedRoute: ActivatedRoute,
     private concernPersonSvc: ConcernPersonService,
-    private stateService: StateService,
     private changeDetector: ChangeDetectorRef
   ) {}
 
@@ -102,16 +100,23 @@ export class DistributionCreateComponent implements OnInit {
           if (data) {
             this.maxDate = new Date(data.today);
             if (data?.lastDistribute) {
-              if (data?.lastDistribute?.lastDistributeStatus === 1) {
+              if (data?.lastDistribute?.lastDistributeStatus === DailyDistributeStatus.Created) {
                 this.notificationSvc.message(
                   'Please create stock before make a distribution',
                   'DISMISS',
                   10000
                 );
-              } else if (data?.lastDistribute?.lastDistributeStatus === 2) {
+              } else if (data?.lastDistribute?.lastDistributeStatus === DailyDistributeStatus.StockComplete) {
                 this.minDate = new Date(
                   data?.lastDistribute?.lastDistributeDay
                 );
+                this.minDate.setDate(this.minDate.getDate() + 1);
+
+                const isMaxAndMinDateIsEqual = new DateFormat().areDatesEqual(this.maxDate, this.minDate);                
+                if (isMaxAndMinDateIsEqual){
+                  this.minDate = null;
+                  this.maxDate = null;
+                }
                 this.loadProductData();
               }
             } else {

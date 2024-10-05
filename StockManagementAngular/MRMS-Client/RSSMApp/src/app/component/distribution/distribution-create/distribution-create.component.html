@@ -29,7 +29,7 @@
       
       <mat-form-field style="width: 30%; padding:5px" class="example-full-width">
         <mat-label>Distribution date</mat-label>
-        <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate" [(ngModel)]="distrbuteDate" [disabled] =" minDate == null || maxDate == null">
+        <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate" [(ngModel)]="distrbuteDate" [disabled] ="minDate == null || maxDate == null">
         <mat-datepicker-toggle matIconSuffix [for]="picker">
           <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
         </mat-datepicker-toggle>
