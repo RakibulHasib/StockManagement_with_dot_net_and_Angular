@@ -81,10 +81,6 @@
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #stockmenu="matMenu">
-            <button mat-menu-item (click)="checkTodayStockUpdate(element.stockId)" disabled>
-              <mat-icon>dialpad</mat-icon>
-              <span>Edit</span>
-            </button>
             <button mat-menu-item (click)="openDamageDialog(element.stockId)">
               <mat-icon>dialpad</mat-icon>
               <span>DamageAdd</span>
@@ -92,10 +88,6 @@
             <button mat-menu-item (click)="openCommissionDialog(element.stockId)">
               <mat-icon>dialpad</mat-icon>
               <span>CommissionAdd</span>
-            </button>
-            <button mat-menu-item (click)="confirmDelete(element.stockId)">
-              <mat-icon>dialpad</mat-icon>
-              <span>Delete</span>
             </button>
           </mat-menu>
 

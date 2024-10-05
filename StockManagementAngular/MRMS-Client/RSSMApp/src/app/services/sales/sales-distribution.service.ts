@@ -23,24 +23,15 @@ export class SalesDistributionService {
   getSalesDistributeDataPerDay(concernPersonID: number,startDate: string, endDate: string): Observable<DailyDistributionModel[]> {
    return this.http.get<DailyDistributionModel[]>(`${IceCreamApiUrl}/${endPoint}/GetSalesDistributeDataPerDay?ConcernPersonID=${concernPersonID}&StartDate=${startDate}&EndDate=${endDate}`);
   }
+
   getReportData(salesDistributeID: number): Observable<SalesReportModel> {
    return this.http.get<SalesReportModel>(`${IceCreamApiUrl}/${endPoint}/GetSalesDistributeReport?SalesDistributeId=${salesDistributeID}`);
   }
-  getPrice(productID: number): Observable<{ price: number }> {
-    return this.http.get<{ price: number }>(`${IceCreamApiUrl}/${endPoint}/GetProductWisePrice?ProductID=${productID}`);
-  }
-  getRemaining(productID: number,concernPersonID:number): Observable<number> {
-    return this.http.get<number>(`${IceCreamApiUrl}/${endPoint}/GetProductWiseRemaining?ProductID=${productID}&ConcernPersonID=${concernPersonID}`);
-  }
+
   getDistributeStatus(date: string): Observable<DailyDistributeStatus[]> {
     return this.http.get<DailyDistributeStatus[]>(`${IceCreamApiUrl}/${endPoint}/GetDistributorStatus?date=${date}`);
   }
-  getProduct(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${IceCreamApiUrl}/${endPoint}/GetProduct`);
-  }
-  getProductByCompanyId(companyId: number): Observable<Product[]> {
-    return this.http.get<Product[]>(`${IceCreamApiUrl}/${endPoint}/GetProduct/${companyId}`);
-  }
+
   GetProductInfoByCompany(companyId: number): Observable<DistributeProductInfo[]> {
     return this.http.get<DistributeProductInfo[]>(`${IceCreamApiUrl}/${endPoint}/GetProductInfoByCompany/${companyId}`);
   }
@@ -52,15 +43,7 @@ export class SalesDistributionService {
   insert(data: {concernPersonId: number, companyId: number, distributionTime: string, salesDistribute: SalesDistribution[]}): Observable<any> {
     return this.http.post<SalesDistribution[]>(`${IceCreamApiUrl}/${endPoint}/InsertSalesDistributeData`, data);
   }
-  insertSkipConcerPersonDistribution(concernPersonId: number, data?: null): Observable<any> {
-    return this.http.post<SalesDistribution[]>(`${IceCreamApiUrl}/${endPoint}/InsertSkipConcerPersonDistribution?ConcernPersonID=${concernPersonId}`, data);
-  }
-  checkTodayConcernPersonDistribution(concernPersonID: number):Observable<boolean>{
-    return this.http.get<boolean>(`${IceCreamApiUrl}/${endPoint}/CheckTodayConcernPersonDistribution?ConcernPersonId=${concernPersonID}`);
-  }
-  getDistributionById(salesDistributeID: number): Observable<{concernPersonID: number, salesDistribute: SalesDistribution[]}> {
-    return this.http.get<{concernPersonID: number, salesDistribute: SalesDistribution[]}>(`${IceCreamApiUrl}/${endPoint}/GetDistributeDataByID?SalesDistributeId=${salesDistributeID}`);
-  }
+
   deleteDistribution(salesDistributeId: number): Observable<any> {
     const Qparams={salesDistributeId:salesDistributeId}
     const options={params:Qparams}

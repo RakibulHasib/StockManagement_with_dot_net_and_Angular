@@ -32,12 +32,6 @@ namespace StockManagement.Controllers
             return Ok(await _salesDistributeService.GetDistributorStatus(date));
         }
 
-        [HttpGet("GetProduct")]
-        public async Task<ActionResult<List<ProductDTO>>> GetProduct()
-        {
-            return Ok(await _salesDistributeService.GetProduct());
-        }
-
         [HttpGet("GetSalesDistributeReport")]
         public async Task<ActionResult<SalesDistributeReportDTO>> GetSalesDistributeReport(int SalesDistributeId)
         {
@@ -57,43 +51,10 @@ namespace StockManagement.Controllers
             return Ok(await _salesDistributeService.GetAvailableDistributeForConcernPerson(concernPersonId, companyId));
         }
 
-        //Edit Start
-        [HttpGet("GetDistributeDataByID")]
-        public async Task<ActionResult<SalesDistributeDataDto>> GetDistributeDataByID(int SalesDistributeId)
-        {
-            return await _salesDistributeService.GetDistributeDataByID(SalesDistributeId);
-        }
-
         [HttpGet("GetProductInfoByCompany/{companyId}")]
         public async Task<ActionResult<List<ProductInfoByConcernPersonDTO>>> GetProductInfoByCompany(int companyId)
         {
             return Ok(await _salesDistributeService.GetProductInfoByCompany(companyId));
-        }
-
-        [HttpGet("GetProductWisePrice")]
-        public async Task<ActionResult<ProductPriceDTO>> GetProductWisePrice(int ProductID)
-        {
-            return Ok(await _salesDistributeService.GetProductWisePrice(ProductID));
-        }
-
-        [HttpGet("GetProductWiseRemaining")]
-        public async Task<ActionResult<int>> GetProductWiseRemaining(int ProductID, int ConcernPersonID)
-        {
-            return Ok(await _salesDistributeService.GetProductWiseRemaining(ProductID, ConcernPersonID));
-        }
-
-        [HttpGet("CheckTodayConcernPersonDistribution")]
-        public async Task<ActionResult<bool>> CheckTodayConcernPersonDistribution(int ConcernPersonId)
-        {
-            return await _salesDistributeService.CheckTodayConcernPersonDistribution(ConcernPersonId);
-        }
-        //Edit End
-
-        //Not Used
-        [HttpGet("GetProduct/{companyId}")]
-        public async Task<ActionResult<List<ProductDTO>>> GetProduct(int companyId)
-        {
-            return Ok(await _salesDistributeService.GetProductByCompanyId(companyId));
         }
     }
 }

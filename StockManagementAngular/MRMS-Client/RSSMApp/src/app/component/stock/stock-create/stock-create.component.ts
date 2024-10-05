@@ -107,147 +107,147 @@ export class StockCreateComponent implements OnInit {
 
     generateFormFields() {
     this.fields = [
-      {
-        type: 'product-repeat',
-        fieldArray: {
-          fieldGroupClassName: 'display-flex',
-          fieldGroup: [
+        {
+          type: 'product-repeat',
+          fieldArray: {
+            fieldGroupClassName: 'display-flex',
+            fieldGroup: [
+              {
+              className: 'product-name flex-1 width-180',
+              type: 'input',
+              key: 'productName',
+              props: {
+                label: 'Product',
+                readonly: true,
+                floatLabel: 'always',
+                hideRequiredMarker: true,
+              },
+              validation: {
+                messages:{required:" "}
+              }
+            },
             {
-            className: 'product-name flex-1 width-180',
-            type: 'input',
-            key: 'productName',
-            props: {
-              label: 'Product',
-              readonly: true,
-              floatLabel: 'always',
-              hideRequiredMarker: true,
+              className: 'flex-1 width-100',
+              type: 'input',
+              key: 'price',
+              props: {
+                label: 'Price',
+                readonly: true,
+                appearance: 'outline',
+                floatLabel: 'always',
+                hideRequiredMarker: true,
+              },
+              validation: {
+                messages:{required:" "}
+              }
             },
-            validation: {
-              messages:{required:" "}
-            }
-          },
-          {
-            className: 'flex-1 width-100',
-            type: 'input',
-            key: 'price',
-            props: {
-              label: 'Price',
-              readonly: true,
-              appearance: 'outline',
-              floatLabel: 'always',
-              hideRequiredMarker: true,
+            {
+              className: 'flex-1 width-100',
+              type: 'input',
+              key: 'eja',
+              props: {
+                label: 'Eja',
+                readonly: true,
+                appearance: 'outline',
+                floatLabel: 'always',
+                hideRequiredMarker: true,
+              },
+              validation: {
+                messages:{required:" "}
+              }
             },
-            validation: {
-              messages:{required:" "}
-            }
-          },
-          {
-            className: 'flex-1 width-100',
-            type: 'input',
-            key: 'eja',
-            props: {
-              label: 'Eja',
-              readonly: true,
-              appearance: 'outline',
-              floatLabel: 'always',
-              hideRequiredMarker: true,
+            {
+              className: 'flex-1 width-110',
+              type: 'input',
+              key: 'newProduct',
+              props: {
+                label: 'New Product',
+                readonly: true,
+                
+                appearance: 'outline',
+                floatLabel: 'always',
+                hideRequiredMarker: true,
+              },
+              validation: {
+                messages:{required:" "}
+              }
             },
-            validation: {
-              messages:{required:" "}
-            }
-          },
-          {
-            className: 'flex-1 width-110',
-            type: 'input',
-            key: 'newProduct',
-            props: {
-              label: 'New Product',
-              readonly: true,
-              
-              appearance: 'outline',
-              floatLabel: 'always',
-              hideRequiredMarker: true,
-            },
-            validation: {
-              messages:{required:" "}
-            }
-          },
-          {
-            className: 'flex-1 width-100',
-            type: 'input',
-            key: 'total',
-            props: {
-              label: 'Total',
-              readonly: true,
-              appearance: 'outline',
-              floatLabel: 'always',
-              hideRequiredMarker: true,
-            },
-            validation: {
-              messages:{required:" "}
-            },
-            expressions: {
-              'model.total': 'parseInt(model.eja) + (model.newProduct ? parseInt(model.newProduct) : 0)',
-              'templateOptions.errorMessage': (field: FormlyFieldConfig) => {
-                const salesQuantity = field.form?.get('salesQuantity')?.value;
-                const totalQuantity = field.formControl?.value;
+            {
+              className: 'flex-1 width-100',
+              type: 'input',
+              key: 'total',
+              props: {
+                label: 'Total',
+                readonly: true,
+                appearance: 'outline',
+                floatLabel: 'always',
+                hideRequiredMarker: true,
+              },
+              validation: {
+                messages:{required:" "}
+              },
+              expressions: {
+                'model.total': 'parseInt(model.eja) + (model.newProduct ? parseInt(model.newProduct) : 0)',
+                'templateOptions.errorMessage': (field: FormlyFieldConfig) => {
+                  const salesQuantity = field.form?.get('salesQuantity')?.value;
+                  const totalQuantity = field.formControl?.value;
 
-                if (salesQuantity > totalQuantity) {
-                  field.formControl?.setErrors({ 'quantityExceeded': true });
-                  return '';
-                } else {
-                  field.formControl?.setErrors(null);
-                  return '';
+                  if (salesQuantity > totalQuantity) {
+                    field.formControl?.setErrors({ 'quantityExceeded': true });
+                    return '';
+                  } else {
+                    field.formControl?.setErrors(null);
+                    return '';
+                  }
                 }
               }
-            }
-          },
-          {
-            className: 'flex-1 width-115',
-            type: 'input',
-            key: 'salesQuantity',
-            props: {
-              label: 'Sales Quantity',
-              readonly: true,
-              appearance: 'outline',
-              floatLabel: 'always',
-              hideRequiredMarker: true,
             },
-            validation: {
-              messages:{required:" "}
-            }
-          },
-          {
-            className: 'flex-1 width-120',
-            type: 'input',
-            key: 'totalAmount',
-            props: {
-              label: 'Total Amount',
-              readonly: true,
-              appearance: 'outline',
-              floatLabel: 'always',
-              hideRequiredMarker: true,
+            {
+              className: 'flex-1 width-115',
+              type: 'input',
+              key: 'salesQuantity',
+              props: {
+                label: 'Sales Quantity',
+                readonly: true,
+                appearance: 'outline',
+                floatLabel: 'always',
+                hideRequiredMarker: true,
+              },
+              validation: {
+                messages:{required:" "}
+              }
             },
-            validation: {
-              messages:{required:" "}
+            {
+              className: 'flex-1 width-120',
+              type: 'input',
+              key: 'totalAmount',
+              props: {
+                label: 'Total Amount',
+                readonly: true,
+                appearance: 'outline',
+                floatLabel: 'always',
+                hideRequiredMarker: true,
+              },
+              validation: {
+                messages:{required:" "}
+              },
+              expressions: {
+                'model.totalAmount': 'parseInt(model.price) * (model.salesQuantity ? parseInt(model.salesQuantity) : 0)',
+              }
+              
             },
-            expressions: {
-              'model.totalAmount': 'parseInt(model.price) * (model.salesQuantity ? parseInt(model.salesQuantity) : 0)',
-            }
-            
-          },
-          {
-            className: 'flex-1 width-140',
-            type: 'input',
-            key: 'damageQuantity',
-            props: {
-              label: 'Damage Quantity',
-              required: false,
-              appearance: 'outline',
-              floatLabel: 'always',
-              hideRequiredMarker: true,
-            }
-          },            
+            {
+              className: 'flex-1 width-140',
+              type: 'input',
+              key: 'damageQuantity',
+              props: {
+                label: 'Damage Quantity',
+                required: false,
+                appearance: 'outline',
+                floatLabel: 'always',
+                hideRequiredMarker: true,
+              }
+            },          
           ],
         }
       }

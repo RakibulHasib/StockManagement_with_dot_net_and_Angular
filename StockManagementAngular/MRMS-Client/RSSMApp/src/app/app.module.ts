@@ -36,8 +36,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { DamageaddComponent } from './component/modal/damageadd/damageadd.component';
 import { CommisionaddComponent } from './component/modal/commisionadd/commisionadd.component';
 import { ConcernViewComponent } from './component/concernPerson/concern-view/concern-view.component';
-import { StockEditComponent } from './component/stock/stock-edit/stock-edit.component';
-import { DistributionEditComponent } from './component/distribution/distribution-edit/distribution-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { UserviewComponent } from './component/User/userview/userview.component';
@@ -72,8 +70,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DamageaddComponent,
     CommisionaddComponent,
     ConcernViewComponent,
-    StockEditComponent,
-    DistributionEditComponent,
     RegisterComponent,
     UserviewComponent,
     CompanyAssignComponent,

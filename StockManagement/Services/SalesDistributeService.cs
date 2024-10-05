@@ -257,8 +257,6 @@ namespace StockManagement.Services
                 }).ToListAsync();
             return data;
         }
-
-        //here need to work
         public async Task<SalesDistributeAvailabityDto?> GetAvailableDistributeForConcernPerson(int concernPersonId, int companyId)
         {
             var data = await _unitOfWork.SalesDistribute.Queryable
@@ -275,126 +273,6 @@ namespace StockManagement.Services
                 Today = DateTime.Now,
                 LastDistribute = data
             };
-        }
-
-        //Edit Start
-        public async Task<SalesDistributeDataDto> GetDistributeDataByID(int SalesDistributeId)
-        {
-            var master = await _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0)
-                .Where(a => a.SalesDistributeId == SalesDistributeId)
-                .Select(query => new SalesDistributeDataDto
-                {
-                    ConcernPersonID = query.ConcernPersonId
-                }).FirstOrDefaultAsync();
-
-            master.salesDistribute = await _unitOfWork.SalesDistributeDetail.Queryable
-                .Where(a => a.SalesDistributeId == SalesDistributeId && a.IsDeleted == 0)
-                .Select(data => new SalesDistributeDTO
-                {
-                    SalesDistributeDetailsId = data.SalesDistributeDetailsId,
-                    SalesDistributeId = data.SalesDistributeId,
-                    ProductId = data.ProductId,
-                    Price = data.Price,
-                    ReceiveQuantity = data.ReceiveQuantity,
-                    ReturnQuantity = 0,
-                    SalesQuantity = data.SalesQuantity,
-                    TotalSalesPrice = data.TotalSalesPrice,
-                    CreationTime = data.CreationTime,
-                    IsDeleted = data.IsDeleted
-                }).ToListAsync();
-
-            foreach (var item in master.salesDistribute)
-            {
-                item.ReturnQuantity = await GetProductWiseRemainingSkipOne(item.ProductId, master.ConcernPersonID);
-            }
-
-            return master;
-        }
-        public async Task<List<ProductDTO>> GetProduct()
-        {
-            var data = await (from p in _unitOfWork.Product.Queryable.Where(a => a.IsDeleted == 0)
-                              join c in _unitOfWork.Company.Queryable.Where(a => a.IsDeleted == 0) on p.CompanyId equals c.CompanyId
-                              select new ProductDTO
-                              {
-                                  ProductId = p.ProductId,
-                                  ProductName = p.ProductName + " (" + c.CompanyName + "),"
-                              }).ToListAsync();
-            return data;
-        }
-        public async Task<ProductPriceDTO> GetProductWisePrice(int ProductID)
-        {
-            var data = await _unitOfWork.Product.Queryable
-                                      .Where(a => a.IsDeleted == 0 && a.IsActive == 1 && a.ProductId == ProductID && a.IsDeleted == 0)
-                                      .Select(query => new ProductPriceDTO
-                                      {
-                                          Price = query.Price ?? 0
-                                      }).FirstOrDefaultAsync();
-            return data;
-        }
-        public async Task<int> GetProductWiseRemaining(int ProductID, int ConcernPersonID)
-        {
-            var SalesDistributeId = await _unitOfWork.SalesDistribute.Queryable
-                .Where(a => a.ConcernPersonId == ConcernPersonID && a.IsDeleted == 0)
-                .OrderByDescending(a => a.SalesDistributeId)
-                .Select(a => a.SalesDistributeId)
-                .FirstOrDefaultAsync();
-
-            int RemainQuantity = 0;
-
-            if (SalesDistributeId != 0)
-            {
-                RemainQuantity = await _unitOfWork.SalesDistributeDetail.Queryable
-                    .Where(a => a.ProductId == ProductID && a.SalesDistributeId == SalesDistributeId && a.IsDeleted == 0)
-                    .Select(a => a.ReturnQuantity)
-                    .FirstOrDefaultAsync();
-            }
-
-            return RemainQuantity;
-        }
-        public async Task<int> GetProductWiseRemainingSkipOne(int ProductID, int ConcernPersonID)
-        {
-            var SalesDistributeId = await _unitOfWork.SalesDistribute.Queryable
-                .Where(a => a.ConcernPersonId == ConcernPersonID && a.IsDeleted == 0)
-                .OrderByDescending(a => a.SalesDistributeId)
-                .Skip(1)
-                .Select(a => a.SalesDistributeId)
-                .FirstOrDefaultAsync();
-
-            int RemainQuantity = 0;
-
-            if (SalesDistributeId != 0)
-            {
-                RemainQuantity = await _unitOfWork.SalesDistributeDetail.Queryable
-                    .Where(a => a.ProductId == ProductID && a.SalesDistributeId == SalesDistributeId && a.IsDeleted == 0)
-                    .Select(a => a.ReturnQuantity)
-                    .FirstOrDefaultAsync();
-            }
-
-            return RemainQuantity;
-        }
-        public async Task<bool> CheckTodayConcernPersonDistribution(int ConcernPersonId)
-        {
-            var data = await _unitOfWork.SalesDistribute.Queryable
-                .Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ConcernPersonId == ConcernPersonId && a.IsDeleted == 0)
-                .Select(a => a.ConcernPersonId)
-                .FirstOrDefaultAsync();
-
-            return data != 0;
-        }
-        //Edit End
-
-        //Not Used
-        public async Task<List<ProductDTO>> GetProductByCompanyId(int companyId)
-        {
-            var data = await _unitOfWork.Product.Queryable
-                .Where(x => x.IsDeleted == 0 && x.CompanyId == companyId)
-                .Select(x => new ProductDTO
-                {
-                    ProductId = x.ProductId,
-                    ProductName = x.ProductName
-                }).ToListAsync();
-
-            return data;
         }
     }
 }

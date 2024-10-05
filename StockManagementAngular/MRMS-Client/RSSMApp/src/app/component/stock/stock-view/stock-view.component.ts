@@ -3,14 +3,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
-import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
-import {Subscription, throwError} from 'rxjs';
+import {Subscription} from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { Dailydatadbmodel } from '../../../models/DailyDataModel/dailydatadbmodel';
 import { StockService } from '../../../services/Stock/stock.service';
-import { DatePipe } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { DamageaddComponent } from '../../modal/damageadd/damageadd.component';
 import { CommisionaddComponent } from '../../modal/commisionadd/commisionadd.component';
@@ -110,29 +107,16 @@ export class StockViewComponent implements OnInit, OnDestroy {
         this._notificationSvc.message("Failed to load data", "DISMISS");
       });
   }
-   navigateToCreate(){
+
+  navigateToCreate(){
     this.stateUpdate();
     this.router.navigate(['/stock-create', this.selectedCompany]);
   }
 
-  checkTodayStockUpdate(stockId: number){
-    this.dailyDataSvc.checkTodayStockUpdate(stockId).toPromise().then(
-      x => {
-        if(x === false){
-          this._notificationSvc.message("This data update not possible", "DISMISS");
-        }
-        else{
-          this.stateUpdate();
-          this.router.navigate(['/stock-edit', stockId]);
-        }
-      }
-    );
-}
-
-
   ngOnDestroy(){
     this.paramsSubscription.unsubscribe();
   }
+
   onDropdownSelectionChange(selectedCompany: number) {
     this.selectedCompany=selectedCompany;
     this.selectedCompanyName = this.companies.find(x => x.companyId == selectedCompany)?.companyName;
@@ -174,64 +158,43 @@ export class StockViewComponent implements OnInit, OnDestroy {
     });
   }
 
-    UpdateDamage(stockId : number,amount : number) {
-      if (stockId && amount) {
-        this.dailyDataSvc.updateDamage(stockId, amount)
-          .subscribe(data => {
-            this._notificationSvc.message("Successfully Updated", "DISMISS");
-          }, err => {
-            this._notificationSvc.message("Failed to update data", "DISMISS");
-          });
-      }
+  UpdateDamage(stockId : number,amount : number) {
+    if (stockId && amount) {
+      this.dailyDataSvc.updateDamage(stockId, amount)
+        .subscribe(data => {
+          this._notificationSvc.message("Successfully Updated", "DISMISS");
+        }, err => {
+          this._notificationSvc.message("Failed to update data", "DISMISS");
+        });
     }
-    openCommissionDialog(stockId: any){
-      const dialogRef = this._dialog.open(CommisionaddComponent,{
-        enterAnimationDuration: '400ms',
-        data:{
-          stockId:stockId
-        }
-      })
-      dialogRef.afterClosed().subscribe(result => {
-        this.UpdateCommission(stockId, Number(result));
-      });
-    }
-
-    UpdateCommission(stockId : number,commission : number) {
-      if (stockId && commission) {
-        this.dailyDataSvc.updateCommission(stockId, commission)
-          .subscribe(data => {
-            this._notificationSvc.message("Successfully Updated", "DISMISS");
-          }, err => {
-            this._notificationSvc.message("Failed to update data", "DISMISS");
-          });
-      }
-    }
-
-    confirmDelete(stockId: any) {
-      this._dialog.open(ConfirmDialogComponent, {
-        width: '450px',
-        enterAnimationDuration: '400ms'
-      }).afterClosed()
-        .subscribe(result => {
-          if (result) {
-            this.dailyDataSvc.deleteStock(stockId)
-              .subscribe({
-                next: r => {
-                  this._notificationSvc.message('Stock Deleted Successfully', 'DISMISS');
-                   this.dataSource.data = this.dataSource.data.filter(c => c.stockId != stockId);
-                },
-                error: err => {
-                  this._notificationSvc.message('Failed to delete data', 'DISMISS');
-                  throwError(() => err);
-                }
-              })
-          }
-        })
-    }
-
-    openDistributeStatus(){
-      this._modal.open(DistributionStatusComponent);
-    }
-
   }
+
+  openCommissionDialog(stockId: any){
+    const dialogRef = this._dialog.open(CommisionaddComponent,{
+      enterAnimationDuration: '400ms',
+      data:{
+        stockId:stockId
+      }
+    })
+    dialogRef.afterClosed().subscribe(result => {
+      this.UpdateCommission(stockId, Number(result));
+    });
+  }
+
+  UpdateCommission(stockId : number,commission : number) {
+    if (stockId && commission) {
+      this.dailyDataSvc.updateCommission(stockId, commission)
+        .subscribe(data => {
+          this._notificationSvc.message("Successfully Updated", "DISMISS");
+        }, err => {
+          this._notificationSvc.message("Failed to update data", "DISMISS");
+        });
+    }
+  }
+
+  openDistributeStatus(){
+    this._modal.open(DistributionStatusComponent);
+  }
+
+}
 

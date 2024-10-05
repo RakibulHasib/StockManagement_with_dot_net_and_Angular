@@ -31,37 +31,6 @@ public class StockService
         return query;
     }
 
-    public async Task<List<StockDTO>> GetStockByID(int StockID)
-    {
-        var data = await (from sd in _unitOfWork.StockDetail.Queryable.Where(a => a.IsDeleted == 0)
-                          join sm in _unitOfWork.Stock.Queryable.Where(a => a.IsDeleted == 0) on sd.StockId equals sm.StockId
-                          join p in _unitOfWork.Product.Queryable.Where(a => a.IsDeleted == 0) on sd.ProductId equals p.ProductId
-                          let salesQ = _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.CreationTime.Date == DateTime.Now.Date && a.ProductId == p.ProductId && a.IsDeleted == 0).Sum(a => a.SalesQuantity)
-                          where sd.StockId == StockID
-                          select new StockDTO
-                          {
-                              StockId = sm.StockId,
-                              StockDetailsId = sd.StockDetailsId,
-                              CompanyId = sm.CompanyId,
-                              ProductId = sd.ProductId,
-                              ProductName = p.ProductName,
-                              Eja = p.StockDetails.Where(a => a.IsDeleted == 0)
-                                                  .OrderByDescending(x => x.CreationTime)
-                                                  .Select(x => x.Eja ?? 0)
-                                                  .Skip(1)
-                                                  .FirstOrDefault(),
-                              Price = sd.Price,
-                              NewProduct = sd.RestockQuantity ?? 0,
-                              Total = sd.TotalQuantity,
-                              SalesQuantity = salesQ,
-                              TotalAmount = sd.TotalAmount,
-                              DamageQuantity = sd.DamageQuantity ?? 0,
-                              CreatedDate = sd.CreationTime
-                          }).ToListAsync();
-
-        return data;
-    }
-
     public async Task<ActionResult<int>> InsertStockData(int companyId, DateTime createdDate, List<StockDTO> savoyIceCreamVM)
     {
         int result = 0;
@@ -123,68 +92,6 @@ public class StockService
             _unitOfWork.SalesDistribute.Update(item);
         }
         await _unitOfWork.SaveChangesAsync();
-        return result;
-    }
-
-    public async Task<int> UpdateStockData(int companyId, List<StockDTO> savoyIceCreamVM)
-    {
-        int result = 0;
-        foreach (var item in savoyIceCreamVM)
-        {
-            var total = (item.Eja ?? 0) + (item.NewProduct);
-            var stockDetails = new StockDetail
-            {
-                StockDetailsId = item.StockDetailsId ?? Guid.NewGuid(),
-                StockId = item.StockId ?? 0,
-                CompanyId = companyId,
-                ProductId = item.ProductId,
-                Price = item.Price,
-                RestockQuantity = item.NewProduct,
-                TotalQuantity = total,
-                Eja = total - (item.SalesQuantity ?? 0),
-                SalesQuantity = item.SalesQuantity,
-                TotalAmount = (item.SalesQuantity) * (item.Price),
-                CreationTime = item.CreatedDate ?? DateTime.Now,
-                DamageQuantity = item.DamageQuantity ?? 0
-            };
-            _unitOfWork.StockDetail.Update(stockDetails);
-        }
-
-        await _unitOfWork.SaveChangesAsync();
-
-        var master = await _unitOfWork.Stock.Queryable.Where(a => a.StockId == savoyIceCreamVM[0].StockId).FirstOrDefaultAsync();
-        if (master != null)
-        {
-            master.TotalEja = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.Eja ?? 0);
-            master.TotalPrice = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.Price);
-            master.TotalNewProduct = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.RestockQuantity ?? 0);
-            master.GrandTotal = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.TotalQuantity ?? 0);
-            master.TotalSalesQuantity = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.SalesQuantity ?? 0);
-            master.GrandTotalAmount = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.TotalAmount ?? 0);
-            _unitOfWork.Stock.Update(master);
-            result = await _unitOfWork.SaveChangesAsync();
-        }
-        return result;
-    }
-
-    public async Task<int> DeleteStock(int StockId)
-    {
-        int result = 0;
-        var master = await _unitOfWork.Stock.Queryable.Where(a => a.StockId == StockId).FirstOrDefaultAsync();
-        if (master != null)
-        {
-            master.IsDeleted = 1;
-            _unitOfWork.Stock.Update(master);
-            await _unitOfWork.SaveChangesAsync();
-
-            var detail = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == StockId).ToListAsync();
-            foreach (var item in detail)
-            {
-                item.IsDeleted = 1;
-                _unitOfWork.StockDetail.Update(item);
-            }
-            result = await _unitOfWork.SaveChangesAsync();
-        }
         return result;
     }
 
@@ -304,15 +211,5 @@ public class StockService
             }
         }
         return result;
-    }
-
-    public async Task<bool> CheckTodayStockforUpdate(int StockID)
-    {
-        var data = await _unitOfWork.Stock.Queryable
-            .Where(a => a.CreationTime.Date == DateTime.Now.Date && a.StockId == StockID)
-            .Select(a => a.StockId)
-            .FirstOrDefaultAsync();
-
-        return data != 0;
     }
 }
