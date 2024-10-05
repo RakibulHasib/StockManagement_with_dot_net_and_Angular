@@ -22,6 +22,7 @@ namespace StockManagement.Controllers
             return await _salesDistributeService.GetSalesDistributeDataPerDay(ConcernPersonID, StartDate, EndDate);
         }
 
+        [JwtAuthorize]
         [HttpPost("InsertSalesDistributeData")]
         public async Task<ActionResult<int>> InsertSalesDistributeData(SalesDistributeDataDto data)
         {
@@ -48,13 +49,15 @@ namespace StockManagement.Controllers
             return await _salesDistributeService.GetSalesDistributeReport(SalesDistributeId);
         }
 
+        [JwtAuthorize]
         [Transaction]
         [HttpPut("DeleteDistribution")]
         public async Task<ActionResult<int>> DeleteDistribution(int SalesDistributeId)
         {
             return Ok(await _salesDistributeService.DeleteDistribution(SalesDistributeId));
         }
-        
+
+        [JwtAuthorize]
         [HttpGet("GetAvailableDistribute/{concernPersonId}/{companyId}")]
         public async Task<ActionResult<SalesDistributeAvailabityDto>> GetAvailableDistributeForConcernPerson(int concernPersonId, int companyId)
         {
@@ -62,12 +65,14 @@ namespace StockManagement.Controllers
         }
 
         //Edit Start
+        [JwtAuthorize]
         [HttpGet("GetDistributeDataByID")]
         public async Task<ActionResult<SalesDistributeDataDto>> GetDistributeDataByID(int SalesDistributeId)
         {
             return await _salesDistributeService.GetDistributeDataByID(SalesDistributeId);
         }
 
+        [JwtAuthorize]
         [HttpGet("GetProductInfoByCompany/{companyId}")]
         public async Task<ActionResult<List<ProductInfoByConcernPersonDTO>>> GetProductInfoByCompany(int companyId)
         {
@@ -80,12 +85,14 @@ namespace StockManagement.Controllers
             return Ok(await _salesDistributeService.GetProductWisePrice(ProductID));
         }
 
+        [JwtAuthorize]
         [HttpGet("GetProductWiseRemaining")]
         public async Task<ActionResult<int>> GetProductWiseRemaining(int ProductID, int ConcernPersonID)
         {
             return Ok(await _salesDistributeService.GetProductWiseRemaining(ProductID, ConcernPersonID));
         }
 
+        [JwtAuthorize]
         [HttpGet("CheckTodayConcernPersonDistribution")]
         public async Task<ActionResult<bool>> CheckTodayConcernPersonDistribution(int ConcernPersonId)
         {
@@ -94,6 +101,7 @@ namespace StockManagement.Controllers
         //Edit End
 
         //Not Used
+        [JwtAuthorize]
         [HttpGet("GetProduct/{companyId}")]
         public async Task<ActionResult<List<ProductDTO>>> GetProduct(int companyId)
         {
