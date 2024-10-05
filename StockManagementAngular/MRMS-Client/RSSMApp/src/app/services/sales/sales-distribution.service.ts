@@ -41,8 +41,8 @@ export class SalesDistributionService {
   getProductByCompanyId(companyId: number): Observable<Product[]> {
     return this.http.get<Product[]>(`${IceCreamApiUrl}/${endPoint}/GetProduct/${companyId}`);
   }
-  GetProductInfoByConcernPerson(concernPersonId: number, companyId: number): Observable<DistributeProductInfo[]> {
-    return this.http.get<DistributeProductInfo[]>(`${IceCreamApiUrl}/${endPoint}/GetProductInfoByConcernPerson/${concernPersonId}/${companyId}`);
+  GetProductInfoByCompany(companyId: number): Observable<DistributeProductInfo[]> {
+    return this.http.get<DistributeProductInfo[]>(`${IceCreamApiUrl}/${endPoint}/GetProductInfoByCompany/${companyId}`);
   }
 
   GetDistributeAvailabilty(concernPersonId: number, companyId: number): Observable<SalesDistributeAvailabityDto> {

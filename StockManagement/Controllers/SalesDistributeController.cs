@@ -22,14 +22,6 @@ namespace StockManagement.Controllers
             return await _salesDistributeService.GetSalesDistributeDataPerDay(ConcernPersonID, StartDate, EndDate);
         }
 
-        [JwtAuthorize]
-        [HttpGet("GetDistributeDataByID")]
-        public async Task<ActionResult<SalesDistributeDataDto>> GetDistributeDataByID(int SalesDistributeId)
-        {
-            return await _salesDistributeService.GetDistributeDataByID(SalesDistributeId);
-        }
-
-        [JwtAuthorize]
         [HttpPost("InsertSalesDistributeData")]
         public async Task<ActionResult<int>> InsertSalesDistributeData(SalesDistributeDataDto data)
         {
@@ -50,62 +42,62 @@ namespace StockManagement.Controllers
             return Ok(await _salesDistributeService.GetProduct());
         }
 
-        [JwtAuthorize]
-        [HttpGet("GetProduct/{companyId}")]
-        public async Task<ActionResult<List<ProductDTO>>> GetProduct(int companyId)
-        {
-            return Ok(await _salesDistributeService.GetProductByCompanyId(companyId));
-        }
-
-        [JwtAuthorize]
-        [HttpGet("GetProductWisePrice")]
-        public async Task<ActionResult<ProductPriceDTO>> GetProductWisePrice(int ProductID)
-        {
-            return Ok(await _salesDistributeService.GetProductWisePrice(ProductID));
-        }
-
-        [JwtAuthorize]
-        [HttpGet("GetProductWiseRemaining")]
-        public async Task<ActionResult<int>> GetProductWiseRemaining(int ProductID, int ConcernPersonID)
-        {
-            return Ok(await _salesDistributeService.GetProductWiseRemaining(ProductID, ConcernPersonID));
-        }
-
-        [JwtAuthorize]
         [HttpGet("GetSalesDistributeReport")]
         public async Task<ActionResult<SalesDistributeReportDTO>> GetSalesDistributeReport(int SalesDistributeId)
         {
             return await _salesDistributeService.GetSalesDistributeReport(SalesDistributeId);
         }
 
-        [JwtAuthorize]
-        [HttpGet("CheckTodayConcernPersonDistribution")]
-        public async Task<ActionResult<bool>> CheckTodayConcernPersonDistribution(int ConcernPersonId)
-        {
-            return await _salesDistributeService.CheckTodayConcernPersonDistribution(ConcernPersonId);
-        }
-
-        [JwtAuthorize]
         [Transaction]
         [HttpPut("DeleteDistribution")]
         public async Task<ActionResult<int>> DeleteDistribution(int SalesDistributeId)
         {
             return Ok(await _salesDistributeService.DeleteDistribution(SalesDistributeId));
         }
-
-        [JwtAuthorize]
-        [HttpGet("GetProductInfoByConcernPerson/{concernPersonId}/{companyId}")]
-        public async Task<ActionResult<List<ProductInfoByConcernPersonDTO>>> GetProductInfoByConcernPerson(int concernPersonId, int companyId)
-        {
-            return Ok(await _salesDistributeService.GetProductInfoByConcernPerson(concernPersonId, companyId));
-        }
-
-        [JwtAuthorize]
+        
         [HttpGet("GetAvailableDistribute/{concernPersonId}/{companyId}")]
         public async Task<ActionResult<SalesDistributeAvailabityDto>> GetAvailableDistributeForConcernPerson(int concernPersonId, int companyId)
         {
             return Ok(await _salesDistributeService.GetAvailableDistributeForConcernPerson(concernPersonId, companyId));
         }
 
+        //Edit Start
+        [HttpGet("GetDistributeDataByID")]
+        public async Task<ActionResult<SalesDistributeDataDto>> GetDistributeDataByID(int SalesDistributeId)
+        {
+            return await _salesDistributeService.GetDistributeDataByID(SalesDistributeId);
+        }
+
+        [HttpGet("GetProductInfoByCompany/{companyId}")]
+        public async Task<ActionResult<List<ProductInfoByConcernPersonDTO>>> GetProductInfoByCompany(int companyId)
+        {
+            return Ok(await _salesDistributeService.GetProductInfoByCompany(companyId));
+        }
+
+        [HttpGet("GetProductWisePrice")]
+        public async Task<ActionResult<ProductPriceDTO>> GetProductWisePrice(int ProductID)
+        {
+            return Ok(await _salesDistributeService.GetProductWisePrice(ProductID));
+        }
+
+        [HttpGet("GetProductWiseRemaining")]
+        public async Task<ActionResult<int>> GetProductWiseRemaining(int ProductID, int ConcernPersonID)
+        {
+            return Ok(await _salesDistributeService.GetProductWiseRemaining(ProductID, ConcernPersonID));
+        }
+
+        [HttpGet("CheckTodayConcernPersonDistribution")]
+        public async Task<ActionResult<bool>> CheckTodayConcernPersonDistribution(int ConcernPersonId)
+        {
+            return await _salesDistributeService.CheckTodayConcernPersonDistribution(ConcernPersonId);
+        }
+        //Edit End
+
+        //Not Used
+        [HttpGet("GetProduct/{companyId}")]
+        public async Task<ActionResult<List<ProductDTO>>> GetProduct(int companyId)
+        {
+            return Ok(await _salesDistributeService.GetProductByCompanyId(companyId));
+        }
     }
 }
