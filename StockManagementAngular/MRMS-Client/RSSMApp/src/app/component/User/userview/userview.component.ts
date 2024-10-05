@@ -428,10 +428,7 @@ export class UserviewComponent implements OnInit {
  async getUserRole() {
     const userData = await this.authService.getUserData();
     if (userData) {
-      console.log("userdata",userData);
-      
       this.userRole = userData;
-      console.log("user role",this.userRole);
     }
   }
 
