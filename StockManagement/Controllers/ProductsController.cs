@@ -75,7 +75,7 @@ public class ProductsController : ControllerBase
                                         .OrderByDescending(x => x.CreationTime)
                                         .Select(x => x.Eja ?? 0)
                                         .FirstOrDefault(),
-                    NewProduct = x.StockQuantity
+                    NewProduct = x.NewQuantity
                 }).ToListAsync();
 
         if (products.Any())

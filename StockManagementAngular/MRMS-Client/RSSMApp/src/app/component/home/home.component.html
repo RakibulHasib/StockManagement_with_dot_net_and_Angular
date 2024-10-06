@@ -33,7 +33,6 @@
                 <th>পণ্যের নাম</th>
                 <th>মূল্য</th>
                 <th>বর্তমান স্টক</th>
-                <th>আগের স্টক</th>
                 <th class="d-flex justify-content-center">Action</th>
               </tr>
           </thead>
@@ -42,7 +41,6 @@
               <td>{{item.productName}}</td>
               <td>{{item.price}}</td>
               <td>{{item?.currentStock}}</td>
-              <td>{{item?.previousStock}}</td>
               <td class="d-flex justify-content-center gap-2">
                 <input class="w-50" name="quantity_{{i}}" type="number" [(ngModel)]="inputValues[i]" placeholder="Enter new stock..."
                  required (input)="checkValue(inputValues[i], i)"/>

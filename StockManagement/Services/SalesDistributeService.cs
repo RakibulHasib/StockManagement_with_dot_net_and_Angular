@@ -11,7 +11,7 @@ namespace StockManagement.Services
             _unitOfWork = unitOfWork;
         }
 
-        enum DailyDistributeStatus
+        public enum DailyDistributeStatus
         {
             NotCreated = 0,
             Created,
@@ -110,7 +110,7 @@ namespace StockManagement.Services
                         {
                             Id = Guid.NewGuid(),
                             ProductId = product.ProductId,
-                            NewQuantity = oldStock - (product?.SalesQuantity == null ? 0 : product.SalesQuantity),
+                            NewQuantity = oldStock - (product?.ReceiveQuantity == null ? 0 : product.ReceiveQuantity),
                             PreviousQuantity = oldStock,
                             StockType = (int)StockType.StockOut
                         };

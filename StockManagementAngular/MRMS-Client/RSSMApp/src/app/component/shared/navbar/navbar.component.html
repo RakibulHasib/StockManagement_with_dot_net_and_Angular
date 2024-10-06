@@ -12,6 +12,12 @@
       <mat-list-item [routerLink]="['/home']">
         <span style="display: flex; align-items: center; gap: 4px;"><mat-icon>dashboard</mat-icon>Dashboard</span>
       </mat-list-item>
+      <mat-list-item [routerLink]="['/sales-view']">
+        <span style="display: flex; align-items: center; gap: 4px;"><mat-icon>transfer_within_a_station</mat-icon>Distribution</span>
+      </mat-list-item>
+      <mat-list-item [routerLink]="['/stock-view']">
+        <span style="display: flex; align-items: center; gap: 4px;"><mat-icon>store</mat-icon>Stock</span>
+      </mat-list-item>
       <mat-expansion-panel [class.mat-elevation-z0]="true">
         <mat-expansion-panel-header style="margin-left: -8px;">
           <span style="display: flex; align-items: center; gap: 4px;"><mat-icon>dns</mat-icon>Common</span>
@@ -21,15 +27,8 @@
           <a mat-list-item [routerLink]="['/companyview']"><span style="display: flex; align-items: center; gap: 4px;"><mat-icon>work</mat-icon>Company</span></a>
           <a mat-list-item [routerLink]="['/productView']"><span style="display: flex; align-items: center; gap: 4px;"><mat-icon>domain</mat-icon>Products</span></a>
           <a mat-list-item [routerLink]="['/concernpersonview']"><span style="display: flex; align-items: center; gap: 4px;"><mat-icon>group</mat-icon>Concern</span></a>
-
         </mat-nav-list>
       </mat-expansion-panel>
-      <mat-list-item [routerLink]="['/sales-view']">
-        <span style="display: flex; align-items: center; gap: 4px;"><mat-icon>transfer_within_a_station</mat-icon>Distribution</span>
-      </mat-list-item>
-      <mat-list-item [routerLink]="['/stock-view']">
-        <span style="display: flex; align-items: center; gap: 4px;"><mat-icon>store</mat-icon>Stock</span>
-      </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
   

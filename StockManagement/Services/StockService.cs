@@ -5,6 +5,7 @@ using StockManagement.Entities;
 using StockManagement.Repository;
 using static StockManagement.Controllers.ProductsController;
 using System.ComponentModel.Design;
+using static StockManagement.Services.SalesDistributeService;
 
 namespace StockManagement.Services;
 
@@ -80,7 +81,6 @@ public class StockService
         master.GrandTotalAmount = await _unitOfWork.StockDetail.Queryable.Where(a => a.StockId == master.StockId).SumAsync(a => a.TotalAmount ?? 0);
 
         _unitOfWork.Stock.Update(master);
-        result = await _unitOfWork.SaveChangesAsync();
 
         var distributeData = await _unitOfWork.SalesDistribute.Queryable
             .Where(a => a.CompanyId == companyId && a.IsDeleted == 0 && a.Status == 1)
@@ -88,8 +88,18 @@ public class StockService
 
         foreach (var item in distributeData)
         {
-            item.Status = 2;
+            item.Status = (int)DailyDistributeStatus.StockComplete;
             _unitOfWork.SalesDistribute.Update(item);
+        }
+
+        var products = await _unitOfWork.Product.Queryable
+            .Where(a => a.CompanyId == companyId && a.IsDeleted == 0)
+            .ToListAsync();
+
+        foreach (var item in products)
+        {
+            item.NewQuantity = 0;
+            _unitOfWork.Product.Update(item);
         }
         await _unitOfWork.SaveChangesAsync();
         return result;

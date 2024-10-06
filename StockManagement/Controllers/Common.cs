@@ -55,31 +55,15 @@ namespace StockManagement.Controllers
         {
             var products = await _unitofwork.Product.Queryable
                 .Where(product => product.CompanyId == CompanyId && product.IsDeleted == 0)
-                .ToListAsync();
+                .Select(x => new ProductStockDTO
+                {
+                    ProductId = x.ProductId,
+                    ProductName = x.ProductName,
+                    Price = x.Price,
+                    CurrentStock = x.StockQuantity
+                }).ToListAsync();
 
-            var productIds = products.Select(a => a.ProductId).ToList();
-
-            var lastStockPerProduct = await _unitofwork.ProductStockLog.Queryable
-                .Where(a => productIds.Contains(a.ProductId))
-                .GroupBy(a => a.ProductId)
-                .Select(d => d.OrderByDescending(g => g.CreationTime).FirstOrDefault())
-                .ToListAsync();
-
-            var stockList = from p in products
-                            join ls in lastStockPerProduct on p.ProductId equals ls.ProductId
-                            into newStock
-                            from ls in newStock.DefaultIfEmpty()
-
-                            select new ProductStockDTO
-                            {
-                                ProductId = p.ProductId,
-                                ProductName = p.ProductName,
-                                Price = p.Price,
-                                CurrentStock = ls?.NewQuantity ?? 0,
-                                PreviousStock = ls?.PreviousQuantity ?? 0
-                            };
-
-            return stockList.ToList();
+            return products;
         }
 
     }
