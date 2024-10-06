@@ -29,17 +29,15 @@ export class SignInComponent {
     private notifyService: NotificationService,
   ) { localStorage.clear(); }
 
-
-
   onLogIn() {
 
-     this.cd.detectChanges();
+    this.cd.detectChanges();
 
     if (this.loginForm.valid) {
       this.auth.login(this.loginForm.value).subscribe({
         next: (res) => {
           switch (res.status) {
-            case Status.Authorized :
+            case Status.Authorized:
               Swal.fire({
                 icon: 'success',
                 title: 'Logged In!',
@@ -52,6 +50,7 @@ export class SignInComponent {
                 }
               });
               this.auth.storeToken(res.data.token);
+              this.auth.storeUserData(res.data.userId,res.data.roleId)
               this.loginForm.reset();
               this.router.navigate(['home']);
               return;
@@ -114,7 +113,7 @@ export class SignInComponent {
                 position: "top",
               });
           }
-          
+
 
         },
         error: (err) => {

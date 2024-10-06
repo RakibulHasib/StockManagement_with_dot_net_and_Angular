@@ -23,20 +23,10 @@ export class AuthGuard  {
     if (!this.auth.isAuthenticated()) {
       this.notifyService.message('Need to Login', 'DISMISS')
       this.router.navigate(['signin']);
-      return false; // Prevent further processing
+      return false; 
     }
-    return true; // Allow navigation if authenticated
+    return true; 
   }
 
-  // canActivate(): boolean {
-  //   if (this.auth.isLogedIn()) {
-  //     return true;
-  //   }
-  //   else {
-  //     this.notifyService.message('Need to Login', 'DISMISS')
-  //     this.router.navigate(['login'])
-  //     return false;
-  //   }
-
-  // }
+ 
 }

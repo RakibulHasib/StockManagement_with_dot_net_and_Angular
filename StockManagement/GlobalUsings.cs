@@ -19,3 +19,4 @@ global using Microsoft.AspNetCore.Mvc.Filters;
 global using StockManagement.Services;
 global using System.Security.Cryptography;
 global using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+global using StockManagement.Attributes;
