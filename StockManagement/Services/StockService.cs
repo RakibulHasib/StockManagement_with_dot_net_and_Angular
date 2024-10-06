@@ -98,6 +98,7 @@ public class StockService
 
         foreach (var item in products)
         {
+            item.Eja = item.StockQuantity;
             item.NewQuantity = 0;
             _unitOfWork.Product.Update(item);
         }

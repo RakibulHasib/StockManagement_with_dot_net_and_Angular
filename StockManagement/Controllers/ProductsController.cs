@@ -73,24 +73,19 @@ public class ProductsController : ControllerBase
                     ProductId = x.ProductId,
                     ProductName = x.ProductName,
                     Price = x.Price,
-                    Eja = x.StockDetails.Where(a => a.IsDeleted == 0)
-                                        .OrderByDescending(x => x.CreationTime)
-                                        .Select(x => x.Eja ?? 0)
-                                        .FirstOrDefault(),
+                    Eja = x.Eja,
                     NewProduct = x.NewQuantity
                 }).ToListAsync();
 
         if (products.Any())
         {
             var distributeData = await (from sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0 && a.Status == 1)
-                                        join sdd in _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.IsDeleted == 0) on sd.SalesDistributeId equals sdd.SalesDistributeId
+                                        join sdd in _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.IsDeleted == 0) on sd.SalesDistributeId        equals sdd.SalesDistributeId
                                         where sd.CompanyId == companyId
                                         select new
                                         {
                                             sdd.ProductId,
-                                            sdd.SalesQuantity,
-                                            sdd.ReceiveQuantity,
-                                            sdd.ReturnQuantity
+                                            sdd.SalesQuantity
                                         }).ToListAsync();
 
 
@@ -99,8 +94,6 @@ public class ProductsController : ControllerBase
                 foreach (var item in products)
                 {
                     item.SalesQuantity = distributeData?.Where(x => x.ProductId == item.ProductId).Sum(a => a.SalesQuantity) ?? 0;
-                    item.ReceiveQuantity = distributeData?.Where(x => x.ProductId == item.ProductId).Sum(a => a.ReceiveQuantity) ?? 0;
-                    item.ReturnQuantity = distributeData?.Where(x => x.ProductId == item.ProductId).Sum(a => a.ReturnQuantity) ?? 0;
                 }
             }
         }
@@ -115,8 +108,6 @@ public class ProductsController : ControllerBase
         public int Eja { get; set; }
         public int NewProduct { get; set; }
         public int SalesQuantity { get; set; }
-        public int ReceiveQuantity { get; set; }
-        public int ReturnQuantity { get; set; }
     }
 
 }
