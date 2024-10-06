@@ -104,7 +104,7 @@ namespace StockManagement.Services
                         productData.StockQuantity -= product?.SalesQuantity == null ? 0 : product.SalesQuantity;
                         products.Add(productData);
                     }
-                    if (product.SalesQuantity > 0)
+                    if (product.ReceiveQuantity > 0)
                     {
                         var salesStockLog = new ProductStockLog
                         {
@@ -116,7 +116,7 @@ namespace StockManagement.Services
                         };
                         await _unitOfWork.ProductStockLog.AddRawAsync(salesStockLog);
                         await _unitOfWork.SaveChangesAsync();
-                        oldStock= salesStockLog.NewQuantity;
+                        oldStock = salesStockLog.NewQuantity;
                         productData.LastStockLogId = salesStockLog.Id;
 
                     }
