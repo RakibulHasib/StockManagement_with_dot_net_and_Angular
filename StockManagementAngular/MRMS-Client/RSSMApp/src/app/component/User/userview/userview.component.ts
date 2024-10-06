@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { firstValueFrom, map, Subscription } from 'rxjs';
-import { PasswordDto, RoleDto, UserInfo } from 'src/app/models/Authentication/UserInfo';
+import { PasswordDto, RoleDto, UserInfo } from 'src/app/models/Authentication/userInfo';
 import { UserRole, UserStatus } from 'src/app/models/Enum/UserStatus.enum';
 import { User, UserDto } from 'src/app/models/User/User';
 import { AuthenticationService } from 'src/app/services/Authentication/authentication.service';
@@ -27,22 +27,22 @@ export class UserviewComponent implements OnInit {
   dataSource: MatTableDataSource<User> = new MatTableDataSource(this.user_data_list);
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  columnList: string[] = ["userName", "loginName", "userStatus","roleName", "actions"]
+  columnList: string[] = ["userName", "loginName", "userStatus", "roleName", "actions"]
   userRole!: UserInfo;
 
-  roleData : RoleDto[] =[]
+  roleData: RoleDto[] = []
 
   currentDate: Date = new Date();
   user_from: FormGroup = new FormGroup({});
 
-  passwordData : PasswordDto = {
-    password : ""
+  passwordData: PasswordDto = {
+    password: ""
   };
 
 
   roleInfo: UserInfo = {
-      roleId:0,
-      userId : 0
+    roleId: 0,
+    userId: 0
   }
 
   model = {
@@ -112,25 +112,25 @@ export class UserviewComponent implements OnInit {
 
   onPasswordReset(): void {
 
-     const data = {
+    const data = {
       userId: this.userId,
       password: this.passwordData.password
-     }
-    
+    }
+
     if (this.form.invalid) {
       console.log("invalid submission");
       Swal.fire({
         icon: 'error',
         title: 'Error!',
         text: 'Failed to save data.',
-        timer: 2000 ,
+        timer: 2000,
         showConfirmButton: false,
         width: 400,
         position: "top",
       });
       return;
     }
-    
+
     this.subscription.add(this.userDataSvc.passwordReset(data)
 
       .subscribe(r => {
@@ -138,7 +138,7 @@ export class UserviewComponent implements OnInit {
           icon: 'success',
           title: 'Success!',
           text: 'Data saved successfully.',
-          timer: 2000 ,
+          timer: 2000,
           showConfirmButton: false,
           width: 400,
           position: "top",
@@ -153,7 +153,7 @@ export class UserviewComponent implements OnInit {
           icon: 'error',
           title: 'Error!',
           text: 'Failed to save data.',
-          timer: 2000 ,
+          timer: 2000,
           showConfirmButton: false,
           width: 400,
           position: "top",
@@ -189,14 +189,14 @@ export class UserviewComponent implements OnInit {
   }
 
 
-  getRole(){
+  getRole() {
     this.userDataSvc.roleList()
-    .subscribe(res => {
-      this.roleData = res
-    },
-    err => {
-      console.log(err);
-    });
+      .subscribe(res => {
+        this.roleData = res
+      },
+        err => {
+          console.log(err);
+        });
   }
 
   onRoleAsign(template: TemplateRef<any>, userId: number) {
@@ -209,52 +209,52 @@ export class UserviewComponent implements OnInit {
   onRoleAssign(): void {
 
     const data = {
-      roleId : this.roleAssignModel.roleInfo.roleId,
+      roleId: this.roleAssignModel.roleInfo.roleId,
       userId: this.roleAssignModel.roleInfo.userId
     }
-   
-   if (this.form.invalid) {
-     console.log("invalid submission");
-     Swal.fire({
-       icon: 'error',
-       title: 'Error!',
-       text: 'Failed to save data.',
-       timer: 2000 ,
-       showConfirmButton: false,
-       width: 400,
-       position: "top",
-     });
-     return;
-   }
-   this.subscription.add(this.userDataSvc.roleAssign(data)
 
-     .subscribe(r => {
-       Swal.fire({
-         icon: 'success',
-         title: 'Success!',
-         text: 'Data saved successfully.',
-         timer: 2000 ,
-         showConfirmButton: false,
-         width: 400,
-         position: "top",
-       });
-       this.form.reset();
-       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-       this.router.onSameUrlNavigation = 'reload';
-       this.router.navigate(['/userview']);
-       this._modal.dismissAll();
-     }, err => {
-       Swal.fire({
-         icon: 'error',
-         title: 'Error!',
-         text: 'Failed to save data.',
-         timer: 2000 ,
-         showConfirmButton: false,
-         width: 400,
-         position: "top",
-       });
-     }))
- }
+    if (this.form.invalid) {
+      console.log("invalid submission");
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to save data.',
+        timer: 2000,
+        showConfirmButton: false,
+        width: 400,
+        position: "top",
+      });
+      return;
+    }
+    this.subscription.add(this.userDataSvc.roleAssign(data)
+
+      .subscribe(r => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Data saved successfully.',
+          timer: 2000,
+          showConfirmButton: false,
+          width: 400,
+          position: "top",
+        });
+        this.form.reset();
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigate(['/userview']);
+        this._modal.dismissAll();
+      }, err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Failed to save data.',
+          timer: 2000,
+          showConfirmButton: false,
+          width: 400,
+          position: "top",
+        });
+      }))
+  }
 
   // onRoleAssignClose(modalRef: NgbActiveModal){
   //   const data = {
@@ -277,39 +277,40 @@ export class UserviewComponent implements OnInit {
   //   );
   // }
 
- async generateRoleFormFields() {
+  async generateRoleFormFields() {
     const roleList = await this.userDataSvc.roleList().toPromise();
     this.fields = [
-      {fieldGroupClassName: 'display-flex',
-      key: 'roleInfo',
-      fieldGroup: [
-        {
-          
-          className: 'flex-1',
-          type: 'select',
-          key: 'roleId',
-          
-          props: {
-            label: 'Role Name',
-            options: roleList,
-            valueProp: 'roleId',
-            labelProp: 'roleName',
-            appearance: 'outline',
-            
-          },
-          expressionProperties: {
-            'templateOptions.style': () => ({
-              border: '2px solid #ff5722', 
-              borderRadius: '5px', 
-              padding: '5px 10px' 
-            })
-          },
-          validation: {
-            messages: { required: " " }
-          },
-        
-        }
-          
+      {
+        fieldGroupClassName: 'display-flex',
+        key: 'roleInfo',
+        fieldGroup: [
+          {
+
+            className: 'flex-1',
+            type: 'select',
+            key: 'roleId',
+
+            props: {
+              label: 'Role Name',
+              options: roleList,
+              valueProp: 'roleId',
+              labelProp: 'roleName',
+              appearance: 'outline',
+
+            },
+            expressionProperties: {
+              'templateOptions.style': () => ({
+                border: '2px solid #ff5722',
+                borderRadius: '5px',
+                padding: '5px 10px'
+              })
+            },
+            validation: {
+              messages: { required: " " }
+            },
+
+          }
+
         ],
 
       }
@@ -317,7 +318,7 @@ export class UserviewComponent implements OnInit {
   }
 
 
- 
+
 
   showUserApprovalAlert(userId: number, data: any) {
     Swal.fire({
@@ -424,23 +425,30 @@ export class UserviewComponent implements OnInit {
     }
   }
 
-  getUserRole() {
-    this.authService.getCurrentUser().subscribe(
-      res => {
-      
-        this.userRole = res;
-      },
-      error => {
-        console.error('Error occurred while fetching user info:', error);
-      }
-    );
-
+ async getUserRole() {
+    const userData = await this.authService.getUserData();
+    if (userData) {
+      this.userRole = userData;
+    }
   }
+
+  // getUserRole() {
+  //   this.authService.getCurrentUser().subscribe(
+  //     res => {
+
+  //       this.userRole = res;
+  //     },
+  //     error => {
+  //       console.error('Error occurred while fetching user info:', error);
+  //     }
+  //   );
+  // }
+
   updateColumnList() {
-    if (this.userRole?.roleId !== this.role.global_admin) { 
-      this.columnList = ["userName", "loginName", "userStatus","roleName","actions"];
+    if (this.userRole?.roleId !== this.role.global_admin) {
+      this.columnList = ["userName", "loginName", "userStatus", "roleName", "actions"];
     } else {
-      this.columnList = ["userName", "loginName", "userStatus","roleName"];
+      this.columnList = ["userName", "loginName", "userStatus", "roleName"];
     }
   }
 

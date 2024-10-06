@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using StockManagement.Attributes;
 using StockManagement.Helpers;
 
 namespace StockManagement.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-//[Authorize]
 public class ProductsController : ControllerBase
 {
     private readonly UnitOfWork _unitOfWork;
@@ -17,18 +16,21 @@ public class ProductsController : ControllerBase
         _productService = productService;
     }
 
+    [JwtAuthorize]
     [HttpGet("ProductDashboard/{companyId}")]
     public async Task<ActionResult<IEnumerable<GetProductData>>> ProductDashboard(int companyId)
     {
         return Ok(await _productService.GetProducCompanyWise(companyId));
     }
 
+    [JwtAuthorize]
     [HttpGet("GetProductByID/{ProductId}")]
     public async Task<ActionResult<ProductDTO>> GetProductByID(int ProductId)
     {
         return await _productService.GetProducByID(ProductId);
     }
 
+    [JwtAuthorize]
     [Transaction]
     [HttpPost("InsertNewProduct")]
     public async Task<ActionResult<int>> InsertNewProduct(ProductDTO product)
@@ -36,7 +38,7 @@ public class ProductsController : ControllerBase
         return Ok(await _productService.InsertProduct(product));
     }
 
-
+    [JwtAuthorize]
     [Transaction]
     [HttpPut("UpdateProduct")]
     public async Task<ActionResult<int>> UpdateProduct(ProductDTO product)
@@ -44,7 +46,7 @@ public class ProductsController : ControllerBase
         return Ok(await _productService.UpdateProduct(product));
     }
 
-
+    [JwtAuthorize]
     [Transaction]
     [HttpPut("delete-product/{productId}")]
     public async Task<ActionResult<int>> DeleteProduct(int productId)
@@ -52,7 +54,7 @@ public class ProductsController : ControllerBase
         return Ok(await _productService.DeleteProduct(productId));
     }
 
-
+    [JwtAuthorize]
     [Transaction]
     [HttpPut("UpdateProductStockLog")]
     public async Task<ActionResult<int>> UpdateProductStockLog(ProducStockLogDTO productStock)
@@ -60,7 +62,7 @@ public class ProductsController : ControllerBase
         return Ok(await _productService.UpdateProductStock(productStock));
     }
 
-
+    [JwtAuthorize]
     [HttpGet("{companyId}")]
     public async Task<ActionResult<IEnumerable<ProductDto>>> GetProduct(int companyId)
     {
@@ -81,15 +83,15 @@ public class ProductsController : ControllerBase
         if (products.Any())
         {
             var distributeData = await (from sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0 && a.Status == 1)
-                              join sdd in _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.IsDeleted == 0) on sd.SalesDistributeId equals sdd.SalesDistributeId
-                              where sd.CompanyId == companyId
-                              select new
-                              {
-                                  sdd.ProductId,
-                                  sdd.SalesQuantity,
-                                  sdd.ReceiveQuantity,
-                                  sdd.ReturnQuantity
-                              }).ToListAsync();
+                                        join sdd in _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.IsDeleted == 0) on sd.SalesDistributeId equals sdd.SalesDistributeId
+                                        where sd.CompanyId == companyId
+                                        select new
+                                        {
+                                            sdd.ProductId,
+                                            sdd.SalesQuantity,
+                                            sdd.ReceiveQuantity,
+                                            sdd.ReturnQuantity
+                                        }).ToListAsync();
 
 
             if (distributeData.Any())

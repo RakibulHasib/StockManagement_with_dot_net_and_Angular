@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using StockManagement.Features.CompanyFeatures;
+﻿using StockManagement.Attributes;
 using StockManagement.Features.SalesDistributeFeatures;
 using StockManagement.Helpers;
-using StockManagement.Repository;
-using StockManagement.Services;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace StockManagement.Controllers
 {
@@ -20,12 +15,14 @@ namespace StockManagement.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [JwtAuthorize]
         [HttpGet("GetConcernPersonCompanyMapping")]
         public async Task<ActionResult<IEnumerable<ConcernCompanyMappingDTO>>> GetConcernPersonCompanyMapping()
         {
             return await _mediator.Send(new GetConcernCompanyMappingQuery());
         }
 
+        [JwtAuthorize]
         [HttpGet("{ConcernPersonId}")]
         public async Task<ActionResult<IEnumerable<ConcernCompanyDTO>>> GetCompanyByConcernPerson(int ConcernPersonId)
         {
@@ -42,6 +39,7 @@ namespace StockManagement.Controllers
             return data;
         }
 
+        [JwtAuthorize]
         [Transaction]
         [HttpPost("InsertConcernPersonCompanyList")]
         public async Task<ActionResult<int>> InsertConcernPersonCompanyList(ConcernCompanyDTO concernCompanyDTO)
@@ -55,7 +53,7 @@ namespace StockManagement.Controllers
             return Ok(await _unitOfWork.SaveChangesAsync());
         }
 
-
+        [JwtAuthorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<int>> Delete(int id)
         {
@@ -67,11 +65,12 @@ namespace StockManagement.Controllers
         }
 
 
-        public sealed class ConcernCompanyDTO {
+        public sealed class ConcernCompanyDTO
+        {
             public int? Id { get; set; }
             public int ConcernPersonId { get; set; }
             public int CompanyId { get; set; }
-            public string? CompanyName { get; set;}
+            public string? CompanyName { get; set; }
         }
     }
 }

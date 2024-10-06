@@ -1,13 +1,13 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, HostListener, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
-import { combineAll, filter, map, Observable, shareReplay } from 'rxjs';
+import { combineAll, filter, map, Observable, shareReplay, Subscription } from 'rxjs';
 import { AuthenticationService } from '../../../services/Authentication/authentication.service';
 import { Company } from 'src/app/models/companyenum/company';
 import { MatDrawer, MatSidenav } from '@angular/material/sidenav';
 import { NavigationEvent } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-view-model';
 import { UserRole } from 'src/app/models/Enum/UserStatus.enum';
-import { UserInfo } from 'src/app/models/Authentication/UserInfo';
+import { UserInfo } from 'src/app/models/Authentication/userInfo';
 import { UserRoleService } from 'src/app/services/Shared/user-role.service';
 @Component({
   selector: 'app-navbar',
@@ -15,7 +15,7 @@ import { UserRoleService } from 'src/app/services/Shared/user-role.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-
+ routerSubscription: Subscription | null = null;;
   userInfo!: UserInfo;
   submenus: { [key: string]: boolean } = {};
 
@@ -30,6 +30,7 @@ export class NavbarComponent {
     KaziFarmFood: Company[Company.KaziFarmFood],
     Igloo: Company[Company.Igloo]
   }
+
   appTitle = "RSSM"
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -45,32 +46,12 @@ export class NavbarComponent {
     private router: Router,
     private userRoleService: UserRoleService
   ) { }
-  // @HostListener('window:popstate', ['$event'])
-  // onPopState(event: PopStateEvent) {
-  //   this.drawer.close();
-  //   console.log("Url:", window.location.href);
-  //   const isSignInPage = window.location.href.includes('signin');
-  //   console.log(isSignInPage)
 
-  //   if (isSignInPage) {
-  //     this.drawer.close();
-  //     this.authService.logout();
-  //     this.router.navigate(['']);
-  //     return; 
-  //   }
-  //   console.log(window.history.state?.navigationId )
-  //   console.log(event.state.navigationId)
-  //   const isForward =  event.state && event.state.navigationId > (window.history.state?.navigationId || 0);
-
-  //   console.log("forward",isForward)
-  // if (isForward && !this.isAuthenticated()) {
-  //   this.router.navigate(['signin']); // Redirect to sign-in if not authenticated
-  // }
-
-  // }
+  
 
   ngOnInit(): void {
-    this.router.events
+
+    this.routerSubscription = this.router.events
       .pipe(
         filter((event: any) => event instanceof NavigationStart)
       )
@@ -88,16 +69,13 @@ export class NavbarComponent {
           }
         }
 
-        // if(event.navigationTrigger==='imperative'){
-        //   if(!this.isAuthenticated()){
-        //     this.router.navigateByUrl('/signin');
-        //   } 
-        // }
-        //  console.log("User_Details",this.authService.getCurrentUser()) ;
-
-        // console.groupEnd();
-        // this.userData = this.authService.getCurrentUser();
-        // console.log("user_data",this.userData);
+        if(event.navigationTrigger==='imperative'){
+          if(!this.isAuthenticated()){
+            this.drawer.close();
+            // this.router.navigateByUrl('/signin');
+          } 
+        }
+        
       })
       
   }
@@ -117,31 +95,31 @@ export class NavbarComponent {
   }
 
   getUserRole(): boolean {
-
-    if(this.isAuthenticated()){
-      this.authService.getCurrentUser().subscribe(
-        res => {
-          this.userInfo = res; 
-          this.userRoleService.setUserInfo(res);
-        },
-        error => {
-          console.error('Error occurred while fetching user info:', error);
-        }
-      );
-      return true;
+    if (this.isAuthenticated()) {
+      const userData = this.authService.getUserData();
+      if (userData) {
+        this.userInfo = userData;
+        return true;
+      }
     }
-    else{
-      return false;
-    }
-     
+    return false;
   }
+
+  
 
 
   logOut() {
     this.authService.logout();
     this.isAuthenticated();
+    this.drawer.close();
     this.router.navigate(['signin']);
-    this.drawer.close()
+    
+  }
+
+  ngOnDestroy(): void {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe(); 
+    }
   }
 
 }
