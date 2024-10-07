@@ -38,13 +38,14 @@ export class DistributionViewComponent {
   selectedCompany: number = 0;
   distibutionId : number = 0;
 
-   onConcernPersonDropdownSelectionChange(selectedConcernPerson: number) {
-    this.selectedConcernPerson=selectedConcernPerson;
+  onConcernPersonDropdownSelectionChange(selectedConcernPerson: number) {
+    this.selectedConcernPerson = selectedConcernPerson;
+    this.selectedCompany = 0;
     this.fetchDistributorData();
   }
 
-   onCompanyDropdownSelectionChange(selectedConcernPerson: number) {
-    this.selectedConcernPerson=selectedConcernPerson;
+  onCompanyDropdownSelectionChange(selectedCompany: number) {
+    this.selectedCompany = selectedCompany;
     this.fetchDistributorData();
   }
 
@@ -142,7 +143,7 @@ export class DistributionViewComponent {
 
   fetchDistributorData() {
     if (this.startDate && this.endDate) {
-      this.salesService.getSalesDistributeDataPerDay(this.selectedConcernPerson,this.startDate, this.endDate)
+      this.salesService.getSalesDistributeDataPerDay(this.selectedConcernPerson, this.selectedCompany, this.startDate, this.endDate)
         .subscribe(data => {
           this.dailyDistributeData = data;
           this.dataSource.data = this.dailyDistributeData;

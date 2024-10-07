@@ -2,6 +2,7 @@ export class SalesReportModel {
     constructor(
       public salesDistributeId?: number,
       public concernPerson?: string,
+      public companyName?: string,
       public creationTime?: Date,
       public reportDetails?: SalesReportDetailModel[]
     ) { }

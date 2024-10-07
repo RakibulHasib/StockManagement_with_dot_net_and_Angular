@@ -87,7 +87,7 @@ export class DistributionReportComponent {
             alignment: 'center',
           },
           {
-            text: 'সংশ্লিষ্ট ব্যক্তিঃ ' + this.salesReportData.concernPerson,
+            text: 'সংশ্লিষ্ট ব্যক্তিঃ ' + this.salesReportData?.concernPerson,
             font: 'Adorsholipi',
             bold: true,
             fontSize: 16, // Adjust the font size as needed

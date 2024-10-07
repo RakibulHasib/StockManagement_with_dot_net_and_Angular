@@ -45,10 +45,10 @@
     
       <ng-container matColumnDef="actions" class="action" style="width: 55%;">  <mat-header-cell *matHeaderCellDef mat-sort-header class="action">...</mat-header-cell>
         <mat-cell *matCellDef="let element" class="action">
-          <button mat-raised-button color="primary" class="icon-spacing" (click)="showUserApprovalAlert(element.userId,element)" [disabled]="(userRole.roleId === role.global_admin && element.userStatus === 1)||(userRole.roleId !== role.global_admin ||element.userStatus === 1)">Permission</button>
-          <button mat-raised-button color="accent" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onRoleAsign(roleAssignModal, element.userId)">Role</button>
-          <button mat-raised-button color="accent" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onReset(passwordReset, element.userId)">Reset</button>
-          <button mat-raised-button color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.userId,element)" [disabled]="(userRole.roleId === role.global_admin && element.userStatus === 0)||(userRole.roleId !== role.global_admin ||element.userStatus === 0)">Deactivate</button>
+          <button mat-raised-button color="primary" aria-hidden="false" class="icon-spacing" (click)="showUserApprovalAlert(element.userId,element)" [disabled]="(userRole.roleId === role.global_admin && element.userStatus === 1)||(userRole.roleId !== role.global_admin ||element.userStatus === 1)">Permission</button>
+          <button mat-raised-button color="accent" aria-hidden="false" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onRoleAsign(roleAssignModal, element.userId)">Role</button>
+          <button mat-raised-button color="accent" aria-hidden="false" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onReset(passwordReset, element.userId)">Reset</button>
+          <button mat-raised-button color="warn" aria-hidden="false" class="icon-spacing" (click)="showConfirmationAlert(element.userId,element)" [disabled]="(userRole.roleId === role.global_admin && element.userStatus === 0)||(userRole.roleId !== role.global_admin ||element.userStatus === 0)">Deactivate</button>
         </mat-cell>
       </ng-container>
     
@@ -66,7 +66,7 @@
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title" style="text-align: right;"> পাসওয়ার্ড রিসেট করুন </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
+      <span aria-hidden="false">&times;</span>
     </button>
   </div>
   <div class="modal-body">
@@ -89,7 +89,7 @@
 			<span>Role Assign</span>
 		</h4>
 		<button type="button" id="times_button" class="close pull-right" aria-label="Close" (click)="modal.dismiss()">
-			<span aria-hidden="true">&times;</span>
+			<span aria-hidden="false">&times;</span>
 		</button>
 	</div>
   <div class="modal-body" style="height: 150px; padding: 10px;">

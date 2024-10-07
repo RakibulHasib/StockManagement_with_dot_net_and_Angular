@@ -4,6 +4,7 @@
     {
         public long SalesDistributeId { get; set; }
         public string? ConcernPerson { get; set; }
+        public string? CompanyName { get; set; }
         public DateTime CreationTime { get; set; }
         public List<SalesDistributeReportDetail>? reportDetails { get; set; }
     }

@@ -17,7 +17,7 @@
     <mat-card-content style="display: flex; justify-content: space-between; align-items: center;">
       <mat-form-field style="width: 50%; padding:5px">
         <mat-label>সংশ্লিষ্ট ব্যক্তি বাছাই করুন</mat-label>
-        <mat-select [(ngModel)]="selectedConcernPerson"  (selectionChange)="onConcernPersonDropdownSelectionChange($event.value)" [value]="selectedConcernPerson">
+        <mat-select [(ngModel)]="selectedConcernPerson" (selectionChange)="onConcernPersonDropdownSelectionChange($event.value)" [value]="selectedConcernPerson">
           <mat-option *ngFor="let concern of concernPerson" [value]="concern.concernPersonId">
             {{concern.concernPersonName}}
           </mat-option>
@@ -27,7 +27,7 @@
       <mat-form-field style="width: 50%; padding:5px">
         <mat-label>সংশ্লিষ্ট কোম্পানি বাছাই করুন</mat-label>
         <mat-select [disabled]="concernPersonMapping.length == 0" [(ngModel)]="selectedCompany"
-          [value]="selectedCompany">
+          (selectionChange)="onCompanyDropdownSelectionChange($event.value)" [value]="selectedCompany">
           <mat-option *ngFor="let company of concernPersonMapping" [value]="company.companyId">
             {{company.companyName}}
           </mat-option>
