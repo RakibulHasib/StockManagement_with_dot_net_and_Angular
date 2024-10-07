@@ -25,12 +25,13 @@ namespace StockManagement.Services
             ReturnStockIn
         }
 
-        public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID, DateTime StartDate, DateTime EndDate)
+        public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID, int CompanyId, DateTime StartDate, DateTime EndDate)
         {
             var query = await (from sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0)
                                join cp in _unitOfWork.ConcernPerson.Queryable.Where(a => a.IsDeleted == 0) on sd.ConcernPersonId equals cp.ConcernPersonId
                                where sd.CreationTime.Date >= StartDate.Date && sd.CreationTime.Date <= EndDate.Date
                                       && cp.ConcernPersonId == (ConcernPersonID == 0 ? cp.ConcernPersonId : ConcernPersonID)
+                                      && sd.CompanyId == (CompanyId == 0 ? sd.CompanyId : CompanyId)
                                select new DailyDistributeDataDTO
                                {
                                    SalesDistributeId = sd.SalesDistributeId,
@@ -192,12 +193,14 @@ namespace StockManagement.Services
         {
             SalesDistributeReportDTO? reportDTO = new SalesDistributeReportDTO();
             var salesdistributeData = await (from sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0)
-                                             join cp in _unitOfWork.ConcernPerson.Queryable.Where(a => a.IsDeleted == 0) on sd.ConcernPersonId equals cp.ConcernPersonId
+                                             join cp in _unitOfWork.ConcernPerson.Queryable.Where(a => a.IsDeleted == 0) on sd.ConcernPersonId equals           cp.ConcernPersonId
+                                             join c in _unitOfWork.Company.Queryable.Where(a => a.IsDeleted == 0) on sd.CompanyId equals c.CompanyId
                                              where sd.SalesDistributeId == SalesDistributeId
                                              select new SalesDistributeReportDTO
                                              {
                                                  SalesDistributeId = sd.SalesDistributeId,
                                                  ConcernPerson = cp.ConcernPersonName,
+                                                 CompanyName = c.CompanyName,
                                                  CreationTime = sd.CreationTime
                                              }).FirstOrDefaultAsync();
 

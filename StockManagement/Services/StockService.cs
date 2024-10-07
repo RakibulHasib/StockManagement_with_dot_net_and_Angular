@@ -52,7 +52,6 @@ public class StockService
 
         foreach (var item in savoyIceCreamVM)
         {
-            var total = item.Total;
             var stockDetails = new StockDetail
             {
                 StockDetailsId = Guid.NewGuid(),
@@ -62,7 +61,7 @@ public class StockService
                 Price = item.Price,
                 RestockQuantity = item.NewProduct,
                 TotalQuantity = item.Total,
-                Eja = total - (item.SalesQuantity ?? 0),
+                Eja = item.Eja,
                 SalesQuantity = item.SalesQuantity,
                 TotalAmount = item.TotalAmount,
                 DamageQuantity = item.DamageQuantity ?? 0,

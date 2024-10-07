@@ -17,9 +17,9 @@ namespace StockManagement.Controllers
 
         [JwtAuthorize]
         [HttpGet("GetSalesDistributeDataPerDay")]
-        public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID, DateTime StartDate, DateTime EndDate)
+        public async Task<ActionResult<IEnumerable<DailyDistributeDataDTO>>> GetSalesDistributeDataPerDay(int ConcernPersonID,int CompanyId, DateTime StartDate, DateTime EndDate)
         {
-            return await _salesDistributeService.GetSalesDistributeDataPerDay(ConcernPersonID, StartDate, EndDate);
+            return await _salesDistributeService.GetSalesDistributeDataPerDay(ConcernPersonID, CompanyId, StartDate, EndDate);
         }
 
         [JwtAuthorize]

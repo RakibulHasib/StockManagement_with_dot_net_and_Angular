@@ -6,12 +6,13 @@
   }
 </style>
 <body>
+  <span style="text-align: center; font-size: 18px; font-weight: 600; display: block">{{salesReportData.companyName}}</span>
   <div class="row" *ngIf="salesReportData">
       <div class="col-4">
         <h3 style="padding-left:40px;padding-top:10px">রেজি নং-</h3>
       </div>
       <div class="col-4">
-        <h1 style="text-align:center;font-weight:1000">সংশ্লিষ্ট ব্যক্তি : {{salesReportData.concernPerson}}</h1>
+        <h1 style="text-align: center; font-size: 18px; font-weight: 600">সংশ্লিষ্ট ব্যক্তি : {{salesReportData.concernPerson}}</h1>
       </div>
       <div class="col-4">
         <h3 style="padding-top:10px;margin-left:250px">তারিখ : {{salesReportData.creationTime| date:'yyyy-MM-dd'}}</h3>
