@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from '../../../services/Shared/notification.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as pdfMake from "pdfmake/build/pdfmake";
@@ -13,30 +12,27 @@ import { DatePipe } from '@angular/common';
 (pdfMake as any).vfs = custom_fonts.pdfMake.vfs;
 
 (pdfMake as any).fonts = {
-        Roboto: {
-            normal: 'Roboto-Regular.ttf',
-            bold: 'Roboto-Medium.ttf',
-            italics: 'Roboto-Italic.ttf',
-            bolditalics: 'Roboto-MediumItalic.ttf'
-        },
-        Adorsholipi: {
-           normal: 'AdorshoLipi.ttf',
-           bold: 'AdorshoLipi.ttf'
-        },
-        Kalpurush: {
-          normal: 'Kalpurush.ttf',
-          bold: 'Kalpurush.ttf'
-        }
-     };
+    'Roboto': {
+        normal: 'Roboto-Regular.ttf',
+        bold: 'Roboto-Medium.ttf',
+        italics: 'Roboto-Italic.ttf',
+        bolditalics: 'Roboto-MediumItalic.ttf'
+    },
+    'Adorsholipi': {
+        normal: 'AdorshoLipi.ttf',
+        bold: 'AdorshoLipi.ttf'
+    },
+    'Kalpurush': {
+      normal: 'Kalpurush.ttf',
+      bold: 'Kalpurush.ttf'
+    }
+  };
 
 @Component({
   selector: 'app-stock-report',
   templateUrl: './stock-report.component.html',
-  styleUrls: ['./stock-report.component.css']
+  styleUrls: ['./stock-report.component.css'],
 })
-/*@ViewChild('dataToExport', { static: false }) public dataToExport: ElementRef;*/
-
-
 export class StockReportComponent implements OnInit {
   [x: string]: any;
   public get dialog(): MatDialog {
@@ -59,328 +55,227 @@ export class StockReportComponent implements OnInit {
     private _notificationSvc: NotificationService,
     private _dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
-    private datePipe : DatePipe
-  ) { }
-
+    private datePipe: DatePipe
+  ) {}
 
   ngOnInit() {
     let stockID: number = this.activatedRoute.snapshot.params['id'];
     this.fetchReportData(stockID);
   }
-  
 
   fetchReportData(stockID: number) {
     if (stockID) {
-      this.reportDataSvc.getReportData(stockID)
-        .subscribe(data => {
+      this.reportDataSvc.getReportData(stockID).subscribe(
+        (data) => {
           this.stockReportData = data;
-        }, err => {
-          this.notificationSvc.message("Failed to load data", "DISMISS");
-        });
+        },
+        (err) => {
+          this.notificationSvc.message('Failed to load data', 'DISMISS');
+        }
+      );
     } else {
-      this.notificationSvc.message("Data Not Found", "DISMISS");
+      this.notificationSvc.message('Data Not Found', 'DISMISS');
     }
   }
 
-    public convetToPDF() {
-        let docDefinition : any = {
-        pageMargins: [40, 20, 40, 20],
-        content: [
-          {
-            font: 'Adorsholipi',
-            text: 'বিসমিল্লাহির রাহ্‌মানির রাহীম',
-            bold: true,
-            fontSize: 10,
-            alignment: 'center',
-          },
-          {
-            layout: 'noBorders',
-            table: {
-              color: 'blue',
-              headerRows: 1,
-              widths: [ 100, '*', 100 ],
-              body: [
-                [
-                  {
-                    margin: [0, 10, 0, 0],
-                    font: 'Adorsholipi',
-                    text: 'রেজিঃ নং- ',
-                    bold: true,
-                    fontSize: 11,
-                    alignment: 'left'
-                  },
-                  {
-                    font: 'Adorsholipi',
-                    text: this.stockReportData.companyName,
-                    bold: true,
-                    fontSize: 22,
-                    alignment: 'center',
-                  },
-                  {
-                    margin: [0, 10, 0, 0],
-                    columns: [
-                      {
-                        font: 'Adorsholipi',
-                        text: 'তারিখঃ ',
-                        bold: true,
-                        fontSize: 11,
-                      },
-                      {
-                        width: 70,
-                        margin: [5, 0, 0, 0],
-                        layout: 'noBorders',
-                        table: {
-                          heights: 10,
-                          headerRows: 1,
-                          widths: [ '*' ],
-                          body: [
-                            [this.datePipe.transform(this.stockReportData.creationTime, 'yyyy-MM-dd')],
-                          ]
-                        }
-                      },
-                    ]
-                  }
-                ],
-              ],
-              style: [{border:'0'}]
-            }
-          },
-          {
-            columns : [
-              { width: '*', text: '' },
-              {
-                width: '125%',
-                table: {
-                  widths: [ 80, 58, 50, 58, 60, 100, 50],
-                  body: [
-                    [
-                      { text: 'পণ্যের নাম', bold: true, font: 'Adorsholipi', alignment: 'center' },
-                      { text: 'মূল্য', bold: true, font: 'Adorsholipi', alignment: 'center' },
-                      { text: 'ইজা', bold: true, font: 'Adorsholipi', alignment: 'center' },
-                      { text: 'মোট', bold: true, font: 'Adorsholipi', alignment: 'center' },
-                      { text: 'বিক্রি', bold: true, font: 'Adorsholipi', alignment: 'center' },
-                      { text: 'ডেমেজ', bold: true, font: 'Adorsholipi', alignment: 'center' },
-                      { text: 'টাকা', bold: true, font: 'Adorsholipi', alignment: 'center' }
-                    ],
-                    // ...this.stockReportData.reportDetails!.map(x => [
-                    //   x.productName,
-                    //   x.price,
-                    //   x.eja,
-                    //   x.totalQuantity,
-                    //   x.salesQuantity,
-                    //   x.damageQuantity,
-                    //   x.totalAmount
-                    // ]
-                      ...this.stockReportData.reportDetails!.map(x => [
-                      { text: x.productName, bold: true, font: 'Kalpurush', alignment: 'center' },
-                      x.price,
-                      x.eja,
-                      x.totalQuantity,
-                      x.salesQuantity,
-                      x.damageQuantity,
-                      x.totalAmount
-                    ]),
-                    [
-                      { colSpan:6, text: 'মোট মূল্যঃ ', font: 'Adorsholipi', bold: true, fontSize: 10, alignment: 'right' },
-                      {},
-                      {},
-                      {},
-                      {},
-                      {},
-                      { text: this.stockReportData.totalPrice, bold: true, fontSize: 10, alignment: 'left' },
-                    ],
-                    [
-                      { colSpan:6, text: '(-) ড্যামেজ মূল্যঃ ', font: 'Adorsholipi', bold: true, fontSize: 10, alignment: 'right' },
-                      {},
-                      {},
-                      {},
-                      {},
-                      {},
-                      { text: this.stockReportData.damageAmount, bold: true, fontSize: 10, alignment: 'left' },
-                    ],
-                    [
-                      { colSpan:6, text: 'মোট মুল্যঃ ', font: 'Adorsholipi', bold: true, fontSize: 10, alignment: 'right' },
-                      {},
-                      {},
-                      {},
-                      {},
-                      {},
-                      { text: this.stockReportData.afterDamagePrice, bold: true, fontSize: 10, alignment: 'left' },
-                    ],
-                    [
-                      { colSpan:6, text: '(-) এস/আর কমিশনঃ ', font: 'Adorsholipi', bold: true, fontSize: 10, alignment: 'right' },
-                      {},
-                      {},
-                      {},
-                      {},
-                      {},
-                      { text: this.stockReportData.srcommission, bold: true, fontSize: 10, alignment: 'left' },
-                    ],
-                    [
-                      { colSpan:6, text: 'নিট মূল্যঃ ', font: 'Adorsholipi', bold: true, fontSize: 10, alignment: 'right' },
-                      {},
-                      {},
-                      {},
-                      {},
-                      {},
-                      { text: this.stockReportData.afterSrCommission, bold: true, fontSize: 10, alignment: 'left' },
-                    ],
-                  ],
-                  alignment: "center"
-                },
-                layout: {
-                  hLineWidth: (i: number, node: any) => {
-                    // return 0.5;
-                    const totalRows = node.table.body.length;
-                    const descendingOrder = totalRows - i;
-                    return (descendingOrder === 1 || descendingOrder === 2 || descendingOrder === 3 || descendingOrder === 4) ? 0 : 0.5;
-                  },
-                                         
-                
-                
-                vLineWidth: (i: number, node: any) => {
-                  return 0.5;
-                  // const totalRows = node.table.body.length;
-                  // const totalColumns = node.table.widths.length;
-                
-                  // const descendingOrder = totalRows - i;
-                
-                  // // Keep vertical borders for the first two rows
-                  // // if (i < 2) {
-                  // //   return 0.5;
-                  // // }
-                
-                  // // Remove vertical borders for rows with descending order from 3 to 7
-                  // if (descendingOrder >= 3 && descendingOrder <= 7) {
-                  //   // Check if it's one of the specified columns
-                  //   const targetColumns = [1, 2, 3, 4, 5];
-                  //   if (targetColumns.includes(i % totalColumns)) {
-                  //     // Set the vertical line width to 0 for the specified columns
-                  //     return 0;
-                  //   } else {
-                  //     // Set a default width for other columns
-                  //     return 0.5;
-                  //   }
-                  // } else {
-                  //   // Set a default width for rows outside the specified range
-                  //   return 0.5;
-                  // }
-                },
-                
-                
-                
-                  hLineColor: '#253da1',
-                  vLineColor: '#253da1',
-                },
-              },
-              { width: '*', text: '' }
-            ]
-          }
-        ],
-        defaultStyle:{
-          color: '#253da1'
-        }
-      };
-      pdfMake.createPdf(docDefinition).print();
+  public convertToPDF() {
+    const invoiceDetails = {
+      companyName: 'Brand Name',
+      invoiceTo: 'Dwayne Clark',
+      address: '24 Dummy Street Area, Location, Lorem Ipsum, 5700X59',
+      invoiceNumber: '52148',
+      date: '01/02/2020',
+      paymentInfo: {
+        accountNo: '1234 5678 9012',
+        ifsc: 'LOREM1234',
+        accName: 'Lorem Ipsum',
+      },
+      items: [
+        { description: 'Lorem Ipsum Dolor', price: 50, qty: 1, total: 50 },
+        {
+          description: 'Pellentesque id neque ligula',
+          price: 20,
+          qty: 3,
+          total: 60,
+        },
+        {
+          description: 'Interdum et malesuada fames',
+          price: 10,
+          qty: 2,
+          total: 20,
+        },
+        {
+          description: 'Vivamus volutpat faucibus',
+          price: 90,
+          qty: 1,
+          total: 90,
+        },
+        { description: 'Product 5', price: 15, qty: 4, total: 60 },
+        { description: 'Product 6', price: 25, qty: 2, total: 50 },
+        { description: 'Product 7', price: 40, qty: 3, total: 120 },
+        { description: 'Product 8', price: 100, qty: 1, total: 100 },
+        { description: 'Product 9', price: 55, qty: 2, total: 110 },
+        { description: 'Product 10', price: 30, qty: 5, total: 150 },
+      ],
     };
-    
 
-  //public downloadAsPdf(): void {
-  //  let data! = document.getElementById('contentToConvert');
-  //  const width = data!.nativeElement.clientWidth;
-  //  const height = data!.nativeElement.clientHeight + 40;
-  //  let orientation = '';
-  //  let imageUnit = 'pt';
-  //  if (width > height) {
-  //    orientation = 'l';
-  //  } else {
-  //    orientation = 'p';
-  //  }
-  //  domToImage
-  //    .toPng(data!.nativeElement, {
-  //      width: width,
-  //      height: height
-  //    })
-  //    .then(result => {
-  //      let jsPdfOptions = {
-  //        orientation: orientation,
-  //        unit: imageUnit,
-  //        format: [width + 50, height + 220]
-  //      };
-  //      const pdf = new jsPDF(jsPdfOptions);
-  //      pdf.setFontSize(48);
-  //      pdf.setTextColor('#2585fe');
-  //      pdf.text(this.pdfName.value ? this.pdfName.value.toUpperCase() : 'Untitled dashboard'.toUpperCase(), 25, 75);
-  //      pdf.setFontSize(24);
-  //      pdf.setTextColor('#131523');
-  //      pdf.text('Report date: ' + moment().format('ll'), 25, 115);
-  //      pdf.addImage(result, 'PNG', 25, 185, width, height);
-  //      pdf.save('file_name' + '.pdf');
-  //    })
-  //    .catch(error => {
-  //    });
-  //}
+    const tableBody: any = [
+      [
+        { text: 'ক্রঃ নং', alignment: 'center', font: 'Adorsholipi' },
+        { text: 'পণ্যের নাম', bold: true, font: 'Adorsholipi', alignment: 'center' },
+        { text: 'মূল্য', bold: false, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'ইজা', bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'নতুন', bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'মোট', bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'বিক্রি', bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'ডেমেজ', bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'টাকা', bold: true, font: 'Adorsholipi', alignment: 'right' },
+      ],
+    ];
 
-  // title = 'html-to-pdf-angular-application';
+    this.stockReportData.reportDetails!.forEach((item, index) => {
+      tableBody.push([
+        { text: index + 1, alignment: 'center' },
+        { text: `${item.productName}`, font: 'Kalpurush', bold: true },
+        { text: [{ text: '৳ ', font: 'Kalpurush' }, `${item.price}`], alignment: 'right' },
+        { text: `${item.eja}`, alignment: 'center' },
+        { text: `${item.restockQuantity}`, alignment: 'center' },
+        { text: `${item.totalQuantity}`, alignment: 'center' },
+        { text: `${item.salesQuantity}`, alignment: 'center' },
+        { text: `${item.damageQuantity}`, alignment: 'center' },
+        { text: [{ text: '৳ ', font: 'Kalpurush' }, `${item.totalAmount}`], alignment: 'right' }
+      ]);
+    });
 
-  // public convetToPDF() {
-  //   var data = document.getElementById('contentToConvert');
-  //   if (data) {
-  //     html2canvas(data).then(canvas => {
-  //       // Few necessary setting options
-  //       var imgWidth = 208;
-  //       var pageHeight = 295;
-  //       var imgHeight = canvas.height * imgWidth / canvas.width;
-  //       var heightLeft = imgHeight;
+    // Add a horizontal line after the last product
+    tableBody.push([
+      { text: '', colSpan: 9, border: [false, true, false, false] },
+      {}, {}, {}, {}, {}, {}, {}, {}
+    ]);
 
-  //       const contentDataURL = canvas.toDataURL('image/png')
-  //       let pdf = new jspdf('p', 'pt', 'a4'); // A4 size page of PDF
+    const docDefinition: any = {
+      pageMargins: [40, 21.6, 40, 40], // Left, Top, Right, Bottom margins (in points)
+      content: [
+        // Company and Invoice Header
+        {
+          columns: [
+            {
+              stack: [
+                {
+                  text: 'রস্ ফুডস এন্ড সুইটস',
+                  bold: true,
+                  font: 'Kalpurush',
+                  fontSize: 17,
+                  alignment: 'left',
+                },
+                {
+                  text: 'রেজিঃ নং- ',
+                  font: 'Kalpurush',
+                  fontSize: 12,
+                  alignment: 'left',
+                  margin: [0, 5, 0, 5],
+                },
+              ],
+            },
+            {
+              text: 'বিসমিল্লাহির রাহ্‌মানির রাহীম',
+              bold: true,
+              font: 'Kalpurush',
+              fontSize: 11,
+              alignment: 'center',
+              stack: [
+                {
+                  text: 'বিসমিল্লাহির রাহ্‌মানির রাহীম',
+                  bold: true,
+                  font: 'Kalpurush',
+                  fontSize: 11,
+                  alignment: 'center',
+                },
+                {
+                  text: `স্টক রিপোর্ট`,
+                  bold: true,
+                  font: 'Kalpurush',
+                  fontSize: 24,
+                  alignment: 'center',
+                },
+              ],
+            },
+            {
+              stack: [
+                {
+                  text: `${this.stockReportData.companyName}`,
+                  bold: true,
+                  font: 'Kalpurush',
+                  fontSize: 17,
+                  alignment: 'right',
+                },
+                {
+                  text: [
+                    {
+                      text: 'তারিখঃ ',
+                      font: 'Kalpurush',
+                      fontSize: 12,
+                      alignment: 'right',
+                    },
+                    {
+                      text: `${this.datePipe.transform(
+                        this.stockReportData.creationTime,
+                        'dd-MM-yyyy'
+                      )}`,
+                      fontSize: 11,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
 
-  //     pdf.html(data!, {
-  //         callback: function(doc) {
-  //           // pdf.internal.pageSize.width = data!.offsetHeight;
-  //           // pdf.internal.pageSize.height = data!.offsetWidth;
-  //             // Save the PDF
-  //             // doc.save('sample-document.pdf');
-  //             // doc.output('datauri');
-  //             pdf.setProperties({
-  //             title: "Report"
-  //             });
-  //             // let componentHeight = data!.offsetHeight;
-  //             // let componentWidth = data!.offsetWidth;
-  //             // pdf.internal.pageSize.width = componentWidth;
-  //             // pdf.internal.pageSize.height = componentHeight;
-  //             // doc.output('datauri');
-  //             pdf.output('dataurlnewwindow');
-  //         },
-  //         margin: [60, 20, 60, 20],
-  //         x: 15,
-  //         y: 15,
-  //         html2canvas: {
-  //             scale: 1, //this was my solution, you have to adjust to your size
-  //             width: 1000 //for some reason width does nothing
-  //         },
-  //         //  width: 100, //target width in the PDF document
-  //         //  windowWidth: 500 //window width in CSS pixels
-  //     });
+        // Product Table
+        {
+          table: {
+            widths: [30, '*', 50, 30, 30, 30, 30, 30, 50],
+            body: tableBody,
+          },
+          layout: 'lightHorizontalLines', // Keep the light borders as in the original design
+          margin: [0, 0, 0, 20],
+        },
 
-  //       // pdf.html(
-  //       //   data!,
-  //       //   {
-  //       //     'width': 180,'elementHandlers': elementHandler
-  //       //   });
+        // Total Calculations aligned to the right
+        {
+          columns: [
+            { width: '*', text: '' }, // Empty space on left
+            {
+              width: 'auto',
+              table: {
+                body: [
+                  [
+                    { text: 'Subtotal', bold: true },
+                    `$${invoiceDetails.items
+                      .reduce((sum, item) => sum + item.total, 0)
+                      .toFixed(2)}`,
+                  ],
+                  [{ text: 'Tax (0.00%)', bold: true }, '$0.00'],
+                  [
+                    { text: 'Total', bold: true },
+                    `$${invoiceDetails.items
+                      .reduce((sum, item) => sum + item.total, 0)
+                      .toFixed(2)}`,
+                  ],
+                ],
+              },
+              layout: 'noBorders',
+              alignment: 'right',
+            },
+          ],
+        },
+      ],
+      defaultStyle: {
+        fontSize: 10,
+      },
+    };
 
-
-
-  //       // var position = 0;
-  //       // pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
-  //       // pdf.save('SavoyReport.pdf'); // Generated PDF
-  //     });
-  //   } else {
-  //     console.error("Element with id 'contentToConvert' not found.");
-  //   }
-   
-  // }
-
+    pdfMake.createPdf(docDefinition).print();
+  }
 }
 
