@@ -1,6 +1,4 @@
-﻿using StockManagement.Attributes;
-
-namespace StockManagement.Controllers
+﻿namespace StockManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
