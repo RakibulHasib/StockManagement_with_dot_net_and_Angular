@@ -1,45 +1,91 @@
 ﻿namespace StockManagement.Services;
 
-public class PasswordHashingService
+public class PasswordHashingService : IPasswordHashingService
 {
-    public  string HashPassword(string password)
+
+    private const int SaltSize = 32;  
+    private const int KeySize = 64;  
+    private const int Iterations = 10000; 
+    private readonly AppSettings _appSettings;
+
+    public PasswordHashingService(IOptions<AppSettings> settings)
     {
-
-        byte[] salt = RandomNumberGenerator.GetBytes(16);
-
-
-        string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-            password: password,
-            salt: salt,
-            prf: KeyDerivationPrf.HMACSHA512,
-            iterationCount: 100000,
-            numBytesRequested: 32
-        ));
-
-
-        return Convert.ToBase64String(salt) + ":" + hashedPassword;
+        _appSettings = settings.Value;
     }
 
-
-    public  bool VerifyHashedPassword(string hashedPassword, string providedPassword)
+    public string HashPassword(string password)
     {
-
-        string[] parts = hashedPassword.Split(':');
-        if (parts.Length != 2)
+        using (var rng = RandomNumberGenerator.Create())
         {
-            return false;
+            var saltBytes = new byte[SaltSize];
+            rng.GetBytes(saltBytes);
+            var salt = Convert.ToBase64String(saltBytes);
+
+            var hashBytes = PBKDF2Hash(password, saltBytes);
+
+            return $"{Convert.ToBase64String(hashBytes)}:{salt}";
         }
-
-        byte[] salt = Convert.FromBase64String(parts[0]);
-
-        string newHashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-            password: providedPassword,
-            salt: salt,
-            prf: KeyDerivationPrf.HMACSHA512,
-            iterationCount: 100000,
-            numBytesRequested: 32
-        ));
-
-        return newHashedPassword == parts[1];
     }
+
+    public bool Authenticate(string inputPassword, string storedPassword)
+    {
+        var storedHashAndSalt = storedPassword.Split(':');
+        var storedHash = storedHashAndSalt[0];
+        var storedSalt = Convert.FromBase64String(storedHashAndSalt[1]);
+
+        var inputHashBytes = PBKDF2Hash(inputPassword, storedSalt);
+        var inputHash = Convert.ToBase64String(inputHashBytes);
+
+        return inputHash == storedHash;
+    }
+
+    private byte[] PBKDF2Hash(string password, byte[] salt)
+    {
+        using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA512))
+        {
+            return pbkdf2.GetBytes(KeySize); 
+        }
+    }
+    //private readonly AppSettings _appSettings;
+    //private readonly byte[] _keyBytes;
+
+    //public PasswordHashingService(IOptions<AppSettings> settings)
+    //{
+    //    _appSettings = settings.Value;
+    //    _keyBytes = Encoding.UTF8.GetBytes(_appSettings.key);
+    //}
+
+
+    //public string HashPassword(string password)
+    //{
+    //    using (var rng = RandomNumberGenerator.Create())
+    //    {
+    //        var saltBytes = new byte[16];
+    //        rng.GetBytes(saltBytes);
+    //        var salt = Convert.ToBase64String(saltBytes);
+
+    //        using (var hmac = new HMACSHA512(_keyBytes))
+    //        {
+    //            var passwordBytes = Encoding.UTF8.GetBytes(password + salt);
+    //            var hashBytes = hmac.ComputeHash(passwordBytes);
+    //            return Convert.ToBase64String(hashBytes) + ":" + salt;
+    //        }
+    //    }
+    //}
+
+    //public bool Authenticate(string inputPassword, string storedPassword)
+    //{
+    //    var storedHashAndSalt = storedPassword.Split(':');
+    //    var storedHash = storedHashAndSalt[0];
+    //    var storedSalt = storedHashAndSalt[1];
+
+    //    using (var hmac = new HMACSHA512(_keyBytes))
+    //    {
+    //        var inputPasswordBytes = Encoding.UTF8.GetBytes(inputPassword + storedSalt);
+    //        var inputHashBytes = hmac.ComputeHash(inputPasswordBytes);
+    //        var inputHash = Convert.ToBase64String(inputHashBytes);
+
+    //        return inputHash == storedHash;
+    //    }
+    //}
 }

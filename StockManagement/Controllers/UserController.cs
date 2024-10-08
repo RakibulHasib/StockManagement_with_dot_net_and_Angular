@@ -1,5 +1,4 @@
-﻿using StockManagement.Attributes;
-using StockManagement.Features.UserFeatures;
+﻿using StockManagement.Features.UserFeatures;
 
 namespace StockManagement.Controllers
 {

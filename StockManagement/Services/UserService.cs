@@ -1,20 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StockManagement.Entities;
-
-namespace StockManagement.Services;
-
+﻿namespace StockManagement.Services;
 public class UserService
 {
 
     private readonly UnitOfWork _unitOfWork;
-    private readonly PasswordHashingService _hasher;
+    private readonly IPasswordHashingService _passwordHashingService;
     private int ROLE_ID = 0;
     private string USER_STATUS = "Pending";
 
-    public UserService(UnitOfWork unitOfWork, PasswordHashingService hasher)
+    public UserService(UnitOfWork unitOfWork, IPasswordHashingService passwordHashingService)
     {
         _unitOfWork = unitOfWork;
-        _hasher = hasher;
+        _passwordHashingService = passwordHashingService;
     }
 
     public async Task<ApiResponse> UserRegister(User user)
@@ -31,9 +27,8 @@ public class UserService
                     StatusCode = (int)HttpStatusCode.Conflict,
                 };
             }
-            //string hashed_password = _hasher.HashPassword(user.Password);SHA512
 
-            string hashed_password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            string hashed_password = _passwordHashingService.HashPassword(user.Password.Trim());
             var user_data = new User()
             {
                 FirstName = user.FirstName,
@@ -198,7 +193,6 @@ public class UserService
     {
         try
         {
-            //var user_data = await _unitOfWork.Users.Queryable.Where(u => u.IsDeleted == 0).ToListAsync();
             var user_data = await _unitOfWork.Users.Queryable
                         .Join(_unitOfWork.RoleMaster.Queryable,
                               u => u.RoleId,
@@ -299,12 +293,8 @@ public class UserService
 
     public async Task<ApiResponse> ResetPassword(int userId, string newPassword)
     {
-        //string hashed_password = _hasher.HashPassword(oldPassword);SHA512
-
         string password = newPassword.Trim();
-
-        var hashed_password = BCrypt.Net.BCrypt.HashPassword(password);
-
+        string hashed_password = _passwordHashingService.HashPassword(password);
 
         var user_data = await _unitOfWork.Users.Queryable.Where(u => u.UserId == userId && u.IsDeleted == 0).FirstOrDefaultAsync();
         if (user_data is null)
@@ -318,15 +308,6 @@ public class UserService
 
         }
 
-        //if (!BCrypt.Net.BCrypt.Verify(oldPassword, user_data.Password)) // (!_hasher.VerifyHashedPassword(user_data.Password, oldPassword))// SHA512
-        //{
-        //    return new ApiResponse()
-        //    {
-        //        Message = "User current password is not valid",
-        //        Status = Status.Failed,
-        //        StatusCode = (int)HttpStatusCode.BadRequest,
-        //    };
-        //}
         user_data.Password = hashed_password;
         _unitOfWork.Users.Update(user_data);
         await _unitOfWork.SaveChangesAsync();

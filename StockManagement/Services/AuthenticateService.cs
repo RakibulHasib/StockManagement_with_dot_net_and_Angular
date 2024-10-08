@@ -1,15 +1,12 @@
-﻿using StockManagement.Enum;
-
-
-namespace StockManagement.Services;
+﻿namespace StockManagement.Services;
 
 public class AuthenticateService : IAuthenticateService
 {
     private readonly UnitOfWork _unitOfWork;
-    private readonly PasswordHashingService _hasher;
+    private readonly IPasswordHashingService _hasher;
     private string _key;
 
-    public AuthenticateService(UnitOfWork unitOfWork, IConfiguration configuration, PasswordHashingService hasher)
+    public AuthenticateService(UnitOfWork unitOfWork, IConfiguration configuration, IPasswordHashingService hasher)
     {
         _unitOfWork = unitOfWork;
         _key = configuration["AppSettings:Key"];
@@ -19,7 +16,6 @@ public class AuthenticateService : IAuthenticateService
 
     public async Task<ApiResponse> AuthenticateUser(string userName, string password)
     {
-        //var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
         var user = await _unitOfWork.Users.Queryable.Where(u => u.UserName == userName && u.IsDeleted == 0).FirstOrDefaultAsync();
         if (user == null)
         {
@@ -41,7 +37,7 @@ public class AuthenticateService : IAuthenticateService
 
         }
 
-        if (!BCrypt.Net.BCrypt.Verify(password, user.Password))  //(!_hasher.VerifyHashedPassword(user.Password,password))//SHA512
+       if(!_hasher.Authenticate(password.Trim(),user.Password))
         {
             return new ApiResponse()
             {
@@ -107,10 +103,7 @@ public class AuthenticateService : IAuthenticateService
                 new Claim("un", user.UserName),
                 new Claim("ufn", user.FirstName + " " + user.LastName),
                 new Claim("rid", user.RoleId.ToString())
-                //new Claim(ClaimTypes.Sid, user.UserId.ToString()),
-                //new Claim(ClaimTypes.Upn, user.UserName ),
-                //new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName ),
-                //new Claim(ClaimTypes.Role, user.RoleId.ToString())
+                
         }),
             Expires = DateTime.UtcNow.AddHours(24),
             SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
@@ -172,11 +165,6 @@ public class AuthenticateService : IAuthenticateService
 
         return null;
     }
-
-
-
-
-
 
     public ClaimResponseDTO? ValidateTokens(string token)
     {
