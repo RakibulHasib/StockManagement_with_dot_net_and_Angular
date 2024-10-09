@@ -16,8 +16,11 @@ public class AuthenticateService : IAuthenticateService
 
     public async Task<ApiResponse> AuthenticateUser(string userName, string password)
     {
-        var user = await _unitOfWork.Users.Queryable.Where(u => u.UserName == userName && u.IsDeleted == 0).FirstOrDefaultAsync();
-        if (user == null)
+        var user = await _unitOfWork.Users.Queryable
+            .Where(u => u.UserName.ToLower() == userName.Trim().ToLower() && u.IsDeleted == 0)
+            .FirstOrDefaultAsync();
+
+        if (user is null)
         {
             return new ApiResponse
             {
@@ -26,7 +29,8 @@ public class AuthenticateService : IAuthenticateService
                 StatusCode = (int)HttpStatusCode.Unauthorized,
             };
         }
-        if (user != null && user.UserStatus == (int)UserStatus.Pending && user.IsDeleted == 0)
+
+        if (user.UserStatus == (int)UserStatus.Pending)
         {
             return new ApiResponse
             {
@@ -34,20 +38,19 @@ public class AuthenticateService : IAuthenticateService
                 Message = "user not approved",
                 StatusCode = (int)HttpStatusCode.Forbidden
             };
-
         }
 
-       if(!_hasher.Authenticate(password.Trim(),user.Password))
+        if(!_hasher.Authenticate(password.Trim(), user.Password))
         {
             return new ApiResponse()
             {
                 Message = "User password is invalid",
                 Status = Status.WrongPassword,
                 StatusCode = (int)HttpStatusCode.Unauthorized
-
             };
         }
-        else if (user != null && user.UserStatus == (int)UserStatus.Active && user.UserName == userName)
+
+        if (user.UserStatus == (int)UserStatus.Active)
         {
             var token = GenerateToken(user, _key);
             var user_credintial = new SignInResponseDTO()
@@ -56,7 +59,6 @@ public class AuthenticateService : IAuthenticateService
                 UserName = userName,
                 Token = token,
                 RoleId = user.RoleId,
-
             };
 
             return new ApiResponse<SignInResponseDTO>
@@ -65,30 +67,16 @@ public class AuthenticateService : IAuthenticateService
                 Message = "",
                 StatusCode = (int)HttpStatusCode.OK,
                 Data = user_credintial
-
             };
 
         }
-        else if (user != null && user.UserStatus == (int)UserStatus.Active && user.UserName != userName)
+
+        return new ApiResponse
         {
-            return new ApiResponse()
-            {
-                Message = "User Name is not matched",
-                Status = Status.UserNameNotFound,
-                StatusCode = (int)HttpStatusCode.Unauthorized
-
-            };
-
-        }
-        else
-        {
-            return new ApiResponse
-            {
-                Status = Status.Unauthorized,
-                Message = "user is unauthorized",
-                StatusCode = (int)HttpStatusCode.Unauthorized,
-            };
-        }
+            Status = Status.Unauthorized,
+            Message = "user is unauthorized",
+            StatusCode = (int)HttpStatusCode.Unauthorized,
+        };
     }
 
     private string GenerateToken(User user, string secret)
@@ -102,8 +90,7 @@ public class AuthenticateService : IAuthenticateService
                 new Claim("uid", user.UserId.ToString()),
                 new Claim("un", user.UserName),
                 new Claim("ufn", user.FirstName + " " + user.LastName),
-                new Claim("rid", user.RoleId.ToString())
-                
+                new Claim("rid", user.RoleId.ToString())                
         }),
             Expires = DateTime.UtcNow.AddHours(24),
             SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
@@ -213,7 +200,6 @@ public class AuthenticateService : IAuthenticateService
 
         return null;
     }
-
 
     public ClaimResponseDTO DecodeToken(string token)
     {
