@@ -207,7 +207,7 @@ namespace StockManagement.Services
             reportDTO = salesdistributeData;
 
             salesdistributeData.reportDetails = await (from si in _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.IsDeleted == 0)
-                                                       join p in _unitOfWork.Product.Queryable.Where(a => a.IsDeleted == 0) on si.ProductId equals p.ProductId
+                                                       join p in _unitOfWork.Product.Queryable on si.ProductId equals p.ProductId
                                                        where si.SalesDistributeId == SalesDistributeId
                                                        select new SalesDistributeReportDetail
                                                        {
