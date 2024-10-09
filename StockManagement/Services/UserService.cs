@@ -18,6 +18,7 @@ public class UserService
         try
         {
             bool IsExist = await IsUsernameExistsAsync(user.UserName);
+
             if (IsExist)
             {
                 return new ApiResponse()
@@ -29,17 +30,19 @@ public class UserService
             }
 
             string hashed_password = _passwordHashingService.HashPassword(user.Password.Trim());
+
             var user_data = new User()
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                UserName = user.UserName,
+                UserName = user.UserName.ToLower(),
                 Password = hashed_password,
                 UserStatus = (int)UserStatus.Pending,
                 Token = " ",
                 RoleId = ROLE_ID,
                 IsDeleted = 0
             };
+
             await _unitOfWork.Users.AddAsync(user_data);
             await _unitOfWork.SaveChangesAsync();
 
@@ -66,7 +69,7 @@ public class UserService
 
     private async Task<bool> IsUsernameExistsAsync(string userName)
     {
-        var usernameExists = await _unitOfWork.Users.Queryable.Where(x => x.UserName == userName && x.UserStatus == (int)UserStatus.Active).CountAsync();
+        var usernameExists = await _unitOfWork.Users.Queryable.Where(x => x.UserName.ToLower() == userName.Trim().ToLower() && x.UserStatus == (int)UserStatus.Active).CountAsync();
         return usernameExists > 0;
     }
 
@@ -75,6 +78,7 @@ public class UserService
         try
         {
             var user_data = await _unitOfWork.Users.Queryable.Where(u => u.UserId == user.UserId).FirstOrDefaultAsync();
+
             user_data.FirstName = user.FirstName;
             user_data.LastName = user.LastName;
             user_data.UserName = user.UserName;
