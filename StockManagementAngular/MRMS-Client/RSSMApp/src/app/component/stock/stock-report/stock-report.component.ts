@@ -80,7 +80,31 @@ export class StockReportComponent implements OnInit {
 
   public convertToPDF() {
     
-    const invoiceHeader: any  = [
+    const defaultHeader: any  = [
+      {
+        text: 'রস্ ফুডস এন্ড সুইটস',
+        bold: true,
+        font: 'Kalpurush',
+        fontSize: 17,
+        alignment: 'left',
+      },
+      {
+        text: `স্টক রিপোর্ট`,
+        bold: true,
+        font: 'Kalpurush',
+        fontSize: 22,
+        alignment: 'center',
+      },
+      {
+        text: `${this.stockReportData.companyName}`,
+        bold: true,
+        font: 'Kalpurush',
+        fontSize: 17,
+        alignment: 'right',
+      },
+    ];
+
+    const firstPageHeader: any  = [
       {
         stack: [
           {
@@ -100,10 +124,6 @@ export class StockReportComponent implements OnInit {
         ],
       },
       {
-        text: 'বিসমিল্লাহির রাহ্‌মানির রাহীম',
-        bold: true,
-        font: 'Kalpurush',
-        fontSize: 11,
         alignment: 'center',
         stack: [
           {
@@ -160,7 +180,7 @@ export class StockReportComponent implements OnInit {
         { text: 'ইজা', bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'নতুন', bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'মোট', bold: true, font: 'Adorsholipi', alignment: 'right' },
-        { text: 'বিক্রি', bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'বিক্রয়', bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'ডেমেজ', bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'টাকা', bold: true, font: 'Adorsholipi', alignment: 'right' },
       ]
@@ -181,7 +201,6 @@ export class StockReportComponent implements OnInit {
               { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.stockReportData.damageAmount}`]},
             ],
             [
-              // { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.stockReportData.totalPrice}`] },
               { text: '(-) এস/আর কমিশনঃ', font: 'Kalpurush', fontSize: 11, bold: true },
               { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.stockReportData.srcommission}`], margin: [25, 0, 0, 0]},
             ],
@@ -211,52 +230,57 @@ export class StockReportComponent implements OnInit {
         { text: index + 1, alignment: 'center' },
         { text: `${item.productName}`, font: 'Kalpurush', bold: true },
         { text: [{ text: '৳ ', font: 'Kalpurush' }, `${item.price}`], alignment: 'right' },
-        { text: `${item.eja}`, alignment: 'center' },
-        { text: `${item.restockQuantity}`, alignment: 'center' },
-        { text: `${item.totalQuantity}`, alignment: 'center' },
-        { text: `${item.salesQuantity}`, alignment: 'center' },
-        { text: `${item.damageQuantity}`, alignment: 'center' },
+        { text: `${item.eja}`, alignment: 'right' },
+        { text: `${item.restockQuantity}`, alignment: 'right' },
+        { text: `${item.totalQuantity}`, alignment: 'right' },
+        { text: `${item.salesQuantity}`, alignment: 'right' },
+        { text: `${item.damageQuantity}`, alignment: 'right' },
         { text: [{ text: '৳ ', font: 'Kalpurush' }, `${item.totalAmount}`], alignment: 'right' }
       ]);
     });
 
     const docDefinition: any = {
       pageSize: 'A4',
-      pageMargins: [40, 70, 40, 20], // Left, Top, Right, Bottom margins (in points)
-      header: {
-        margin: [40, 20, 40, 20],
-        columns: invoiceHeader
+      pageMargins: [40, 75, 40, 40], // Left, Top, Right, Bottom margins (in points)
+      header : function(currentPage: any, pageCount: any, pageSize: any){
+        return {
+          margin: [40, 20, 40, 20],
+          columns: currentPage == 1 ? firstPageHeader : defaultHeader
+        }
       },
       content: [
-        // Product Table
         {
           table: {
             headerRows: 1,
-            widths: [30, '*', 50, 30, 30, 30, 30, 30, 50],
+            widths: [30, '*', 50, 35, 35, 35, 35, 35, 50],
             body: tableBody,
+            dontBreakRows: true,
           },
-            layout: {
-              hLineWidth: function (i: any, node: any) {
-                // Apply border-bottom only for the last row
-                return i === 0 ? 0 : 1;
-                // return i === totalRows ? 1 : 0; // 1 for the last row, 0 for others
-              },
-              vLineWidth: function () {
-                return 0;
-              },
-              hLineColor: function (i: any, node: any) {
-                return i === 1 ? '#313131' : '#aaa';
-              }
+          layout: {
+            hLineWidth: function (i: any, node: any) {
+              return i === 0 ? 0 : 1;
             },
+            vLineWidth: function () {
+              return 0;
+            },
+            hLineColor: function (i: any, node: any) {
+              return i === 1 ? '#313131' : '#aaa';
+            }
+          },
           margin: [0, 0, 0, 0],
         },
-
-        // Total Calculations in footer aligned to the right
         {
           columns: invoiceFooter,
           unbreakable: true
         },
       ],
+      footer: function(currentPage: any, pageCount: any){
+        return {
+          text: `Page ${currentPage.toString()} of ${pageCount}`,
+          fontSize: 8,
+          margin: [20, 0, 0, 20]
+        }
+      },
       defaultStyle: {
         fontSize: 10,
       },

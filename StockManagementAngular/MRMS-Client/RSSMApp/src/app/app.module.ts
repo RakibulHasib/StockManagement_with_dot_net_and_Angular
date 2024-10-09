@@ -26,7 +26,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 import { ProductRepeatComponent } from './component/shared/product-repeat/product-repeat.component';
 import { CompanyViewComponent } from './component/Company/company-view/company-view.component';
 import { ProductViewComponent } from './component/Product/product-view/product-view.component';
-import { StockReportComponent } from './component/report/stock-report/stock-report.component';
+import { StockReportComponent } from './component/stock/stock-report/stock-report.component';
 import { DistributionViewComponent } from './component/distribution/distribution-view/distribution-view.component';
 import { DistributionCreateComponent } from './component/distribution/distribution-create/distribution-create.component';
 import { DistributionConfigComponent } from './component/distribution/distribution-config/distribution-config.component';

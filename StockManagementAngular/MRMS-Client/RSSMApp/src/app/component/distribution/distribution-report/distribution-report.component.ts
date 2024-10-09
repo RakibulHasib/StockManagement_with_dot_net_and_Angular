@@ -6,6 +6,7 @@ import * as custom_fonts  from 'src/assets/custom_fonts/custom_fonts';
 import { SalesReportModel } from 'src/app/models/sales/sales-report-model';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
 import { SalesDistributionService } from 'src/app/services/sales/sales-distribution.service';
+import { DatePipe } from '@angular/common';
 
 (pdfMake as any).vfs = custom_fonts.pdfMake.vfs;
 
@@ -47,26 +48,27 @@ export class DistributionReportComponent {
   }
 
   salesReportData!: SalesReportModel;
+  totalSalesAmount: any = 0;
 
   constructor(
     private reportDataSvc: SalesDistributionService,
     private _notificationSvc: NotificationService,
     private _dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
+    private datePipe: DatePipe
   ) { }
-
 
   ngOnInit() {
     let salesDistributeID: number = this.activatedRoute.snapshot.params['id'];
     this.fetchReportData(salesDistributeID);
   }
-  
 
   fetchReportData(salesDistributeID: number) {
     if (salesDistributeID) {
       this.reportDataSvc.getReportData(salesDistributeID)
         .subscribe(data => {
           this.salesReportData = data;
+          this.totalSalesAmount = data.reportDetails?.reduce((sum, item) => sum + (item?.totalSalesPrice ?? 0), 0) || 0;
         }, err => {
           this.notificationSvc.message("Failed to load data", "DISMISS");
         });
@@ -75,67 +77,214 @@ export class DistributionReportComponent {
     }
   }
 
-    public convetToPDF() {
-        let docDefinition : any = {
-        pageMargins: [40, 20, 40, 20],
-        content: [
+  public convetToPDF() {
+
+    const defaultHeader: any  = [
+      {
+        text: 'রস্ ফুডস এন্ড সুইটস',
+        bold: true,
+        font: 'Kalpurush',
+        fontSize: 17,
+        alignment: 'left',
+      },
+      {
+        text: `ডিস্ট্রিবিউট হিসাব`,
+        bold: true,
+        font: 'Kalpurush',
+        fontSize: 24,
+        alignment: 'center',
+      },
+      {
+        stack: [
           {
-            font: 'Adorsholipi',
+            text: `${this.salesReportData?.companyName}`,
+            bold: true,
+            font: 'Kalpurush',
+            fontSize: 14,
+            alignment: 'right'
+          },
+          {
+            text: `${this.salesReportData?.concernPerson}`,
+            bold: true,
+            font: 'Kalpurush',
+            fontSize: 16,
+            alignment: 'right',
+          },
+        ],
+      },
+    ];
+
+    const distributeHeader: any  = [
+      {
+        stack: [
+          {
+            text: 'রস্ ফুডস এন্ড সুইটস',
+            bold: true,
+            font: 'Kalpurush',
+            fontSize: 17,
+            alignment: 'left',
+          },
+          {
+            text: 'রেজিঃ নং- ',
+            font: 'Kalpurush',
+            fontSize: 12,
+            alignment: 'left',
+            margin: [0, 5, 0, 5],
+          },
+        ],
+      },
+      {
+        stack: [
+          {
             text: 'বিসমিল্লাহির রাহ্‌মানির রাহীম',
             bold: true,
-            fontSize: 10,
+            font: 'Kalpurush',
+            fontSize: 11,
             alignment: 'center',
           },
           {
-            text: 'সংশ্লিষ্ট ব্যক্তিঃ ' + this.salesReportData?.concernPerson,
-            font: 'Adorsholipi',
+            text: `ডিস্ট্রিবিউট হিসাব`,
             bold: true,
-            fontSize: 16, // Adjust the font size as needed
+            font: 'Kalpurush',
+            fontSize: 24,
             alignment: 'center',
-            margin: [0, 0, 0, 15]
+          },
+        ],
+      },
+      {
+        stack: [
+          {
+            text: `${this.salesReportData?.companyName}`,
+            bold: true,
+            font: 'Kalpurush',
+            fontSize: 14,
+            alignment: 'right'
           },
           {
-            columns : [
-              { width: '*', text: '' },
+            text: `${this.salesReportData?.concernPerson}`,
+            bold: true,
+            font: 'Kalpurush',
+            fontSize: 16,
+            alignment: 'right',
+          },
+          {
+            text: [
               {
-                width: 'auto',
-                table: {
-                  widths: [ 70, 45, 85, 85, 85, 90],
-                  body: [
-                      // ['Product', 'Price', 'Eja', 'Total', 'Sales', 'Amount', 'Dumping', 'Receiving', 'Remaining'],
-                      [
-                        { text: 'পণ্যের নাম', bold: true, font: 'Adorsholipi', alignment: 'center' }, // Make the heading text bold 
-                        { text: 'মূল্য',  bold: true, font: 'Adorsholipi', alignment: 'center' },
-                        { text: 'গ্রহণের পরিমাণ',  bold: true, font: 'Adorsholipi', alignment: 'center' },
-                        { text: 'ফেরতের পরিমাণ',  bold: true, font: 'Adorsholipi', alignment: 'center' },
-                        { text: 'বিক্রয়ের পরিমাণ',  bold: true, font: 'Adorsholipi', alignment: 'center' },
-                        { text: 'মোট বিক্রয় মূল্য',  bold: true, font: 'Adorsholipi', alignment: 'center' }
-                      ],
-                      ...this.salesReportData.reportDetails!.map(x => [
-                        { text: x.productName, bold: true, font: 'Kalpurush', alignment: 'center' },
-                        x.price,
-                        x.receiveQuantity,
-                        x.returnQuantity,
-                        x.salesQuantity,
-                        x.totalSalesPrice
-                      ]),
-                      // [
-                      //   { colSpan:5, text: 'মোট মূল্যঃ ', font: 'Adorsholipi', bold: true, fontSize: 10, alignment: 'right' },
-                      //   {},
-                      //   {},
-                      //   {},
-                      //   {},
-                      //   { text: 'this.stockReportData.totalPrice', bold: true, fontSize: 10, alignment: 'left' },
-                      // ],
-                    ],
-                  alignment: "center",
-                }
+                text: 'তারিখঃ ',
+                font: 'Kalpurush',
+                fontSize: 12,
+                alignment: 'right',
               },
-              { width: '*', text: '' }
+              {
+                text: `${this.datePipe.transform(
+                  this.salesReportData?.creationTime,
+                  'dd-MM-yyyy'
+                )}`,
+                fontSize: 11,
+              },
+            ],
+          },
+        ],
+      },
+    ];
+
+    const tableBody: any = [
+      [
+        { text: 'ক্রমিক', font: 'Adorsholipi', alignment: 'center' },
+        { text: 'পণ্যের নাম', bold: true, font: 'Adorsholipi', alignment: 'center' },
+        { text: 'মূল্য',  bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'গ্রহণ',  bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'ফেরৎ',  bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'বিক্রয়',  bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'টাকা',  bold: true, font: 'Adorsholipi', alignment: 'right' }
+      ]
+    ];
+
+    const distributeFooter: any = [
+      { width: '*', text: '' },
+      {
+        width: 'auto',
+        table: {
+          body: [
+            [
+              { text: 'মোট মূল্যঃ', font: 'Kalpurush', fontSize: 11, bold: true, margin: [0, 0, 15, 0] },
+              { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.totalSalesAmount}`]},
             ]
-          }
-        ]
-      };
-      pdfMake.createPdf(docDefinition).print();
+          ],
+        },
+        layout: {
+          hLineWidth: function (i: number, node: any) {
+            return i === 0 || i === node.table.body.length ? 0 : 1;
+          },
+          vLineWidth: function () {
+            return 0;
+          },
+          hLineColor: function () {
+            return '#aaa';
+          },
+        },
+        alignment: 'right',
+      },
+    ];
+
+    this.salesReportData?.reportDetails?.forEach((item, index) => {
+      tableBody.push([
+        { text: index + 1, alignment: 'center' },
+        { text: `${item.productName}`, font: 'Kalpurush', bold: true, margin: [10, 0, 0, 0] },
+        { text: [{ text: '৳ ', font: 'Kalpurush' }, `${item.price}`], alignment: 'right' },
+        { text: `${item.receiveQuantity}`, alignment: 'right' },
+        { text: `${item.returnQuantity}`, alignment: 'right' },
+        { text: `${item.salesQuantity}`, alignment: 'right' },
+        { text: [{ text: '৳ ', font: 'Kalpurush' }, `${item.totalSalesPrice}`], alignment: 'right' }
+      ]);
+    });
+
+      const docDefinition: any = {
+      pageSize: 'A4',
+      pageMargins: [40, 80, 40, 40], // Left, Top, Right, Bottom margins (in points)
+      header : function(currentPage: any, pageCount: any, pageSize: any){
+        return {
+          margin: [40, 20, 40, 20],
+          columns: currentPage == 1 ? distributeHeader : defaultHeader
+        }
+      },
+      content: [
+        {
+          table: {
+            headerRows: 1,
+            widths: [30, '*', 50, 45, 45, 45, 60],
+            dontBreakRows: true,
+            body: tableBody,
+          },
+            layout: {
+              hLineWidth: function (i: any, node: any) {
+                return i === 0 ? 0 : 1;
+              },
+              vLineWidth: function () {
+                return 0;
+              },
+              hLineColor: function (i: any, node: any) {
+                return i === 1 ? '#313131' : '#aaa';
+              }
+            },
+          margin: [0, 0, 0, 0],
+        },
+        {
+          columns: distributeFooter
+        },
+      ],
+      footer: function(currentPage: any, pageCount: any){
+        return {
+          text: `Page ${currentPage.toString()} of ${pageCount}`,
+          fontSize: 8,
+          margin: [20, 0, 0, 20]
+        }
+      },
+      defaultStyle: {
+        fontSize: 10,
+      },
     };
+
+    pdfMake.createPdf(docDefinition).print();
+  };
 }
