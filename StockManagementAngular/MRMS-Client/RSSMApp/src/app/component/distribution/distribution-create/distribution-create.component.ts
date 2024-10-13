@@ -107,16 +107,17 @@ export class DistributionCreateComponent implements OnInit {
                   10000
                 );
               } else if (data?.lastDistribute?.lastDistributeStatus === DailyDistributeStatus.StockComplete) {
+                // check if last distribute is today
+                const isDistributedToday = new DateFormat().areDatesEqual(new Date(data.today), new Date(data?.lastDistribute?.lastDistributeDay));
+                if (isDistributedToday){
+                  this.minDate = null;
+                  this.maxDate = null;
+                  return;
+                }
                 this.minDate = new Date(
                   data?.lastDistribute?.lastDistributeDay
                 );
                 this.minDate.setDate(this.minDate.getDate() + 1);
-
-                const isMaxAndMinDateIsEqual = new DateFormat().areDatesEqual(this.maxDate, this.minDate);                
-                if (isMaxAndMinDateIsEqual){
-                  this.minDate = null;
-                  this.maxDate = null;
-                }
                 this.loadProductData();
               }
             } else {
