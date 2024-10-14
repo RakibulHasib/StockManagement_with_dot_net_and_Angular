@@ -198,19 +198,17 @@ public class UserService
         try
         {
             var user_data = await _unitOfWork.Users.Queryable
-                        .Join(_unitOfWork.RoleMaster.Queryable,
-                              u => u.RoleId,
-                              rm => rm.RoleId,
-                              (u, rm) => new UserInfoDTO
-                              {
-                                  UserId = u.UserId,
-                                  UserName = u.UserName,
-                                  UserStatus = u.UserStatus ?? 0,
-                                  FirstName = u.FirstName,
-                                  LastName = u.LastName,
-                                  RoleId = u.RoleId,
-                                  RoleName = rm.RoleName
-                              }).ToListAsync();
+               .Where(x => x.IsDeleted == 0)
+               .Select(x => new UserInfoDTO
+               {
+                   UserId = x.UserId,
+                   UserName = x.UserName,
+                   UserStatus = x.UserStatus ?? 0,
+                   FirstName = x.FirstName,
+                   LastName = x.LastName,
+                   RoleId = x.RoleId,
+                   RoleName = x.RoleMaster.RoleName
+               }).ToListAsync();
 
             return new ApiResponse<List<UserInfoDTO>>()
             {
