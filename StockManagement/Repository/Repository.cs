@@ -52,7 +52,6 @@ public class Repository<TEntity, TId> where TEntity : class
         await _table.AddAsync(entity);
     }
 
-
     public async Task AddRangeAsync(IEnumerable<TEntity> entities)
     {
         foreach (var entity in entities)
@@ -73,13 +72,20 @@ public class Repository<TEntity, TId> where TEntity : class
     {
         await _table.AddRangeAsync(entities);
     }
+    public async Task AddRangeInSequenceAsync(IEnumerable<TEntity> entities)
+    {
+        foreach (var entity in entities)
+        {
+            await _table.AddAsync(entity);
+        }
+    }
 
     public void Update(TEntity entity)
     {
         _table.Update(entity);
     }
 
-    public void UpdateRangeAsync(IEnumerable<TEntity> entities)
+    public void UpdateRange(IEnumerable<TEntity> entities)
     {
         _table.UpdateRange(entities);
     }
