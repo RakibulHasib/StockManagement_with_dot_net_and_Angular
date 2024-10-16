@@ -128,6 +128,7 @@ public class StockService
         savoyIceCreamData.reportDetails = (from si in _unitOfWork.StockDetail.Queryable.Where(a => a.IsDeleted == 0)
                                            join p in _unitOfWork.Product.Queryable.Where(a => a.IsDeleted == 0) on si.ProductId equals p.ProductId
                                            where si.StockId == StockId
+                                           orderby p.ProductId ascending
                                            select new ReportDetail
                                            {
                                                StockId = si.StockId,
