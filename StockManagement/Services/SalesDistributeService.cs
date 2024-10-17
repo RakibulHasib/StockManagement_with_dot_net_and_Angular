@@ -37,6 +37,7 @@ namespace StockManagement.Services
                                {
                                    SalesDistributeId = sd.SalesDistributeId,
                                    ConcernPerson = cp.ConcernPersonName,
+                                   CompanyName = sd.Company.CompanyName,
                                    TotalReceive = sd.TotalReceive,
                                    TotalReturn = sd.TotalReturn,
                                    TotalSales = sd.TotalSales,

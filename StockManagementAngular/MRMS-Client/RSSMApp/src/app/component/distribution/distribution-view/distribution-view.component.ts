@@ -55,7 +55,7 @@ export class DistributionViewComponent {
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  columnList: string[] = ["concernPerson","totalReceive", "totalReturn","totalSales","totalPrice","grandTotal","creationTime","actions"];
+  columnList: string[] = ["concernPerson", "companyName", "creationTime", "totalSales","totalPrice","grandTotal","actions"];
   startDate: string = '';
   endDate: string = '';
 
