@@ -1,12 +1,6 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using StockManagement.DTO;
-using StockManagement.Entities;
-using StockManagement.Repository;
-
-namespace StockManagement.Features.StockFeatures
+﻿namespace StockManagement.Features.StockFeatures
 {
-    public class GetStockDataPerDayQuery: IRequest<List<DailyDataDTO>>
+    public class GetStockDataPerDayQuery : IRequest<List<DailyDataDTO>>
     {
         public int companyId { get; set; }
         public DateTime StartDate { get; set; }
@@ -25,11 +19,12 @@ namespace StockManagement.Features.StockFeatures
                     && x.CompanyId == (request.companyId == 0 ? x.CompanyId : request.companyId) && x.IsDeleted == 0)
                 .Select(query => new DailyDataDTO
                 {
-                        StockId = query.StockId,
-                        CreationTime = query.CreationTime,
-                        TotalSalesQuantity = query.TotalSalesQuantity,
-                        TotalAmount = query.GrandTotalAmount
-                    }).OrderByDescending(a => a.StockId).ToListAsync();
+                    StockId = query.StockId,
+                    CompanyName = query.Company.CompanyName,
+                    CreationTime = query.CreationTime,
+                    TotalSalesQuantity = query.TotalSalesQuantity,
+                    TotalAmount = query.GrandTotalAmount
+                }).OrderByDescending(a => a.StockId).ToListAsync();
             }
         }
     }

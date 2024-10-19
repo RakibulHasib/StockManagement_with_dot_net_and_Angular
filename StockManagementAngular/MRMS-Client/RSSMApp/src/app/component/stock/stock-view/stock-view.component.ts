@@ -46,7 +46,7 @@ export class StockViewComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  columnList: string[] = ["createdDate", "totalSalesQuantity", "totalAmount","actions"];
+  columnList: string[] = ["companyName", "createdDate", "totalSalesQuantity", "totalAmount","actions"];
   startDate: string = '';
   endDate: string = '';
   selectedCompany: number= 0;

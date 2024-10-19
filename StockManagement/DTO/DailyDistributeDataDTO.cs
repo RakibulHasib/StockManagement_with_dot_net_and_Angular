@@ -4,6 +4,7 @@
     {
         public long SalesDistributeId { get; set; }
         public string? ConcernPerson { get; set; }
+        public string? CompanyName { get; set; }
         public int TotalReceive { get; set; }
         public int TotalReturn { get; set; }
         public int TotalSales { get; set; }

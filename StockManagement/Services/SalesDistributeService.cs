@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using StockManagement.Entities;
 
 namespace StockManagement.Services
 {
@@ -36,6 +37,7 @@ namespace StockManagement.Services
                                {
                                    SalesDistributeId = sd.SalesDistributeId,
                                    ConcernPerson = cp.ConcernPersonName,
+                                   CompanyName = sd.Company.CompanyName,
                                    TotalReceive = sd.TotalReceive,
                                    TotalReturn = sd.TotalReturn,
                                    TotalSales = sd.TotalSales,
@@ -48,106 +50,107 @@ namespace StockManagement.Services
 
         public async Task<ActionResult<int>> InsertSalesDistributeData(int ConcernPersonID, int companyId, DateTime distributionTime, List<SalesDistributeDTO> productDto)
         {
-            int result = 0;
+            var productIds = productDto.Select(x => x.ProductId).ToList();
+
+            var dbProducts = await _unitOfWork.Product.Queryable
+                .Where(a => productIds.Contains(a.ProductId)).ToListAsync();
+
+            if (!dbProducts.Any())
+                throw new InvalidOperationException("Product not found");
+
+            var dbProductIds = dbProducts.Select(x => x.ProductId).ToList();
+
+            if (!productIds.All(x => dbProductIds.Contains(x)))
+                throw new InvalidOperationException("Product not found");
+
+            SalesDistribute salesDistrbute = new();
             List<SalesDistributeDetail> distributeDetails = new();
-            List<Product> products = new();
+            List<ProductStockLog> productStockLogs = new();
 
             foreach (var item in productDto)
             {
-                var remaining = (item.ReceiveQuantity ?? 0) - (item.SalesQuantity ?? 0);
+                var returnQuantity = (item.ReceiveQuantity ?? 0) - (item.SalesQuantity ?? 0);
+
                 var Details = new SalesDistributeDetail
                 {
+                    SalesDistribute = salesDistrbute, //Reference
                     SalesDistributeDetailsId = Guid.NewGuid(),
                     ProductId = item.ProductId,
                     Price = item.Price,
                     ReceiveQuantity = item.ReceiveQuantity ?? 0,
-                    ReturnQuantity = remaining,
+                    ReturnQuantity = returnQuantity,
                     SalesQuantity = item.SalesQuantity ?? 0,
                     TotalSalesPrice = item.TotalSalesPrice,
                     IsDeleted = 0,
                     CreationTime = distributionTime
                 };
+
                 distributeDetails.Add(Details);
             }
 
-            SalesDistribute salesDistrbute = new SalesDistribute
+            salesDistrbute.ConcernPersonId = ConcernPersonID;
+            salesDistrbute.CompanyId = companyId;
+            salesDistrbute.CreationTime = distributionTime;
+            salesDistrbute.IsDeleted = 0;
+            salesDistrbute.Status = (int)DailyDistributeStatus.Created;
+            salesDistrbute.TotalPrice = distributeDetails.Sum(x => x.Price);
+            salesDistrbute.TotalReceive = distributeDetails.Sum(x => x.ReceiveQuantity);
+            salesDistrbute.TotalReturn = distributeDetails.Sum(x => x.ReturnQuantity);
+            salesDistrbute.TotalSales = distributeDetails.Sum(x => x.SalesQuantity);
+            salesDistrbute.GrandTotal = distributeDetails.Sum(x => x.TotalSalesPrice);
+
+            foreach (var distributedProduct in distributeDetails)
             {
-                TotalPrice = distributeDetails.Sum(x => x.Price),
-                TotalReceive = distributeDetails.Sum(x => x.ReceiveQuantity),
-                TotalReturn = distributeDetails.Sum(x => x.ReturnQuantity),
-                TotalSales = distributeDetails.Sum(x => x.SalesQuantity),
-                GrandTotal = distributeDetails.Sum(x => x.TotalSalesPrice),
-                ConcernPersonId = ConcernPersonID,
-                CompanyId = companyId,
-                CreationTime = distributionTime,
-                IsDeleted = 0,
-                Status = (int)DailyDistributeStatus.Created
-            };
+                var dbProduct = dbProducts.First(x => x.ProductId == distributedProduct.ProductId);
+                var previousStock = dbProduct.StockQuantity;
 
-            var productIds = distributeDetails.Select(x => x.ProductId).ToList();
+                dbProduct.StockQuantity -= distributedProduct?.SalesQuantity ?? 0;
 
-            products = await _unitOfWork.Product.Queryable
-            .Where(a => productIds.Contains(a.ProductId)).ToListAsync();
+                if (distributedProduct?.ReceiveQuantity > 0)
+                {
+                    var salesStockLog = new ProductStockLog
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = distributedProduct.ProductId,
+                        NewQuantity = previousStock - (distributedProduct?.ReceiveQuantity ?? 0),
+                        PreviousQuantity = previousStock,
+                        StockType = (int)StockType.StockOut
+                    };
+
+                    productStockLogs.Add(salesStockLog);
+                    previousStock = salesStockLog.NewQuantity;
+                    dbProduct.LastStockLogId = salesStockLog.Id;
+                }
+
+                if (distributedProduct?.ReturnQuantity > 0)
+                {
+                    var returnStockLog = new ProductStockLog
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = distributedProduct.ProductId,
+                        NewQuantity = previousStock + (distributedProduct?.ReturnQuantity ?? 0),
+                        PreviousQuantity = previousStock,
+                        StockType = (int)StockType.ReturnStockIn,
+                        ConcernPersonId = salesDistrbute.ConcernPersonId
+                    };
+                    productStockLogs.Add(returnStockLog);
+                    dbProduct.LastStockLogId = returnStockLog.Id;
+                }
+            }
 
             var transaction = await _unitOfWork.BeginTransactionAsync();
 
             try
             {
-                foreach (var product in distributeDetails)
-                {
-                    product.SalesDistribute = salesDistrbute;
-
-                    var productData = products.FirstOrDefault(x => x.ProductId == product.ProductId);
-                    var oldStock = productData.StockQuantity;
-
-                    if (productData != null)
-                    {
-                        productData.StockQuantity -= product?.SalesQuantity == null ? 0 : product.SalesQuantity;
-                        products.Add(productData);
-                    }
-                    if (product.ReceiveQuantity > 0)
-                    {
-                        var salesStockLog = new ProductStockLog
-                        {
-                            Id = Guid.NewGuid(),
-                            ProductId = product.ProductId,
-                            NewQuantity = oldStock - (product?.ReceiveQuantity == null ? 0 : product.ReceiveQuantity),
-                            PreviousQuantity = oldStock,
-                            StockType = (int)StockType.StockOut
-                        };
-                        await _unitOfWork.ProductStockLog.AddRawAsync(salesStockLog);
-                        await _unitOfWork.SaveChangesAsync();
-                        oldStock = salesStockLog.NewQuantity;
-                        productData.LastStockLogId = salesStockLog.Id;
-
-                    }
-                    if (product.ReturnQuantity > 0)
-                    {
-                        var returnStockLog = new ProductStockLog
-                        {
-                            Id = Guid.NewGuid(),
-                            ProductId = product.ProductId,
-                            NewQuantity = oldStock + (product?.ReturnQuantity == null ? 0 : product.ReturnQuantity),
-                            PreviousQuantity = oldStock,
-                            StockType = (int)StockType.ReturnStockIn,
-                            ConcernPersonId = salesDistrbute.ConcernPersonId
-                        };
-                        await _unitOfWork.ProductStockLog.AddRawAsync(returnStockLog);
-                        await _unitOfWork.SaveChangesAsync();
-                        productData.LastStockLogId = returnStockLog.Id;
-                    }
-
-                }
-
                 await _unitOfWork.SalesDistribute.AddRawAsync(salesDistrbute);
                 await _unitOfWork.SalesDistributeDetail.AddRangeRawAsync(distributeDetails);
-                _unitOfWork.Product.UpdateRangeAsync(products);
+                await _unitOfWork.ProductStockLog.AddRangeInSequenceAsync(productStockLogs);
+                _unitOfWork.Product.UpdateRange(dbProducts);
 
                 await _unitOfWork.SaveChangesAsync();
-
                 await transaction.CommitAsync();
 
-                return result;
+                return 0;
             }
             catch (Exception)
             {

@@ -1,8 +1,9 @@
 export class Dailydatadbmodel {
   constructor(
     public stockId?:number,
-    public CreationTime?: Date,
-    public TotalSalesQuantity?: number,
-    public TotalAmount?: number
+    public companyName?: string,
+    public creationTime?: Date,
+    public totalSalesQuantity?: number,
+    public totalAmount?: number
   ) { }
 }
