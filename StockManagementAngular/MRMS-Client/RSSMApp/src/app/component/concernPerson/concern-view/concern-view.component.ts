@@ -1,13 +1,11 @@
 import { ConcernPersonService } from './../../../services/concernPerson/concern-person.service';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConcernPerson } from 'src/app/models/concernPerson/concern-person';
 import { NotificationService } from 'src/app/services/Shared/notification.service';
-import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { Subscription, throwError } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
@@ -26,7 +24,7 @@ export class ConcernViewComponent {
   dataSource: MatTableDataSource<ConcernPerson>= new MatTableDataSource(this.concernPersondata);
   @ViewChild(MatSort,{static:false}) sort!:MatSort;
   @ViewChild(MatPaginator,{static:false}) paginator!:MatPaginator;
-  columnList: string[]=["concernpersonName","actions"]
+  columnList: string[]=["concernPersonName","actions"]
 
   currentDate: Date = new Date();
   Form: FormGroup = new FormGroup({});

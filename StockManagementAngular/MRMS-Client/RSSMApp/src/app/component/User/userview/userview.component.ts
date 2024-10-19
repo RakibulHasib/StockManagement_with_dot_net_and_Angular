@@ -39,23 +39,17 @@ export class UserviewComponent implements OnInit {
     password: ""
   };
 
-
   roleInfo: UserInfo = {
     roleId: 0,
     userId: 0
   }
-
   model = {
     passwordData: this.passwordData
   }
-
-
   roleAssignModel = {
     roleInfo: this.roleInfo
   };
-
   userId = 0;
-
   form = new FormGroup({});
   options: FormlyFormOptions = {};
 
@@ -173,7 +167,7 @@ export class UserviewComponent implements OnInit {
             type: 'input',
             key: 'password',
             props: {
-              label: 'পাসওয়ার্ড',
+              label: 'নতুন পাসওয়ার্ড',
               appearance: 'outline',
               floatLabel: 'always',
               required: true,
@@ -199,9 +193,10 @@ export class UserviewComponent implements OnInit {
         });
   }
 
-  onRoleAsign(template: TemplateRef<any>, userId: number) {
-    //this.getRole();
-    this.roleAssignModel.roleInfo.userId = userId;
+  onRoleAsign(template: TemplateRef<any>, user: any) {
+
+    this.roleAssignModel.roleInfo.userId = user.userId;
+    this.roleAssignModel.roleInfo.roleId = user.roleId ?? 0;
     this.generateRoleFormFields();
     this.modalRef = this._modal.open(template);
   }
@@ -256,27 +251,7 @@ export class UserviewComponent implements OnInit {
       }))
   }
 
-  // onRoleAssignClose(modalRef: NgbActiveModal){
-  //   const data = {
-  //     roleId : this.roleAssignModel.roleId,
-  //     userId: this.roleAssignModel.userId
-  //   }
-  //   this.userDataSvc.roleAssign(data).subscribe(
-  //     (res) => {
-  //       this._notifitions.message("Successfully saved data", "DISMISS");
-  //       modalRef.dismiss();
-  //       this.roleAssignModel = {
-  //         roleId: 0,
-  //         userId: 0
-  //       };
-  //       this.getItems();
-  //     },
-  //     (err) => {
-  //       this._notifitions.message("Failed to save!!!", "DISMISS");
-  //     }
-  //   );
-  // }
-
+ 
   async generateRoleFormFields() {
     const roleList = await this.userDataSvc.roleList().toPromise();
     this.fields = [
@@ -316,9 +291,6 @@ export class UserviewComponent implements OnInit {
       }
     ]
   }
-
-
-
 
   showUserApprovalAlert(userId: number, data: any) {
     Swal.fire({
@@ -425,24 +397,13 @@ export class UserviewComponent implements OnInit {
     }
   }
 
- async getUserRole() {
+  async getUserRole() {
     const userData = await this.authService.getUserData();
     if (userData) {
       this.userRole = userData;
     }
   }
 
-  // getUserRole() {
-  //   this.authService.getCurrentUser().subscribe(
-  //     res => {
-
-  //       this.userRole = res;
-  //     },
-  //     error => {
-  //       console.error('Error occurred while fetching user info:', error);
-  //     }
-  //   );
-  // }
 
   updateColumnList() {
     if (this.userRole?.roleId !== this.role.global_admin) {

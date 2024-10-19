@@ -43,10 +43,10 @@
         <mat-cell *matCellDef="let element" [style.text-align]="'center'">{{getUserStatusName(element.userStatus)}}</mat-cell>
       </ng-container> 
     
-      <ng-container matColumnDef="actions" class="action" style="width: 55%;">  <mat-header-cell *matHeaderCellDef mat-sort-header class="action">...</mat-header-cell>
+      <ng-container matColumnDef="actions" class="action" style="width: 55%;">  <mat-header-cell *matHeaderCellDef mat-sort-header class="action">একসান</mat-header-cell>
         <mat-cell *matCellDef="let element" class="action">
           <button mat-raised-button color="primary" aria-hidden="false" class="icon-spacing" (click)="showUserApprovalAlert(element.userId,element)" [disabled]="(userRole.roleId === role.global_admin && element.userStatus === 1)||(userRole.roleId !== role.global_admin ||element.userStatus === 1)">Permission</button>
-          <button mat-raised-button color="accent" aria-hidden="false" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onRoleAsign(roleAssignModal, element.userId)">Role</button>
+          <button mat-raised-button color="accent" aria-hidden="false" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onRoleAsign(roleAssignModal, element)">Role</button>
           <button mat-raised-button color="accent" aria-hidden="false" class="icon-spacing" [disabled]="userRole.roleId !== role.global_admin" (click)="onReset(passwordReset, element.userId)">Reset</button>
           <button mat-raised-button color="warn" aria-hidden="false" class="icon-spacing" (click)="showConfirmationAlert(element.userId,element)" [disabled]="(userRole.roleId === role.global_admin && element.userStatus === 0)||(userRole.roleId !== role.global_admin ||element.userStatus === 0)">Deactivate</button>
         </mat-cell>
@@ -100,18 +100,6 @@
           <button type="submit" class="btn btn-outline-dark"(click)="modal.dismiss()">Assign</button>
         </div>
       </form>
-    <!-- <form #f="ngForm" novalidate>
-      <div class="form-group" style="padding: 5px; margin: 20px 20px;">
-        <select class="form-select" name="roleId" [(ngModel)]="roleAssignModel.roleId" required>
-          <option [value] = 0 disabled>Choose a role</option>
-          <option *ngFor="let item of roleData" [value]="item.roleId">{{item.roleName| titlecase}} 
-          </option>
-        </select>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-success btn-sm" (click)="onRoleAssignClose(modal)" [disabled]="f.invalid">Submit</button>
-      </div>
-    </form> -->
   </div>
 
 </ng-template> 
