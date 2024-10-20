@@ -28,6 +28,8 @@ export class StockCreateComponent implements OnInit {
   dateControl = new FormControl(new Date());
   dateFilter: any;
   dateValidation = 0;
+  isLoading = false;
+
   constructor(
     private notificationSvc: NotificationService,
     private productService: ProductService,
@@ -94,12 +96,17 @@ export class StockCreateComponent implements OnInit {
     }
     const formatDate = new DateFormat();
     const date = formatDate.formatDateWithTime(this.dateControl.value);
+
+    this.isLoading = true;
+
     this.savoyService.insert(this.companyId, date, this.savoyData)
       .subscribe(r => {
         this.notificationSvc.message("Data saved successfully!!!", "DISMISS");
         this.router.navigate(['/stock-view']);
+        this.isLoading = false;
       }, err => {
         this.notificationSvc.message("Failed to save data!!!", "DISMISS");
+        this.isLoading = false;
       })
   }
 
