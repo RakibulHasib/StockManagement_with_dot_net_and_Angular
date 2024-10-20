@@ -27,26 +27,25 @@
         </div>
   
       </div>
-      <mat-table [dataSource]="dataSource" matSort style="text-align:center">
-    
+
+      <mat-table [dataSource]="dataSource" matSort style="text-align:center; width: 100%;">
+
         <ng-container matColumnDef="companyName">
-          <mat-header-cell *matHeaderCellDef mat-sort-header >কোম্পানি নাম</mat-header-cell>
-          <mat-cell *matCellDef="let element" [style.text-align]="'center'" >{{element.companyName}} </mat-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="flex: 1 1 auto;">কোম্পানি নাম</mat-header-cell>
+          <mat-cell *matCellDef="let element" style="flex: 1 1 auto; ">{{element.companyName}}</mat-cell>
         </ng-container>
-  
-        <ng-container matColumnDef="actions" class="action" style="width: 80px;align-items:end;">
-          <mat-header-cell *matHeaderCellDef mat-sort-header  class="action" >Action</mat-header-cell>
-          <mat-cell *matCellDef="let element" class="action">
-  
-            <button mat-raised-button color="primary" class="icon-spacing" (click)="onEdit(updateModal,element)" >Edit</button>
-            <button mat-raised-button  color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.companyId,element)" >Delete</button>
-  
+      
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="flex: 0 0 20%;" class="action">একসান</mat-header-cell>
+          <mat-cell *matCellDef="let element" style="flex: 0 0 20%;" class="action">
+            <button mat-raised-button color="primary" style="margin-right: 5px;" (click)="onEdit(updateModal, element)">Edit</button>
+            <button mat-raised-button color="warn" (click)="showConfirmationAlert(element.companyId, element)">Delete</button>
           </mat-cell>
         </ng-container>
-  
-        <mat-header-row *matHeaderRowDef="columnList" class="bold-header"></mat-header-row>
+      
+        <mat-header-row *matHeaderRowDef="columnList"  class="bold-header"></mat-header-row>
         <mat-row *matRowDef="let row; columns: columnList;"></mat-row>
-  
+        
       </mat-table>
       <mat-paginator [pageSizeOptions]="[40, 60, 80, 100]" [pageSize]="40" showFirstLastButtons></mat-paginator>
   
