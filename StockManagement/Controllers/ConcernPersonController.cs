@@ -1,5 +1,4 @@
-﻿using StockManagement.Attributes;
-using StockManagement.Features.ConcernPersonFeatures;
+﻿using StockManagement.Features.ConcernPersonFeatures;
 using StockManagement.Helpers;
 
 namespace StockManagement.Controllers;

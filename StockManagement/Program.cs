@@ -1,12 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Models;
-using Serilog;
-using StockManagement.Middlewares;
-using System.Reflection;
-
-var builder = WebApplication.CreateBuilder(args);
-ConfigurationManager configuration = builder.Configuration;
+﻿var builder = WebApplication.CreateBuilder(args);
+Microsoft.Extensions.Configuration.ConfigurationManager configuration = builder.Configuration;
 
 builder.Host.UseSerilog((_, config) =>
 {
@@ -55,58 +48,18 @@ builder.Services.AddScoped<ConcernPersonService>();
 builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddScoped<IAuthenticateService, AuthenticateService>();
 builder.Services.AddScoped<UserService>();
-builder.Services.AddTransient<PasswordHashingService>();
+builder.Services.AddTransient<IPasswordHashingService, PasswordHashingService>();
 builder.Services.AddScoped<AuthorizeAttribute>();
-//builder.Services.AddScoped<IAuthorizationFilter, AuthorizeAttribute>();
 builder.Services.AddCors();
 
 builder.Services.AddDbContext<StockDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllers();
-//builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "jwtToken_Auth_API",
-        Version = "v1"
-    });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Here Enter JWT Token with bearer format like bearer[space] token"
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-        new OpenApiSecurityScheme
-        {
-            Reference=new OpenApiReference
-            {
-             Type=ReferenceType.SecurityScheme,
-             Id="Bearer"
-            }
-        },
-        new string[]{}
-        }
-    });
-});
 
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 app.UseCors(x =>
 {

@@ -6,7 +6,7 @@
   }
 </style>
 <body>
-  <span style="text-align: center; font-size: 18px; font-weight: 600; display: block">{{salesReportData.companyName}}</span>
+  <span *ngIf="salesReportData" style="text-align: center; font-size: 18px; font-weight: 600; display: block">{{salesReportData.companyName}}</span>
   <div class="row" *ngIf="salesReportData">
       <div class="col-4">
         <h3 style="padding-left:40px;padding-top:10px">রেজি নং-</h3>
@@ -15,12 +15,12 @@
         <h1 style="text-align: center; font-size: 18px; font-weight: 600">সংশ্লিষ্ট ব্যক্তি : {{salesReportData.concernPerson}}</h1>
       </div>
       <div class="col-4">
-        <h3 style="padding-top:10px;margin-left:250px">তারিখ : {{salesReportData.creationTime| date:'yyyy-MM-dd'}}</h3>
+        <h3 class="text-end pe-4" style="padding-top:10px">তারিখ : {{salesReportData.creationTime| date:'yyyy-MM-dd'}}</h3>
       </div>
   </div>
 
   <table style="width:100%" id="contentToConvert" class="table table-primary">
-    <tr>
+    <tr class="text-center">
       <th>ক্রঃনং</th>
       <th>পণ্যের নাম</th>
       <th>মূল্য</th>
@@ -29,14 +29,18 @@
       <th>বিক্রি</th>
       <th>মোট বিক্রিত মূল্য</th>
     </tr>
-    <tr *ngFor="let element of salesReportData?.reportDetails; let i = index">
+    <tr class="text-center" *ngFor="let element of salesReportData?.reportDetails; let i = index">
       <td>{{ i + 1 }}</td>
       <td>{{ element.productName }}</td>
-      <td>{{ element.price }}</td>
+      <td style="text-align:center" >{{ element.price }}</td>
       <td>{{ element.receiveQuantity }}</td>
       <td>{{ element.returnQuantity }}</td>
       <td>{{ element.salesQuantity }}</td>
       <td>{{ element.totalSalesPrice }}</td>
+    </tr>
+    <tr style="font-weight: bold;">
+      <td colspan="6" class="text-end">মোট মূল্যঃ &nbsp;</td>
+      <td class="text-center" style="text-decoration: underline double; text-decoration-color: black;">{{ totalSalesAmount }}</td>
     </tr>
   </table>
 

@@ -1,20 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StockManagement.Entities;
-
-namespace StockManagement.Services;
-
+﻿namespace StockManagement.Services;
 public class UserService
 {
 
     private readonly UnitOfWork _unitOfWork;
-    private readonly PasswordHashingService _hasher;
+    private readonly IPasswordHashingService _passwordHashingService;
     private int ROLE_ID = 0;
     private string USER_STATUS = "Pending";
 
-    public UserService(UnitOfWork unitOfWork, PasswordHashingService hasher)
+    public UserService(UnitOfWork unitOfWork, IPasswordHashingService passwordHashingService)
     {
         _unitOfWork = unitOfWork;
-        _hasher = hasher;
+        _passwordHashingService = passwordHashingService;
     }
 
     public async Task<ApiResponse> UserRegister(User user)
@@ -22,6 +18,7 @@ public class UserService
         try
         {
             bool IsExist = await IsUsernameExistsAsync(user.UserName);
+
             if (IsExist)
             {
                 return new ApiResponse()
@@ -31,20 +28,21 @@ public class UserService
                     StatusCode = (int)HttpStatusCode.Conflict,
                 };
             }
-            //string hashed_password = _hasher.HashPassword(user.Password);SHA512
 
-            string hashed_password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            string hashed_password = _passwordHashingService.HashPassword(user.Password.Trim());
+
             var user_data = new User()
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                UserName = user.UserName,
+                UserName = user.UserName.ToLower(),
                 Password = hashed_password,
                 UserStatus = (int)UserStatus.Pending,
                 Token = " ",
                 RoleId = ROLE_ID,
                 IsDeleted = 0
             };
+
             await _unitOfWork.Users.AddAsync(user_data);
             await _unitOfWork.SaveChangesAsync();
 
@@ -71,7 +69,7 @@ public class UserService
 
     private async Task<bool> IsUsernameExistsAsync(string userName)
     {
-        var usernameExists = await _unitOfWork.Users.Queryable.Where(x => x.UserName == userName && x.UserStatus == (int)UserStatus.Active).CountAsync();
+        var usernameExists = await _unitOfWork.Users.Queryable.Where(x => x.UserName.ToLower() == userName.Trim().ToLower() && x.UserStatus == (int)UserStatus.Active).CountAsync();
         return usernameExists > 0;
     }
 
@@ -80,6 +78,7 @@ public class UserService
         try
         {
             var user_data = await _unitOfWork.Users.Queryable.Where(u => u.UserId == user.UserId).FirstOrDefaultAsync();
+
             user_data.FirstName = user.FirstName;
             user_data.LastName = user.LastName;
             user_data.UserName = user.UserName;
@@ -198,21 +197,18 @@ public class UserService
     {
         try
         {
-            //var user_data = await _unitOfWork.Users.Queryable.Where(u => u.IsDeleted == 0).ToListAsync();
             var user_data = await _unitOfWork.Users.Queryable
-                        .Join(_unitOfWork.RoleMaster.Queryable,
-                              u => u.RoleId,
-                              rm => rm.RoleId,
-                              (u, rm) => new UserInfoDTO
-                              {
-                                  UserId = u.UserId,
-                                  UserName = u.UserName,
-                                  UserStatus = u.UserStatus ?? 0,
-                                  FirstName = u.FirstName,
-                                  LastName = u.LastName,
-                                  RoleId = u.RoleId,
-                                  RoleName = rm.RoleName
-                              }).ToListAsync();
+               .Where(x => x.IsDeleted == 0)
+               .Select(x => new UserInfoDTO
+               {
+                   UserId = x.UserId,
+                   UserName = x.UserName,
+                   UserStatus = x.UserStatus ?? 0,
+                   FirstName = x.FirstName,
+                   LastName = x.LastName,
+                   RoleId = x.RoleId,
+                   RoleName = x.RoleMaster.RoleName
+               }).ToListAsync();
 
             return new ApiResponse<List<UserInfoDTO>>()
             {
@@ -299,12 +295,8 @@ public class UserService
 
     public async Task<ApiResponse> ResetPassword(int userId, string newPassword)
     {
-        //string hashed_password = _hasher.HashPassword(oldPassword);SHA512
-
         string password = newPassword.Trim();
-
-        var hashed_password = BCrypt.Net.BCrypt.HashPassword(password);
-
+        string hashed_password = _passwordHashingService.HashPassword(password);
 
         var user_data = await _unitOfWork.Users.Queryable.Where(u => u.UserId == userId && u.IsDeleted == 0).FirstOrDefaultAsync();
         if (user_data is null)
@@ -318,15 +310,6 @@ public class UserService
 
         }
 
-        //if (!BCrypt.Net.BCrypt.Verify(oldPassword, user_data.Password)) // (!_hasher.VerifyHashedPassword(user_data.Password, oldPassword))// SHA512
-        //{
-        //    return new ApiResponse()
-        //    {
-        //        Message = "User current password is not valid",
-        //        Status = Status.Failed,
-        //        StatusCode = (int)HttpStatusCode.BadRequest,
-        //    };
-        //}
         user_data.Password = hashed_password;
         _unitOfWork.Users.Update(user_data);
         await _unitOfWork.SaveChangesAsync();

@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using StockManagement.Services;
-
-namespace StockManagement.Controllers;
+﻿namespace StockManagement.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

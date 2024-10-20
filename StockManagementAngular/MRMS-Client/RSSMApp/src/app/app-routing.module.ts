@@ -7,7 +7,7 @@ import { SignInComponent } from './component/Authentication/sign-in/sign-in.comp
 import { AuthGuard } from './component/auth/guards/auth.guard';
 import { StockViewComponent } from './component/stock/stock-view/stock-view.component';
 import { StockCreateComponent } from './component/stock/stock-create/stock-create.component';
-import { StockReportComponent } from './component/report/stock-report/stock-report.component';
+import { StockReportComponent } from './component/stock/stock-report/stock-report.component';
 import { DistributionCreateComponent } from './component/distribution/distribution-create/distribution-create.component';
 import { ProductViewComponent } from './component/Product/product-view/product-view.component';
 import { DistributionViewComponent } from './component/distribution/distribution-view/distribution-view.component';
