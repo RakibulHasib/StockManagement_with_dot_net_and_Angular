@@ -26,6 +26,9 @@
       <th>ইজা</th>
       <th>নতুন</th>
       <th>মোট</th>
+      <th>টাকা</th>
+      <th>ফেরৎ</th>
+      <th>টাকা</th>
       <th>বিক্রি</th>
       <th>ডেমেজ</th>
       <th>টাকা</th>
@@ -37,28 +40,37 @@
       <td>{{ element?.eja }}</td>
       <td>{{ element?.restockQuantity }}</td>
       <td>{{ element?.totalQuantity }}</td>
+      <td>{{ element?.totalPrice }}</td>
+      <td>{{ element?.returnQuantity }}</td>
+      <td>{{ element?.returnPrice }}</td>
       <td>{{ element?.salesQuantity }}</td>
       <td>{{ element?.damageQuantity }}</td>
       <td>{{ element?.totalAmount }}</td>
     </tr>
     <tr style="font-weight: bold;" *ngIf="stockReportData">
-      <td colspan="8" style="text-align:right;border-bottom-style: hidden;">মোট মূল্যঃ &nbsp; </td>
-      <td style="border-bottom-style: hidden;">{{stockReportData.totalPrice}}</td>
+      <td colspan="6" style="text-align:right;border-bottom-style: hidden;">মোট মূল্যঃ &nbsp; </td>
+      <td>{{totalOfTotalPrice}}</td>
+      <td></td>
+      <td>{{returnTotalPrice}}</td>
+      <td></td>
+      <td></td>
+      <td>{{stockReportData.totalPrice}}</td>
     </tr>
+
     <tr style="font-weight: bold;" *ngIf="stockReportData">
-      <td colspan="8" style="text-align:right;border-bottom-style: hidden;">(-)&nbsp;ড্যামেজ মূল্যঃ &nbsp;</td>
+      <td colspan="11" style="text-align:right;border-bottom-style: hidden;">(-)&nbsp;ড্যামেজ মূল্যঃ &nbsp;</td>
       <td style="border-bottom-style: hidden;">{{stockReportData.damageAmount}}</td>
     </tr>
     <tr style="font-weight: bold;" *ngIf="stockReportData">
-      <td colspan="8" style="text-align:right;border-bottom-style: hidden;">মোট মূল্যঃ &nbsp;</td>
+      <td colspan="11" style="text-align:right;border-bottom-style: hidden;">মোট মূল্যঃ &nbsp;</td>
       <td style="border-bottom-style: hidden;">{{stockReportData.afterDamagePrice}}</td>
     </tr>
     <tr style="font-weight: bold;" *ngIf="stockReportData">
-      <td colspan="8" style="text-align:right;border-bottom-style: hidden;">(-)&nbsp;এস/আর কমিশনঃ &nbsp;</td>
+      <td colspan="11" style="text-align:right;border-bottom-style: hidden;">(-)&nbsp;এস/আর কমিশনঃ &nbsp;</td>
       <td style="border-bottom-style: hidden;">{{stockReportData.srcommission}}</td>
     </tr>
     <tr style="font-weight: bold;" *ngIf="stockReportData">
-      <td colspan="8" style="text-align:right;">নিট মূল্যঃ &nbsp;</td>
+      <td colspan="11" style="text-align:right;">নিট মূল্যঃ &nbsp;</td>
       <td style="text-decoration: underline double; text-decoration-color: black;">{{stockReportData.afterSrCommission}}</td>
     </tr>
   </table>

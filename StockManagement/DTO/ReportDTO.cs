@@ -22,9 +22,12 @@
         public int CompanyId { get; set; }
         public int? Eja { get; set; }
         public int? RestockQuantity { get; set; }
-        public int? SalesQuantity { get; set; }
         public decimal Price { get; set; }
         public int? TotalQuantity { get; set; }
+        public decimal? TotalPrice { get; set; }
+        public int? SalesQuantity { get; set; }
+        public int? ReturnQuantity { get; set; }
+        public decimal? ReturnPrice { get; set; }
         public int? DamageQuantity { get; set; }
         public decimal? TotalAmount { get; set; }
         public DateTime CreationTime { get; set; }

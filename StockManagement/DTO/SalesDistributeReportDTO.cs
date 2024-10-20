@@ -17,7 +17,9 @@
         public string? ProductName { get; set; }
         public decimal Price { get; set; }
         public int ReceiveQuantity { get; set; }
+        public decimal ReceivePrice { get; set; }
         public int ReturnQuantity { get; set; }
+        public decimal ReturnPrice { get; set; }
         public int SalesQuantity { get; set; }
         public decimal TotalSalesPrice { get; set; }
         public DateTime CreationTime { get; set; }

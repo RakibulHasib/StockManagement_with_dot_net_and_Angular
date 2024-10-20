@@ -49,6 +49,8 @@ export class StockReportComponent implements OnInit {
   }
 
   stockReportData!: stockReportDataModel;
+  totalOfTotalPrice: any = 0;
+  returnTotalPrice: any = 0;
 
   constructor(
     private reportDataSvc: StockService,
@@ -68,6 +70,8 @@ export class StockReportComponent implements OnInit {
       this.reportDataSvc.getReportData(stockID).subscribe(
         (data) => {
           this.stockReportData = data;
+          this.totalOfTotalPrice = data.reportDetails?.reduce((sum, item) => sum + (item?.totalPrice ?? 0), 0) || 0;
+          this.returnTotalPrice = data.reportDetails?.reduce((sum, item) => sum + (item?.returnPrice ?? 0), 0) || 0;
         },
         (err) => {
           this.notificationSvc.message('Failed to load data', 'DISMISS');
@@ -174,12 +178,15 @@ export class StockReportComponent implements OnInit {
 
     const tableBody: any = [
       [
-        { text: 'ক্রমিক', alignment: 'center', font: 'Adorsholipi' },
+        { text: 'ক্রঃ', alignment: 'center', font: 'Adorsholipi' },
         { text: 'পণ্যের নাম', bold: true, font: 'Adorsholipi', alignment: 'center' },
         { text: 'মূল্য', bold: false, font: 'Adorsholipi', alignment: 'right' },
         { text: 'ইজা', bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'নতুন', bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'মোট', bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'টাকা', bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'ফেরৎ', bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'টাকা', bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'বিক্রয়', bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'ডেমেজ', bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'টাকা', bold: true, font: 'Adorsholipi', alignment: 'right' },
@@ -192,21 +199,21 @@ export class StockReportComponent implements OnInit {
         width: 'auto',
         table: {
           body: [
+            // [
+            //   { text: 'মোট মূল্যঃ', font: 'Kalpurush', fontSize: 11, bold: true },
+            //   { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.stockReportData.totalPrice}`]},
+            // ],
             [
-              { text: 'মোট মূল্যঃ', font: 'Kalpurush', fontSize: 11, bold: true },
-              { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.stockReportData.totalPrice}`]},
+              { text: '(-) ড্যামেজ মূল্যঃ', font: 'Kalpurush', fontSize: 12, bold: true },
+              { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.stockReportData.damageAmount}`], bold: true },
             ],
             [
-              { text: '(-) ড্যামেজ মূল্যঃ', font: 'Kalpurush', fontSize: 11, bold: true },
-              { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.stockReportData.damageAmount}`]},
+              { text: '(-) এস/আর কমিশনঃ', font: 'Kalpurush', fontSize: 12, bold: true },
+              { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.stockReportData.srcommission}`], bold: true, margin: [25, 0, 0, 0]},
             ],
             [
-              { text: '(-) এস/আর কমিশনঃ', font: 'Kalpurush', fontSize: 11, bold: true },
-              { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.stockReportData.srcommission}`], margin: [25, 0, 0, 0]},
-            ],
-            [
-              { text: 'নিট মূল্যঃ', font: 'Kalpurush', fontSize: 11, bold: true },
-              { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.stockReportData.afterSrCommission}`]},
+              { text: 'নিট মূল্যঃ', font: 'Kalpurush', fontSize: 12, bold: true },
+              { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.stockReportData.afterSrCommission}`], bold: true },
             ],
           ],
         },
@@ -222,6 +229,7 @@ export class StockReportComponent implements OnInit {
           },
         },
         alignment: 'right',
+        margin: [0, 0, -5, 0]
       },
     ];
 
@@ -233,11 +241,29 @@ export class StockReportComponent implements OnInit {
         { text: `${item.eja}`, alignment: 'right' },
         { text: `${item.restockQuantity}`, alignment: 'right' },
         { text: `${item.totalQuantity}`, alignment: 'right' },
+        { text: [{ text: '৳ ', font: 'Kalpurush' }, `${item.totalPrice}`], alignment: 'right' },
+        { text: `${item.returnQuantity}`, alignment: 'right' },
+        { text: [{ text: '৳ ', font: 'Kalpurush' }, `${item.returnPrice}`], alignment: 'right' },
         { text: `${item.salesQuantity}`, alignment: 'right' },
         { text: `${item.damageQuantity}`, alignment: 'right' },
         { text: [{ text: '৳ ', font: 'Kalpurush' }, `${item.totalAmount}`], alignment: 'right' }
       ]);
     });
+
+    tableBody.push([
+        { },
+        { },
+        { },
+        { },
+        { },
+        { text: 'মোট', font: 'Kalpurush', fontSize: 12, bold: true },
+        { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.totalOfTotalPrice}`], bold: true, alignment: 'right' },
+        { },
+        { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.returnTotalPrice}`], bold: true, alignment: 'right' },
+        { },
+        { },
+        { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.stockReportData.totalPrice}`], bold: true, alignment: 'right' }
+      ]);
 
     const docDefinition: any = {
       pageSize: 'A4',
@@ -252,7 +278,7 @@ export class StockReportComponent implements OnInit {
         {
           table: {
             headerRows: 1,
-            widths: [30, '*', 50, 35, 35, 35, 35, 35, 50],
+            widths: [15, 95, 40, 20, 20, 20, 45, 25, 45, 25, 30, 45],
             body: tableBody,
             dontBreakRows: true,
           },

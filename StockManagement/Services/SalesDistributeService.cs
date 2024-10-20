@@ -220,7 +220,9 @@ namespace StockManagement.Services
                                                            ProductName = p.ProductName,
                                                            Price = si.Price,
                                                            ReceiveQuantity = si.ReceiveQuantity,
+                                                           ReceivePrice = si.ReceiveQuantity * si.Price,
                                                            ReturnQuantity = si.ReturnQuantity,
+                                                           ReturnPrice = si.ReturnQuantity * si.Price,
                                                            SalesQuantity = si.SalesQuantity,
                                                            TotalSalesPrice = si.TotalSalesPrice,
                                                            CreationTime = si.CreationTime

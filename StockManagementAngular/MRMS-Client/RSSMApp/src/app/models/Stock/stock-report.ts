@@ -8,7 +8,10 @@ export class StockReportModel {
   public eja?: number,
   public restockQuantity?: number,
   public totalQuantity?: number,
+  public totalPrice?: number,
   public salesQuantity?: number,
+  public returnQuantity?: number,
+  public returnPrice?: number,
   public damageQuantity?: number,
   public totalAmount?: number
   ) { }

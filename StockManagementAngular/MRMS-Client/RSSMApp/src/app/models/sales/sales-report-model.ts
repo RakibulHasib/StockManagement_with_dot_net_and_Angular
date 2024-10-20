@@ -17,14 +17,11 @@ export class SalesReportDetailModel {
     public productName?: string,
     public price?: number,
     public receiveQuantity?: number,
+    public receivePrice?: number,
     public returnQuantity?: number,
+    public returnPrice?: number,
     public salesQuantity?: number,
     public totalSalesPrice?: number,
     public creationTime?: Date
     ) { }
   }
-  
-  
-  
-
-  

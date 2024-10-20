@@ -25,7 +25,9 @@
       <th>পণ্যের নাম</th>
       <th>মূল্য</th>
       <th>গ্রহণ</th>
+      <th>টাকা</th>
       <th>ফেরৎ</th>
+      <th>টাকা</th>
       <th>বিক্রি</th>
       <th>মোট বিক্রিত মূল্য</th>
     </tr>
@@ -34,12 +36,18 @@
       <td>{{ element.productName }}</td>
       <td style="text-align:center" >{{ element.price }}</td>
       <td>{{ element.receiveQuantity }}</td>
+      <td>{{ (element.receiveQuantity || 0) * (element.price || 0) }}</td>
       <td>{{ element.returnQuantity }}</td>
+      <td>{{ (element.returnQuantity || 0) * (element.price || 0) }}</td>
       <td>{{ element.salesQuantity }}</td>
       <td>{{ element.totalSalesPrice }}</td>
     </tr>
     <tr style="font-weight: bold;">
-      <td colspan="6" class="text-end">মোট মূল্যঃ &nbsp;</td>
+      <td colspan="4" class="text-end">মোট মূল্যঃ &nbsp;</td>
+      <td class="text-center" style="text-decoration: underline double; text-decoration-color: black;">{{ totalReceivePrice }}</td>
+      <td></td>
+      <td class="text-center" style="text-decoration: underline double; text-decoration-color: black;">{{ totalReturnPrice }}</td>
+      <td></td>
       <td class="text-center" style="text-decoration: underline double; text-decoration-color: black;">{{ totalSalesAmount }}</td>
     </tr>
   </table>

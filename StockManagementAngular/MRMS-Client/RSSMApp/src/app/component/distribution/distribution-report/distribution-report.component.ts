@@ -49,6 +49,8 @@ export class DistributionReportComponent {
 
   salesReportData!: SalesReportModel;
   totalSalesAmount: any = 0;
+  totalReceivePrice: any = 0;
+  totalReturnPrice: any = 0;
 
   constructor(
     private reportDataSvc: SalesDistributionService,
@@ -69,6 +71,8 @@ export class DistributionReportComponent {
         .subscribe(data => {
           this.salesReportData = data;
           this.totalSalesAmount = data.reportDetails?.reduce((sum, item) => sum + (item?.totalSalesPrice ?? 0), 0) || 0;
+          this.totalReceivePrice = data.reportDetails?.reduce((sum, item) => sum + (item?.receivePrice ?? 0), 0) || 0;
+          this.totalReturnPrice = data.reportDetails?.reduce((sum, item) => sum + (item?.returnPrice ?? 0), 0) || 0;
         }, err => {
           this.notificationSvc.message("Failed to load data", "DISMISS");
         });
@@ -194,37 +198,12 @@ export class DistributionReportComponent {
         { text: 'পণ্যের নাম', bold: true, font: 'Adorsholipi', alignment: 'center' },
         { text: 'মূল্য',  bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'গ্রহণ',  bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'টাকা',  bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'ফেরৎ',  bold: true, font: 'Adorsholipi', alignment: 'right' },
+        { text: 'টাকা',  bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'বিক্রয়',  bold: true, font: 'Adorsholipi', alignment: 'right' },
         { text: 'টাকা',  bold: true, font: 'Adorsholipi', alignment: 'right' }
       ]
-    ];
-
-    const distributeFooter: any = [
-      { width: '*', text: '' },
-      {
-        width: 'auto',
-        table: {
-          body: [
-            [
-              { text: 'মোট মূল্যঃ', font: 'Kalpurush', fontSize: 11, bold: true, margin: [0, 0, 15, 0] },
-              { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.totalSalesAmount}`]},
-            ]
-          ],
-        },
-        layout: {
-          hLineWidth: function (i: number, node: any) {
-            return i === 0 || i === node.table.body.length ? 0 : 1;
-          },
-          vLineWidth: function () {
-            return 0;
-          },
-          hLineColor: function () {
-            return '#aaa';
-          },
-        },
-        alignment: 'right',
-      },
     ];
 
     this.salesReportData?.reportDetails?.forEach((item, index) => {
@@ -233,7 +212,9 @@ export class DistributionReportComponent {
         { text: `${item.productName}`, font: 'Kalpurush', bold: true, margin: [10, 0, 0, 0] },
         { text: [{ text: '৳ ', font: 'Kalpurush' }, `${item.price}`], alignment: 'right' },
         { text: `${item.receiveQuantity}`, alignment: 'right' },
+        { text: `${(item.receiveQuantity || 0) * (item.price || 0)}`, alignment: 'right' },
         { text: `${item.returnQuantity}`, alignment: 'right' },
+        { text: `${(item.returnQuantity || 0) * (item.price || 0)}`, alignment: 'right' },
         { text: `${item.salesQuantity}`, alignment: 'right' },
         { text: [{ text: '৳ ', font: 'Kalpurush' }, `${item.totalSalesPrice}`], alignment: 'right' }
       ]);
@@ -252,7 +233,7 @@ export class DistributionReportComponent {
         {
           table: {
             headerRows: 1,
-            widths: [30, '*', 50, 45, 45, 45, 60],
+            widths: [30, '*', 50, 33, 45, 33, 45, 33, 60],
             dontBreakRows: true,
             body: tableBody,
           },
@@ -270,7 +251,23 @@ export class DistributionReportComponent {
           margin: [0, 0, 0, 0],
         },
         {
-          columns: distributeFooter
+          table: {
+            widths: [30, '*', 50, 33, 45, 33, 45, 33, 60],
+            body: [
+              [
+                { },
+                { },
+                { text: 'মোট', bold: true, font: 'Adorsholipi', fontSize: 11, alignment: 'right' },
+                { },
+                { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.totalReceivePrice}`], bold: true, alignment: 'right' },
+                { },
+                { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.totalReturnPrice}`], bold: true, alignment: 'right' },
+                { },
+                { text: [{ text: '৳ ', font: 'Kalpurush' }, `${this.totalSalesAmount}`], bold: true, alignment: 'right' },
+              ]
+            ]
+          },
+          layout: 'noBorders'
         },
       ],
       footer: function(currentPage: any, pageCount: any){

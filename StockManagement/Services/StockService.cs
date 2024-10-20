@@ -138,8 +138,11 @@ public class StockService
                                                Eja = si.Eja,
                                                Price = si.Price,
                                                RestockQuantity = si.RestockQuantity,
-                                               SalesQuantity = si.SalesQuantity,
                                                TotalQuantity = si.TotalQuantity,
+                                               TotalPrice = si.TotalQuantity * si.Price,
+                                               SalesQuantity = si.SalesQuantity,
+                                               ReturnQuantity = si.TotalQuantity - si.SalesQuantity,
+                                               ReturnPrice = (si.TotalQuantity - si.SalesQuantity) * si.Price,
                                                TotalAmount = si.TotalAmount,
                                                DamageQuantity = si.DamageQuantity,
                                                CreationTime = si.CreationTime
