@@ -19,6 +19,7 @@
     public class DailyDataDTO
     {
         public long StockId { get; set; }
+        public string? CompanyName { get; set; }
         public DateTime CreationTime { get; set; }
         public int TotalSalesQuantity { get; set; }
         public decimal TotalAmount { get; set; }

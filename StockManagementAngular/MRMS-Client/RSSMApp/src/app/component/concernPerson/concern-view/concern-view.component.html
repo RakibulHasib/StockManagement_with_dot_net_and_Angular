@@ -31,29 +31,36 @@
         </div>
   
       </div>
-      <mat-table [dataSource]="dataSource" matSort style="text-align:center">
+      <mat-table [dataSource]="dataSource" matSort style="width: 100%;">
   
-  
-        <ng-container matColumnDef="concernpersonName">
-          <mat-header-cell *matHeaderCellDef mat-sort-header > নাম</mat-header-cell>
-          <mat-cell *matCellDef="let element" [style.text-align]="'center'" >{{element.concernPersonName}} </mat-cell>
-        </ng-container>
-  
-        <ng-container matColumnDef="actions" class="action" style="width: 80px;align-items:end;">
-          <mat-header-cell *matHeaderCellDef mat-sort-header  class="action" >Action</mat-header-cell>
-          <mat-cell *matCellDef="let element" class="action">
-            <button mat-raised-button color="primary" class="icon-spacing" (click)="onEdit(updateModal,element)" >Edit</button>
-            <button mat-raised-button  color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.concernPersonId, element)" >Delete</button>
-            <button mat-raised-button color="accent" class="icon-spacing" (click)="onAssignCompany(element)" >Concern Assign</button>
-            
+        <ng-container matColumnDef="concernPersonName">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="flex: 1 1 70%; "> 
+            নাম 
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element" style="flex: 1 1 70%;">
+            {{element.concernPersonName}}
           </mat-cell>
         </ng-container>
-  
-        <mat-header-row *matHeaderRowDef="columnList" class="bold-header"></mat-header-row>
+      
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="flex: 1 1 30%;" class="action"> 
+            একসান 
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element" style="flex: 1 1 30%;" class="action" >
+            <button mat-raised-button color="primary" class="icon-spacing" (click)="onEdit(updateModal, element)">Edit</button>
+            <button mat-raised-button color="warn" class="icon-spacing" (click)="showConfirmationAlert(element.concernPersonId, element)">Delete</button>
+            <button mat-raised-button color="accent" class="icon-spacing" (click)="onAssignCompany(element)">Concern Assign</button>
+          </mat-cell>
+        </ng-container>
+      
+        <mat-header-row *matHeaderRowDef="columnList"  class="bold-header"></mat-header-row>
         <mat-row *matRowDef="let row; columns: columnList;"></mat-row>
-  
+      
       </mat-table>
-      <mat-paginator [pageSizeOptions]="[5, 10, 20, 40]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+      
+      <mat-paginator [pageSizeOptions]="[40, 60, 80, 100]" [pageSize]="40" showFirstLastButtons></mat-paginator>
+      
+      
   
     </mat-card-content>
   </mat-card>

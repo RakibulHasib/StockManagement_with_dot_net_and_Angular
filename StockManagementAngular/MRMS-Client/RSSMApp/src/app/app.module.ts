@@ -12,7 +12,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatModule } from './module/shared/mat/mat.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { ConfirmDialogComponent } from './component/shared/confirm-dialog/confirm-dialog.component';
 import { HomeComponent } from './component/home/home.component';
 import { FileContainerComponent } from './component/shared/file-container/file-container.component';
@@ -43,9 +43,7 @@ import { CompanyAssignComponent } from './component/concernPerson/concern-view/c
 import { DistributionStatusComponent } from './component/shared/distribution-status/distribution-status.component';
 import { AuthInterceptor } from './component/Interceptor/auth.interceptor';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
-
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -94,6 +92,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FormlyMatToggleModule,
     MatExpansionModule,
     MatTooltipModule,
+    MatProgressSpinnerModule,
     FormlyModule.forRoot({
       extras: { lazyRender: true, resetFieldOnHide: true },
       validationMessages: [

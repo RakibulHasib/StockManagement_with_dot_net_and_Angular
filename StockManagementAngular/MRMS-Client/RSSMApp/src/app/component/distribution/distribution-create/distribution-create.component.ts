@@ -36,6 +36,8 @@ export class DistributionCreateComponent implements OnInit {
   minDate: Date | null = null;
   maxDate: Date | null = null;
 
+  isLoading = false;
+
   constructor(
     private notificationSvc: NotificationService,
     private salesService: SalesDistributionService,
@@ -229,6 +231,8 @@ export class DistributionCreateComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true;
+
     this.salesService
       .insert({
         concernPersonId: this.selectedConcernPerson,
@@ -240,9 +244,11 @@ export class DistributionCreateComponent implements OnInit {
         (r) => {
           this.notificationSvc.message('Successfully distributed.', 'DISMISS');
           this.onConcernPersonDropdownSelectionChange(this.selectedConcernPerson);
+          this.isLoading = false;
         },
         (err) => {
           this.notificationSvc.message('Failed to save data!!!', 'DISMISS');
+          this.isLoading = false;
         }
       );
   }

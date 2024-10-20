@@ -44,7 +44,10 @@
     <form *ngIf="formData.length > 0" [formGroup]="form" class="productEntryForm" (ngSubmit)="insert()">
       <formly-form [model]="formData" [fields]="fields" [options]="options" [form]="form"></formly-form>
       <div class="f-w d-flex justify-content-end">
-        <button type="submit" [disabled]="distrbuteDate === null" mat-raised-button color="primary">Save</button>
+        <button type="submit" [disabled]="distrbuteDate === null || isLoading" mat-raised-button color="primary">
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+          <span *ngIf="!isLoading">Save</span>
+        </button>
       </div>
     </form>
 

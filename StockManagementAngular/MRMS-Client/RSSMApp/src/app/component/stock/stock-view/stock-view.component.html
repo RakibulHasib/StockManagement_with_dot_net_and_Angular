@@ -55,14 +55,30 @@
     </div> -->
     <mat-table [dataSource]="dataSource" matSort style="text-align:center">
 
+      <ng-container matColumnDef="companyName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>কোম্পানি</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="centered-text" style="font-weight: 600;font-size: 14px; color:#4e4e4e">
+          {{element.companyName}}
+        </mat-cell>
+      </ng-container>
+
       <ng-container matColumnDef="createdDate">
-        <mat-header-cell *matHeaderCellDef mat-sort-header >CreatedDate</mat-header-cell>
-        <mat-cell *matCellDef="let element" style="text-align: center;font-weight: 500;
-        font-size: 14px;">{{element.creationTime | date:'EEEE, MMMM d, y'}}</mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header >স্টকের সময়</mat-header-cell>
+        <mat-cell *matCellDef="let element" style="text-align: center;font-weight: 500;font-size: 14px;">
+          <span style="line-height: 1;">
+            <span>
+              {{ element.creationTime | date: 'MMMM d, y' }}
+            </span>
+            <br>
+            <span style="font-size:11px; color:#3f3f3f">
+              {{ element.creationTime | date: 'h:mm a (EEEE)' }}
+            </span>
+          </span>
+      </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalSalesQuantity">
-        <mat-header-cell *matHeaderCellDef mat-sort-header >মোট বিক্রিত পণ্যে</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header >মোট বিক্রিত পণ্য</mat-header-cell>
         <mat-cell *matCellDef="let element" class="centered-text">{{element.totalSalesQuantity}}</mat-cell>
       </ng-container>
 
@@ -99,7 +115,7 @@
       <mat-row *matRowDef="let row; columns: columnList;"></mat-row>
 
     </mat-table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20, 40]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[40, 60, 80, 100]" [pageSize]="40" showFirstLastButtons></mat-paginator>
 
   </mat-card-content>
 </mat-card>
