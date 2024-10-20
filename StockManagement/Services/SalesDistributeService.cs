@@ -163,9 +163,11 @@ namespace StockManagement.Services
         public async Task<List<DailyDistributorStatusDTO>> GetDistributorStatus(DateTime date)
         {
             var concernPersonsWithDetails =
-                await (from cp in _unitOfWork.ConcernPerson.Queryable where cp.IsDeleted == 0
+                await (from cp in _unitOfWork.ConcernPerson.Queryable
+                       where cp.IsDeleted == 0
                        join cm in _unitOfWork.ConcernUserCompanyMapping.Queryable on cp.ConcernPersonId equals cm.ConcernPersonId
-                       join c in _unitOfWork.Company.Queryable on cm.CompanyId equals c.CompanyId where c.IsDeleted == 0
+                       join c in _unitOfWork.Company.Queryable on cm.CompanyId equals c.CompanyId
+                       where c.IsDeleted == 0
                        join sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.CreationTime.Date == date.Date) on new { cm.ConcernPersonId, cm.CompanyId } equals new { sd.ConcernPersonId, sd.CompanyId } into sdGroup
                        from sd in sdGroup.DefaultIfEmpty()
                        select new
@@ -196,7 +198,7 @@ namespace StockManagement.Services
         {
             SalesDistributeReportDTO? reportDTO = new SalesDistributeReportDTO();
             var salesdistributeData = await (from sd in _unitOfWork.SalesDistribute.Queryable.Where(a => a.IsDeleted == 0)
-                                             join cp in _unitOfWork.ConcernPerson.Queryable.Where(a => a.IsDeleted == 0) on sd.ConcernPersonId equals           cp.ConcernPersonId
+                                             join cp in _unitOfWork.ConcernPerson.Queryable.Where(a => a.IsDeleted == 0) on sd.ConcernPersonId equals cp.ConcernPersonId
                                              join c in _unitOfWork.Company.Queryable.Where(a => a.IsDeleted == 0) on sd.CompanyId equals c.CompanyId
                                              where sd.SalesDistributeId == SalesDistributeId
                                              select new SalesDistributeReportDTO
@@ -210,7 +212,8 @@ namespace StockManagement.Services
             reportDTO = salesdistributeData;
 
             salesdistributeData.reportDetails = await (from si in _unitOfWork.SalesDistributeDetail.Queryable.Where(a => a.IsDeleted == 0)
-                                                       join p in _unitOfWork.Product.Queryable on si.ProductId equals p.ProductId
+                                                       join p in _unitOfWork.Product.Queryable.Where(a => a.IsDeleted == 0) on si.ProductId equals p.ProductId
+                                                       orderby p.ProductId ascending
                                                        where si.SalesDistributeId == SalesDistributeId
                                                        select new SalesDistributeReportDetail
                                                        {
