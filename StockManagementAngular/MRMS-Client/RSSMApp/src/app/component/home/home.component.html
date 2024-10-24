@@ -45,7 +45,10 @@
                 <input class="w-50" name="quantity_{{i}}" type="number" [(ngModel)]="inputValues[i]" placeholder="Enter new stock..."
                  required (input)="checkValue(inputValues[i], i)"/>
                 <button mat-raised-button color="primary" class="icon-spacing" style="font-size: 11px !important;" 
-                (click)="updateStock(inputValues[i], item, i)" [disabled]="isButtonDisabled[i]">Update</button>
+                (click)="updateStock(inputValues[i], item, i)" [disabled]="isButtonDisabled[i] || isLoading[i]">
+                <mat-spinner *ngIf="isLoading[i]" diameter="20"></mat-spinner>
+                <span *ngIf="!isLoading[i]">Update</span>
+              </button>
               </td>
             </tr>
           </tbody>
@@ -54,7 +57,3 @@
     </div>
   </div>
 </ng-template>
-
-
-
-

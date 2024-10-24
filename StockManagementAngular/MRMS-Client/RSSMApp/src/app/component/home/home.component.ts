@@ -19,6 +19,7 @@ export class HomeComponent {
   currentCompany: string = "";
   currenProduct: string = "";
   isButtonDisabled: boolean[] = [];
+  isLoading: boolean[] = [];
   inputValues: any[] = [];
   constructor(
     private notificationSvc: NotificationService,
@@ -72,15 +73,18 @@ export class HomeComponent {
       productId: item.productId,
       newQuantity: newStock
     }
+    this.isLoading[i] = true;
     this._productSvc.updateStockLog(data).subscribe(
       (res) => {
         this.notificationSvc.message("Successfully Updated!!!", "DISMISS");
         this.getProductStock(this.currentCompanyId);
         this.inputValues[i] = null;
         this.isButtonDisabled[i] = true;
+        this.isLoading[i] = false;
       },
       (err) => {
         this.notificationSvc.message("Failed to Update!!!", "DISMISS");
+        this.isLoading[i] = false;
       }
     )
   }
